@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>DP Biology | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="band">
+  <div class="band-in">
+    <header class="site-head">
+      <a class="wordmark" href="index.html">What the Cell</a>
+      <nav class="site-nav" aria-label="Site">
+        <a href="dp-biology.html" aria-current="page">DP Biology</a>
+        <a href="course-map.html">Course map</a>
+      </nav>
+    </header>
+    <div class="intro">
+      <div class="eyebrow">IBDP Biology &middot; first assessment 2025</div>
+      <h1>DP Biology</h1>
+      <p class="lede">Everyone starts on the SL path. HL students then continue with AHL, for 250 hours in total.</p>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <main>
+    <div class="landing">
+      <section class="book" aria-labelledby="book-h">
+        <div class="book-spine" aria-hidden="true"></div>
+        <div class="book-body">
+          <div class="eyebrow">The textbook</div>
+          <div>
+            <h2 id="book-h">Biology for the IB Diploma</h2>
+            <p class="book-title">Clegg, Davis &amp; Talbot &middot; 3rd edition &middot; Hodder, 2023</p>
+          </div>
+          <ul class="themes">
+            <li class="t-A"><a href="course-map.html#book"><b>A</b><span class="t-name">Unity and diversity</span><span class="pg">pp. 2&ndash;180</span></a></li>
+            <li class="t-B"><a href="course-map.html#book"><b>B</b><span class="t-name">Form and function</span><span class="pg">pp. 181&ndash;379</span></a></li>
+            <li class="t-C"><a href="course-map.html#book"><b>C</b><span class="t-name">Interaction and interdependence</span><span class="pg">pp. 380&ndash;601</span></a></li>
+            <li class="t-D"><a href="course-map.html#book"><b>D</b><span class="t-name">Continuity and change</span><span class="pg">pp. 602&ndash;837</span></a></li>
+          </ul>
+          <p class="book-note">40 chapters. Each subtopic page gives the printed page number for every syllabus statement.</p>
+        </div>
+      </section>
+
+      <div class="paths">
+        <a class="path path-sl" href="course-map.html#sl">
+          <div class="eyebrow">Weeks 1&ndash;39</div>
+          <h2>SL path &rarr;</h2>
+          <p>Starts with Body Systems and ends with Ecosystems.</p>
+          <p class="facts">10 units &middot; 39 weeks &middot; 130 hours</p>
+        </a>
+        <a class="path path-ahl" href="course-map.html#ahl">
+          <div class="eyebrow">Weeks 40&ndash;62</div>
+          <h2>AHL path &rarr;</h2>
+          <p>Starts with AHL: Cells and ends with AHL: Ecosystems.</p>
+          <p class="facts">8 units &middot; 23 weeks &middot; 120 hours</p>
+        </a>
+        <a class="path-all" href="course-map.html">See the full course map &rarr;</a>
+      </div>
+    </div>
+
+    <section class="week" aria-labelledby="week-h">
+      <div class="week-head">
+        <h2 id="week-h">This week&rsquo;s questions</h2>
+        <span class="unit-meta" id="week-label"></span>
+      </div>
+      <div id="week-body"><p class="week-empty">This week&rsquo;s questions will appear here.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-foot">Page numbers are the printed page numbers in the book. What the Cell is an independent teaching resource. It is not affiliated with or endorsed by the International Baccalaureate Organization.</footer>
+</div>
+<script src="assets/this-week.js"></script>
+<script>
+(function(){
+  var w = window.THIS_WEEK;
+  if(!w || !w.questions || !w.questions.length) return;
+  var ol = document.createElement('ol');
+  w.questions.forEach(function(q){ var li=document.createElement('li'); li.textContent=q; ol.appendChild(li); });
+  var body = document.getElementById('week-body');
+  body.textContent = '';
+  body.appendChild(ol);
+  document.getElementById('week-label').textContent = w.label || '';
+})();
+</script>
+</body>
+</html>

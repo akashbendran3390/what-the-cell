@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>What the Cell</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="membrane" d="M-130,-20 C-135,-95 -60,-140 15,-130 C95,-122 140,-60 130,15 C122,90 60,135 -15,128 C-90,122 -125,55 -130,-20Z"/>
+    <g id="mito">
+      <rect x="-26" y="-12" width="52" height="24" rx="12"/>
+      <path d="M-16,4 q5,-14 10,0 t10,0 t10,0" fill="none" stroke="#1E0E4A" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </defs>
+</svg>
+
+<div class="band hero">
+  <div class="band-in">
+    <div class="hero-grid">
+      <div>
+        <h1><span>What</span><span class="w2">the</span><span class="w3">Cell</span></h1>
+        <p class="lede">Science courses, down to the last cell.</p>
+      </div>
+      <svg class="cells" viewBox="0 0 520 400" aria-hidden="true">
+        <g transform="translate(320 195) scale(1.22)"><g class="cell-a">
+          <use href="#membrane" fill="#F7A8CF" fill-opacity=".38" stroke="#F7A8CF" stroke-width="6"/>
+          <circle cx="-8" cy="4" r="48" fill="#5F3DB8"/>
+          <circle cx="-8" cy="4" r="48" fill="none" stroke="#C9B8F5" stroke-width="4"/>
+          <circle cx="4" cy="-8" r="15" fill="#FBDD82"/>
+          <use href="#mito" fill="#CBE98A" transform="translate(70 -62) rotate(32)"/>
+          <use href="#mito" fill="#CBE98A" transform="translate(-74 62) rotate(-24)"/>
+          <use href="#mito" fill="#F9BC8F" transform="translate(72 66) rotate(-48)"/>
+          <circle cx="-78" cy="-48" r="11" fill="#8ADFDA"/><circle cx="-52" cy="-82" r="7" fill="#8ADFDA"/><circle cx="-92" cy="-12" r="6" fill="#FBDD82"/>
+          <circle cx="20" cy="-96" r="7" fill="#FBDD82"/><circle cx="96" cy="4" r="9" fill="#8ADFDA"/><circle cx="12" cy="92" r="8" fill="#FBDD82"/>
+        </g></g>
+        <g transform="translate(92 92) scale(.56)"><g class="cell-b">
+          <use href="#membrane" fill="#CBE98A" fill-opacity=".3" stroke="#CBE98A" stroke-width="9"/>
+          <circle cx="4" cy="-6" r="52" fill="#3A9E9E"/><circle cx="16" cy="-16" r="17" fill="#FBDD82"/>
+          <use href="#mito" fill="#F7A8CF" transform="translate(-72 66) rotate(-30)"/>
+          <circle cx="82" cy="52" r="13" fill="#F7A8CF"/>
+        </g></g>
+        <g transform="translate(92 312) scale(.42)"><g class="cell-c">
+          <use href="#membrane" fill="#8ADFDA" fill-opacity=".3" stroke="#8ADFDA" stroke-width="11"/>
+          <circle r="54" fill="#F9BC8F"/><circle cx="-10" cy="-10" r="18" fill="#5F3DB8"/>
+        </g></g>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <main>
+    <section class="choose" aria-labelledby="choose-h">
+      <h2 id="choose-h">Choose your course</h2>
+      <div class="doors">
+        <div class="door door-soon">
+          <div class="eyebrow">Middle Years Programme</div>
+          <h3>MYP Science</h3>
+          <span class="pill">Coming soon</span>
+          <svg class="door-art" viewBox="-150 -150 300 300" aria-hidden="true">
+            <use href="#membrane" fill="#FFFFFF" fill-opacity=".35" stroke="#5F3DB8" stroke-width="6"/>
+            <circle r="46" fill="#5F3DB8"/><circle cx="10" cy="-10" r="15" fill="#FBDD82"/>
+          </svg>
+        </div>
+
+        <a class="door door-live" href="dp-biology.html">
+          <div class="eyebrow">Diploma Programme</div>
+          <h3>DP Biology</h3>
+          <p>SL and AHL paths across 62 teaching weeks, with every subtopic matched to the textbook.</p>
+          <span class="go">Enter DP Biology &rarr;</span>
+          <svg class="door-art" viewBox="-150 -150 300 300" aria-hidden="true">
+            <use href="#membrane" fill="#FBDD82" fill-opacity=".28" stroke="#FBDD82" stroke-width="6"/>
+            <circle cx="-6" cy="4" r="48" fill="#FBDD82"/><circle cx="6" cy="-8" r="16" fill="#B0356F"/>
+            <use href="#mito" fill="#8ADFDA" transform="translate(-72 -56) rotate(30)"/>
+            <circle cx="-84" cy="40" r="9" fill="#CBE98A"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+    <p class="site-note">What the Cell is an independent teaching resource. It is not affiliated with or endorsed by the International Baccalaureate Organization.</p>
+  </main>
+</div>
+</body>
+</html>

@@ -19,8 +19,10 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
@@ -43,7 +45,207 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How do neurons produce electrical signals and pass them along?</li><li>How do neurons affect other cells?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#dataq">Data questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c2-2/c2-2-slides.pdf" data-filename="C2.2 Neural signalling - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/c2-2/slides/" data-count="22">
+    <img id="viewer-img" src="../resources/c2-2/slides/s01.png" alt="Slide 1 of 22" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 22</label>
+      <input type="range" id="viewer-range" min="1" max="22" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "4": [["Nervous System", "Amoeba Sisters", "RNLceVI8jcc"]],
+    "10": [["Action Potential", "Amoeba Sisters", "-uty1gne6zs"]],
+    "11": [["The Nervous System, Part 2: Action! Potential!", "CrashCourse", "OZG8M_ldA1M"]],
+    "17": [["Synaptic Transmission at a Cholinergic Synapse", "Mr Pollock", "9lHRr6CAvKQ"]],
+    "18": [["Synaptic Transmission at a Cholinergic Synapse", "Mr Pollock", "9lHRr6CAvKQ"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the course textbook and class slides. Use the page numbers to read the book's fuller account. Image credits are on slide 22.</p>
+
+  <h3 class="note-group">Neurons at rest</h3>
+
+  <article class="note-card" id="n1">
+    <header><span class="code t-C">C2.2.1</span><h4>What neurons are</h4><span class="pg-ref">pp. 467&ndash;469</span></header>
+    <div class="note-split">
+      <div>
+        <p>The nervous system is made of cells called <b>neurons</b>. The brain and spinal cord form the central nervous system, and peripheral nerves link it with the rest of the body.</p>
+        <p>A neuron has a <b>cell body</b>, containing cytoplasm and a nucleus, with long nerve fibres projecting from it. <b>Dendrites</b> are many short fibres that bring impulses to the cell body. An <b>axon</b> is one long fibre that carries impulses away. Electrical impulses travel along these fibres.</p>
+        <p>Sensory neurons bring signals from receptors, relay neurons connect neurons in the CNS, and motor neurons take signals out to effectors, which are muscles and glands.</p>
+      </div>
+      <figure><img loading="lazy" src="../resources/c2-2/slides/s05.png" alt="Slide: diagram of a neuron with key parts listed beside it" width="1280" height="720"></figure>
+    </div>
+    <p class="tip warn"><b>Watch out:</b> receptors detect stimuli and effectors respond to them.</p>
+  </article>
+
+  <article class="note-card" id="n2">
+    <header><span class="code t-C">C2.2.2</span><h4>How pumping ions sets up the resting potential</h4><span class="pg-ref">pp. 469&ndash;470</span></header>
+    <p>A <b>membrane potential</b> is a difference in charge across a membrane. A membrane with positive charge on one side and negative on the other is <b>polarized</b>. In a neuron that is not transmitting an impulse, the inside is negative at about <b>&minus;70 mV</b>. This is the <b>resting potential</b>.</p>
+    <div class="note-split">
+      <div>
+        <ul>
+          <li><b>The pump:</b> sodium-potassium pumps use ATP to move three Na<sup>+</sup> out for every two K<sup>+</sup> in. This active transport builds a concentration gradient for each ion, and removes more positive charge than it brings in.</li>
+          <li><b>Leakage:</b> the membrane is more permeable to K<sup>+</sup>, so K<sup>+</sup> leaks out faster than Na<sup>+</sup> leaks in.</li>
+          <li><b>Proteins:</b> large, negatively charged proteins stay inside the axon.</li>
+        </ul>
+        <p>So a "resting" neuron is not idle. It uses ATP all the time to keep the gradients in place.</p>
+      </div>
+      <figure><img loading="lazy" src="../resources/c2-2/slides/s08.png" alt="Slide: the sodium-potassium pump moving three sodium ions out and two potassium ions in" width="1280" height="720"></figure>
+    </div>
+  </article>
+
+  <h3 class="note-group">The impulse</h3>
+
+  <article class="note-card" id="n3">
+    <header><span class="code t-C">C2.2.3</span><h4>Nerve impulses: action potentials travelling along nerve fibres</h4><span class="pg-ref">p. 471</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/c2-2/slides/s10.png" alt="Slide: graph of membrane potential rising from minus 70 to plus 40 millivolts and returning" width="1280" height="720"></figure>
+    <p>A stimulus lets positively charged sodium ions flow into the axon, and the potential reverses from about &minus;70 mV to about +40 mV. Potassium ions then flow out, restoring a negative potential. This brief change is an <b>action potential</b>.</p>
+    <p>An action potential at one point triggers the next region of the fibre, so the impulse is propagated along it. At any one point it lasts only about two milliseconds.</p>
+    <p>The impulse is <b>electrical</b> because it involves the movement of charged ions, which changes the voltage across the membrane. It is not a flow of electrons along a wire.</p>
+  </article>
+
+  <article class="note-card" id="n4">
+    <header><span class="code t-C">C2.2.4</span><h4>Why nerve impulses travel at different speeds</h4><span class="pg-ref">pp. 472&ndash;475</span></header>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fibre</th><th>Diameter</th><th>Myelin</th><th>Typical speed</th></tr></thead>
+      <tbody>
+        <tr><th>Small fibre in a mammal</th><td>1 &micro;m</td><td>No</td><td>About 1 m s<sup>&minus;1</sup></td></tr>
+        <tr><th>Squid giant axon</th><td>Up to 500 &micro;m</td><td>No</td><td>About 25 m s<sup>&minus;1</sup></td></tr>
+        <tr><th>Mammal motor fibre</th><td>About 20 &micro;m</td><td>Yes</td><td>About 100 m s<sup>&minus;1</sup></td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Diameter:</b> a narrow fibre has greater resistance to the flow of ions inside it, so a wider fibre conducts faster. Giant axons help a squid to escape quickly.</p>
+    <p><b>Myelin:</b> Schwann cells wrap around the axon, forming a lipid-rich sheath with high electrical resistance. Ions cross the membrane only at the gaps, or nodes of Ranvier, so the impulse jumps from node to node. This is far faster, even in much narrower fibres.</p>
+  </article>
+
+  <h3 class="note-group">Passing the signal on</h3>
+
+  <article class="note-card" id="n5">
+    <header><span class="code t-C">C2.2.5</span><h4>Synapses: junctions with neurons and effectors</h4><span class="pg-ref">p. 476</span></header>
+    <div class="note-split">
+      <div>
+        <p>A <b>synapse</b> is a junction between a neuron and another neuron, or between a neuron and an effector, such as a muscle fibre or a gland. The two cells do not touch. A gap, the <b>synaptic cleft</b>, is about 20 nm wide, and an action potential cannot cross it.</p>
+        <p>Chemical neurotransmitters carry the signal across instead. A signal can cross a typical synapse in only one direction, because vesicles occur only on the presynaptic side and receptors only on the postsynaptic side.</p>
+      </div>
+      <figure><img loading="lazy" src="../resources/c2-2/slides/s15.png" alt="Slide: illustration of a chemical synapse beside key points" width="1280" height="720"></figure>
+    </div>
+  </article>
+
+  <article class="note-card" id="n6">
+    <header><span class="code t-C">C2.2.6</span><h4>How the presynaptic membrane releases neurotransmitter</h4><span class="pg-ref">p. 477</span></header>
+    <ol>
+      <li>An action potential arrives and depolarizes the presynaptic membrane.</li>
+      <li>Calcium channels open, and <b>Ca<sup>2+</sup></b> diffuses into the knob.</li>
+      <li>Calcium acts as a signalling chemical inside the neuron, making vesicles move to the membrane.</li>
+      <li>Vesicles fuse with the membrane, releasing neurotransmitter into the cleft.</li>
+    </ol>
+  </article>
+
+  <article class="note-card" id="n7">
+    <header><span class="code t-C">C2.2.7</span><h4>How an excitatory postsynaptic potential is produced</h4><span class="pg-ref">pp. 477&ndash;478</span></header>
+    <p>Use <b>acetylcholine (ACh)</b> as your example. It is used at many synapses, including the neuromuscular junction.</p>
+    <ol start="5">
+      <li>ACh diffuses across the cleft, from high to low concentration.</li>
+      <li>It binds to specific transmembrane receptors on the postsynaptic membrane.</li>
+      <li>These receptors are also ion channels. They open, and Na<sup>+</sup> flows in.</li>
+      <li>This depolarizes the membrane: an <b>excitatory postsynaptic potential</b>. If it is large enough, it starts an action potential in the next cell.</li>
+      <li>The enzyme acetylcholinesterase breaks ACh down to choline and acetate. The channel closes, and the choline is reabsorbed and reused.</li>
+    </ol>
+    <p class="tip warn"><b>Watch out:</b> always say that the neurotransmitter crosses the cleft by <b>diffusion</b>. Remember to mention its removal by an enzyme.</p>
+  </article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=RNLceVI8jcc" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Nervous System</b><small>Amoeba Sisters &middot; start here</small></span><span class="pill">C2.2.1</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=-uty1gne6zs" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Action Potential</b><small>Amoeba Sisters</small></span><span class="pill">C2.2.2&ndash;3</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=OZG8M_ldA1M" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>The Nervous System, Part 2: Action! Potential!</b><small>CrashCourse &middot; goes further than SL</small></span><span class="pill">C2.2.2&ndash;4</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=9lHRr6CAvKQ" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Synaptic Transmission at a Cholinergic Synapse</b><small>Mr Pollock &middot; a short animation</small></span><span class="pill">C2.2.5&ndash;7</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=5GcaNthTSJ4" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Cholinergic Synapse</b><small>Biology with Christine &middot; includes extra A-level detail</small></span><span class="pill">C2.2.5&ndash;7</span></a></li>
+  </ul>
+</section>
+
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c2-2/c2-2-note-taking-sheet.pdf" data-filename="C2.2 Neural signalling - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/c2-2/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all seven statements, from quick recall to data questions and a longer answer. It has 49 marks and takes about 50 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c2-2/c2-2-worksheet.pdf" data-filename="C2.2 Neural signalling - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme. Past-paper practice: IB Biology SL, November 2021, Paper 1, questions 3 and 28. Ask your teacher for a copy.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/c2-2/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<section class="block" id="dataq">
+  <div class="block-head"><h2>Data-based questions</h2><div class="dl-row"><a class="dl" href="../resources/dataq/c2-2/c2-2-data-questions.pdf" data-filename="C2.2 Neural signalling - data questions.pdf">Data questions PDF</a></div></div>
+  <p class="block-intro">Questions built on realistic experimental data, in the style of Paper 1B and Paper 2. Work them on paper and show your working. 8 marks in total. Your teacher has the mark scheme.</p>
+<article class="dq-card" id="dq-alarm"><header><h3>Smelling danger</h3><span class="pill">8 marks</span></header><div class="dq-intro"><figure class="dq-photo"><img loading="lazy" src="../resources/dataq/c2-2/neuron.png" alt="A neuron"><figcaption>Photo: BruceBlaus, CC BY 3.0, Wikimedia Commons.</figcaption></figure><p>When a fish is injured, its skin releases an alarm substance that warns other fish. Scientists recorded from two types of smell (olfactory) neurons in the noses of zebrafish while washing over one of four test liquids. The graph shows the percentage of neurons of each type that responded with action potentials.</p></div><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/c2-2/alarm.svg" alt="Bar chart of neurons responding. Ciliated neurons: alarm substance 42%, pike odour 35%, food odour 12%, water 2%. Microvillous neurons: 8%, 6%, 48%, 1%."></figure><ol class="dq-parts" type="a"><li><b>State</b> the percentage of ciliated neurons that responded to pike odour. <span class="dq-mk">[1]</span></li><li><b>Identify</b>, with a reason, which type of neuron is mainly used to detect danger. <span class="dq-mk">[1]</span></li><li><b>Explain</b> why water was included as one of the test liquids. <span class="dq-mk">[1]</span></li><li><b>Compare</b> the responses of the two types of neuron to alarm substance and food odour. <span class="dq-mk">[2]</span></li><li><b>Explain</b> how the nervous system could tell a strong smell from a weak one, given that action potentials are all-or-nothing. <span class="dq-mk">[2]</span></li><li><b>Suggest</b> an advantage of detecting alarm substance and predator odour with the same neurons. <span class="dq-mk">[1]</span></li></ol></article>
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"C2.2.1","q":"Which fibre carries impulses away from the cell body?","o":["Dendrite","Axon","Synapse","Schwann cell"],"a":1,"e":"A neuron has one long axon, which carries impulses away from the cell body. Dendrites carry them towards it."},
+ {"s":"C2.2.1","q":"What does a motor neuron connect?","o":["Receptors with the CNS","The CNS with an effector","Two sense organs","Two muscles"],"a":1,"e":"Motor neurons carry signals from the CNS to muscles or glands."},
+ {"s":"C2.2.2","q":"What does the sodium-potassium pump do in one cycle?","o":["2 Na+ out and 3 K+ in","3 Na+ out and 2 K+ in","3 Na+ in and 2 K+ out","1 Na+ out and 1 K+ in"],"a":1,"e":"Three sodium ions leave and two potassium ions enter, using one ATP."},
+ {"s":"C2.2.2","q":"Why does a resting neuron need ATP?","o":["To make impulses at all times","To keep pumping ions and maintain the gradients","To produce dendrites","To move vesicles only"],"a":1,"e":"Ions keep leaking back, so the pump must work to maintain the resting potential."},
+ {"s":"C2.2.2","q":"Which helps to make the inside of an axon negative?","o":["Faster leakage of K+ out than Na+ in","Faster leakage of Na+ in than K+ out","Positively charged proteins inside","Calcium entering at rest"],"a":0,"e":"The membrane is more permeable to K+, and large negative proteins also stay inside."},
+ {"s":"C2.2.3","q":"Why is a nerve impulse described as electrical?","o":["Electrons flow along the axon","Charged ions move, changing the voltage across the membrane","It uses a metal core","Neurotransmitters carry a charge along the axon"],"a":1,"e":"The change in voltage comes from ions moving across the membrane."},
+ {"s":"C2.2.3","q":"What causes depolarization in an action potential?","o":["K+ leaving the axon","Na+ entering the axon","Cl- leaving the axon","ATP entering the axon"],"a":1,"e":"Sodium ions enter, taking the potential from about −70 mV to about +40 mV."},
+ {"s":"C2.2.4","q":"Why do wider non-myelinated fibres conduct faster?","o":["They have more myelin","Less resistance to ion flow along the fibre","They use no ions","They have more synapses"],"a":1,"e":"A narrow fibre has more resistance to the flow of ions inside the axon."},
+ {"s":"C2.2.4","q":"Why does myelin speed up conduction?","o":["It adds more channels along the fibre","The impulse jumps between gaps in the sheath","It stores neurotransmitter","It widens the axon"],"a":1,"e":"The membrane is exposed only at the nodes of Ranvier, so the impulse moves from node to node."},
+ {"s":"C2.2.5","q":"Why does a signal cross a typical synapse in one direction only?","o":["The cleft narrows in one direction","Vesicles are on one side and receptors on the other","Ions can move one way only","Dendrites cannot conduct"],"a":1,"e":"Neurotransmitter is released from the presynaptic side, and receptors are on the postsynaptic side."},
+ {"s":"C2.2.6","q":"What triggers vesicles to fuse with the presynaptic membrane?","o":["Calcium ions entering the knob","Sodium ions leaving the knob","Binding of neurotransmitter","Acetylcholinesterase"],"a":0,"e":"Calcium acts as a signalling chemical inside the neuron."},
+ {"s":"C2.2.7","q":"How does acetylcholine reach the postsynaptic membrane?","o":["Active transport","Diffusion across the cleft","Inside a vesicle that crosses the cleft","Along a protein fibre"],"a":1,"e":"It diffuses from high to low concentration. Name diffusion in an exam."},
+ {"s":"C2.2.7","q":"What happens when acetylcholine binds to its receptor?","o":["Na+ channels open and Na+ enters the cell","K+ channels close the synapse permanently","Calcium is released into the cleft","The cleft widens"],"a":0,"e":"Sodium entry depolarizes the postsynaptic membrane, giving an excitatory postsynaptic potential."}
+]
+</script>
+
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Reaction time with a falling ruler</h3><div class="practical-meta"><span class="pill">Lab</span><span class="pill">25 min</span><span class="pill">C2.2.1, C2.2.5</span></div><p><b>You will need:</b> 30 cm ruler, reaction time conversion formula</p><ol><li>Partner holds the ruler above your open hand, then drops it without warning</li><li>Record the distance fallen before you catch it, for ten trials</li><li>Convert distance to time using t = square root of (2d / 9.8), with d in metres</li><li>Discuss why the response takes time, using neurons and synapses in your answer</li></ol><p class="practical-safety"><b>Safety:</b> Low risk. Keep the ruler low and away from faces.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Experiments</h3><p>Hodgkin and Huxley recorded nerve impulses from inside squid giant axons, because the large size made measurement possible.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>How far can findings from one species be applied to others?</h3><p>Much of what we know about human neurons began with squid. What must be true for that extrapolation to be reasonable?</p></div></div></section>
     <section class="block" id="statements">
@@ -59,11 +261,12 @@
         <li class=""><span class="id">C2.2.7</span><span>How an excitatory postsynaptic potential is produced</span><span class="pg">p. 477</span></li>
       </ul>
     </section>
-    <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-c2-2.html">AHL &middot; Equilibrium</a></li></ul></section>
+    <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-c2-2.html">AHL &middot; Body Systems</a></li></ul></section>
     
-    <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-b3-2-animal.html"><span>Previous</span><b>B3.2 Transport (Animal)</b></a><a class="next" href="sl-c3-2.html"><span>Next</span><b>C3.2 Defence against disease</b></a></nav>
+    <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-b3-2-animal.html"><span>Previous</span><b>B3.2 Transport (Animal)</b></a><a class="next" href="sl-c3-1.html"><span>Next</span><b>C3.1 Integration of body systems</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

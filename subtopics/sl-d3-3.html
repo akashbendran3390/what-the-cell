@@ -19,15 +19,17 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../course-map.html#sl">SL path</a><span aria-hidden="true">/</span>
-      <a href="../course-map.html#sl-1">Unit 2&nbsp;Equilibrium</a>
+      <a href="../course-map.html#sl-0">Unit 1&nbsp;Body Systems</a>
     </nav>
     <div class="sub-title">
       <span class="code">D3.3</span>
@@ -43,7 +45,186 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How do humans keep internal conditions constant?</li><li>Why is it useful for organisms to keep internal conditions constant?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#dataq">Data questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-3/d3-3-slides.pdf" data-filename="D3.3 Homeostasis - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/d3-3/slides/" data-count="18">
+    <img id="viewer-img" src="../resources/d3-3/slides/s01.png" alt="Slide 1 of 18" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 18</label>
+      <input type="range" id="viewer-range" min="1" max="18" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "5": [["Homeostasis and Negative/Positive Feedback", "Amoeba Sisters", "Iz0Q9nTZCw4"]],
+    "9": [["Type 1 and Type 2 Diabetes (Animation)", "The Science info", "mPF_vAMpOmQ"], ["What is type 2 diabetes?", "Diabète Québec", "PKb5n8V8dro"]],
+    "13": [["GCSE Biology: How We Control Our Body Temperature", "Cognito", "IGsQi0JZUTw"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the course textbook and class slides. Use the page numbers to read the book's fuller account.  Image credits are on slide 18.</p>
+
+  <h3 class="note-group">The principle</h3>
+
+  <article class="note-card" id="n1">
+    <header><span class="code t-D">D3.3.1</span><h4>Homeostasis: keeping the internal environment steady</h4><span class="pg-ref">p. 760</span></header>
+    <p><b>Homeostasis</b> is maintaining the internal environment within preset limits, despite changes in the external environment. In humans, the controlled variables include <b>body temperature</b>, <b>blood pH</b>, <b>blood glucose concentration</b> and <b>blood osmotic concentration</b>.</p>
+    <p class="tip warn"><b>Watch out:</b> homeostasis is about the internal environment. It does not mean moving to somewhere more comfortable.</p>
+  </article>
+
+  <article class="note-card" id="n2">
+    <header><span class="code t-D">D3.3.2</span><h4>How negative feedback loops work</h4><span class="pg-ref">p. 761</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/d3-3/slides/s05.png" alt="Slide: the negative feedback loop from a change in a variable back to the set point" width="1280" height="720"></figure>
+    <p>A receptor detects a change, a coordinator compares it with the set point, and an effector acts in the opposite direction. <b>Negative feedback</b> returns a variable to the set point from above and from below. Positive feedback would move it further away, which is why homeostasis does not use it.</p>
+  </article>
+
+  <h3 class="note-group">Blood glucose</h3>
+
+  <article class="note-card" id="n3">
+    <header><span class="code t-D">D3.3.3</span><h4>How hormones regulate blood glucose</h4><span class="pg-ref">pp. 761&ndash;763</span></header>
+    <p>Blood glucose is normally about 90 mg per 100 cm&#179;. The brain has no glycogen store, so it depends on a steady supply from the blood.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Glucose too high</th><th>Glucose too low</th></tr></thead>
+      <tbody>
+        <tr><th>Detected by</th><td>Beta cells in the islets of Langerhans</td><td>Alpha cells in the islets of Langerhans</td></tr>
+        <tr><th>Hormone</th><td>Insulin</td><td>Glucagon</td></tr>
+        <tr><th>Target cells</th><td>Liver, muscle and other tissues</td><td>Liver</td></tr>
+        <tr><th>Effect</th><td>Glucose uptake; storage as glycogen; more used in respiration</td><td>Glycogen broken down; glucose released</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tip warn"><b>Watch out:</b> glucagon is a hormone, and glycogen is the storage product. The pancreas itself detects the change, so the hypothalamus is not involved.</p>
+  </article>
+
+  <article class="note-card" id="n4">
+    <header><span class="code t-D">D3.3.4</span><h4>The changes behind type 1 and type 2 diabetes</h4><span class="pg-ref">pp. 764&ndash;765</span></header>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Type 1</th><th>Type 2</th></tr></thead>
+      <tbody>
+        <tr><th>Physiological change</th><td>The immune system destroys beta cells, so little or no insulin is produced</td><td>Insulin is produced, but target cells do not respond well to it</td></tr>
+        <tr><th>Risk factors</th><td>Genes, and possibly exposure to some viruses</td><td>Overweight, inactivity, age, family history</td></tr>
+        <tr><th>Prevention</th><td>None known at present</td><td>Healthy diet, regular exercise, healthy weight</td></tr>
+        <tr><th>Treatment</th><td>Insulin, with regular monitoring of blood glucose</td><td>Diet and exercise, sometimes medicine</td></tr>
+      </tbody>
+    </table></div>
+    <p>In either type, blood glucose stays raised and glucose may appear in urine. Long-term effects can include damage to the kidneys, eyes, nerves and blood vessels.</p>
+    <p class="tip warn"><b>Watch out:</b> do not say that type 2 is simply caused by a high-sugar diet. Such a diet is linked with it, and is one of several risk factors.</p>
+  </article>
+
+  <h3 class="note-group">Body temperature</h3>
+
+  <article class="note-card" id="n5">
+    <header><span class="code t-D">D3.3.5</span><h4>Temperature control as negative feedback</h4><span class="pg-ref">p. 766</span></header>
+    <p><b>Peripheral thermoreceptors</b> in the skin detect temperature changes. The <b>hypothalamus</b> compares these with the set point and signals to effectors, including muscle and adipose tissue.</p>
+    <div class="note-split">
+      <div><p>Hormones are involved too. The hypothalamus secretes a releasing hormone, the <b>pituitary gland</b> secretes thyroid-stimulating hormone, and the thyroid gland secretes <b>thyroxin</b>. Thyroxin raises oxygen consumption and metabolic rate, which generates heat.</p></div>
+      <figure><img loading="lazy" src="../resources/d3-3/slides/s12.png" alt="Slide: steps from the hypothalamus to thyroxin, with a table of effector tissues" width="1280" height="720"></figure>
+    </div>
+  </article>
+
+  <article class="note-card" id="n6">
+    <header><span class="code t-D">D3.3.6</span><h4>How humans regulate body temperature</h4><span class="pg-ref">pp. 766&ndash;767</span></header>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Too hot</th><th>Too cold</th></tr></thead>
+      <tbody>
+        <tr><th>Skin arterioles</th><td>Vasodilation: more blood to the skin</td><td>Vasoconstriction: less blood to the skin</td></tr>
+        <tr><th>Sweat glands</th><td>More sweat, which evaporates</td><td>Less sweat</td></tr>
+        <tr><th>Hair</th><td>Muscles relax; hairs lie flat</td><td>Muscles contract; hair erection traps air</td></tr>
+        <tr><th>Muscle</th><td>No shivering</td><td>Shivering generates heat</td></tr>
+        <tr><th>Brown adipose tissue</th><td>Little activity</td><td>Uncoupled respiration releases heat</td></tr>
+      </tbody>
+    </table></div>
+    <p>Sweat cools the skin because evaporation breaks hydrogen bonds, which takes heat energy. <b>Uncoupled respiration</b> in brown adipose tissue releases energy as heat rather than storing it in ATP, which is important for newborn babies. Birds and mammals also use behaviour to regulate temperature.</p>
+    <p class="tip warn"><b>Watch out:</b> blood vessels do not move up or down in the skin. Arterioles widen or narrow, which changes how much blood flows through the surface capillaries.</p>
+  </article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=Iz0Q9nTZCw4" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Homeostasis and Negative/Positive Feedback</b><small>Amoeba Sisters &middot; start here</small></span><span class="pill">D3.3.1&ndash;2</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=mPF_vAMpOmQ" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Type 1 and Type 2 Diabetes (Animation)</b><small>The Science info</small></span><span class="pill">D3.3.4</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=PKb5n8V8dro" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>What is type 2 diabetes?</b><small>Diabète Québec</small></span><span class="pill">D3.3.3&ndash;4</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=IGsQi0JZUTw" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>GCSE Biology: How We Control Our Body Temperature</b><small>Cognito &middot; a clear recap</small></span><span class="pill">D3.3.5&ndash;6</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-3/d3-3-note-taking-sheet.pdf" data-filename="D3.3 Homeostasis - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d3-3/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all six statements, from quick recall to data questions and longer answers. It has 48 marks and takes about 50 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-3/d3-3-worksheet.pdf" data-filename="D3.3 Homeostasis - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d3-3/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<section class="block" id="dataq">
+  <div class="block-head"><h2>Data-based questions</h2><div class="dl-row"><a class="dl" href="../resources/dataq/d3-3/d3-3-data-questions.pdf" data-filename="D3.3 Homeostasis - data questions.pdf">Data questions PDF</a></div></div>
+  <p class="block-intro">Questions built on realistic experimental data, in the style of Paper 1B and Paper 2. Work them on paper and show your working. 19 marks in total. Your teacher has the mark scheme.</p>
+<article class="dq-card" id="dq-ogtt"><header><h3>A glucose tolerance test</h3><span class="pill">7 marks</span></header><div class="dq-intro"><figure class="dq-photo"><img loading="lazy" src="../resources/dataq/d3-3/pancreas.jpg" alt="Pancreas tissue"><figcaption>Photo: OpenStax College, CC BY 3.0, Wikimedia Commons.</figcaption></figure><p>In an oral glucose tolerance test, a person who has not eaten overnight drinks a solution containing 75 g of glucose, and blood glucose is measured for three hours. The graph shows mean results for 20 healthy adults and 20 adults with type 2 diabetes.</p></div><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/d3-3/ogtt.svg" alt="Line graph of blood glucose. Healthy adults rise from 5.0 to 7.8 at 30 minutes and return to 5.0 by 180. Adults with type 2 diabetes rise from 7.5 to 14.0 at 60 minutes and are still 9.5 at 180."></figure><ol class="dq-parts" type="a"><li><b>State</b> the blood glucose of healthy adults 60 minutes after the drink. <span class="dq-mk">[1]</span></li><li><b>Compare</b> the results of the two groups. <span class="dq-mk">[2]</span></li><li>A value of 11.1 mmol dm<sup>&minus;3</sup> or more at 120 minutes indicates diabetes. <b>Deduce</b> whether the test identifies the diabetic group. <span class="dq-mk">[1]</span></li><li><b>Explain</b> how blood glucose returns to normal in the healthy adults. <span class="dq-mk">[3]</span></li></ol></article>
+<article class="dq-card" id="dq-marathon"><header><h3>Heat illness in marathon runners</h3><span class="pill">6 marks</span></header><div class="dq-intro"><p>Organisers of four city marathons recorded the percentage of runners treated for heat illness. Weather at the start of each race is shown.</p></div><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/d3-3/marathon.svg" alt="Bar chart of runners treated for heat illness: race A, 12 degrees and 60% humidity, 0.3%; race B, 18 degrees and 70%, 0.9%; race C, 24 degrees and 60%, 2.1%; race D, 28 degrees and 85%, 5.6%."></figure><ol class="dq-parts" type="a"><li><b>Describe</b> the relationship between air temperature and heat illness. <span class="dq-mk">[1]</span></li><li>One organiser claimed that humidity, not temperature, causes most heat illness. <b>Evaluate</b> this claim using the data. <span class="dq-mk">[2]</span></li><li><b>Explain</b> why high humidity increases the risk of overheating. <span class="dq-mk">[1]</span></li><li><b>Suggest</b> two ways runners can reduce the risk of heat illness. <span class="dq-mk">[2]</span></li></ol></article>
+<article class="dq-card" id="dq-sloth"><header><h3>Body temperature in a sloth</h3><span class="pill">6 marks</span></header><div class="dq-intro"><p>Brown-throated three-toed sloths (<i>Bradypus variegatus</i>) live in trees in Central and South America and eat leaves, which give little energy. The body temperature of sloths was measured at different air temperatures.</p></div><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/d3-3/sloth.svg" alt="Scatter graph of body temperature against air temperature. Body temperature rises from about 30.5 at 20 degrees to about 35.5 at 34 degrees."></figure><ol class="dq-parts" type="a"><li><b>Describe</b> the relationship between air temperature and body temperature. <span class="dq-mk">[1]</span></li><li><b>Calculate</b> the mean change in body temperature for each 1 &deg;C rise in air temperature between 20 and 34 &deg;C. <span class="dq-mk">[1]</span></li><li><b>Compare</b> the sloths with a human in the same conditions. <span class="dq-mk">[1]</span></li><li><b>Suggest</b> two reasons why it is an advantage for sloths not to keep a constant body temperature. <span class="dq-mk">[2]</span></li><li><b>Suggest</b> why sloths eat more on warm days. <span class="dq-mk">[1]</span></li></ol></article>
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"D3.3.1","q":"What is homeostasis?","o":["Keeping the external environment constant","Maintaining the internal environment within preset limits","Moving to a better habitat","Growing at a constant rate"],"a":1,"e":"It concerns internal conditions, despite changes in the external environment."},
+ {"s":"D3.3.1","q":"Which is a homeostatic variable in humans?","o":["Hair length","Blood pH","Height","Number of neurons"],"a":1,"e":"Others include body temperature, blood glucose and blood osmotic concentration."},
+ {"s":"D3.3.2","q":"Why is negative feedback used in homeostasis?","o":["It amplifies changes","It returns variables to the set point","It uses no energy","It only works on hormones"],"a":1,"e":"Positive feedback would move a variable further from the set point."},
+ {"s":"D3.3.3","q":"Which cells secrete insulin?","o":["Alpha cells","Beta cells","Liver cells","Red blood cells"],"a":1,"e":"Both cell types are in the islets of Langerhans. Alpha cells secrete glucagon."},
+ {"s":"D3.3.3","q":"What does insulin do?","o":["Raises blood glucose","Causes cells to take up glucose, lowering blood glucose","Breaks down glycogen","Is stored in muscle"],"a":1,"e":"Liver and muscle also store glucose as glycogen."},
+ {"s":"D3.3.3","q":"What triggers glucagon secretion?","o":["High blood glucose","Low blood glucose","A rise in temperature","A meal"],"a":1,"e":"Glucagon raises blood glucose by acting on the liver."},
+ {"s":"D3.3.4","q":"What is the change in type 1 diabetes?","o":["Target cells stop responding","Beta cells are destroyed by the immune system","Too much insulin","The liver stores too much glycogen"],"a":1,"e":"Little or no insulin is produced, so insulin must be supplied."},
+ {"s":"D3.3.4","q":"Which is a risk factor for type 2 diabetes?","o":["Regular exercise","Being overweight","Low blood pressure","A low-sugar diet"],"a":1,"e":"Others include inactivity, age and family history."},
+ {"s":"D3.3.5","q":"Where is the temperature control centre?","o":["Pancreas","Hypothalamus","Cerebellum","Skin"],"a":1,"e":"It receives information from thermoreceptors and sends signals to effectors."},
+ {"s":"D3.3.5","q":"What does thyroxin do?","o":["Lowers metabolic rate","Raises metabolic rate, generating heat","Causes sweating","Lowers blood glucose"],"a":1,"e":"It stimulates oxygen consumption by body cells."},
+ {"s":"D3.3.6","q":"What is vasoconstriction?","o":["Skin arterioles narrow, reducing blood flow to the skin","Blood vessels sink deeper","Hairs lie flat","Sweat evaporates"],"a":0,"e":"Less heat is lost from the surface. Vessels narrow, but they do not move."},
+ {"s":"D3.3.6","q":"How does uncoupled respiration warm the body?","o":["It produces extra ATP","Energy is released as heat rather than stored in ATP","It uses no oxygen","It causes shivering"],"a":1,"e":"It takes place in brown adipose tissue, which is important in newborn babies."}
+]
+</script>
+
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Evaporative cooling and body temperature</h3><div class="practical-meta"><span class="pill">Lab</span><span class="pill">40 min</span><span class="pill">D3.3.5, D3.3.6</span></div><p><b>You will need:</b> Two boiling tubes, paper towel, thermometers or probes, warm water at about 40 C</p><ol><li>Wrap one tube in wet paper towel and the other in dry paper towel</li><li>Fill both with the same volume of warm water</li><li>Record temperature every minute for 15 minutes</li><li>Relate the difference in cooling to sweating</li></ol><p class="practical-safety"><b>Safety:</b> Water no hotter than 45 C. Wipe up spills.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Global impact of science</h3><p>Isolating insulin in 1921 turned type 1 diabetes from a fatal disease into a treatable one, saving millions of lives.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>What limits should there be on how knowledge is obtained?</h3><p>The insulin work relied on experiments on dogs. Consider how the benefits of knowledge should be weighed against the way it was gained.</p></div></div></section>
     <section class="block" id="statements">
@@ -58,11 +239,12 @@
         <li class=""><span class="id">D3.3.6</span><span>How humans regulate body temperature</span><span class="pg">p. 766</span></li>
       </ul>
     </section>
-    <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-d3-3.html">AHL &middot; Equilibrium</a></li></ul></section>
+    <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-d3-3.html">AHL &middot; Body Systems</a></li></ul></section>
     
-    <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-c3-1.html"><span>Previous</span><b>C3.1 Integration of body systems</b></a><a class="next" href="sl-b3-1-plant.html"><span>Next</span><b>B3.1 Gas exchange (Plant)</b></a></nav>
+    <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-c3-1.html"><span>Previous</span><b>C3.1 Integration of body systems</b></a><a class="next" href="sl-c3-2.html"><span>Next</span><b>C3.2 Defence against disease</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

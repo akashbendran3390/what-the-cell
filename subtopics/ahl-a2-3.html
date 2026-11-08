@@ -19,8 +19,10 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
@@ -43,7 +45,122 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How do viruses manage with so few genes?</li><li>How do viruses differ from one another?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/a2-3/a2-3-slides.pdf" data-filename="A2.3 Viruses (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/a2-3/slides/" data-count="17">
+    <img id="viewer-img" src="../resources/a2-3/slides/s01.png" alt="Slide 1 of 17" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 17</label>
+      <input type="range" id="viewer-range" min="1" max="17" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "8": [["Viruses (Updated)", "Amoeba Sisters", "8FqlTslU22s"]],
+    "13": [["Influenza: Get the (Antigenic) Drift", "NIAID", "ug-M1nIhfIA"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 88&ndash;99 of the course textbook. Image credits are on slide 17.</p>
+
+  <h3 class="note-group">What a virus is</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-A">A2.3.1</span><h4>Features shared by all viruses</h4><span class="pg-ref">pp. 88&ndash;90</span></header>
+    <p>Viruses are very small, from about 20 to 400 nm, and of a fixed size, because they are assembled from parts rather than growing. Each has <b>DNA or RNA</b>, never both, inside a <b>capsid</b> of protein subunits. They have <b>no cytoplasm</b>, no ribosomes and few or no enzymes, so they can reproduce only inside a host cell, using its enzymes and ribosomes. A virus is not a cell.</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-A">A2.3.2</span><h4>Diversity of viruses</h4><span class="pg-ref">pp. 90&ndash;93</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/a2-3/slides/s06.png" alt="Slide: electron micrographs of tobacco mosaic virus, SARS-CoV-2 and HIV, with a table of enveloped and non-enveloped viruses" width="1280" height="720"></figure>
+    <p>Genomes vary: double-stranded DNA in <b>phage lambda</b>, positive-sense single-stranded RNA in <b>coronaviruses</b>, which acts directly as mRNA, and two copies of single-stranded RNA in <b>HIV</b>, a retrovirus whose <b>reverse transcriptase</b> makes DNA from it. Capsids may be helical, icosahedral or complex. Some viruses, such as HIV and coronaviruses, have an <b>envelope</b> of host membrane with viral glycoproteins, taken as they bud out of the cell. The great variety suggests viruses did not all evolve from one ancestor.</p></article>
+
+  <h3 class="note-group">Reproduction</h3>
+
+  <article class="note-card" id="n3"><header><span class="code t-A">A2.3.3</span><h4>The lytic cycle</h4><span class="pg-ref">pp. 93&ndash;95</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/a2-3/slides/s08.png" alt="Slide: the five stages of the lytic cycle of phage lambda, with an electron micrograph of phages on E. coli" width="1280" height="720"></figure>
+    <p>Phage lambda attaches to a receptor on <i>E. coli</i> and injects its DNA. The host&rsquo;s enzymes replicate the phage DNA and its ribosomes make capsid proteins, using the host&rsquo;s ATP, nucleotides and amino acids. New phages assemble, and enzymes break down the cell wall, so the cell bursts (<b>lysis</b>) and releases about a hundred phages.</p></article>
+  <article class="note-card" id="n4"><header><span class="code t-A">A2.3.4</span><h4>The lysogenic cycle</h4><span class="pg-ref">pp. 95&ndash;96</span></header>
+    <p>Instead of taking over the cell at once, lambda DNA can be inserted into the bacterial chromosome as a <b>prophage</b>. It is copied every time the bacterium divides, and the cell survives. Stress, such as UV light, can cut the prophage out, and the lytic cycle begins. Lysogeny is favoured when bacteria grow poorly, because lysis would then release few phages.</p></article>
+
+  <h3 class="note-group">Origins and evolution</h3>
+
+  <article class="note-card" id="n5"><header><span class="code t-A">A2.3.5</span><h4>Where viruses came from</h4><span class="pg-ref">pp. 96&ndash;98</span></header>
+    <p>Three hypotheses compete: <b>progressive</b> (genes that escaped from cells, such as transposons, gained a coat), <b>regressive</b> (cells that became parasites and lost most of their genes) and <b>virus first</b> (self-replicating RNA before cells). No gene is shared by all viruses, so they probably arose several times. Their shared features, such as capsids and small size, are best explained by <b>convergent evolution</b> to a parasitic life. They use the same genetic code as their hosts.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-A">A2.3.6</span><h4>Rapid evolution: influenza and HIV</h4><span class="pg-ref">pp. 98&ndash;99</span></header>
+    <p>Viruses have short generation times, huge numbers and, in RNA viruses, no proofreading, so mutations are frequent and selection by immunity or drugs is strong. In influenza, <b>antigenic drift</b> slowly changes the H and N surface antigens, so vaccines are updated each year; <b>antigenic shift</b>, the swapping of whole RNA segments between strains, can produce a new subtype and a pandemic. HIV&rsquo;s reverse transcriptase makes many errors, so many variants arise in one person; combinations of drugs are used so that resistance is unlikely.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=8FqlTslU22s" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Viruses (Updated)</b><small>Amoeba Sisters</small></span><span class="pill">A2.3.1, A2.3.3, A2.3.4</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=ug-M1nIhfIA" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Influenza: Get the (Antigenic) Drift</b><small>NIAID</small></span><span class="pill">A2.3.6</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/a2-3/a2-3-note-taking-sheet.pdf" data-filename="A2.3 Viruses (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/a2-3/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all six statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/a2-3/a2-3-worksheet.pdf" data-filename="A2.3 Viruses (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/a2-3/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"A2.3.1","q":"Which feature is shared by all viruses?","o":["A protein capsid","A cell membrane","Ribosomes","Both DNA and RNA"],"a":0,"e":"The capsid surrounds the genome."},
+ {"s":"A2.3.1","q":"Why can a virus reproduce only inside a host cell?","o":["It has no ribosomes or metabolism of its own","It has no genes","It is too large","It needs oxygen"],"a":0,"e":"It uses the host's enzymes and ribosomes."},
+ {"s":"A2.3.2","q":"What is the genetic material of HIV?","o":["Single-stranded RNA","Double-stranded DNA","Single-stranded DNA","Protein"],"a":0,"e":"Reverse transcriptase copies it into DNA."},
+ {"s":"A2.3.2","q":"Where does a viral envelope come from?","o":["The host cell membrane","The capsid","The bacterial cell wall","The nucleus"],"a":0,"e":"The virus takes membrane as it buds out."},
+ {"s":"A2.3.3","q":"What happens at the end of the lytic cycle?","o":["The host cell bursts and releases new phages","The phage DNA joins the host chromosome","The host divides","The phage leaves the cell unharmed"],"a":0,"e":"This is lysis."},
+ {"s":"A2.3.3","q":"Which part of phage lambda enters the host cell?","o":["Its DNA","Its capsid","Its tail fibres","Its whole body"],"a":0,"e":"The empty capsid stays outside."},
+ {"s":"A2.3.4","q":"What is a prophage?","o":["Phage DNA inserted into the host chromosome","An empty capsid","A young phage","A phage receptor"],"a":0,"e":"It is copied when the host divides."},
+ {"s":"A2.3.4","q":"What can switch a prophage into the lytic cycle?","o":["Stress such as UV light","Plenty of food","Cell division","Low temperature only"],"a":0,"e":"The prophage is cut out of the chromosome."},
+ {"s":"A2.3.5","q":"Why are viruses thought to have several origins?","o":["No gene is shared by all viruses","All viruses are the same size","All viruses use RNA","Viruses have no genetic code"],"a":0,"e":"Shared features probably arose by convergent evolution."},
+ {"s":"A2.3.6","q":"What is antigenic shift in influenza?","o":["Two strains swap whole RNA segments in one cell","A single base change","The loss of the capsid","Copying RNA into DNA"],"a":0,"e":"It can make a new subtype that nobody is immune to."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Modelling lytic and lysogenic cycles</h3><div class="practical-meta"><span class="pill">Model</span><span class="pill">30 min</span><span class="pill">A2.3.3, A2.3.4</span></div><p><b>You will need:</b> Counters, large sheet for tallying, dice</p><ol><li>Start with one infected cell, where each lytic round releases five new viruses</li><li>Tally the growth over five rounds</li><li>Repeat, using a dice roll to decide whether each virus enters the lysogenic stage</li><li>Compare the two graphs and explain the difference</li></ol><p class="practical-safety"><b>Safety:</b> No practical hazards.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Evidence</h3><p>In the 1890s Ivanovsky and Beijerinck found that a disease agent passed through filters that stopped bacteria, before anyone could see a virus.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>Is the boundary of life a discovery or a decision?</h3><p>Whether viruses are alive depends on how we define life. Consider what kind of question this is.</p></div></div></section>
     <section class="block" id="statements">
@@ -61,8 +178,9 @@
     
     
     <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-a2-1.html"><span>Previous</span><b>A2.1 Origins of cells</b></a><a class="next" href="ahl-a2-2.html"><span>Next</span><b>A2.2 Cell structure</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

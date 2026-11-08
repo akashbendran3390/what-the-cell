@@ -19,8 +19,10 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
@@ -43,7 +45,135 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How can a cell change which genes it expresses?</li><li>How can patterns of gene expression be passed on?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#dataq">Data questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d2-2/d2-2-slides.pdf" data-filename="D2.2 Gene expression (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/d2-2/slides/" data-count="17">
+    <img id="viewer-img" src="../resources/d2-2/slides/s01.png" alt="Slide 1 of 17" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 17</label>
+      <input type="range" id="viewer-range" min="1" max="17" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "8": [["What is epigenetics?", "TED-Ed", "_aAhcNjmvhc"]],
+    "10": [["Can Your Environment Affect Your DNA?", "SciShow", "kp1bZEUgqVI"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 670&ndash;680 of the course textbook. Image credits are on slide 17.</p>
+
+  <h3 class="note-group">Controlling expression</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-D">D2.2.1</span><h4>Gene expression</h4><span class="pg-ref">pp. 670&ndash;671</span></header>
+    <p>Gene expression is how the information in a gene affects the phenotype: the gene is <b>transcribed</b> into mRNA, the mRNA is <b>translated</b> into a polypeptide, and the protein acts, for example as an enzyme. For example, the enzyme tyrosinase is needed to make the pigment melanin.</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-D">D2.2.2</span><h4>Transcription factors</h4><span class="pg-ref">pp. 671&ndash;672</span></header>
+    <p><b>Transcription factors</b> are proteins that bind specific base sequences. General factors and RNA polymerase bind the <b>promoter</b>, just before the gene. Activators bind <b>enhancers</b>, which may be thousands of bases away; the DNA loops so they meet the promoter proteins and raise the rate of transcription. Repressors bind silencers and lower it.</p></article>
+  <article class="note-card" id="n3"><header><span class="code t-D">D2.2.3</span><h4>mRNA breakdown</h4><span class="pg-ref">p. 672</span></header>
+    <p>Each mRNA has a poly-A tail that is shortened over time; when it is short enough, nucleases break the mRNA down. In human cells mRNA lasts from minutes to days. Controlling how long it lasts controls how much protein is made from it.</p></article>
+
+  <h3 class="note-group">Epigenetics</h3>
+
+  <article class="note-card" id="n4"><header><span class="code t-D">D2.2.4</span><h4>Epigenesis</h4><span class="pg-ref">pp. 672&ndash;673</span></header>
+    <p><b>Epigenesis</b> is the development of patterns of differentiation in a multicellular organism. Cells switch different genes on and off, so the <b>phenotype</b> of each cell changes while the base sequence, the <b>genotype</b>, stays the same.</p></article>
+  <article class="note-card" id="n5"><header><span class="code t-D">D2.2.5</span><h4>Genome, transcriptome, proteome</h4><span class="pg-ref">pp. 673&ndash;674</span></header>
+    <p>The <b>genome</b> is all the genetic information, the same in every cell. The <b>transcriptome</b> is the mRNA a cell makes at a given time, and the <b>proteome</b> is the proteins it makes; both differ between cells and change over time. No cell expresses all its genes, and the pattern decides how it differentiates.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-D">D2.2.6</span><h4>Methylation as an epigenetic tag</h4><span class="pg-ref">pp. 674&ndash;675</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/d2-2/slides/s08.png" alt="Slide: a nucleosome beside a table comparing DNA methylation and histone methylation" width="1280" height="720"></figure>
+    <p>Methyl groups added to <b>cytosine</b> in a promoter repress transcription of the gene. Methyl groups on amino acids in <b>histone</b> tails can repress or activate transcription by changing how tightly DNA is packed and which proteins bind.</p></article>
+  <article class="note-card" id="n7"><header><span class="code t-D">D2.2.7</span><h4>Epigenetic inheritance</h4><span class="pg-ref">pp. 675&ndash;676</span></header>
+    <p>Methylation patterns are copied when DNA replicates, so daughter cells keep the same pattern of expression. If tags survive meiosis, changes in phenotype can pass to offspring without any change to the base sequence.</p></article>
+  <article class="note-card" id="n8"><header><span class="code t-D">D2.2.8</span><h4>Environmental effects</h4><span class="pg-ref">pp. 676&ndash;677</span></header>
+    <p>Air pollution (particulate matter, ozone, nitrogen oxides) is linked to changes in DNA methylation, for example in genes for immune responses, and to asthma. In agouti mice, a mother&rsquo;s diet changes methylation and the coat colour and weight of her offspring. Much human evidence is correlational.</p></article>
+  <article class="note-card" id="n9"><header><span class="code t-D">D2.2.9</span><h4>Resetting tags in gametes</h4><span class="pg-ref">pp. 677&ndash;679</span></header>
+    <p>Most tags are removed in eggs and sperm and in the early embryo, so the zygote can form every cell type. Some survive: in <b>imprinted</b> genes one parent&rsquo;s copy is silenced. Ligers (lion father, tiger mother) grow very large, probably because growth-promoting imprints from the lion are not balanced by growth-limiting imprints from the tiger; tigons do not.</p></article>
+  <article class="note-card" id="n10"><header><span class="code t-D">D2.2.10</span><h4>Twin studies</h4><span class="pg-ref">pp. 679&ndash;680</span></header>
+    <p>Monozygotic twins have identical genomes, so differences between them come from the environment. Their methylation patterns are similar when young and differ more with age, especially if they live apart.</p></article>
+  <article class="note-card" id="n11"><header><span class="code t-D">D2.2.11</span><h4>External signals</h4><span class="pg-ref">p. 680</span></header>
+    <p>In <i>E. coli</i>, <b>lactose</b> binds a repressor so that it leaves the DNA, and the genes for lactose uptake and breakdown are transcribed only when lactose is present. A steroid hormone such as <b>oestradiol</b> enters target cells, binds a receptor, and the complex acts as a transcription factor.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=_aAhcNjmvhc" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>What is epigenetics?</b><small>TED-Ed</small></span><span class="pill">D2.2.4, D2.2.6, D2.2.7</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=kp1bZEUgqVI" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Can Your Environment Affect Your DNA?</b><small>SciShow</small></span><span class="pill">D2.2.8, D2.2.10</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d2-2/d2-2-note-taking-sheet.pdf" data-filename="D2.2 Gene expression (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d2-2/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all eleven statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d2-2/d2-2-worksheet.pdf" data-filename="D2.2 Gene expression (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d2-2/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<section class="block" id="dataq">
+  <div class="block-head"><h2>Data-based questions</h2><div class="dl-row"><a class="dl" href="../resources/dataq/d2-2/d2-2-data-questions.pdf" data-filename="D2.2 Gene expression (HL) - data questions.pdf">Data questions PDF</a></div></div>
+  <p class="block-intro">Questions built on realistic experimental data, in the style of Paper 1B and Paper 2. Work them on paper and show your working. 19 marks in total. Your teacher has the mark scheme.</p>
+<article class="dq-card" id="dq-antisense"><header><h3>Antisense RNA and fruit softening</h3><span class="pill">7 marks</span></header><div class="dq-intro"><p>The enzyme polygalacturonase (PG) breaks down pectin in cell walls as tomatoes ripen, making them soft. Tomato plants were genetically modified to produce antisense RNA, which is complementary to the mRNA for PG. PG activity and fruit firmness were measured as fruit ripened.</p></div><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/d2-2/pg.svg" alt="Line graph of PG activity: normal fruit rises from 2 to 100% by day 6, then 90% by day 10; antisense fruit stays below 6%."></figure><ol class="dq-parts" type="a"><li><b>State</b> the PG activity of antisense fruit at day 6, as a percentage of normal fruit at day 6. <span class="dq-mk">[1]</span></li><li><b>Explain</b> how antisense RNA reduces the production of PG. <span class="dq-mk">[2]</span></li><li><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/d2-2/firm.svg" alt="Line graph of fruit firmness: normal fruit falls from 30 to 6 newtons by day 10; antisense fruit falls only to 21."></figure><b>Compare</b> the firmness of normal and antisense fruit. <span class="dq-mk">[2]</span></li><li><b>Suggest</b> why the antisense fruit still softens a little. <span class="dq-mk">[1]</span></li><li><b>Suggest</b> one advantage of these tomatoes for growers or shops. <span class="dq-mk">[1]</span></li></ol></article>
+<article class="dq-card" id="dq-npy"><header><h3>A brain chemical and alcohol</h3><span class="pill">6 marks</span></header><div class="dq-intro"><p>Neuropeptide Y (NPY) is made by neurons in the brain. Three groups of mice were compared: knockout mice with the NPY gene removed, normal mice, and mice genetically modified to make extra NPY. Each mouse could choose between water and an alcohol solution. Sensitivity to alcohol was measured as how long mice slept after a fixed dose.</p></div><div class="dq-table table-wrap"><table><tr><th>Mice</th><th>NPY in brain / % of normal</th><th>Alcohol drunk / g kg<sup>&minus;1</sup> day<sup>&minus;1</sup></th><th>Sleep time after a dose / min</th></tr><tr><th>Knockout</th><td>0</td><td>12.5</td><td>18</td></tr><tr><th>Normal</th><td>100</td><td>7.1</td><td>31</td></tr><tr><th>Extra NPY</th><td>250</td><td>3.9</td><td>47</td></tr></table></div><ol class="dq-parts" type="a"><li><b>Identify</b> the relationship between NPY level and alcohol drunk. <span class="dq-mk">[1]</span></li><li><b>Calculate</b> the percentage difference in alcohol drunk by knockout mice compared with normal mice. <span class="dq-mk">[1]</span></li><li><b>Outline</b> the relationship between sensitivity to alcohol and the amount drunk. <span class="dq-mk">[2]</span></li><li><b>Evaluate</b> the hypothesis that low levels of NPY cause a preference for alcohol. <span class="dq-mk">[2]</span></li></ol></article>
+<article class="dq-card" id="dq-defence"><header><h3>Plant defence genes</h3><span class="pill">6 marks</span></header><div class="dq-intro"><p>Tomato leaves were attacked by caterpillars (which chew leaves) or aphids (which suck sap), or sprayed with one of two plant signalling chemicals, jasmonic acid or salicylic acid. After 24 hours, mRNA was extracted, converted to DNA by reverse transcription and copied by PCR to measure the expression of two defence genes. Expression is shown relative to untreated leaves (1.0).</p></div><figure class="dq-graph"><img loading="lazy" src="../resources/dataq/d2-2/defence.svg" alt="Bar chart of expression of genes PIN2 and PR1. Caterpillars: PIN2 12, PR1 2. Aphids: PIN2 3, PR1 9. Jasmonic acid: PIN2 14, PR1 1.5. Salicylic acid: PIN2 1.2, PR1 11."></figure><ol class="dq-parts" type="a"><li><b>Identify</b> the treatment that increases PIN2 expression most. <span class="dq-mk">[1]</span></li><li><b>Compare</b> the effects of caterpillars and aphids on the two genes. <span class="dq-mk">[2]</span></li><li><b>Deduce</b> which signalling chemical each herbivore causes the plant to produce. Give reasons. <span class="dq-mk">[2]</span></li><li><b>Explain</b> why the mRNA had to be converted to DNA before PCR. <span class="dq-mk">[1]</span></li></ol></article>
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"D2.2.2","q":"Where do activator proteins bind?","o":["Enhancers","Ribosomes","Introns","tRNA"],"a":0,"e":"They raise the rate of transcription."},
+ {"s":"D2.2.3","q":"What triggers breakdown of mRNA?","o":["Shortening of its poly-A tail","Methylation of cytosine","Binding of RNA polymerase","Translation stopping"],"a":0,"e":"Nucleases then break it down."},
+ {"s":"D2.2.4","q":"What do epigenetic changes alter?","o":["Gene expression, not the base sequence","The base sequence","The number of chromosomes","The genetic code"],"a":0,"e":"Phenotype changes, genotype does not."},
+ {"s":"D2.2.5","q":"Which is the same in every cell of a person?","o":["The genome","The transcriptome","The proteome","The mRNA"],"a":0,"e":"The others vary between cells."},
+ {"s":"D2.2.6","q":"What is the usual effect of methylating a promoter?","o":["The gene is repressed","The gene is copied more","The gene mutates","The gene is deleted"],"a":0,"e":"Cytosine is the base methylated."},
+ {"s":"D2.2.7","q":"How are methylation patterns passed to daughter cells?","o":["They are copied when DNA replicates","They are added by ribosomes","They are inherited in mRNA","They are not passed on"],"a":0,"e":"So cells keep their identity."},
+ {"s":"D2.2.9","q":"Which cross produces a liger?","o":["Male lion and female tiger","Male tiger and female lion","Two lions","Two tigers"],"a":0,"e":"Imprinting is thought to explain its size."},
+ {"s":"D2.2.10","q":"Why are monozygotic twins useful in epigenetic studies?","o":["They have identical genomes","They always live apart","They have no methylation","They have different DNA"],"a":0,"e":"Differences come from the environment."},
+ {"s":"D2.2.11","q":"What does lactose do in E. coli?","o":["Removes the repressor so lactose genes are transcribed","Methylates DNA","Acts as a ribosome","Blocks RNA polymerase"],"a":0,"e":"The genes are expressed only when needed."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Light and gene expression in seedlings</h3><div class="practical-meta"><span class="pill">Lab</span><span class="pill">20 min, then 7 days</span><span class="pill">D2.2.8</span></div><p><b>You will need:</b> Fast-growing seeds such as cress or bean, compost, a dark box, ruler</p><ol><li>Sow identical batches and keep one in the light and one in the dark</li><li>Water them equally for a week</li><li>Compare height, leaf size and colour</li><li>Explain how the same genes can give different phenotypes</li></ol><p class="practical-safety"><b>Safety:</b> Wash hands after using compost. Check seeds have not been treated with chemicals.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Evidence</h3><p>Studies of people conceived during the Dutch Hunger Winter of 1944-45 linked famine to health effects decades later, with evidence of lasting epigenetic marks.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>What can natural experiments tell us?</h3><p>Researchers cannot ethically create a famine. Consider the strengths and limits of evidence from events that were never designed as experiments.</p></div></div></section>
     <section class="block" id="statements">
@@ -65,9 +195,10 @@
     </section>
     
     
-    <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-d1-2.html"><span>Previous</span><b>D1.2 Protein synthesis</b></a><a class="next" href="ahl-d1-3.html"><span>Next</span><b>D1.3 Mutation and gene editing</b></a></nav>
+    <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-c1-3.html"><span>Previous</span><b>C1.3 Photosynthesis</b></a><a class="next" href="ahl-d1-1.html"><span>Next</span><b>D1.1 DNA replication</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

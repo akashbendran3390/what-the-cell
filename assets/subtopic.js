@@ -6,9 +6,9 @@ function saveState(key, value) { try { localStorage.setItem(key, JSON.stringify(
 function initViewer() {
   const v = document.getElementById('viewer');
   if (!v) return;
-  const count = +v.dataset.count, img = document.getElementById('viewer-img'), range = document.getElementById('viewer-range'), num = document.getElementById('viewer-num');
+  let count = +v.dataset.count; const img = document.getElementById('viewer-img'), range = document.getElementById('viewer-range'), num = document.getElementById('viewer-num');
   const prev = document.getElementById('viewer-prev'), next = document.getElementById('viewer-next');
-  const src = n => v.dataset.base + 's' + String(n).padStart(2, '0') + '.png';
+  const src = n => v.dataset.base + 's' + String(n).padStart(2, '0') + '.' + (v.dataset.ext || 'png');
   const videoBox = document.getElementById('viewer-videos'), videoData = document.getElementById('slide-videos');
   const videos = videoData ? JSON.parse(videoData.textContent) : {};
   function showVideos(n) {
@@ -34,11 +34,79 @@ function initViewer() {
     prev.disabled = at === 1; next.disabled = at === count;
     showVideos(at);
     if (at < count) new Image().src = src(at + 1);
+    if (presenting()) { if (videos[at]) wake(); else if (!v.contains(document.activeElement) || document.activeElement === v) sleep(); }
   }
+  // Full screen presenting. If the browser refuses full screen, as an embedded preview can, the slide still fills the window.
+  const controls = document.createElement('div'); controls.className = 'viewer-controls';
+  v.querySelector('.viewer-bar').before(controls);
+  controls.append(v.querySelector('.viewer-bar'));
+  if (videoBox) controls.append(videoBox);
+  const full = document.createElement('button'); full.type = 'button'; full.id = 'viewer-full'; full.textContent = 'Full screen';
+  next.after(full);
+  const presenting = () => v.classList.contains('presenting');
+  const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
+  let idleTimer;
+  function sleep() { clearTimeout(idleTimer); if (!v.querySelector('.yt-player')) v.classList.add('idle'); }
+  function wake() { v.classList.remove('idle'); clearTimeout(idleTimer); idleTimer = setTimeout(sleep, 3000); }
+  function setPresenting(on) {
+    v.classList.toggle('presenting', on);
+    document.documentElement.classList.toggle('presenting-on', on);
+    full.textContent = on ? 'Exit full screen' : 'Full screen';
+    if (on) { v.tabIndex = -1; v.focus({ preventScroll: true }); wake(); }
+    else { clearTimeout(idleTimer); v.classList.remove('idle'); }
+  }
+  async function enter() {
+    setPresenting(true);
+    const request = v.requestFullscreen || v.webkitRequestFullscreen;
+    if (request) { try { await request.call(v); } catch (e) {} }
+  }
+  function leave() {
+    if (fsElement()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    setPresenting(false);
+  }
+  const fsChange = () => { if (!fsElement() && presenting()) setPresenting(false); };
+  document.addEventListener('fullscreenchange', fsChange);
+  document.addEventListener('webkitfullscreenchange', fsChange);
+  full.addEventListener('click', () => presenting() ? leave() : enter());
+  img.addEventListener('click', e => {
+    if (!presenting()) return;
+    const box = img.getBoundingClientRect();
+    show(e.clientX - box.left < box.width / 3 ? at - 1 : at + 1);
+  });
+  v.addEventListener('mousemove', () => { if (presenting()) wake(); });
+  v.addEventListener('focusin', e => { if (presenting() && e.target !== v) wake(); });
+  v.addEventListener('pointerdown', e => { if (presenting() && e.pointerType === 'touch') wake(); });
   prev.addEventListener('click', () => show(at - 1));
   next.addEventListener('click', () => show(at + 1));
   range.addEventListener('input', () => show(+range.value));
-  v.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') show(at - 1); if (e.key === 'ArrowRight') show(at + 1); });
+  v.addEventListener('keydown', e => {
+    if (presenting()) return;
+    if (e.key === 'ArrowLeft') show(at - 1);
+    if (e.key === 'ArrowRight') show(at + 1);
+    if (e.key === 'f' || e.key === 'F') enter();
+  });
+  // Clickers send Page Up and Page Down, so those move slides too.
+  document.addEventListener('keydown', e => {
+    if (!presenting() || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === ' ' && e.target.closest('a,button')) return;
+    const step = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, ' ': 1, ArrowLeft: -1, ArrowUp: -1, PageUp: -1, Backspace: -1 }[e.key];
+    if (step) show(at + step);
+    else if (e.key === 'Home') show(1);
+    else if (e.key === 'End') show(count);
+    else if (e.key === 'Escape' || e.key === 'f' || e.key === 'F') leave();
+    else return;
+    e.preventDefault();
+  });
+  // Pages with several decks, such as Skills, switch the one viewer between them with tabs.
+  const tabs = [...document.querySelectorAll('.deck-tab')];
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(o => o.setAttribute('aria-selected', o === t));
+    v.dataset.base = t.dataset.base; v.dataset.ext = t.dataset.ext || 'png'; count = +t.dataset.count; range.max = count;
+    const total = document.getElementById('viewer-total'); if (total) total.textContent = count;
+    const pdf = document.getElementById('deck-pdf');
+    if (pdf) { pdf.href = t.dataset.pdf; pdf.dataset.filename = t.dataset.filename; pdf.download = t.dataset.filename; }
+    show(1);
+  }));
   show(1);
 }
 
@@ -89,6 +157,49 @@ function initYouTube() {
   });
 }
 
+// Folds each note card to one row. Without this script every note simply stays open.
+function initNotes() {
+  const cards = [...document.querySelectorAll('#notes .note-card')];
+  if (!cards.length) return;
+  const canFind = 'onbeforematch' in document.body;
+  const all = document.createElement('button'); all.type = 'button'; all.className = 'notes-all';
+  const isOpen = card => !card.classList.contains('closed');
+  const syncAll = () => { all.textContent = cards.every(isOpen) ? 'Close all notes' : 'Open all notes'; };
+  function setOpen(card, open) {
+    const body = card.querySelector('.note-body');
+    card.classList.toggle('closed', !open);
+    card.querySelector('.note-toggle').setAttribute('aria-expanded', open);
+    if (open) body.removeAttribute('hidden');
+    else body.setAttribute('hidden', canFind ? 'until-found' : ''); // until-found lets the browser's page search open a note.
+    syncAll();
+  }
+  cards.forEach(card => {
+    const header = card.querySelector('header'), h4 = header.querySelector('h4');
+    const body = document.createElement('div'); body.className = 'note-body'; body.id = card.id + '-body';
+    while (header.nextSibling) body.append(header.nextSibling);
+    card.append(body);
+    const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'note-toggle';
+    toggle.setAttribute('aria-controls', body.id);
+    toggle.append(...h4.childNodes); h4.append(toggle);
+    header.addEventListener('click', () => setOpen(card, !isOpen(card)));
+    body.addEventListener('beforematch', () => setOpen(card, true));
+    setOpen(card, false);
+  });
+  all.addEventListener('click', () => { const open = !cards.every(isOpen); cards.forEach(c => setOpen(c, open)); });
+  document.querySelector('#notes .note-group, #notes .note-card').before(all);
+  function openFromHash() {
+    const target = location.hash.length > 1 && document.getElementById(location.hash.slice(1));
+    const card = target && target.closest('.note-card');
+    if (card && cards.includes(card)) { setOpen(card, true); target.scrollIntoView(); }
+  }
+  addEventListener('hashchange', openFromHash);
+  openFromHash();
+  // Printing always shows every note, then puts the page back as it was.
+  let beforePrint = null;
+  addEventListener('beforeprint', () => { beforePrint = cards.filter(isOpen); cards.forEach(c => setOpen(c, true)); });
+  addEventListener('afterprint', () => { if (beforePrint) cards.forEach(c => setOpen(c, beforePrint.includes(c))); beforePrint = null; });
+}
+
 function initQuiz() {
   const box = document.getElementById('quiz'), data = document.getElementById('quiz-data');
   if (!box || !data) return;
@@ -96,6 +207,17 @@ function initQuiz() {
   const answered = new Map();
   const update = () => { const right = [...answered.values()].filter(Boolean).length; score.textContent = right + ' correct out of ' + answered.size + ' answered, ' + items.length + ' questions'; };
   box.textContent = '';
+  // Houses the questions in one dropdown. Start again runs this function again, so it wraps only once.
+  if (!box.closest('details')) {
+    const drop = document.createElement('details'); drop.className = 'quiz-drop';
+    const label = document.createElement('summary');
+    const name = () => { label.textContent = (drop.open ? 'Hide the ' : 'Show the ') + items.length + ' questions'; };
+    drop.addEventListener('toggle', name); name();
+    box.before(drop); drop.append(label, box);
+    const openDrop = () => { drop.open = true; };
+    document.querySelectorAll('a[href="#selfcheck"]').forEach(a => a.addEventListener('click', openDrop));
+    if (location.hash === '#selfcheck') openDrop();
+  }
   items.forEach((it, i) => {
     const fs = document.createElement('fieldset'); fs.className = 'q';
     const lg = document.createElement('legend');
@@ -139,4 +261,4 @@ function initChecklist() {
   update();
 }
 
-initViewer(); initDownloads(); initYouTube(); initQuiz(); initChecklist();
+initViewer(); initNotes(); initDownloads(); initYouTube(); initQuiz(); initChecklist();

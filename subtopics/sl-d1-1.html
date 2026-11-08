@@ -19,15 +19,17 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../course-map.html#sl">SL path</a><span aria-hidden="true">/</span>
-      <a href="../course-map.html#sl-6">Unit 7&nbsp;Metabolism</a>
+      <a href="../course-map.html#sl-2">Unit 3&nbsp;Genetics</a>
     </nav>
     <div class="sub-title">
       <span class="code">D1.1</span>
@@ -43,7 +45,161 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How do cells make new DNA?</li><li>What biotechnology has understanding DNA replication made possible?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d1-1/d1-1-slides.pdf" data-filename="D1.1 DNA replication - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/d1-1/slides/" data-count="19">
+    <img id="viewer-img" src="../resources/d1-1/slides/s01.png" alt="Slide 1 of 19" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 19</label>
+      <input type="range" id="viewer-range" min="1" max="19" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "7": [["DNA replication - 3D", "yourgenome", "TNKWgcFPHqw"]],
+    "9": [["PCR (Polymerase Chain Reaction)", "Amoeba Sisters", "a5jmdh9AnS4"]],
+    "11": [["Gel Electrophoresis", "Amoeba Sisters", "ZDZUAleWX78"]],
+    "14": [["DNA Fingerprinting", "FuseSchool", "7onjVBsQwQ8"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the course textbook and class slides, with page references for each statement. The chapter is on pages 602&ndash;610 of the course textbook. Image credits are on slide 19.</p>
+
+  <h3 class="note-group">Copying DNA</h3>
+
+  <article class="note-card" id="n1">
+    <header><span class="code t-D">D1.1.1</span><h4>Replication makes exact copies of DNA</h4><span class="pg-ref">p. 602</span></header>
+    <p>Replication produces copies with identical base sequences. It happens in the S phase, before a cell divides. It is needed for <b>reproduction</b>, so that offspring inherit base sequences, and for <b>growth</b> and <b>tissue replacement</b> in multicellular organisms, so that every new cell has a full set of genes.</p>
+    <p class="tip warn"><b>Watch out:</b> replication and cell division are separate events. DNA is copied first, and the cell divides later.</p>
+  </article>
+
+  <article class="note-card" id="n2">
+    <header><span class="code t-D">D1.1.2</span><h4>Semi-conservative replication and base pairing</h4><span class="pg-ref">pp. 602&ndash;604</span></header>
+    <div class="note-split">
+      <div><p>The two strands separate and each acts as a <b>template</b>. Each new molecule has <b>one old strand and one new strand</b>, so replication is <b>semi-conservative</b>.</p><p>Adenine pairs only with thymine, and cytosine only with guanine. Hydrogen bonds form only between complementary bases, so the template decides which nucleotide joins next. This is why copying is so accurate.</p></div>
+      <figure><img loading="lazy" src="../resources/d1-1/slides/s06.png" alt="Slide: a template strand and its complementary new strand" width="1280" height="720"></figure>
+    </div>
+  </article>
+
+  <article class="note-card" id="n3">
+    <header><span class="code t-D">D1.1.3</span><h4>Helicase and DNA polymerase</h4><span class="pg-ref">p. 604</span></header>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Enzyme</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><th>Helicase</th><td>Unwinds the double helix and separates the strands, by breaking hydrogen bonds between bases</td></tr>
+        <tr><th>DNA polymerase</th><td>Links free nucleotides into a new strand, using the old strand as a template, by forming covalent bonds</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <h3 class="note-group">Tools for working with DNA</h3>
+
+  <article class="note-card" id="n4">
+    <header><span class="code t-D">D1.1.4</span><h4>PCR and gel electrophoresis</h4><span class="pg-ref">pp. 605&ndash;608</span></header>
+    <p>The <b>polymerase chain reaction</b> copies a chosen section of DNA. Each cycle doubles the DNA, so 30 cycles give over a billion copies.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Step</th><th>Temperature</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><th>Denaturation</th><td>About 95&deg;C</td><td>Strands separate</td></tr>
+        <tr><th>Annealing</th><td>About 40&deg;C</td><td>Primers, which are short single strands of DNA, attach to mark the section</td></tr>
+        <tr><th>Elongation</th><td>About 72&deg;C</td><td>Taq polymerase builds new strands from the primers</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Taq polymerase</b> comes from a bacterium living in hot springs, so it is not denatured at 95&deg;C.</p>
+    <p>In <b>gel electrophoresis</b>, DNA is placed in wells and an electric current is applied. Negatively charged phosphate groups make DNA move towards the positive electrode. The gel acts as a sieve, so short fragments travel furthest. A DNA ladder of known lengths allows comparison.</p>
+    <p class="tip warn"><b>Watch out:</b> charge makes DNA move, but length is what separates the fragments.</p>
+  </article>
+
+  <article class="note-card" id="n5">
+    <header><span class="code t-D">D1.1.5</span><h4>What these tools are used for</h4><span class="pg-ref">pp. 608&ndash;610</span></header>
+    <p>Some non-coding regions contain <b>short tandem repeats</b>. The number of repeats varies between people, so fragment lengths vary too. Many loci are compared, as a match at all of them is very unlikely by chance.</p>
+    <ul>
+      <li><b>Forensics:</b> all bands from the crime scene sample must match the suspect. This is strong evidence that the DNA is theirs, but not in itself proof of guilt.</li>
+      <li><b>Paternity:</b> every band in a child comes from the mother or the father. Bands not found in the mother must be in the father.</li>
+      <li><b>Other uses:</b> diagnosing infections, and copying genes for research.</li>
+    </ul>
+  </article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=TNKWgcFPHqw" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>DNA replication - 3D</b><small>yourgenome &middot; start here</small></span><span class="pill">D1.1.2&ndash;3</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=a5jmdh9AnS4" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>PCR (Polymerase Chain Reaction)</b><small>Amoeba Sisters</small></span><span class="pill">D1.1.4</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=ZDZUAleWX78" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Gel Electrophoresis</b><small>Amoeba Sisters</small></span><span class="pill">D1.1.4</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=7onjVBsQwQ8" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>DNA Fingerprinting</b><small>FuseSchool</small></span><span class="pill">D1.1.5</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d1-1/d1-1-note-taking-sheet.pdf" data-filename="D1.1 DNA replication - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d1-1/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all five statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d1-1/d1-1-worksheet.pdf" data-filename="D1.1 DNA replication - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d1-1/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"D1.1.1","q":"Which is a reason for DNA replication?","o":["Making proteins","Growth by adding new cells","Digesting food","Moving ions"],"a":1,"e":"Reproduction and tissue replacement also need replication."},
+ {"s":"D1.1.2","q":"What does semi-conservative mean?","o":["Half the bases are changed","Each new molecule has one old strand and one new strand","Half the DNA is lost","One molecule is entirely new"],"a":1,"e":"Each original strand acts as a template."},
+ {"s":"D1.1.2","q":"A template strand reads G A T. What is the new strand?","o":["G A T","C T A","C U A","T A G"],"a":1,"e":"G pairs with C, A with T and T with A."},
+ {"s":"D1.1.2","q":"Why is copying so accurate?","o":["Hydrogen bonds form only between complementary bases","DNA is very long","Helicase checks each base","The sugar determines the sequence"],"a":0,"e":"The template decides which nucleotide fits next."},
+ {"s":"D1.1.3","q":"What does helicase do?","o":["Links nucleotides","Separates strands by breaking hydrogen bonds","Makes primers","Cuts DNA into fragments"],"a":1,"e":"It also unwinds the helix."},
+ {"s":"D1.1.3","q":"What does DNA polymerase do?","o":["Breaks hydrogen bonds","Links nucleotides into a new strand","Unwinds the helix","Moves DNA through a gel"],"a":1,"e":"It forms covalent bonds between neighbouring nucleotides."},
+ {"s":"D1.1.4","q":"What happens at about 95 degrees C in PCR?","o":["Primers attach","Strands separate","Taq builds strands","DNA is cut"],"a":1,"e":"This step is called denaturation."},
+ {"s":"D1.1.4","q":"Why is Taq polymerase used in PCR?","o":["It is cheap to grow","It is not denatured at high temperatures","It makes no errors","It needs no nucleotides"],"a":1,"e":"It comes from a bacterium that lives in hot springs."},
+ {"s":"D1.1.4","q":"How many copies does one molecule give after three PCR cycles?","o":["3","6","8","9"],"a":2,"e":"Each cycle doubles the DNA: 2, then 4, then 8."},
+ {"s":"D1.1.4","q":"Which fragments travel furthest in a gel?","o":["The longest","The shortest","Those with most adenine","All travel equally"],"a":1,"e":"The gel acts as a sieve, and short fragments pass through most easily."},
+ {"s":"D1.1.5","q":"Why do short tandem repeats differ between people?","o":["The number of repeats varies","They code for different proteins","They are found only in some people","The bases are always different"],"a":0,"e":"So fragment lengths differ between people."},
+ {"s":"D1.1.5","q":"In a paternity test, a child has a band that the mother lacks. What follows?","o":["The child is not hers","The band must be in the father","The test has failed","The band can be ignored"],"a":1,"e":"Every band in the child comes from one of the two parents."}
+]
+</script>
+
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Modelling semi-conservative replication</h3><div class="practical-meta"><span class="pill">Model</span><span class="pill">30 min</span><span class="pill">D1.1.1, D1.1.2, D1.1.3</span></div><p><b>You will need:</b> Paper strips or sets of coloured beads for bases, two colours of backbone</p><ol><li>Build a short double strand in one colour</li><li>Separate the strands, acting as helicase</li><li>Add new complementary bases in the second colour, acting as DNA polymerase</li><li>Explain why each new molecule keeps one original strand</li></ol><p class="practical-safety"><b>Safety:</b> No practical hazards.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Experiments</h3><p>Meselson and Stahl used heavy nitrogen in 1958 to separate three models of replication, supporting the semi-conservative one.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>What makes an experiment elegant?</h3><p>The design made each hypothesis predict a different result. Consider whether a simple, decisive design is a kind of beauty, and whether beauty matters.</p></div></div></section>
     <section class="block" id="statements">
@@ -57,11 +213,12 @@
         <li class=""><span class="id">D1.1.5</span><span>What PCR and gel electrophoresis are used for</span><span class="pg">p. 608</span></li>
       </ul>
     </section>
-    <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-d1-1.html">AHL &middot; Metabolism</a></li></ul></section>
+    <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-d1-1.html">AHL &middot; Genetics</a></li></ul></section>
     
-    <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-c1-3.html"><span>Previous</span><b>C1.3 Photosynthesis</b></a><a class="next" href="sl-d1-2.html"><span>Next</span><b>D1.2 Protein synthesis</b></a></nav>
+    <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-d3-1-plant.html"><span>Previous</span><b>D3.1 Reproduction (Plant)</b></a><a class="next" href="sl-d1-2.html"><span>Next</span><b>D1.2 Protein synthesis</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

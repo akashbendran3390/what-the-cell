@@ -19,8 +19,10 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
@@ -43,7 +45,127 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>What is a believable explanation for how life began?</li><li>What stages might have linked non-living matter to the first cells?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/a2-1/a2-1-slides.pdf" data-filename="A2.1 Origins of cells (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/a2-1/slides/" data-count="18">
+    <img id="viewer-img" src="../resources/a2-1/slides/s01.png" alt="Slide 1 of 18" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 18</label>
+      <input type="range" id="viewer-range" min="1" max="18" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "13": [["The mysterious origins of life on Earth", "TED-Ed", "de1hiS_XjWg"]],
+    "7": [["Spontaneous Generation", "Microbiology Mantra", "AndOnmx9cuM"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 34&ndash;47 of the course textbook. Image credits are on slide 18.</p>
+
+  <h3 class="note-group">Before life</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-A">A2.1.1</span><h4>Conditions on the early Earth</h4><span class="pg-ref">pp. 34&ndash;36</span></header>
+    <p>The early atmosphere had almost no free <b>oxygen</b>, so there was no <b>ozone</b> layer and strong ultraviolet light reached the surface. <b>Carbon dioxide</b> and <b>methane</b> were much more concentrated, so the greenhouse effect made the Earth hotter. With energy from lightning, UV and volcanoes, carbon compounds such as amino acids could form by chemical reactions that no longer happen, because oxygen and living things now break them down.</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-A">A2.1.2</span><h4>Cells: the smallest self-sustaining units</h4><span class="pg-ref">p. 36</span></header>
+    <p>A cell has a membrane, genetic material and its own metabolism, so it can sustain itself. Its separate parts cannot. <b>Viruses</b> are usually classed as non-living: they are not cells, have no metabolism or ribosomes of their own, and can reproduce only inside a host cell, although they do have genes and evolve.</p></article>
+
+  <h3 class="note-group">From chemicals to cells</h3>
+
+  <article class="note-card" id="n3"><header><span class="code t-A">A2.1.3</span><h4>Why the first cells are hard to explain</h4><span class="pg-ref">pp. 36&ndash;38</span></header>
+    <p>Pasteur&rsquo;s swan-necked flasks showed that cells come only from existing cells. Yet the first cells must have formed from non-living matter. That needed <b>catalysis</b>, <b>self-replication</b> of molecules, <b>self-assembly</b> and <b>compartmentalization</b>. Competing hypotheses put protocells, genes or metabolism first; none is proven, because early conditions cannot be recreated and the first cells left no fossils.</p></article>
+  <article class="note-card" id="n4"><header><span class="code t-A">A2.1.4</span><h4>The Miller&ndash;Urey experiment</h4><span class="pg-ref">pp. 38&ndash;40</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/a2-1/slides/s09.png" alt="Slide: the Miller-Urey apparatus as a loop of boxes and arrows" width="1280" height="720"></figure>
+    <p>In 1953, sparks passed through methane, ammonia, hydrogen and water vapour produced amino acids within a week. <b>Strengths:</b> a controlled, repeatable system showing organic molecules can form without life. <b>Limitations:</b> the early atmosphere probably had more carbon dioxide and less methane; UV may have mattered more than sparks; monomers are still far from a cell.</p></article>
+  <article class="note-card" id="n5"><header><span class="code t-A">A2.1.5</span><h4>Vesicles form spontaneously</h4><span class="pg-ref">pp. 40&ndash;41</span></header>
+    <p>Fatty acids are <b>amphipathic</b>. In water they form bilayers that close into spherical <b>vesicles</b>, with no enzymes needed. A membrane-bound compartment lets the chemistry inside become different from the outside.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-A">A2.1.6</span><h4>The RNA world</h4><span class="pg-ref">pp. 41&ndash;43</span></header>
+    <p>Today DNA needs enzymes to be copied, and enzymes need DNA. RNA could have done both jobs: it stores information, can be replicated by base pairing, and can fold into catalytic <b>ribozymes</b>. In ribosomes, rRNA still catalyses peptide bond formation, a likely relic of this stage.</p></article>
+
+  <h3 class="note-group">The common ancestor</h3>
+
+  <article class="note-card" id="n7"><header><span class="code t-A">A2.1.7</span><h4>Evidence for LUCA</h4><span class="pg-ref">pp. 43&ndash;45</span></header>
+    <p>All life shares the same <b>genetic code</b>, amino acids and similar ribosomes, and about 355 protein families seem to go back to one ancestor: the <b>last universal common ancestor</b>, about 4 billion years ago. Other early forms of life may have existed but became extinct, outcompeted by LUCA and its descendants.</p></article>
+  <article class="note-card" id="n8"><header><span class="code t-A">A2.1.8</span><h4>Dating early life</h4><span class="pg-ref">p. 46</span></header>
+    <p><b>Fossils</b> and stromatolites are dated by <b>radiometric dating</b> of the rocks. A <b>molecular clock</b> uses the number of differences in a conserved gene and the rate of mutation to estimate when groups shared an ancestor. Life has been evolving for at least 3.7 billion years.</p></article>
+  <article class="note-card" id="n9"><header><span class="code t-A">A2.1.9</span><h4>LUCA and hydrothermal vents</h4><span class="pg-ref">p. 47</span></header>
+    <p>Haematite tubes in vent rock at Nuvvuagittuq, Canada, at least 3.77 billion years old, look like the work of vent microbes. Genes probably inherited from LUCA suggest it was anaerobic, fixed carbon dioxide, used hydrogen and lived at high temperatures: conditions found at deep-sea vents.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=de1hiS_XjWg" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>The mysterious origins of life on Earth</b><small>TED-Ed</small></span><span class="pill">A2.1.1, A2.1.7</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=AndOnmx9cuM" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Spontaneous Generation</b><small>Microbiology Mantra</small></span><span class="pill">A2.1.3</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/a2-1/a2-1-note-taking-sheet.pdf" data-filename="A2.1 Origins of cells (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/a2-1/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all nine statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/a2-1/a2-1-worksheet.pdf" data-filename="A2.1 Origins of cells (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/a2-1/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"A2.1.1","q":"Why was there no ozone layer on the early Earth?","o":["There was almost no free oxygen","It was too cold","There was too much water","Volcanoes destroyed it"],"a":0,"e":"Ozone forms from oxygen."},
+ {"s":"A2.1.2","q":"Why are viruses usually classed as non-living?","o":["They cannot sustain themselves outside a host cell","They have no genes","They never change","They are too small to see"],"a":0,"e":"They have no metabolism or ribosomes of their own."},
+ {"s":"A2.1.3","q":"Which is NOT one of the four requirements for the first cells?","o":["Photosynthesis","Catalysis","Self-replication","Compartmentalization"],"a":0,"e":"The fourth is self-assembly."},
+ {"s":"A2.1.4","q":"What did Miller and Urey produce?","o":["Amino acids","Living cells","DNA","Proteins"],"a":0,"e":"Monomers, not polymers or cells."},
+ {"s":"A2.1.4","q":"Which is a limitation of the Miller-Urey experiment?","o":["The gas mixture may not match the early atmosphere","It used no water","It could not be repeated","It used oxygen"],"a":0,"e":"Carbon dioxide was probably more common than methane."},
+ {"s":"A2.1.5","q":"Why do fatty acids form vesicles in water?","o":["They are amphipathic","They are enzymes","They are proteins","They contain DNA"],"a":0,"e":"Hydrophilic heads face the water on both sides."},
+ {"s":"A2.1.6","q":"What is a ribozyme?","o":["An RNA molecule that acts as a catalyst","A ribosome protein","A type of DNA","A fatty acid vesicle"],"a":0,"e":"rRNA in the ribosome is one example."},
+ {"s":"A2.1.7","q":"Which is the strongest evidence for one common ancestor?","o":["The universal genetic code","All cells are the same size","All life is green","All life lives in water"],"a":0,"e":"Many codes would be possible."},
+ {"s":"A2.1.8","q":"What does a molecular clock use?","o":["Differences in gene sequences and a mutation rate","The decay of carbon-14 only","Tree rings","Fossil size"],"a":0,"e":"Radiometric dating dates the rocks instead."},
+ {"s":"A2.1.9","q":"Which feature probably describes LUCA?","o":["Lived without oxygen at high temperature","Needed sunlight","Breathed oxygen","Lived on land"],"a":0,"e":"Conditions found at deep-sea vents."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Modelling how membranes assemble</h3><div class="practical-meta"><span class="pill">Model</span><span class="pill">25 min</span><span class="pill">A2.1.5</span></div><p><b>You will need:</b> Clear jars, water, cooking oil, a little washing-up liquid, microscope slides</p><ol><li>Shake oil and water and observe how they separate</li><li>Add a drop of washing-up liquid and shake again</li><li>View the droplets under a microscope</li><li>Discuss how molecules with polar and non-polar ends could form early vesicles, and what this model leaves out</li></ol><p class="practical-safety"><b>Safety:</b> Low risk. Wipe up spills, because oil makes floors slippery.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Experiments</h3><p>In 1953 Miller and Urey made amino acids from simple gases, showing that a step in life&#39;s origin was possible, though not that it happened that way.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>How can we know about events that cannot be repeated?</h3><p>No experiment can replay the origin of life. Consider the difference between showing something could happen and showing it did.</p></div></div></section>
     <section class="block" id="statements">
@@ -64,8 +186,9 @@
     
     
     <nav class="pager" aria-label="Teaching order"><a class="next" href="ahl-a2-3.html"><span>Next</span><b>A2.3 Viruses</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

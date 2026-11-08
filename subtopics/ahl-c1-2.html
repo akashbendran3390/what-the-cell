@@ -19,15 +19,17 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../course-map.html#ahl">AHL path</a><span aria-hidden="true">/</span>
-      <a href="../course-map.html#ahl-1">Unit H2&nbsp;Metabolism</a>
+      <a href="../course-map.html#ahl-1">Unit H2&nbsp;Biomolecules</a>
     </nav>
     <div class="sub-title">
       <span class="code">C1.2</span>
@@ -43,7 +45,128 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>What do hydrogen and oxygen contribute to releasing energy in cells?</li><li>How is energy shared out and used within cells?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c1-2-hl/c1-2-hl-slides.pdf" data-filename="C1.2 Cell respiration (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/c1-2-hl/slides/" data-count="17">
+    <img id="viewer-img" src="../resources/c1-2-hl/slides/s01.png" alt="Slide 1 of 17" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 17</label>
+      <input type="range" id="viewer-range" min="1" max="17" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "4": [["Cellular Respiration (Updated)", "Amoeba Sisters", "eJ9Zjc-jdys"]],
+    "11": [["The Electron Transport Chain Explained", "BioMan Biology", "zJNx1DDqIVo"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 412&ndash;424 of the course textbook. Image credits are on slide 17.</p>
+
+  <h3 class="note-group">Glycolysis and anaerobic respiration</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-C">C1.2.7</span><h4>Oxidation, reduction and NAD</h4><span class="pg-ref">pp. 412&ndash;413</span></header>
+    <p>Oxidation is loss of electrons; because a hydrogen atom carries an electron, removing hydrogen (<b>dehydrogenation</b>) oxidizes a substance. Respiration oxidizes glucose step by step. <b>NAD</b> accepts the hydrogen and is <b>reduced</b>, carrying it to the electron transport chain. Oxidation and reduction always occur together (redox).</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-C">C1.2.8</span><h4>Glycolysis</h4><span class="pg-ref">pp. 413&ndash;415</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/c1-2-hl/slides/s04.png" alt="Slide: the five stages of glycolysis and its yield per glucose" width="1280" height="720"></figure>
+    <p>In the cytoplasm, glucose is <b>phosphorylated</b> by 2 ATP, <b>split</b> into two 3C sugars, <b>oxidized</b> (2 NAD reduced) and converted to two <b>pyruvate</b>, making 4 ATP by substrate-level phosphorylation. Net yield: 2 ATP and 2 reduced NAD. Each step has its own enzyme.</p></article>
+  <article class="note-card" id="n3"><header><span class="code t-C">C1.2.9</span><h4>Lactate regenerates NAD</h4><span class="pg-ref">pp. 415&ndash;416</span></header>
+    <p>Without oxygen, reduced NAD cannot be oxidized by the electron transport chain. In human muscle, pyruvate accepts its hydrogen and becomes <b>lactate</b>, regenerating NAD+ so that glycolysis can continue. The net yield is only 2 ATP per glucose.</p></article>
+  <article class="note-card" id="n4"><header><span class="code t-C">C1.2.10</span><h4>Yeast, baking and brewing</h4><span class="pg-ref">pp. 416&ndash;417</span></header>
+    <p>Yeast uses the same glycolysis, but regenerates NAD by converting pyruvate to <b>ethanol and carbon dioxide</b>. In baking, carbon dioxide makes dough rise and the ethanol evaporates in the oven; in brewing, ethanol is the product wanted.</p></article>
+
+  <h3 class="note-group">Aerobic respiration</h3>
+
+  <article class="note-card" id="n5"><header><span class="code t-C">C1.2.11</span><h4>The link reaction</h4><span class="pg-ref">pp. 417&ndash;418</span></header>
+    <p>In the mitochondrial matrix, pyruvate is <b>decarboxylated</b> (CO<sub>2</sub> released) and <b>oxidized</b> (NAD reduced). The 2C acetyl group joins coenzyme A as acetyl-CoA. Fatty acids from lipids are also cut into acetyl groups that enter the same way.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-C">C1.2.12</span><h4>The Krebs cycle</h4><span class="pg-ref">pp. 418&ndash;419</span></header>
+    <p>The acetyl group joins <b>oxaloacetate</b> (4C) to form <b>citrate</b> (6C). Two decarboxylations and four oxidations (dehydrogenations) regenerate oxaloacetate. Each turn gives 2 CO<sub>2</sub>, 3 reduced NAD, 1 reduced FAD and 1 ATP; the cycle turns twice per glucose.</p></article>
+  <article class="note-card" id="n7"><header><span class="code t-C">C1.2.13</span><h4>Reduced NAD and the electron transport chain</h4><span class="pg-ref">pp. 419&ndash;420</span></header>
+    <p>Reduced NAD from glycolysis, the link reaction and the Krebs cycle passes a pair of electrons to the first carrier of the chain in the inner membrane, becoming NAD+ again. This transfers its energy to the chain.</p></article>
+  <article class="note-card" id="n8"><header><span class="code t-C">C1.2.14</span><h4>The proton gradient</h4><span class="pg-ref">pp. 420&ndash;421</span></header>
+    <p>As electrons pass from carrier to carrier they release energy in small steps, which is used to pump <b>protons</b> from the matrix into the small intermembrane space. The inner membrane is impermeable to protons, so a steep gradient builds up.</p></article>
+  <article class="note-card" id="n9"><header><span class="code t-C">C1.2.15</span><h4>Chemiosmosis</h4><span class="pg-ref">pp. 421&ndash;422</span></header>
+    <p>Protons flow back into the matrix through <b>ATP synthase</b>. The flow turns part of the enzyme and provides energy to join ADP and phosphate: <b>oxidative phosphorylation</b>. This makes most of the ATP from aerobic respiration.</p></article>
+  <article class="note-card" id="n10"><header><span class="code t-C">C1.2.16</span><h4>Oxygen as the final acceptor</h4><span class="pg-ref">p. 422</span></header>
+    <p>At the end of the chain, <b>oxygen</b> accepts electrons and protons from the matrix, forming <b>metabolic water</b>. This keeps electrons flowing; without oxygen the chain stops and only glycolysis can produce ATP.</p></article>
+  <article class="note-card" id="n11"><header><span class="code t-C">C1.2.17</span><h4>Lipids and carbohydrates as fuels</h4><span class="pg-ref">pp. 423&ndash;424</span></header>
+    <p>Lipids give about twice as much energy per gram as carbohydrates, because they contain less oxygen and more hydrogen and carbon to oxidize. Fatty acids enter respiration as acetyl-CoA, not through glycolysis, so lipids can only be respired aerobically; carbohydrates can also be used anaerobically.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=eJ9Zjc-jdys" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Cellular Respiration (Updated)</b><small>Amoeba Sisters</small></span><span class="pill">C1.2.8, C1.2.11, C1.2.12</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=zJNx1DDqIVo" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>The Electron Transport Chain Explained</b><small>BioMan Biology</small></span><span class="pill">C1.2.13, C1.2.14, C1.2.15, C1.2.16</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c1-2-hl/c1-2-hl-note-taking-sheet.pdf" data-filename="C1.2 Cell respiration (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/c1-2-hl/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all eleven statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c1-2-hl/c1-2-hl-worksheet.pdf" data-filename="C1.2 Cell respiration (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/c1-2-hl/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"C1.2.7","q":"What happens to NAD when it accepts hydrogen?","o":["It is reduced","It is oxidized","It is phosphorylated","It is decarboxylated"],"a":0,"e":"The substrate it took hydrogen from is oxidized."},
+ {"s":"C1.2.8","q":"What is the net ATP yield of glycolysis per glucose?","o":["2","4","32","0"],"a":0,"e":"4 are made but 2 are used."},
+ {"s":"C1.2.9","q":"Why is pyruvate converted to lactate without oxygen?","o":["To regenerate NAD+","To make more ATP directly","To store energy as fat","To release CO2"],"a":0,"e":"Glycolysis can then continue."},
+ {"s":"C1.2.10","q":"Which product of yeast makes bread rise?","o":["Carbon dioxide","Ethanol","Lactate","Water"],"a":0,"e":"Ethanol evaporates during baking."},
+ {"s":"C1.2.11","q":"What happens to pyruvate in the link reaction?","o":["It is decarboxylated and oxidized","It is phosphorylated","It is split into two","It is reduced to lactate"],"a":0,"e":"Acetyl-CoA is formed."},
+ {"s":"C1.2.12","q":"Which compound combines with the acetyl group in the Krebs cycle?","o":["Oxaloacetate","Citrate","Pyruvate","Glucose"],"a":0,"e":"Citrate is formed."},
+ {"s":"C1.2.14","q":"Where are protons pumped to by the electron transport chain?","o":["The intermembrane space","The matrix","The cytoplasm","The nucleus"],"a":0,"e":"A gradient builds up there."},
+ {"s":"C1.2.15","q":"What drives ATP synthase?","o":["Protons flowing down their gradient","Glucose binding","Oxygen binding","Electrons entering the matrix"],"a":0,"e":"This is chemiosmosis."},
+ {"s":"C1.2.16","q":"What is the role of oxygen?","o":["Final electron acceptor","First electron carrier","Source of protons","Enzyme in glycolysis"],"a":0,"e":"Water is formed."},
+ {"s":"C1.2.17","q":"Why can lipids not be respired anaerobically?","o":["They do not enter glycolysis","They contain no carbon","They are too large","They have no hydrogen"],"a":0,"e":"They enter as acetyl-CoA."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Hydrogen carriers and yeast</h3><div class="practical-meta"><span class="pill">Lab</span><span class="pill">40 min</span><span class="pill">C1.2.7</span></div><p><b>You will need:</b> Yeast suspension, glucose solution, dilute methylene blue, test tubes, water bath, timer</p><ol><li>Mix yeast and glucose, and warm to a set temperature</li><li>Add a few drops of methylene blue and do not shake</li><li>Time how long the blue colour takes to fade, at several temperatures</li><li>Explain the change using oxidation and reduction</li></ol><p class="practical-safety"><b>Safety:</b> Eye protection. Methylene blue stains skin and clothes.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Hypotheses</h3><p>Peter Mitchell&#39;s chemiosmotic theory of 1961 was doubted by many. It later gained strong support, and he received a Nobel Prize in 1978.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>How do paradigm shifts happen in science?</h3><p>Researchers had been searching for a chemical intermediate. Consider how an expected answer can make a different one harder to accept.</p></div></div></section>
     <section class="block" id="statements">
@@ -64,10 +187,11 @@
       </ul>
     </section>
     
-    <section class="block"><h2>More of C1.2 in this course</h2><ul class="sibs"><li><a href="sl-c1-2.html">SL &middot; Metabolism</a></li></ul></section>
+    <section class="block"><h2>More of C1.2 in this course</h2><ul class="sibs"><li><a href="sl-c1-2.html">SL &middot; Biomolecules</a></li></ul></section>
     <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-c1-1.html"><span>Previous</span><b>C1.1 Enzymes and metabolism</b></a><a class="next" href="ahl-c1-3.html"><span>Next</span><b>C1.3 Photosynthesis</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

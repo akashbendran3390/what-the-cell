@@ -19,15 +19,17 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../course-map.html#sl">SL path</a><span aria-hidden="true">/</span>
-      <a href="../course-map.html#sl-3">Unit 4&nbsp;Genetics</a>
+      <a href="../course-map.html#sl-2">Unit 3&nbsp;Genetics</a>
     </nav>
     <div class="sub-title">
       <span class="code">D3.2</span>
@@ -43,8 +45,209 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>What patterns of inheritance are seen in plants and animals?</li><li>What happens at the molecular level to produce these patterns?</li></ol>
     </section>
-    
-    <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Height as continuous variation</h3><div class="practical-meta"><span class="pill">Data</span><span class="pill">30 min</span><span class="pill">D3.2.14, D3.2.15</span></div><p><b>You will need:</b> Tape measure, class results table, graph paper or spreadsheet</p><ol><li>Collect heights from volunteers, anonymously</li><li>Find the median, quartiles and range</li><li>Draw a box-and-whisker plot</li><li>Discuss how many genes and which environmental factors could contribute</li></ol><p class="practical-safety"><b>Safety:</b> Keep the data anonymous, and let anyone opt out.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-2/d3-2-slides.pdf" data-filename="D3.2 Inheritance - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/d3-2/slides/" data-count="23">
+    <img id="viewer-img" src="../resources/d3-2/slides/s01.png" alt="Slide 1 of 23" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 23</label>
+      <input type="range" id="viewer-range" min="1" max="23" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "5": [["Gregor Mendel", "Teacher's Pet", "cWt1RFnWNzk"], ["How Mendel's pea plants helped us understand genetics", "TED-Ed", "Mehz7tCxjSE"]],
+    "9": [["Monohybrids and the Punnett Square Guinea Pigs", "Amoeba Sisters", "i-0rSv6oxSY"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the course textbook and class slides, with page references for each statement. The chapter is on pages 725&ndash;746 of the course textbook. Image credits are on slide 23.</p>
+
+  <h3 class="note-group">The basics</h3>
+
+  <article class="note-card" id="n1">
+    <header><span class="code t-D">D3.2.1</span><h4>Gametes and zygotes</h4><span class="pg-ref">p. 725</span></header>
+    <p>Parents make <b>haploid gametes</b>, with one copy of each gene, and these fuse to form a <b>diploid zygote</b>, with two copies of each autosomal gene. This pattern is common to all eukaryotes with a sexual life cycle.</p>
+  </article>
+
+  <article class="note-card" id="n2">
+    <header><span class="code t-D">D3.2.2</span><h4>Genetic crosses in flowering plants</h4><span class="pg-ref">pp. 726&ndash;730</span></header>
+    <p>Pollen contains male gametes and female gametes are in the ovary, so a cross needs <b>pollination</b>. Peas make both on one plant, so they can self-fertilize. The parents are the <b>P generation</b>, their offspring are <b>F1</b>, and the offspring of F1 are <b>F2</b>. Crosses are widely used to breed new varieties.</p>
+  </article>
+
+  <article class="note-card" id="n3">
+    <header><span class="code t-D">D3.2.3</span><h4>Genotype</h4><span class="pg-ref">p. 730</span></header>
+    <p>A <b>gene</b> influences a characteristic, and an <b>allele</b> is a version of a gene. The <b>genotype</b> is the combination of alleles inherited. It is <b>homozygous</b> if the two alleles are identical, and <b>heterozygous</b> if they differ.</p>
+  </article>
+
+  <article class="note-card" id="n4">
+    <header><span class="code t-D">D3.2.4</span><h4>Phenotype</h4><span class="pg-ref">p. 731</span></header>
+    <p>The <b>phenotype</b> is the observable traits, from genotype and environment. ABO blood group depends on genotype only, a surgical scar on environment only, and height on both.</p>
+  </article>
+
+  <article class="note-card" id="n5">
+    <header><span class="code t-D">D3.2.5</span><h4>Dominant and recessive alleles</h4><span class="pg-ref">p. 732</span></header>
+    <div class="note-split">
+      <div><p>A <b>dominant</b> allele has the same effect whether homozygous or heterozygous. A <b>recessive</b> allele has an effect only when homozygous. YY and Yy look alike because the dominant allele usually codes for a working protein, and one copy gives enough.</p><p>Crossing two heterozygotes gives a 3 : 1 phenotype ratio.</p></div>
+      <figure><img loading="lazy" src="../resources/d3-2/slides/s09.png" alt="Slide: a Punnett grid for a cross of two heterozygous plants" width="1280" height="720"></figure>
+    </div>
+  </article>
+
+  <h3 class="note-group">Expression and disease</h3>
+
+  <article class="note-card" id="n6">
+    <header><span class="code t-D">D3.2.6</span><h4>Phenotypic plasticity</h4><span class="pg-ref">p. 732</span></header>
+    <p>Organisms can develop traits suited to their environment by varying <b>gene expression</b>. The genotype does not change, and the effect may be reversible, as when skin darkens in sunlight and then fades.</p>
+  </article>
+
+  <article class="note-card" id="n7">
+    <header><span class="code t-D">D3.2.7</span><h4>Phenylketonuria</h4><span class="pg-ref">p. 733</span></header>
+    <p><b>PKU</b> is a recessive condition, due to a mutation in an autosomal gene for the enzyme that converts phenylalanine to tyrosine. Without it, phenylalanine builds up and can damage the developing brain. Babies are screened after birth, and a low-phenylalanine diet prevents most harm.</p>
+  </article>
+
+  <h3 class="note-group">Beyond two alleles</h3>
+
+  <article class="note-card" id="n8">
+    <header><span class="code t-D">D3.2.8</span><h4>SNPs and multiple alleles</h4><span class="pg-ref">p. 734</span></header>
+    <p>A <b>gene pool</b> is all the alleles in a population. SNPs create new alleles, so any number of alleles of a gene can exist in a gene pool. An individual still inherits only two.</p>
+  </article>
+
+  <article class="note-card" id="n9">
+    <header><span class="code t-D">D3.2.9</span><h4>ABO blood groups</h4><span class="pg-ref">pp. 734&ndash;735</span></header>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Group</th><th>Genotypes</th></tr></thead>
+      <tbody>
+        <tr><th>A</th><td>I<sup>A</sup>I<sup>A</sup> or I<sup>A</sup>i</td></tr>
+        <tr><th>B</th><td>I<sup>B</sup>I<sup>B</sup> or I<sup>B</sup>i</td></tr>
+        <tr><th>AB</th><td>I<sup>A</sup>I<sup>B</sup></td></tr>
+        <tr><th>O</th><td>ii</td></tr>
+      </tbody>
+    </table></div>
+  </article>
+
+  <article class="note-card" id="n10">
+    <header><span class="code t-D">D3.2.10</span><h4>Incomplete dominance and codominance</h4><span class="pg-ref">pp. 736&ndash;737</span></header>
+    <p>In <b>incomplete dominance</b>, heterozygotes have an intermediate phenotype: red and white <i>Mirabilis jalapa</i> give pink. In <b>codominance</b>, they have a dual phenotype: I<sup>A</sup>I<sup>B</sup> gives group AB. Crossing two heterozygotes gives a 1 : 2 : 1 ratio.</p>
+  </article>
+
+  <h3 class="note-group">Sex and pedigrees</h3>
+
+  <article class="note-card" id="n11">
+    <header><span class="code t-D">D3.2.11</span><h4>Sex determination</h4><span class="pg-ref">pp. 737&ndash;738</span></header>
+    <p>All eggs carry an X, and half of sperm carry a Y. So the sex chromosome in the sperm determines whether a zygote develops certain male-typical or female-typical characteristics. The X chromosome carries far more genes than the Y.</p>
+  </article>
+
+  <article class="note-card" id="n12">
+    <header><span class="code t-D">D3.2.12</span><h4>Haemophilia</h4><span class="pg-ref">pp. 739&ndash;740</span></header>
+    <p>The recessive allele X<sup>h</sup> is on the X chromosome. Males have only one X, so one copy causes the disease. A carrier mother (X<sup>H</sup>X<sup>h</sup>) and an unaffected father (X<sup>H</sup>Y) have a 1 in 2 chance that a son is affected.</p>
+  </article>
+
+  <article class="note-card" id="n13">
+    <header><span class="code t-D">D3.2.13</span><h4>Pedigree charts</h4><span class="pg-ref">pp. 741&ndash;743</span></header>
+    <ul>
+      <li><b>Autosomal recessive:</b> unaffected parents can have an affected child, of either sex.</li>
+      <li><b>Autosomal dominant:</b> every affected person has an affected parent.</li>
+      <li><b>X-linked recessive:</b> mostly males are affected, never passed from father to son.</li>
+    </ul>
+    <p>Close relatives are more likely to carry the same recessive allele. This is the genetic basis for rules in many societies against marriage between close relatives.</p>
+  </article>
+
+  <h3 class="note-group">Continuous traits</h3>
+
+  <article class="note-card" id="n14">
+    <header><span class="code t-D">D3.2.14</span><h4>Continuous variation</h4><span class="pg-ref">pp. 743&ndash;745</span></header>
+    <p>ABO blood group is a <b>discrete</b> variable, and skin colour is a <b>continuous</b> one. <b>Polygenic</b> traits are affected by many genes, each with a small effect, often with the environment as well. The centre of a distribution can be described by its mean, median and mode.</p>
+  </article>
+
+  <article class="note-card" id="n15">
+    <header><span class="code t-D">D3.2.15</span><h4>Box-and-whisker plots</h4><span class="pg-ref">p. 746</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/d3-2/slides/s20.png" alt="Slide: a box-and-whisker plot of student heights, with an outlier" width="1280" height="720"></figure>
+    <p>A plot shows outliers, minimum, first quartile, median, third quartile and maximum. A value is an outlier if it is more than 1.5 &times; IQR above Q3 or below Q1.</p>
+  </article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=Mehz7tCxjSE" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>How Mendel's pea plants helped us understand genetics</b><small>TED-Ed &middot; start here</small></span><span class="pill">D3.2.2&ndash;5</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=cWt1RFnWNzk" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Gregor Mendel</b><small>Teacher's Pet</small></span><span class="pill">D3.2.2</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=i-0rSv6oxSY" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Monohybrids and the Punnett Square Guinea Pigs</b><small>Amoeba Sisters</small></span><span class="pill">D3.2.5</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-2/d3-2-note-taking-sheet.pdf" data-filename="D3.2 Inheritance - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d3-2/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all fifteen statements, from quick recall to crosses, data and a longer answer. It has 52 marks and takes about 55 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-2/d3-2-worksheet.pdf" data-filename="D3.2 Inheritance - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d3-2/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"D3.2.1","q":"How many copies of an autosomal gene does a gamete have?","o":["None","One","Two","Four"],"a":1,"e":"A diploid zygote then has two copies."},
+ {"s":"D3.2.2","q":"What is the F1 generation?","o":["The parents","The offspring of the P generation","The offspring of F2","Any plant that self-fertilizes"],"a":1,"e":"F2 are the offspring of F1."},
+ {"s":"D3.2.3","q":"What is a heterozygous genotype?","o":["Two identical alleles","Two different alleles","No alleles","Three alleles"],"a":1,"e":"For example, Yy."},
+ {"s":"D3.2.4","q":"Which trait depends on both genotype and environment?","o":["ABO blood group","A surgical scar","Height","A tattoo"],"a":2,"e":"Genes set a range, and diet affects where a person falls within it."},
+ {"s":"D3.2.5","q":"Two heterozygotes are crossed. What phenotype ratio is expected?","o":["1 : 1","3 : 1","1 : 2 : 1","All the same"],"a":1,"e":"Three show the dominant phenotype for each one that shows the recessive."},
+ {"s":"D3.2.6","q":"What changes in phenotypic plasticity?","o":["The base sequence","The pattern of gene expression","The number of chromosomes","The alleles inherited"],"a":1,"e":"The genotype is unchanged, and the effect may be reversible."},
+ {"s":"D3.2.7","q":"What builds up in untreated phenylketonuria?","o":["Tyrosine","Phenylalanine","Glucose","Haemoglobin"],"a":1,"e":"The enzyme that converts it to tyrosine does not work."},
+ {"s":"D3.2.8","q":"How many alleles of a gene can one person inherit?","o":["One","Two","Three","As many as exist"],"a":1,"e":"The gene pool can hold many more."},
+ {"s":"D3.2.9","q":"Which genotype gives blood group O?","o":["I&#7468;I&#7470;","I&#7468;i","ii","I&#7470;i"],"a":2,"e":"Allele i is recessive."},
+ {"s":"D3.2.10","q":"Red and white Mirabilis give pink flowers. What is this called?","o":["Codominance","Incomplete dominance","Sex linkage","Polygenic inheritance"],"a":1,"e":"The heterozygote has an intermediate phenotype."},
+ {"s":"D3.2.11","q":"Which gamete determines the sex chromosomes of a zygote?","o":["The egg","The sperm","Either","Neither"],"a":1,"e":"All eggs carry X, and half of sperm carry Y."},
+ {"s":"D3.2.12","q":"Why is haemophilia more common in males?","o":["They have one X, so one recessive allele has an effect","The Y carries the allele","Females are immune","It is dominant in males"],"a":0,"e":"Females with one copy are usually carriers."},
+ {"s":"D3.2.13","q":"Unaffected parents have an affected child. What must the allele be?","o":["Dominant","Recessive","Codominant","On the Y chromosome"],"a":1,"e":"Both parents must carry it."},
+ {"s":"D3.2.14","q":"Which is a continuous variable?","o":["ABO blood group","Skin colour","Haemophilia","Pea colour"],"a":1,"e":"It depends on many genes and on sunlight."},
+ {"s":"D3.2.15","q":"Q1 is 10, and Q3 is 20. Above which value is a point an outlier?","o":["25","30","35","40"],"a":2,"e":"IQR is 10; 1.5 x 10 = 15; and 20 + 15 = 35."}
+]
+</script>
+
+    <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Light, dark and genetic barley seedlings</h3><div class="practical-meta"><span class="pill">Lab</span><span class="pill">20 min to set up, then 3 to 5 days</span><span class="pill">D3.2.4, D3.2.5, D3.2.6</span></div><p><b>You will need:</b> Genetic barley seeds from a heterozygous cross, two petri dishes, filter paper, water, a lamp or window, a dark box</p><ol><li>Draw a Punnett grid for Gg x Gg, and predict the ratio of green to white shoots</li><li>Put ten seeds on moist filter paper in each dish, then keep one dish in light and one in the dark</li><li>After 3 to 5 days, count the green and white shoots in each dish and pool the class results</li><li>Compare the ratios, then explain the difference using genotype, environment and phenotypic plasticity</li></ol><p class="practical-safety"><b>Safety:</b> Low risk. Wash hands after handling seeds, and do not eat them.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Patterns and trends</h3><p>Mendel&#39;s large counts of pea plants revealed ratios that small samples would have hidden.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>What should we do with results that look too good?</h3><p>Statistician R. A. Fisher argued that Mendel&#39;s data fit the ratios suspiciously well. Consider what this means for trust, and for how data are recorded.</p></div></div></section>
     <section class="block" id="statements">
       <h2>Syllabus statements</h2>
@@ -70,8 +273,9 @@
     <section class="block" id="hl"><h2>HL extension</h2><ul class="sibs"><li><a href="ahl-d3-2.html">AHL &middot; Genetics</a></li></ul></section>
     
     <nav class="pager" aria-label="Teaching order"><a class="prev" href="sl-d2-1.html"><span>Previous</span><b>D2.1 Cell and nuclear division</b></a><a class="next" href="sl-a2-2.html"><span>Next</span><b>A2.2 Cell structure</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

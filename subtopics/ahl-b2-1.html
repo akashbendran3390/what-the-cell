@@ -19,8 +19,10 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
@@ -43,7 +45,122 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How do lipid and protein molecules come together to form membranes?</li><li>What decides whether a substance can cross a membrane?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/b2-1-hl/b2-1-hl-slides.pdf" data-filename="B2.1 Membranes and membrane transport (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/b2-1-hl/slides/" data-count="17">
+    <img id="viewer-img" src="../resources/b2-1-hl/slides/s01.png" alt="Slide 1 of 17" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 17</label>
+      <input type="range" id="viewer-range" min="1" max="17" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "6": [["Cell Transport", "Amoeba Sisters", "Ptmlvtei8hw"]],
+    "10": [["Sodium Potassium Pump", "Amoeba Sisters", "7NY6XdPBhxo"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 237&ndash;243 of the course textbook. Image credits are on slide 17.</p>
+
+  <h3 class="note-group">Membrane fluidity</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-B">B2.1.11</span><h4>Fatty acids and fluidity</h4><span class="pg-ref">p. 237</span></header>
+    <p>Saturated fatty acid tails are straight and pack closely, so they make a membrane less fluid. Unsaturated tails are kinked at their double bonds, cannot pack closely and keep the membrane fluid at lower temperatures. Membranes must be fluid enough for proteins to move and work, but not so fluid that they leak. Organisms such as the lake sturgeon raise the share of unsaturated fatty acids when the water gets colder: <b>homeoviscous adaptation</b>.</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-B">B2.1.12</span><h4>Cholesterol</h4><span class="pg-ref">pp. 237&ndash;238</span></header>
+    <p>In animal membranes, cholesterol sits with its polar <b>-OH group</b> next to the phosphate heads and its non-polar rings and tail among the fatty acid tails. It acts as a <b>fluidity buffer</b>: at low temperature it keeps phospholipids apart so the membrane stays fluid; at high temperature it restricts their movement so the membrane is less fluid and less leaky.</p></article>
+  <article class="note-card" id="n3"><header><span class="code t-B">B2.1.13</span><h4>Vesicles form and fuse</h4><span class="pg-ref">pp. 238&ndash;239</span></header>
+    <p>Because phospholipids can flow, a membrane can pinch inwards to make a vesicle (<b>endocytosis</b>: phagocytosis of solids, pinocytosis of liquids) and a vesicle can fuse with the plasma membrane (<b>exocytosis</b>) without leaving a hole. Both need ATP. Macrophages engulf old red blood cells; plasma cells secrete antibodies and neurons release neurotransmitters by exocytosis.</p></article>
+
+  <h3 class="note-group">Channels, pumps and cotransporters</h3>
+
+  <article class="note-card" id="n4"><header><span class="code t-B">B2.1.14</span><h4>Gated ion channels</h4><span class="pg-ref">pp. 239&ndash;241</span></header>
+    <p>Gated channels open and close, letting ions diffuse down their gradients. <b>Voltage-gated</b> Na<sup>+</sup> and K<sup>+</sup> channels in axons open when the membrane potential changes; a K<sup>+</sup> channel is then plugged by a &ldquo;ball and chain&rdquo; until the membrane repolarizes. <b>Neurotransmitter-gated</b> channels, such as the nicotinic acetylcholine receptor, open when acetylcholine binds, letting Na<sup>+</sup> into the post-synaptic cell.</p></article>
+  <article class="note-card" id="n5"><header><span class="code t-B">B2.1.15</span><h4>The sodium-potassium pump</h4><span class="pg-ref">pp. 241&ndash;242</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/b2-1-hl/slides/s10.png" alt="Slide: diagram of the sodium-potassium pump beside its five steps" width="1280" height="720"></figure>
+    <p>An <b>exchange transporter</b>. Three Na<sup>+</sup> bind inside; ATP phosphorylates the pump, which opens outwards and releases them; two K<sup>+</sup> bind outside; the phosphate leaves and the pump opens inwards, releasing K<sup>+</sup>. Both ions move against their gradients, building the gradients used by neurons and cotransporters.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-B">B2.1.16</span><h4>Indirect active transport of glucose</h4><span class="pg-ref">p. 242</span></header>
+    <p>In the small intestine and kidney tubules, Na<sup>+</sup>/K<sup>+</sup> pumps keep Na<sup>+</sup> low inside the cell. Na<sup>+</sup> diffuses back in through a <b>sodium-dependent glucose cotransporter</b>, carrying glucose with it (two Na<sup>+</sup> per glucose), even against the glucose gradient. The cotransporter uses no ATP itself, so this is <b>indirect active transport</b>. Glucose then leaves the cell by facilitated diffusion into the blood.</p></article>
+
+  <h3 class="note-group">Tissues</h3>
+
+  <article class="note-card" id="n7"><header><span class="code t-B">B2.1.17</span><h4>Cell adhesion</h4><span class="pg-ref">p. 243</span></header>
+    <p><b>Cell-adhesion molecules</b> (CAMs) are membrane proteins that bind cells to each other (usually <b>cadherins</b>) or to the extracellular matrix (usually <b>integrins</b>). They form junctions: <b>tight junctions</b> seal epithelia, <b>anchoring junctions</b> give strength and <b>gap junctions</b> link the cytoplasm of neighbouring cells. Plant cells rely instead on interlocking walls and plasmodesmata.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=Ptmlvtei8hw" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Cell Transport</b><small>Amoeba Sisters</small></span><span class="pill">B2.1.13</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=7NY6XdPBhxo" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Sodium Potassium Pump</b><small>Amoeba Sisters</small></span><span class="pill">B2.1.15, B2.1.16</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/b2-1-hl/b2-1-hl-note-taking-sheet.pdf" data-filename="B2.1 Membranes and membrane transport (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/b2-1-hl/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all seven statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/b2-1-hl/b2-1-hl-worksheet.pdf" data-filename="B2.1 Membranes and membrane transport (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/b2-1-hl/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"B2.1.11","q":"Why do unsaturated fatty acids make a membrane more fluid?","o":["Their kinked tails cannot pack closely","They are longer","They have more phosphate","They bind cholesterol"],"a":0,"e":"Double bonds put kinks in the tails."},
+ {"s":"B2.1.11","q":"A fish moved to colder water will probably increase which membrane component?","o":["Unsaturated fatty acids","Saturated fatty acids","Glycogen","Cellulose"],"a":0,"e":"This keeps the membrane fluid in the cold."},
+ {"s":"B2.1.12","q":"Which part of cholesterol lies next to the phosphate heads?","o":["The -OH group","The hydrocarbon tail","The ring structure","The double bond"],"a":0,"e":"It is the only polar part."},
+ {"s":"B2.1.12","q":"What does cholesterol do at high temperature?","o":["Reduces fluidity","Increases fluidity","Breaks the bilayer","Makes ATP"],"a":0,"e":"It restricts the movement of fatty acid tails."},
+ {"s":"B2.1.13","q":"Which process releases antibodies from a plasma cell?","o":["Exocytosis","Phagocytosis","Pinocytosis","Osmosis"],"a":0,"e":"Vesicles fuse with the plasma membrane."},
+ {"s":"B2.1.14","q":"What opens a nicotinic acetylcholine receptor channel?","o":["Acetylcholine binding","A change in voltage","ATP","Light"],"a":0,"e":"It is a neurotransmitter-gated channel."},
+ {"s":"B2.1.15","q":"How many Na+ and K+ ions does one pump cycle move?","o":["3 Na+ out, 2 K+ in","2 Na+ out, 3 K+ in","3 Na+ in, 2 K+ out","1 Na+ out, 1 K+ in"],"a":0,"e":"Both against their gradients, using one ATP."},
+ {"s":"B2.1.16","q":"What provides the energy for glucose cotransport into intestinal cells?","o":["The sodium gradient","ATP used by the cotransporter","Light","The glucose gradient"],"a":0,"e":"The pump makes the gradient using ATP."},
+ {"s":"B2.1.17","q":"Which junction links the cytoplasm of neighbouring animal cells?","o":["Gap junction","Tight junction","Desmosome","Cell wall"],"a":0,"e":"Plasmodesmata do the same in plants."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Temperature and membrane permeability</h3><div class="practical-meta"><span class="pill">Lab</span><span class="pill">50 min</span><span class="pill">B2.1.11, B2.1.12</span></div><p><b>You will need:</b> Beetroot cylinders, water baths from 20 to 70 C, test tubes, colorimeter or colour chart</p><ol><li>Rinse the beetroot until the water runs clear</li><li>Leave equal pieces in water at each temperature for 20 minutes</li><li>Compare the colour of the water</li><li>Plot the results, and explain them using membrane fluidity</li></ol><p class="practical-safety"><b>Safety:</b> Take care with hot water and with cutting tools. Beetroot stains.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Experiments</h3><p>In 1970 Frye and Edidin fused mouse and human cells, and saw their membrane proteins mix, giving strong evidence that membranes are fluid.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>Can one result settle a question?</h3><p>A single clear experiment can be very persuasive. Consider what else would be needed before a scientific community accepts a claim.</p></div></div></section>
     <section class="block" id="statements">
@@ -62,8 +179,9 @@
     
     <section class="block"><h2>More of B2.1 in this course</h2><ul class="sibs"><li><a href="sl-b2-1.html">SL &middot; Cells</a></li></ul></section>
     <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-a2-2.html"><span>Previous</span><b>A2.2 Cell structure</b></a><a class="next" href="ahl-b2-2.html"><span>Next</span><b>B2.2 Organelles and compartmentalization</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

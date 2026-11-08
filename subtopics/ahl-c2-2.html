@@ -19,15 +19,17 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
     </header>
     <nav class="crumbs" aria-label="Breadcrumb">
       <a href="../course-map.html#ahl">AHL path</a><span aria-hidden="true">/</span>
-      <a href="../course-map.html#ahl-3">Unit H4&nbsp;Equilibrium</a>
+      <a href="../course-map.html#ahl-3">Unit H4&nbsp;Body Systems</a>
     </nav>
     <div class="sub-title">
       <span class="code">C2.2</span>
@@ -43,7 +45,124 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>How do neurons produce electrical signals and pass them along?</li><li>How do neurons affect other cells?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c2-2-hl/c2-2-hl-slides.pdf" data-filename="C2.2 Neural signalling (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/c2-2-hl/slides/" data-count="16">
+    <img id="viewer-img" src="../resources/c2-2-hl/slides/s01.png" alt="Slide 1 of 16" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 16</label>
+      <input type="range" id="viewer-range" min="1" max="16" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "14": [["The Action Potential", "Bozeman Science", "HYLyhXRp298"]],
+    "4": [["Voltage-Gated Sodium Channels in Neurons", "Laura Slusser", "KTTeD2AMiPA"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 479&ndash;489 of the course textbook. Image credits are on slide 16.</p>
+
+  <h3 class="note-group">Action potentials</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-C">C2.2.8</span><h4>Depolarization and repolarization</h4><span class="pg-ref">pp. 479&ndash;481</span></header>
+    <p>When the membrane reaches the <b>threshold</b> (about &minus;50 mV), voltage-gated Na<sup>+</sup> channels open and Na<sup>+</sup> diffuses in: the inside becomes positive (<b>depolarization</b>). At about +30 mV they close and voltage-gated K<sup>+</sup> channels open; K<sup>+</sup> diffuses out and the inside becomes negative again (<b>repolarization</b>). Below threshold, no action potential occurs: it is all-or-nothing.</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-C">C2.2.9</span><h4>Local currents</h4><span class="pg-ref">pp. 481&ndash;482</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/c2-2-hl/slides/s06.png" alt="Slide: sodium ions diffusing along inside and outside an axon from a depolarized region" width="1280" height="720"></figure>
+    <p>Na<sup>+</sup> that has entered diffuses along inside the axon, while Na<sup>+</sup> outside diffuses towards the depolarized region. These local currents bring the next region to threshold, so its Na<sup>+</sup> channels open and the impulse moves on.</p></article>
+  <article class="note-card" id="n3"><header><span class="code t-C">C2.2.10</span><h4>Oscilloscope traces</h4><span class="pg-ref">p. 482</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/c2-2-hl/slides/s05.png" alt="Slide: oscilloscope trace of one action potential" width="1280" height="720"></figure>
+    <p>An oscilloscope plots membrane potential against time: a flat resting potential near &minus;70 mV, a steep rise to about +30 mV, a fall, a brief dip below rest, then recovery, all within a few milliseconds.</p></article>
+  <article class="note-card" id="n4"><header><span class="code t-C">C2.2.11</span><h4>Saltatory conduction</h4><span class="pg-ref">pp. 482&ndash;483</span></header>
+    <p>Myelin insulates the axon. Pumps and channels are clustered at the <b>nodes of Ranvier</b>, so the action potential jumps from node to node. Myelinated axons conduct many times faster than unmyelinated ones of the same width.</p></article>
+
+  <h3 class="note-group">Synapses</h3>
+
+  <article class="note-card" id="n5"><header><span class="code t-C">C2.2.12</span><h4>Exogenous chemicals</h4><span class="pg-ref">pp. 483&ndash;484</span></header>
+    <p><b>Neonicotinoid</b> pesticides bind nicotinic acetylcholine receptors in insects and are not broken down, so transmission is blocked. <b>Cocaine</b> blocks the transporters that reabsorb dopamine, so dopamine stays in the cleft and keeps stimulating.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-C">C2.2.13</span><h4>Inhibitory neurotransmitters</h4><span class="pg-ref">pp. 484&ndash;485</span></header>
+    <p>Neurotransmitters such as GABA open channels that let chloride ions in or potassium ions out. The postsynaptic membrane becomes <b>hyperpolarized</b>, an inhibitory postsynaptic potential, so an action potential is less likely.</p></article>
+  <article class="note-card" id="n7"><header><span class="code t-C">C2.2.14</span><h4>Summation</h4><span class="pg-ref">p. 485</span></header>
+    <p>A neuron receives many excitatory and inhibitory inputs. Their effects add together; only if the total reaches threshold does the neuron fire, and then fully.</p></article>
+
+  <h3 class="note-group">Pain and consciousness</h3>
+
+  <article class="note-card" id="n8"><header><span class="code t-C">C2.2.15</span><h4>Pain</h4><span class="pg-ref">pp. 486&ndash;487</span></header>
+    <p>Free nerve endings in the skin have channels for positive ions that open with heat, acid or chemicals such as capsaicin. Ions enter, threshold is reached and impulses travel to the brain, where pain is perceived.</p></article>
+  <article class="note-card" id="n9"><header><span class="code t-C">C2.2.16</span><h4>Consciousness</h4><span class="pg-ref">pp. 487&ndash;489</span></header>
+    <p>Consciousness is an <b>emergent property</b>: it is not found in any single neuron but arises from the interactions of billions of neurons in the brain.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=HYLyhXRp298" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>The Action Potential</b><small>Bozeman Science</small></span><span class="pill">C2.2.8, C2.2.9, C2.2.11</span></a></li>
+    <li><a href="https://www.youtube.com/watch?v=KTTeD2AMiPA" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Voltage-Gated Sodium Channels in Neurons</b><small>Laura Slusser</small></span><span class="pill">C2.2.8, C2.2.10</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c2-2-hl/c2-2-hl-note-taking-sheet.pdf" data-filename="C2.2 Neural signalling (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/c2-2-hl/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all nine statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/c2-2-hl/c2-2-hl-worksheet.pdf" data-filename="C2.2 Neural signalling (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/c2-2-hl/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"C2.2.8","q":"What happens when voltage-gated Na+ channels open?","o":["Na+ diffuses in and the membrane depolarizes","K+ diffuses out","The membrane hyperpolarizes","The pump stops"],"a":0,"e":"This is depolarization."},
+ {"s":"C2.2.9","q":"What brings the next region of an axon to threshold?","o":["Local currents of sodium ions","Myelin","Neurotransmitter","The sodium-potassium pump"],"a":0,"e":"Na+ diffuses along the axon."},
+ {"s":"C2.2.11","q":"Where are ion channels clustered in a myelinated axon?","o":["Nodes of Ranvier","Under the myelin","At the cell body only","In the synaptic cleft"],"a":0,"e":"The impulse jumps between them."},
+ {"s":"C2.2.12","q":"How does cocaine affect a dopamine synapse?","o":["Blocks reuptake of dopamine","Blocks dopamine receptors","Breaks down dopamine","Stops dopamine release"],"a":0,"e":"Dopamine stays in the cleft."},
+ {"s":"C2.2.13","q":"What does an inhibitory neurotransmitter do to the postsynaptic membrane?","o":["Hyperpolarizes it","Depolarizes it","Makes it permeable to Na+","Nothing"],"a":0,"e":"It moves further from threshold."},
+ {"s":"C2.2.15","q":"Which chemical opens heat-sensitive pain channels?","o":["Capsaicin","Dopamine","GABA","Acetylcholine"],"a":0,"e":"Found in chilli peppers."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Reading action potential traces</h3><div class="practical-meta"><span class="pill">Data</span><span class="pill">30 min</span><span class="pill">C2.2.8, C2.2.10</span></div><p><b>You will need:</b> Printed oscilloscope trace with scale, ruler</p><ol><li>Label the resting potential, depolarization and repolarization</li><li>Measure the peak voltage and how long the action potential lasts</li><li>Calculate how many could occur per second</li><li>Explain each part of the trace using ion movements</li></ol><p class="practical-safety"><b>Safety:</b> No practical hazards.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Experiments</h3><p>In 1921 Otto Loewi showed chemical transmission using two frog hearts. He later said that the idea came to him in a dream.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>What is the role of intuition in science?</h3><p>The idea may have come from a dream, but the evidence came from an experiment. Consider how discovery and justification differ.</p></div></div></section>
     <section class="block" id="statements">
@@ -63,9 +182,10 @@
     </section>
     
     <section class="block"><h2>More of C2.2 in this course</h2><ul class="sibs"><li><a href="sl-c2-2.html">SL &middot; Body Systems</a></li></ul></section>
-    <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-c2-1.html"><span>Previous</span><b>C2.1 Chemical signalling</b></a><a class="next" href="ahl-d3-3.html"><span>Next</span><b>D3.3 Homeostasis</b></a></nav>
+    <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-b3-2.html"><span>Previous</span><b>B3.2 Transport</b></a><a class="next" href="ahl-d3-3.html"><span>Next</span><b>D3.3 Homeostasis</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

@@ -19,8 +19,10 @@
         <a href="../dp-biology.html">DP Biology</a>
         <a href="../course-map.html">Course map</a>
         <a href="../practical-scheme.html">Practicals</a>
+        <a href="../skills.html">Skills</a>
         <a href="../internal-assessment.html">IA</a>
         <a href="../extended-essay.html">EE</a>
+        <a href="../collaborative-science-project.html">CSP</a>
         <a href="../nature-of-science.html">NOS</a>
         <a href="../tok.html">TOK</a>
       </nav>
@@ -43,7 +45,111 @@
       <h2>Guiding questions</h2>
       <ol class="gq"><li>What patterns of inheritance are seen in plants and animals?</li><li>What happens at the molecular level to produce these patterns?</li></ol>
     </section>
-    
+    <nav class="jump" aria-label="On this page">
+  <a href="#slides">Slides</a>
+  <a href="#notes">Notes</a>
+  <a href="#videos">Videos</a>
+  <a href="#notetaking">Note-taking sheet</a>
+  <a href="#selfcheck">Self-check</a>
+  <a href="#practice">Practice questions</a>
+  <a href="#practical">Practical</a>
+  <a href="#nos-tok">NOS and TOK</a>
+  <a href="#statements">Syllabus statements</a>
+  <a href="#hl">HL extension</a>
+</nav>
+
+<section class="block" id="slides">
+  <div class="block-head">
+    <h2>Slides</h2>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-2-hl/d3-2-hl-slides.pdf" data-filename="D3.2 Inheritance (HL) - slides.pdf">Slides PDF</a>
+    </div>
+  </div>
+  <div class="viewer" id="viewer" data-base="../resources/d3-2-hl/slides/" data-count="14">
+    <img id="viewer-img" src="../resources/d3-2-hl/slides/s01.png" alt="Slide 1 of 14" width="1280" height="720">
+    <div class="viewer-bar">
+      <button type="button" id="viewer-prev" aria-label="Previous slide">&larr; Back</button>
+      <label for="viewer-range" class="viewer-count"><span id="viewer-num">1</span> of 14</label>
+      <input type="range" id="viewer-range" min="1" max="14" value="1">
+      <button type="button" id="viewer-next" aria-label="Next slide">Next &rarr;</button>
+    </div>
+    <div class="viewer-videos" id="viewer-videos" hidden></div>
+  </div>
+  <script id="slide-videos" type="application/json">
+  {
+    "9": [["Heredity: Crash Course Biology #9", "CrashCourse", "CBezq1fFUEA"]]
+  }
+  </script>
+</section>
+
+<section class="block" id="notes">
+  <h2>Notes</h2>
+  <p class="block-intro">Written for this site from the class slides, with textbook page references for each statement. The chapter is on pages 747&ndash;759 of the course textbook. Image credits are on slide 14.</p>
+
+  <h3 class="note-group">Two genes</h3>
+
+  <article class="note-card" id="n1"><header><span class="code t-D">D3.2.16</span><h4>Segregation and independent assortment</h4><span class="pg-ref">pp. 747&ndash;748</span></header>
+    <p>In meiosis I, homologous chromosomes separate, so each gamete gets one allele of each gene (<b>segregation</b>). Each pair of homologues lines up at random in metaphase I, so genes on different chromosomes are inherited independently (<b>independent assortment</b>). A parent RrYy makes RY, Ry, rY and ry gametes in equal numbers.</p></article>
+  <article class="note-card" id="n2"><header><span class="code t-D">D3.2.17</span><h4>Dihybrid Punnett grids</h4><span class="pg-ref">pp. 748&ndash;750</span></header>
+    <figure class="wide"><img loading="lazy" src="../resources/d3-2-hl/slides/s04.png" alt="Slide: a 4 by 4 Punnett grid for a dihybrid cross giving 9:3:3:1" width="1280" height="720"></figure>
+    <p>Crossing two double heterozygotes for unlinked genes gives a <b>9:3:3:1</b> phenotype ratio. A test cross of a double heterozygote with a double homozygous recessive gives <b>1:1:1:1</b>.</p></article>
+  <article class="note-card" id="n3"><header><span class="code t-D">D3.2.18</span><h4>Gene loci</h4><span class="pg-ref">pp. 750&ndash;751</span></header>
+    <p>Databases give each human gene&rsquo;s locus and product. HBB (beta globin) and HBD (delta globin) lie next to each other on chromosome 11; HBA1 (alpha globin) is on chromosome 16; CFTR is on chromosome 7.</p></article>
+
+  <h3 class="note-group">Linkage and statistics</h3>
+
+  <article class="note-card" id="n4"><header><span class="code t-D">D3.2.19</span><h4>Linkage</h4><span class="pg-ref">pp. 751&ndash;752</span></header>
+    <p>Genes on the same chromosome are <b>linked</b> and tend to be inherited together, so they do not assort independently. They are shown with alleles beside vertical lines, one line per homologous chromosome. The closer the loci, the stronger the linkage.</p></article>
+  <article class="note-card" id="n5"><header><span class="code t-D">D3.2.20</span><h4>Recombinants</h4><span class="pg-ref">pp. 752&ndash;754</span></header>
+    <p>A <b>recombinant</b> has a combination of alleles not found in either parent. With linked genes, recombinants come only from crossing over between the loci, so a test cross gives two large parental classes and two small recombinant classes.</p></article>
+  <article class="note-card" id="n6"><header><span class="code t-D">D3.2.21</span><h4>Chi-squared test</h4><span class="pg-ref">pp. 755&ndash;757</span></header>
+    <p>The null hypothesis is that observed numbers do not differ significantly from those expected (for example 9:3:3:1). Calculate &chi;<sup>2</sup> = &Sigma;(O &minus; E)<sup>2</sup>/E, with degrees of freedom = classes &minus; 1. If &chi;<sup>2</sup> is greater than the critical value at p = 0.05 (7.81 for 3 degrees of freedom), reject the null hypothesis; the genes may be linked.</p></article>
+</section>
+
+<section class="block" id="videos">
+  <h2>Videos</h2>
+  <p class="block-intro">Select a video to play it here. Select it again to close it.</p>
+  <ul class="videos">
+    <li><a href="https://www.youtube.com/watch?v=CBezq1fFUEA" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span><b>Heredity: Crash Course Biology #9</b><small>CrashCourse</small></span><span class="pill">D3.2.16, D3.2.17</span></a></li>
+  </ul>
+</section>
+<section class="block sheet" id="notetaking">
+  <div class="sheet-text">
+    <h2>Note-taking sheet</h2>
+    <p>Print this guide and complete it as you work through the slides and videos. It asks for your own explanations, so close the notes while you try each section.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-2-hl/d3-2-hl-note-taking-sheet.pdf" data-filename="D3.2 Inheritance (HL) - note-taking sheet.pdf">PDF to print</a>
+    </div>
+    <p class="dl-status" id="dl-status" role="status"></p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d3-2-hl/sheet-preview.png" alt="First page of the note-taking sheet" width="600" height="848">
+</section>
+
+<section class="block" id="selfcheck">
+  <div class="block-head"><h2>Quick self-check</h2><span class="unit-meta" id="quiz-score"></span></div>
+  <div id="quiz" class="quiz"><p class="block-intro">The self-check needs JavaScript to run.</p></div>
+</section>
+
+<section class="block sheet sheet-alt" id="practice">
+  <div class="sheet-text">
+    <h2>Practice questions</h2>
+    <p>A printable worksheet covering all six statements, from quick recall to data questions and a longer answer. It has 40 marks and takes about 40 minutes, or you can do one section at a time.</p>
+    <div class="dl-row">
+      <a class="dl" href="../resources/d3-2-hl/d3-2-hl-worksheet.pdf" data-filename="D3.2 Inheritance (HL) - worksheet.pdf">Worksheet PDF</a>
+    </div>
+    <p class="practice-note">Your teacher has the mark scheme.</p>
+  </div>
+  <img class="sheet-preview" loading="lazy" src="../resources/d3-2-hl/worksheet-preview.png" alt="First page of the worksheet" width="600" height="848">
+</section>
+<script id="quiz-data" type="application/json">
+[
+ {"s":"D3.2.16","q":"When does independent assortment happen?","o":["Metaphase I of meiosis","Mitosis","Fertilization","Interphase"],"a":0,"e":"Each pair of homologues lines up at random."},
+ {"s":"D3.2.17","q":"What ratio comes from crossing two double heterozygotes (unlinked genes)?","o":["9:3:3:1","1:1:1:1","3:1","1:2:1"],"a":0,"e":"A test cross gives 1:1:1:1."},
+ {"s":"D3.2.19","q":"Why do linked genes not assort independently?","o":["They are on the same chromosome","They are on different chromosomes","They are recessive","They are on the X chromosome"],"a":0,"e":"Only crossing over separates them."},
+ {"s":"D3.2.20","q":"How do recombinants of linked genes arise?","o":["Crossing over between the loci","Independent assortment","Mutation","Fertilization"],"a":0,"e":"Closer loci give fewer recombinants."},
+ {"s":"D3.2.21","q":"For four phenotype classes, how many degrees of freedom are there?","o":["3","4","2","1"],"a":0,"e":"Classes minus one."}
+]
+</script>
     <section class="block" id="practical"><h2>Practical</h2><div class="practical-card"><h3>Dihybrid crosses and chi-squared</h3><div class="practical-meta"><span class="pill">Model</span><span class="pill">45 min</span><span class="pill">D3.2.17, D3.2.21</span></div><p><b>You will need:</b> Two coins per student, Punnett grid template, chi-squared table</p><ol><li>Treat each coin as a heterozygous gene, and toss both coins for each parent</li><li>Record 80 offspring from a cross of two heterozygotes</li><li>Compare the results to the expected 9:3:3:1 ratio</li><li>Calculate chi-squared and decide whether the difference is significant</li></ol><p class="practical-safety"><b>Safety:</b> No practical hazards.</p></div><p class="block-intro">Carry this out with your teacher's supervision and follow your school's lab rules.</p></section>
     <section class="block" id="nos-tok"><h2>Nature of science and TOK</h2><div class="link-cards"><div class="link-card link-nos"><div class="eyebrow">Nature of science</div><h3>Patterns and trends</h3><p>Morgan&#39;s fruit fly results did not fit independent assortment. In 1913 his student Sturtevant used this to make the first genetic map.</p></div><div class="link-card link-tok"><div class="eyebrow">Theory of knowledge</div><h3>Why is a significance level of 5% used?</h3><p>The chi-squared cut-off is a convention. Consider how an agreed threshold shapes what counts as a real result.</p></div></div></section>
     <section class="block" id="statements">
@@ -60,9 +166,10 @@
     </section>
     
     <section class="block"><h2>More of D3.2 in this course</h2><ul class="sibs"><li><a href="sl-d3-2.html">SL &middot; Genetics</a></li></ul></section>
-    <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-d2-1.html"><span>Previous</span><b>D2.1 Cell and nuclear division</b></a><a class="next" href="ahl-c2-1.html"><span>Next</span><b>C2.1 Chemical signalling</b></a></nav>
+    <nav class="pager" aria-label="Teaching order"><a class="prev" href="ahl-d2-1.html"><span>Previous</span><b>D2.1 Cell and nuclear division</b></a><a class="next" href="ahl-b3-3.html"><span>Next</span><b>B3.3 Muscle and motility</b></a></nav>
+    <p class="rights">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</p>
   </main>
 </div>
-
+<script src="../assets/subtopic.js"></script>
 </body>
 </html>

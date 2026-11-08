@@ -1,6 +1,6 @@
 /* Layout: a confocal micrograph come to life. Glowing stain colours on deep indigo bands, soft cell-shaped blocks, and a chunky rounded display face. */
 :root{
-  --bg:#FAF6FF; --surface:#FFFFFF; --fg:#1E0E4A; --muted:#5A4C85; --line:#DCCFF5; --soft:#EFE6FF; --accent:#B0356F;
+  --bg:#FAF6FF; --surface:#FFFFFF; --fg:#1E0E4A; --muted:#473B72; --line:#DCCFF5; --soft:#EFE6FF; --accent:#B0356F;
   /* Stains: bright fills that always carry dark text */
   --on-bright:#1E0E4A; --pink:#F7A8CF; --cyan:#8ADFDA; --lime:#CBE98A; --yellow:#FBDD82; --lilac:#C9B8F5; --orange:#F9BC8F;
   /* Saturated fills that always carry white text */
@@ -23,7 +23,7 @@
   --bg:#17112E; --surface:#241B47; --fg:#F3EEFF; --muted:#BDB1E0; --line:#40356F; --soft:#30265A; --accent:#F29CC6;
   --shadow:0 10px 30px rgb(0 0 0/.35); color-scheme:dark}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-synthesis:none}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--deep)}
 a{color:var(--accent)}
@@ -68,7 +68,7 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
 .crumbs{font-size:14.5px;display:flex;flex-wrap:wrap;gap:2px 8px}
 .crumbs a{color:#fff}
 
-.pill{display:inline-block;font:500 11.5px var(--mono);padding:2px 9px;border-radius:99px;background:var(--cyan);color:var(--on-bright);white-space:nowrap}
+.pill{display:inline-block;font:500 12.5px var(--mono);padding:2px 9px;border-radius:99px;background:var(--cyan);color:var(--on-bright);white-space:nowrap}
 .pill.hl{background:var(--violet);color:#fff}
 .code{font:500 13px var(--mono);color:#fff;background:var(--tc);border-radius:7px;padding:3px 8px;white-space:nowrap}
 .t-A{--tc:var(--tA)}.t-B{--tc:var(--tB)}.t-C{--tc:var(--tC)}.t-D{--tc:var(--tD)}
@@ -98,7 +98,7 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
 .door-soon .eyebrow{color:var(--on-bright)}
 .door-soon .pill{align-self:flex-start;font:600 14px var(--ui);padding:5px 14px;background:var(--yellow);color:var(--on-bright)}
 .door-live{background:linear-gradient(125deg,var(--magenta),var(--tB));color:#fff;text-decoration:none;box-shadow:var(--shadow);transition:transform .18s}
-.door-live:hover{transform:translateY(-4px) rotate(-.4deg)}
+.door-live:hover{transform:translateY(-4px)}
 .door-live .eyebrow{color:#fff}
 .door-live .go{margin-top:auto;align-self:flex-start;position:relative;font:700 17px var(--ui);background:var(--yellow);color:var(--on-bright);padding:9px 18px;border-radius:99px}
 .door-art{position:absolute;right:-46px;bottom:-56px;width:300px;height:300px;pointer-events:none}
@@ -178,7 +178,7 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
 .unit-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
 .unit-meta{font:12.5px var(--mono);color:var(--muted)}
 .note{font-size:14.5px;color:var(--muted);max-width:70ch}
-.group-label{font:500 11.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.group-label{font:500 12.5px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:4px}
 .rows{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
 .rows>li+li{border-top:1px solid var(--soft)}
 .row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:12px 16px;color:var(--fg);text-decoration:none}
@@ -452,3 +452,31 @@ figure.wide{max-width:640px}
 .dq-table tbody th{text-align:left;background:var(--surface)}
 .dq-pre{margin:4px 0 8px}
 .dq-parts .dq-graph{margin:6px 0 10px}
+
+/* Themes. Light: bright stains glowing on pale lilac. Dark: a fluorescence microscope, with vivid stains on near-black indigo. */
+:root[data-theme="dark"]{
+  --bg:#0D0824; --surface:#1B1240; --fg:#FFFFFF; --muted:#DAD2F7; --line:#43357F; --soft:#2B1F5C; --accent:#FF8FC8;
+  --deep:#21145C; --magenta:#C92F80; --violet:#7048D8;
+  --tA:#0F8580; --tB:#C4562A; --tC:#C92F80; --tD:#7048D8;
+  --shadow:0 0 0 1px rgb(201 184 245/.14),0 12px 34px rgb(112 72 216/.3)}
+body{background-image:
+  radial-gradient(58vmax 58vmax at 104% -6%,rgb(247 168 207/.22),transparent 62%),
+  radial-gradient(48vmax 48vmax at -8% 42%,rgb(138 223 218/.2),transparent 62%),
+  radial-gradient(56vmax 56vmax at 82% 108%,rgb(201 184 245/.26),transparent 62%);
+  background-attachment:fixed;transition:background-color .3s,color .3s}
+:root[data-theme="dark"] body{background-image:
+  radial-gradient(58vmax 58vmax at 104% -6%,rgb(201 47 128/.3),transparent 62%),
+  radial-gradient(48vmax 48vmax at -8% 42%,rgb(15 170 160/.24),transparent 62%),
+  radial-gradient(56vmax 56vmax at 82% 108%,rgb(112 72 216/.36),transparent 62%)}
+:root[data-theme="dark"] .band{box-shadow:0 10px 60px rgb(112 72 216/.5)}
+
+
+
+/* Light and dark theme button, added to every page by theme.js */
+.theme-toggle{display:inline-flex;align-items:center;gap:7px;font:700 15px var(--ui);color:var(--on-bright);background:linear-gradient(100deg,var(--pink),var(--lilac) 55%,var(--cyan));border:0;border-radius:99px;padding:5px 14px;cursor:pointer;box-shadow:0 3px 12px rgb(30 14 74/.3);transition:transform .15s,box-shadow .15s}
+.theme-toggle:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgb(30 14 74/.42)}
+:root[data-theme="dark"] .theme-toggle{background:linear-gradient(100deg,var(--yellow),var(--orange) 55%,var(--pink));box-shadow:0 0 16px rgb(251 221 130/.55)}
+:root[data-theme="dark"] .theme-toggle:hover{box-shadow:0 0 24px rgb(251 221 130/.8)}
+.theme-row{display:flex;justify-content:flex-end;padding-top:18px}
+@media print{.theme-toggle,.theme-row{display:none}body{background-image:none}}
+@media (prefers-reduced-motion:reduce){body,.theme-toggle{transition:none}.theme-toggle:hover{transform:none}}

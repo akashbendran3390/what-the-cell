@@ -265,7 +265,9 @@ mark{background:var(--yellow);color:var(--on-bright);border-radius:3px}
 html.presenting-on{overflow:hidden}
 .viewer.presenting:has(.yt-player)>img{visibility:hidden}
 @media (max-width:560px){.viewer-bar{flex-wrap:wrap;gap:8px}.viewer-bar input{order:5;flex:1 0 100%}}
-.videos li.has-player{grid-column:1/-1}
+.videos li.has-player{grid-column:1/-1;display:flex;flex-direction:column;gap:8px}
+.videos li.has-player>a{height:auto}
+.videos .yt-player{flex:none;margin-top:0}
 .videos .yt-player a.yt-out{display:inline;height:auto;background:none;box-shadow:none;padding:0;color:var(--accent);font-size:13px;text-decoration:underline}
 .site-note{font-size:13px;color:var(--muted)}
 .section-head{margin-bottom:-18px}

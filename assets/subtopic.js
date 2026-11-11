@@ -7,6 +7,7 @@ function initViewer() {
   const v = document.getElementById('viewer');
   if (!v) return;
   let count = +v.dataset.count; const img = document.getElementById('viewer-img'), range = document.getElementById('viewer-range'), num = document.getElementById('viewer-num');
+  if (range) range.max = count; if (num && num.parentNode && num.nextSibling && num.nextSibling.nodeType === 3) num.nextSibling.textContent = ' of ' + count;
   const prev = document.getElementById('viewer-prev'), next = document.getElementById('viewer-next');
   const src = n => v.dataset.base + 's' + String(n).padStart(2, '0') + '.' + (v.dataset.ext || 'png');
   const videoBox = document.getElementById('viewer-videos'), videoData = document.getElementById('slide-videos');

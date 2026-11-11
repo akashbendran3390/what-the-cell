@@ -10,7 +10,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <script src="assets/theme.js"></script>
-</head>
+<style>
+.band-in{position:relative}
+.dp-cells{position:absolute;right:0;bottom:30px;width:290px;height:auto;pointer-events:none}.intro{max-width:calc(100% - 300px)}
+.path{position:relative;overflow:hidden;padding-right:150px}
+.path-art{position:absolute;right:-26px;top:50%;transform:translateY(-50%);width:170px;height:170px;pointer-events:none}
+@media (max-width:760px){.intro{max-width:none}.dp-cells{position:static;width:240px;align-self:center}.path{padding-right:120px}.path-art{width:140px;height:140px}}
+</style></head>
 <body>
 <div class="band">
   <div class="band-in">
@@ -31,7 +37,11 @@
     <div class="intro">
       <div class="eyebrow">IBDP Biology &middot; first assessment 2025</div>
       <h1>DP Biology</h1>
-      <p class="lede">Everyone starts on the SL path. HL students then continue with AHL, for 250 hours in total.</p>
+      <svg class="dp-cells" viewBox="0 0 360 260" aria-hidden="true">
+        <defs><clipPath id="c1"><circle r="96"/></clipPath><clipPath id="c2"><circle r="58"/></clipPath></defs>
+        <g transform="translate(230 130)"><g class="cell-a"><image href="assets/art/blood.jpg" x="-96" y="-96" width="192" height="192" clip-path="url(#c1)" preserveAspectRatio="xMidYMid slice"/><circle r="98" fill="none" stroke="#8ADFDA" stroke-width="8"/><circle cx="104" cy="-70" r="9" fill="#FBDD82"/><circle cx="-60" cy="104" r="7" fill="#F7A8CF"/></g></g>
+        <g transform="translate(70 70)"><g class="cell-b"><image href="assets/art/anemone.jpg" x="-58" y="-58" width="116" height="116" clip-path="url(#c2)" preserveAspectRatio="xMidYMid slice"/><circle r="60" fill="none" stroke="#FBDD82" stroke-width="7"/></g></g>
+      </svg>      <p class="lede">Everyone starts on the SL path. HL students then continue with AHL, for 250 hours in total.</p>
     </div>
   </div>
 </div>
@@ -63,13 +73,13 @@
           <div class="eyebrow">Weeks 1&ndash;39</div>
           <h2>SL path &rarr;</h2>
           <p>Starts with Body Systems and ends with Ecosystems.</p>
-          <p class="facts">7 units &middot; 39 weeks &middot; 130 hours</p>
+          <p class="facts">7 units &middot; 39 weeks &middot; 130 hours</p><svg class="path-art" viewBox="-90 -90 180 180" aria-hidden="true"><defs><clipPath id="pmoss"><circle r="80"/></clipPath></defs><image href="assets/art/moss.jpg" x="-80" y="-80" width="160" height="160" clip-path="url(#pmoss)" preserveAspectRatio="xMidYMid slice"/><circle r="82" fill="none" stroke="#3A9E9E" stroke-width="7"/></svg>
         </a>
         <a class="path path-ahl" href="course-map.html#ahl">
           <div class="eyebrow">Weeks 40&ndash;62</div>
           <h2>AHL path &rarr;</h2>
           <p>Starts with AHL: Body Systems and ends with AHL: Ecosystems.</p>
-          <p class="facts">7 units &middot; 23 weeks &middot; 120 hours</p>
+          <p class="facts">7 units &middot; 23 weeks &middot; 120 hours</p><svg class="path-art" viewBox="-90 -90 180 180" aria-hidden="true"><defs><clipPath id="pfrogs"><circle r="80"/></clipPath></defs><image href="assets/art/frogs.jpg" x="-80" y="-80" width="160" height="160" clip-path="url(#pfrogs)" preserveAspectRatio="xMidYMid slice"/><circle r="82" fill="none" stroke="#B0356F" stroke-width="7"/></svg>
         </a>
         <a class="path-all" href="course-map.html">See the full course map &rarr;</a>
       </div>

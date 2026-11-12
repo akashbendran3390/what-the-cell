@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>IA toolkit | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..700&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/ia.css">
+</head>
+<body>
+<div class="band">
+  <div class="band-in">
+    <header class="site-head">
+      <a class="wordmark" href="index.html">What the Cell</a>
+      <nav class="site-nav" aria-label="Site">
+        <a href="dp-biology.html">DP Biology</a>
+        <a href="course-map.html">Course map</a>
+        <a href="practical-scheme.html">Practicals</a>
+        <a href="skills.html">Skills</a>
+        <a href="internal-assessment.html" aria-current="page">IA</a>
+        <a href="extended-essay.html">EE</a>
+        <a href="collaborative-science-project.html">CSP</a>
+        <a href="nature-of-science.html">NOS</a>
+        <a href="tok.html">TOK</a>
+        <a href="teachers.html">Teachers</a>
+      </nav>
+    </header>
+    <div class="intro">
+      <div class="eyebrow">Internal assessment &middot; tools</div>
+      <h1>IA toolkit</h1>
+      <p class="lede">Quick tools for the hard parts: checking a topic, building a question, choosing a test, and avoiding weak evaluation.</p>
+    </div>
+  </div>
+</div>
+<div class="page">
+  <main>
+    <nav class="ia-tabs" aria-label="Internal assessment sections"><a href="internal-assessment.html">Overview</a><a href="ia-research-design.html">Research design</a><a href="ia-data-analysis.html">Data analysis</a><a href="ia-conclusion-evaluation.html">Conclusion and evaluation</a><a href="ia-final-draft.html">Final draft</a><a href="ia-toolkit.html" aria-current="page">Toolkit</a></nav>
+
+    <article class="ia-doc">
+<h2 id="topic-check">Is my topic good enough?</h2>
+<p>Answer honestly. One “no” means talk to your teacher before Task 1.</p>
+<div id="topic-quiz" class="ia-quiz">
+<label><input type="checkbox"> I can change <strong>one</strong> independent variable across at least <strong>5 levels</strong> (or collect 20+ data pairs for a correlation).</label> <label><input type="checkbox"> I can <strong>measure</strong> the dependent variable as a number, with units, using equipment the school has.</label> <label><input type="checkbox"> I can repeat each level at least <strong>5 times</strong> within about 10 hours of practical time.</label> <label><input type="checkbox"> I can explain the <strong>biological mechanism</strong> that links my two variables, and find at least one source about it.</label> <label><input type="checkbox"> It is <strong>safe and ethical</strong>: no harm to vertebrates, consent for human participants, school rules for microbes.</label>
+<p class="ia-quiz-result" aria-live="polite">
+</p>
+</div>
+<p><strong>Also ask yourself:</strong> Can I keep at least three other variables constant? Will living material grow or arrive in time? What is my back-up if the organism fails? Is there a twist that makes this question mine rather than a copy of a classic practical?</p>
+<h2 id="rq-builder">Research question builder</h2>
+<p>Fill in the boxes and the question builds itself. Copy it into your Task 1 proposal, then improve it.</p>
+<div id="rq-builder-form" class="ia-builder">
+<label>How the independent variable is changed <input data-rq="iv" placeholder="temperature"></label> <label>Its levels and units <input data-rq="levels" placeholder="20, 30, 40, 50 and 60 °C"></label> <label>The dependent variable <input data-rq="dv" placeholder="the rate of catalase activity"></label> <label>How it is measured, with units <input data-rq="method" placeholder="the volume of oxygen released in 60 s (cm³)"></label> <label>Organism (<em>Genus species</em>) or system <input data-rq="org" placeholder="Solanum tuberosum tissue"></label>
+<p class="ia-rq-out" aria-live="polite">
+</p>
+</div>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Part of the question</th>
+<th>Weak</th>
+<th>Strong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Independent variable</td>
+<td>“temperature”</td>
+<td>“temperature (20, 30, 40, 50, 60 °C), set with a water bath”</td>
+</tr>
+<tr>
+<td>Dependent variable</td>
+<td>“enzyme activity”</td>
+<td>“volume of oxygen released in 60 s (cm³), measured with a gas syringe”</td>
+</tr>
+<tr>
+<td>Organism</td>
+<td>“potato”</td>
+<td>“<em>Solanum tuberosum</em> tissue”</td>
+</tr>
+<tr>
+<td>Field study</td>
+<td>“light in the forest”</td>
+<td>“light intensity (lux) and percentage cover of <em>Pteridium aquilinum</em> along a woodland transect in the dry season”</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="test-chooser">Which statistical test?</h2>
+<div id="test-chooser-form" class="ia-chooser">
+<label>What does your data look like? <select data-q="shape"> <option value="">Choose…</option> <option value="groups">Repeated trials at different levels or groups</option> <option value="pairs">Pairs of values (X and Y), one per sample</option> <option value="counts">Counts in categories (phenotypes, species present)</option> </select></label> <label class="hide" data-for="groups">How many groups or levels? <select data-q="n"> <option value="">Choose…</option> <option value="2u">2, different samples in each</option> <option value="2p">2, the same samples before and after</option> <option value="3">3 or more, and the trend rises then falls (or has no steady direction)</option> <option value="3m">3 or more, and the trend only rises or only falls</option> </select></label> <label class="hide" data-for="groups">Is the data strongly skewed (|skew| above 2 at most levels)? <select data-q="skew"> <option value="">Choose…</option> <option value="no">No: use means and SD</option> <option value="yes">Yes: use medians and IQR</option> </select></label> <label class="hide" data-for="pairs">Shape of the scatter graph? <select data-q="line"> <option value="">Choose…</option> <option value="lin">Roughly a straight line</option> <option value="mono">Curved, but always rising or always falling</option> </select></label> <label class="hide" data-for="counts">What are you testing? <select data-q="chi"> <option value="">Choose…</option> <option value="fit">Observed counts against an expected ratio (for example 3:1)</option> <option value="assoc">Whether two species or factors occur together</option> </select></label>
+<p class="ia-test-out" aria-live="polite">
+</p>
+</div>
+<p>Significance level in biology: <strong>p &lt; 0.05</strong>. A test only works on the kind of data it was made for: chi-squared needs raw counts, never percentages or means.</p>
+<h2 id="graph-chooser">Which graph?</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>You calculated</th>
+<th>Independent variable is</th>
+<th>Graph</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean ± SD</td>
+<td>Categories (species, treatments)</td>
+<td>Bar chart with ± 1 SD error bars</td>
+</tr>
+<tr>
+<td>Mean ± SD</td>
+<td>Numbers (temperature, concentration)</td>
+<td>Points of the means with ± 1 SD error bars and a trendline</td>
+</tr>
+<tr>
+<td>Median and IQR</td>
+<td>Either</td>
+<td>Box and whisker plot</td>
+</tr>
+<tr>
+<td>Counts in categories</td>
+<td>Levels of a variable</td>
+<td>Stacked bar chart with a key</td>
+</tr>
+<tr>
+<td>Paired values</td>
+<td>—</td>
+<td>Scatter graph with a trendline and R²</td>
+</tr>
+</tbody>
+</table></div>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Trendline</th>
+<th>Shape</th>
+<th>Biology example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear</td>
+<td>Steady rise or fall</td>
+<td>Percentage mass change across sucrose concentrations</td>
+</tr>
+<tr>
+<td>Polynomial</td>
+<td>Rises then falls</td>
+<td>Enzyme activity against temperature or pH</td>
+</tr>
+<tr>
+<td>Exponential</td>
+<td>Rapid, ever-faster rise</td>
+<td>Early yeast or bacterial population growth</td>
+</tr>
+<tr>
+<td>Logarithmic</td>
+<td>Rises quickly then levels off</td>
+<td>Photosynthesis rate against light intensity</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="uncertainty">Uncertainties for biology equipment</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Equipment or method</th>
+<th>Typical uncertainty</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Analogue scale (ruler, measuring cylinder, thermometer)</td>
+<td>± half the smallest division</td>
+<td>A 10 cm³ cylinder marked every 0.2 cm³ gives ± 0.1 cm³</td>
+</tr>
+<tr>
+<td>Digital readout (balance, probe, colorimeter)</td>
+<td>± 1 in the last digit</td>
+<td>A balance reading 2.46 g gives ± 0.01 g</td>
+</tr>
+<tr>
+<td>Graduated pipette or syringe</td>
+<td>± half the smallest division</td>
+<td>Read at eye level from the bottom of the meniscus</td>
+</tr>
+<tr>
+<td>Hand timing with a stopwatch</td>
+<td>about ± 0.2 s</td>
+<td>Reaction time is far bigger than the stopwatch’s ± 0.01 s</td>
+</tr>
+<tr>
+<td>Counting (colonies, stomata, bubbles, organisms)</td>
+<td>Difference between two counts of the same sample</td>
+<td>Recount a few samples, or ask a partner to count blind</td>
+</tr>
+<tr>
+<td>Quadrat percentage cover</td>
+<td>Difference between two observers</td>
+<td>Use a gridded quadrat to make estimates more consistent</td>
+</tr>
+<tr>
+<td>Database values</td>
+<td>The uncertainty the source states</td>
+<td>If none is given, say so in your evaluation</td>
+</tr>
+</tbody>
+</table></div>
+<p>When you divide or multiply values, add their percentage uncertainties. For most biology IAs, the spread between trials (SD) is bigger than the instrument uncertainty: say which is bigger and why.</p>
+<h2 id="word-budget">Word budget</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Criterion</th>
+<th>Words (about)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Research question, context and hypothesis</td>
+<td>Research design</td>
+<td>500</td>
+</tr>
+<tr>
+<td>Variables, method, risk assessment</td>
+<td>Research design</td>
+<td>600</td>
+</tr>
+<tr>
+<td>Data processing and statistics write-up</td>
+<td>Data analysis</td>
+<td>600</td>
+</tr>
+<tr>
+<td>Conclusion</td>
+<td>Conclusion</td>
+<td>600</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>Evaluation</td>
+<td>500</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>about 2,800</strong> (limit 3,000)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Cut these first:</strong> general background about the whole topic, repeating the method in the results, describing every row of a table, step-by-step software instructions, and apologies (“I may have…”).</p>
+<h2 id="evaluation-examples">Weak and creditworthy evaluation</h2>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Weak</th>
+<th>Creditworthy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>“Human error affected the results.”</td>
+<td>“Potato cylinders were blotted by hand, so surface water varied; this gave the large SD at 0.4 mol dm⁻³ (± 1.8%). Rolling each cylinder twice on the same paper towel would standardise drying.”</td>
+</tr>
+<tr>
+<td>“I should have done more trials.”</td>
+<td>“With five trials, one anomaly at 50 °C moved the mean by 14%. Ten trials per level would reduce its effect and narrow the error bars, making the optimum clearer.”</td>
+</tr>
+<tr>
+<td>“The temperature was not controlled.”</td>
+<td>“The hot plate cycled between 25 and 35 °C, so respiration rate varied within each trial. A thermostatic water bath (± 0.5 °C) would hold the temperature steady.”</td>
+</tr>
+</tbody>
+</table></div>
+<p>Use the chain: <strong>name</strong> the specific weakness → show its <strong>evidence</strong> in your data → say <strong>how much</strong> it matters and which way it pushed the results → give a <strong>realistic improvement</strong> and how it helps.</p>
+<h2 id="gates">Before you hand in the complete draft</h2>
+<p>Pass all three gates before Task 7:</p>
+<ol type="1">
+<li><strong>Conclusion gate.</strong> My first sentence answers the research question with real values, and I compare my result with at least one cited published study.</li>
+<li><strong>Uncertainty gate.</strong> Every raw data header has units and ± uncertainty, my error bars are defined in the caption, and I say how the spread affects my confidence.</li>
+<li><strong>Evaluation gate.</strong> I have three design weaknesses with evidence from my own data, ranked by impact, each with a specific improvement.</li>
+</ol>
+<h2 id="topic-bank">Topic ideas from this course</h2>
+<p>Starting points only: make each one your own by changing the organism, the variable or the method. Each links to the subtopic page where its biology is taught.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Idea</th>
+<th>Independent variable</th>
+<th>Dependent variable</th>
+<th>Type</th>
+<th>Biology</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Catalase and temperature</td>
+<td>Temperature (5 levels)</td>
+<td>Volume of O₂ in 60 s</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-c1-1.html">C1.1 Enzymes</a></td>
+</tr>
+<tr>
+<td>Amylase and pH</td>
+<td>pH with buffers (5 levels)</td>
+<td>Time for starch to disappear (iodine)</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-c1-1.html">C1.1 Enzymes</a></td>
+</tr>
+<tr>
+<td>Osmosis in plant tissue</td>
+<td>Sucrose concentration (6 levels)</td>
+<td>Percentage change in mass</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-d2-3.html">D2.3 Water potential</a></td>
+</tr>
+<tr>
+<td>Yeast respiration and sugar</td>
+<td>Sugar type or concentration</td>
+<td>CO₂ produced (gas syringe or probe)</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-c1-2.html">C1.2 Respiration</a></td>
+</tr>
+<tr>
+<td>Light and photosynthesis</td>
+<td>Light intensity or colour</td>
+<td>O₂ produced or floating leaf discs</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-c1-3.html">C1.3 Photosynthesis</a></td>
+</tr>
+<tr>
+<td>Antimicrobial plant extracts</td>
+<td>Extract concentration</td>
+<td>Clear zone diameter (school-safe bacteria)</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-c3-2.html">C3.2 Defence against disease</a></td>
+</tr>
+<tr>
+<td>Stomatal density</td>
+<td>Leaf position or species</td>
+<td>Stomata per mm² (nail-varnish peels)</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-b3-1-plant.html">B3.1 Gas exchange in plants</a></td>
+</tr>
+<tr>
+<td>Transpiration rate</td>
+<td>Wind speed or humidity</td>
+<td>Water uptake (potometer)</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-b3-2-plant.html">B3.2 Transport in plants</a></td>
+</tr>
+<tr>
+<td>Membrane damage in beetroot</td>
+<td>Temperature or ethanol concentration</td>
+<td>Absorbance of leaked pigment (colorimeter)</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-b2-1.html">B2.1 Membranes</a></td>
+</tr>
+<tr>
+<td>Seed germination</td>
+<td>Salinity or temperature</td>
+<td>Percentage germination after 7 days</td>
+<td>Lab</td>
+<td><a href="subtopics/sl-d3-1-plant.html">D3.1 Reproduction in plants</a></td>
+</tr>
+<tr>
+<td>Plant distribution along a gradient</td>
+<td>Distance from a path or light intensity</td>
+<td>Percentage cover in quadrats</td>
+<td>Field</td>
+<td><a href="subtopics/sl-b4-1.html">B4.1 Adaptation to environment</a></td>
+</tr>
+<tr>
+<td>Diversity in two habitats</td>
+<td>Habitat (managed and unmanaged)</td>
+<td>Simpson’s diversity index</td>
+<td>Field</td>
+<td><a href="subtopics/sl-a4-1.html">A4.1 Evolution and speciation</a></td>
+</tr>
+<tr>
+<td>Heart rate recovery</td>
+<td>Exercise duration</td>
+<td>Time to return to resting rate</td>
+<td>Lab (volunteers)</td>
+<td><a href="subtopics/sl-b3-2-animal.html">B3.2 Transport</a></td>
+</tr>
+<tr>
+<td>Sequence similarity</td>
+<td>Species pair</td>
+<td>Percentage identity of a protein (BLAST)</td>
+<td>Database</td>
+<td><a href="subtopics/ahl-a3-2.html">A3.2 Classification</a></td>
+</tr>
+<tr>
+<td>Climate and flowering</td>
+<td>Spring temperature</td>
+<td>First flowering date (phenology records)</td>
+<td>Database</td>
+<td><a href="subtopics/sl-d4-3.html">D4.3 Climate change</a></td>
+</tr>
+<tr>
+<td>Disease spread model</td>
+<td>Proportion vaccinated</td>
+<td>Peak number infected (SIR model)</td>
+<td>Simulation</td>
+<td><a href="subtopics/sl-c3-2.html">C3.2 Defence against disease</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>For more starting points, see the <a href="practical-scheme.html">practical scheme of work</a> and the <a href="skills.html">Skills</a> page.</p>
+    </article>
+    <p class="ia-print">Tick boxes are saved on this device only. <a href="#" onclick="window.print();return false">Print this page</a></p>
+    <div class="ia-pager"><a href="ia-final-draft.html">&larr; Final draft</a></div>
+  </main>
+  <footer class="site-foot">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</footer>
+</div>
+<script src="assets/ia.js"></script>
+</body>
+</html>

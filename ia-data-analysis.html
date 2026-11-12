@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>IA: Data analysis | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..700&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/ia.css">
+</head>
+<body>
+<div class="band">
+  <div class="band-in">
+    <header class="site-head">
+      <a class="wordmark" href="index.html">What the Cell</a>
+      <nav class="site-nav" aria-label="Site">
+        <a href="dp-biology.html">DP Biology</a>
+        <a href="course-map.html">Course map</a>
+        <a href="practical-scheme.html">Practicals</a>
+        <a href="skills.html">Skills</a>
+        <a href="internal-assessment.html" aria-current="page">IA</a>
+        <a href="extended-essay.html">EE</a>
+        <a href="collaborative-science-project.html">CSP</a>
+        <a href="nature-of-science.html">NOS</a>
+        <a href="tok.html">TOK</a>
+        <a href="teachers.html">Teachers</a>
+      </nav>
+    </header>
+    <div class="intro">
+      <div class="eyebrow">Internal assessment &middot; stages 6 to 9</div>
+      <h1>IA: Data analysis</h1>
+      <p class="lede">Summarise your data, draw the right graphs, and test whether your results are real.</p>
+    </div>
+  </div>
+</div>
+<div class="page">
+  <main>
+    <nav class="ia-tabs" aria-label="Internal assessment sections"><a href="internal-assessment.html">Overview</a><a href="ia-research-design.html">Research design</a><a href="ia-data-analysis.html" aria-current="page">Data analysis</a><a href="ia-conclusion-evaluation.html">Conclusion and evaluation</a><a href="ia-final-draft.html">Final draft</a><a href="ia-toolkit.html">Toolkit</a></nav>
+
+    <article class="ia-doc">
+<h2 id="stage-6">Stage 6: Descriptive statistics</h2>
+<p class="stage-meta"><strong>Week 6</strong> · Begins with the in-class mentor session on data analysis.</p>
+<p>Descriptive statistics summarise your data so a reader can see what it shows; they do not test your hypothesis (that is Stage 8). Choose the statistics that fit <strong>your</strong> question and data, not what a classmate did.</p>
+<p>For every calculation, write in your report:</p>
+<ol type="1">
+<li><p><strong>Why</strong> you did it.</p></li>
+<li><p><strong>Where</strong> to find the results (“See Table 4 for the mean and standard deviation at each sucrose concentration.”).</p></li>
+<li><p><strong>One worked example</strong> using your data: the formula with your numbers, or a clear, cited screenshot of a spreadsheet or online calculator, labelled with the level it uses.</p></li>
+</ol>
+<p>Round calculated values to the same number of decimal places as the least precise raw value.</p>
+<h3 id="step-1-preliminary-calculations-if-needed">Step 1: Preliminary calculations (if needed)</h3>
+<p>Do these <strong>for each trial</strong>, before averaging.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Calculation</th>
+<th>Formula</th>
+<th>Biology example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Total change</td>
+<td>final − initial</td>
+<td>Change in height of seedlings</td>
+</tr>
+<tr>
+<td>Percentage change</td>
+<td>(final − initial) ÷ initial × 100</td>
+<td>Change in mass of potato cylinders in osmosis</td>
+</tr>
+<tr>
+<td>Rate</td>
+<td>change ÷ time, or 1/t</td>
+<td>Volume of O₂ per minute; 1/time for a colour change</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>e.g. Simpson’s diversity index, percentage cover</td>
+<td>Field studies</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="step-2-what-kind-of-study-is-it">Step 2: What kind of study is it?</h3>
+<ul>
+<li><p><strong>Levels of an independent variable with repeated trials</strong> → Step 3.</p></li>
+<li><p><strong>Paired data, no repeats</strong> (e.g. light intensity and leaf area for 30 plants) → Step 6.</p></li>
+<li><p><strong>Unique data</strong> (presence/absence in quadrats, DNA or protein sequences) → Step 7.</p></li>
+</ul>
+<h3 id="step-3-check-the-shape-of-the-data-skew">Step 3: Check the shape of the data (skew)</h3>
+<p>Calculate skew <strong>for each level</strong> using the SKEW function in Excel or Google Sheets, or a cited online calculator.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Absolute skew</th>
+<th>Meaning</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 to 0.5</td>
+<td>Approximately symmetrical</td>
+<td>Mean</td>
+</tr>
+<tr>
+<td>0.5 to 1.0</td>
+<td>Slightly skewed</td>
+<td>Mean</td>
+</tr>
+<tr>
+<td>1.0 to 2.0</td>
+<td>Moderately skewed, acceptable</td>
+<td>Mean</td>
+</tr>
+<tr>
+<td>Above 2.0</td>
+<td>Strongly skewed</td>
+<td>Median</td>
+</tr>
+</tbody>
+</table></div>
+<p>Negative skew = more values above the mean; positive skew = more values below. Report direction and strength for each level. Check outliers with the 1.5 × IQR rule; justify keeping or removing them and, if it matters, show results both ways.</p>
+<h3 id="step-4-central-tendency">Step 4: Central tendency</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Your data</th>
+<th>Use</th>
+<th>Spreadsheet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quantitative, most skews within ±2.0</td>
+<td><strong>Mean</strong> (most students)</td>
+<td>=AVERAGE( )</td>
+</tr>
+<tr>
+<td>Quantitative, most skews beyond ±2.0</td>
+<td><strong>Median</strong></td>
+<td>=MEDIAN( )</td>
+</tr>
+<tr>
+<td>Qualitative, ranked</td>
+<td><strong>Median</strong></td>
+<td>=MEDIAN( )</td>
+</tr>
+<tr>
+<td>Qualitative, categories</td>
+<td><strong>Mode</strong></td>
+<td>=MODE( )</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="step-5-spread">Step 5: Spread</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>You used</th>
+<th>Trials per level</th>
+<th>Use</th>
+<th>Spreadsheet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean</td>
+<td>5 or more</td>
+<td><strong>Standard deviation (SD)</strong></td>
+<td>=STDEV( )</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>30 or more</td>
+<td>SD or <strong>standard error (SE)</strong></td>
+<td>=STDEV( )/SQRT(n)</td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>4 or fewer</td>
+<td><strong>Range</strong></td>
+<td>=MAX( ) − MIN( )</td>
+</tr>
+<tr>
+<td>Median</td>
+<td>5 or more</td>
+<td><strong>Interquartile range (IQR)</strong></td>
+<td>=QUARTILE( ,3) − QUARTILE( ,1)</td>
+</tr>
+<tr>
+<td>Median</td>
+<td>4 or fewer</td>
+<td><strong>Range</strong></td>
+<td>=MAX( ) − MIN( )</td>
+</tr>
+</tbody>
+</table></div>
+<p>About 68% of values lie within 1 SD of the mean. A small SD suggests consistent, precise data; a large SD suggests high natural variation or error. Biological material often varies a lot, so comment on it.</p>
+<p><strong>Summary table</strong></p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Level of IV / unit</th>
+<th>Skew</th>
+<th>Mean (or median) / unit</th>
+<th>SD (or IQR/range) / unit</th>
+<th>n</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Level A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Level B</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Level C</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Level D</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Level E</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="step-6-correlation-studies">Step 6: Correlation studies</h3>
+<ol type="1">
+<li><p>Draw a scatter graph.</p></li>
+<li><p><strong>Linear</strong> → Pearson’s r. <strong>Curved but always rising or always falling (monotonic)</strong> → Spearman’s rank rₛ.</p></li>
+<li><p>Calculate with all data pairs (=PEARSON( ) or a cited calculator).</p></li>
+<li><p>Describe direction (positive or negative) and strength: up to 0.5 weak; 0.5–0.8 moderate; 0.8–1.0 strong.</p></li>
+</ol>
+<h3 id="step-7-unique-data">Step 7: Unique data</h3>
+<p>Write a paragraph and build a summary table describing the data (for example, the number of quadrats in which each species was present, or sequence similarity percentages).</p>
+<h2 id="stage-7">Stage 7: Present your data in graphs</h2>
+<p class="stage-meta"><strong>Week 6</strong></p>
+<p>Graph your <strong>processed</strong> data (means, medians, frequencies), not every raw value. The graph follows from what you calculated in Stage 6. Excel handles custom SD error bars more easily than Google Sheets; clearly scanned hand-drawn graphs are also acceptable.</p>
+<h3 id="choose-your-graph">Choose your graph</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>You calculated</th>
+<th>Independent variable is</th>
+<th>Graph</th>
+<th>Biology example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean + SD (or range)</td>
+<td>Categories</td>
+<td><strong>Bar chart</strong> with ± 1 SD error bars</td>
+<td>Rate of respiration in three yeast species</td>
+</tr>
+<tr>
+<td>Mean + SD (or range)</td>
+<td>Numbers</td>
+<td><strong>Points of the means</strong> with ± 1 SD error bars and a trendline</td>
+<td>Catalase activity at five temperatures</td>
+</tr>
+<tr>
+<td>Median + IQR</td>
+<td>Either</td>
+<td><strong>Box and whisker</strong> plot</td>
+<td>Leaf length in sun vs shade (skewed data)</td>
+</tr>
+<tr>
+<td>Mode (qualitative)</td>
+<td>Levels of a variable</td>
+<td><strong>Stacked bar chart</strong> of frequencies, with a key</td>
+<td>Seed colour phenotypes in different conditions</td>
+</tr>
+<tr>
+<td>Mode (qualitative)</td>
+<td>No levels</td>
+<td><strong>Pie chart</strong>, with a key</td>
+<td>Proportions of species in a sample</td>
+</tr>
+<tr>
+<td>Correlation (r)</td>
+<td>Paired data</td>
+<td><strong>Scatter graph</strong> with a trendline</td>
+<td>Light intensity vs percentage cover along a transect</td>
+</tr>
+<tr>
+<td>Unique data</td>
+<td>—</td>
+<td>Suitable visual (e.g. phylogenetic tree) with a descriptive paragraph</td>
+<td>Sequence comparison between species</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="every-graph-must-have">Every graph must have</h3>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />A numbered, descriptive title: “Figure 5: Mean percentage change in mass of <em>S. tuberosum</em> cylinders in six sucrose concentrations (error bars show ± 1 SD)”</label></p></li>
+<li><p><label><input type="checkbox" />Independent variable on the x-axis, dependent variable on the y-axis</label></p></li>
+<li><p><label><input type="checkbox" />Axis labels with metric units and proportional scales</label></p></li>
+<li><p><label><input type="checkbox" />Error bars, defined in the caption</label></p></li>
+<li><p><label><input type="checkbox" />A key, where colours are used</label></p></li>
+<li><p><label><input type="checkbox" />A size that makes it easy to read</label></p></li>
+</ul>
+<h3 id="choose-a-trendline-numerical-data">Choose a trendline (numerical data)</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Trendline</th>
+<th>Shape</th>
+<th>Biology example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linear</td>
+<td>Steady increase or decrease</td>
+<td>Osmosis across a concentration range</td>
+</tr>
+<tr>
+<td>Polynomial</td>
+<td>Rises then falls (a peak)</td>
+<td>Enzyme activity vs temperature or pH</td>
+</tr>
+<tr>
+<td>Exponential</td>
+<td>Rapid, continual increase</td>
+<td>Early bacterial or yeast population growth</td>
+</tr>
+<tr>
+<td>Logarithmic</td>
+<td>Rises quickly then levels off</td>
+<td>Photosynthesis vs light intensity (saturation)</td>
+</tr>
+</tbody>
+</table></div>
+<p>Report <strong>R²</strong>: the closer to 1, the better the line fits. Use it to justify your trendline, or explain why you did not add one.</p>
+<h3 id="write-about-each-graph-35-sentences">Write about each graph (3–5 sentences)</h3>
+<p>1. Where: “See Figure [n] for …”<br />
+2. Type: “A [graph type] was used because [justification linked to the data].”<br />
+3. Comparison: “Mean [DV] increased from [value] at [level] to [value] at [level] …”<br />
+4. Error bars: “The SD at [level] was large relative to the mean, suggesting high biological variability …”<br />
+5. Overlap: “The error bars for [level] and [level] overlap, suggesting the difference may not be real …”<br />
+(Trendline) “A [type] trendline (R² = [value]) shows [shape]; the slope is steep until [x], then levels off …”</p>
+<h2 id="stage-8">Stage 8: Inferential statistics</h2>
+<p class="stage-meta"><strong>Week 7</strong></p>
+<p>Inferential statistics tell you whether your results are likely to be <strong>real</strong> or could have happened <strong>by chance</strong>. Choose the test that fits your data; running a test that does not fit loses marks.</p>
+<h3 id="step-1-key-ideas">Step 1: Key ideas</h3>
+<ul>
+<li><p><strong>Significant:</strong> very unlikely to be due to chance. <strong>Not significant:</strong> could be due to chance.</p></li>
+<li><p><strong>p-value:</strong> the probability that results like yours happen by chance alone (p = 0.025 means a 2.5% chance).</p></li>
+<li><p><strong>Significance level:</strong> the cut-off used in biology is <strong>0.05</strong>. If p &lt; 0.05, the result is significant.</p></li>
+<li><p>Significance is more likely with a large difference between groups, small spread within groups, and a large sample.</p></li>
+</ul>
+<p>In your report, define an inferential test, <em>significant</em> and <em>not significant</em>, and state your significance level, with a citation.</p>
+<h3 id="step-2-choose-your-test-from-your-graph">Step 2: Choose your test from your graph</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Your graph and data</th>
+<th>Test</th>
+<th>Statistic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bar chart of means ± SD, <strong>2</strong> groups, unrelated samples</td>
+<td>Unpaired t-test (two-tailed)</td>
+<td>t</td>
+</tr>
+<tr>
+<td>Bar chart of means ± SD, <strong>2</strong> groups, same samples before and after</td>
+<td>Paired t-test</td>
+<td>t</td>
+</tr>
+<tr>
+<td>Means ± SD, <strong>3 or more</strong> groups</td>
+<td>One-way ANOVA + Tukey post-hoc</td>
+<td>F</td>
+</tr>
+<tr>
+<td>Box and whisker of medians (skewed data)</td>
+<td>Kruskal–Wallis + Dunn post-hoc</td>
+<td>H</td>
+</tr>
+<tr>
+<td>Stacked bar or pie chart of counts; phenotype ratios; species association</td>
+<td>Chi-squared</td>
+<td>χ²</td>
+</tr>
+<tr>
+<td>Scatter or line of means, <strong>linear</strong> trendline</td>
+<td>Pearson’s correlation</td>
+<td>r</td>
+</tr>
+<tr>
+<td>Scatter or line of means, <strong>curved but monotonic</strong></td>
+<td>Spearman’s rank correlation</td>
+<td>rₛ</td>
+</tr>
+<tr>
+<td>Line of means, <strong>non-monotonic</strong> (e.g. enzyme optimum)</td>
+<td>ANOVA + post-hoc</td>
+<td>F</td>
+</tr>
+</tbody>
+</table></div>
+<p>Explain <strong>why</strong> your test suits your data. Chi-squared works only on counts, not percentages or means.</p>
+<h3 id="step-3-statistical-hypotheses">Step 3: Statistical hypotheses</h3>
+<p>These are different from your research hypothesis. Match the wording to the test.</p>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Null hypothesis (H₀)</th>
+<th>Alternative hypothesis (H₁)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>t-test, ANOVA, Kruskal–Wallis</td>
+<td>There is no significant <strong>difference</strong> in [DV] between [levels of IV]; any difference may be due to chance.</td>
+<td>There is a significant <strong>difference</strong> in [DV] between [levels of IV].</td>
+</tr>
+<tr>
+<td>Chi-squared (association)</td>
+<td>There is no significant <strong>association</strong> between [species A] and [species B] at [site].</td>
+<td>There is a significant association between [species A] and [species B].</td>
+</tr>
+<tr>
+<td>Chi-squared (goodness of fit)</td>
+<td>There is no significant difference between observed and expected [counts/ratio].</td>
+<td>There is a significant difference between observed and expected [counts/ratio].</td>
+</tr>
+<tr>
+<td>Pearson, Spearman</td>
+<td>There is no significant <strong>correlation</strong> between [X] and [Y].</td>
+<td>There is a significant correlation between [X] and [Y].</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="step-4-run-the-test-and-show-working">Step 4: Run the test and show working</h3>
+<p>Use a spreadsheet or a reputable online calculator. Include a clear, captioned, cited screenshot or worked calculation. If ANOVA or Kruskal–Wallis is significant, report the post-hoc test to show <strong>which</strong> groups differ.</p>
+<h3 id="step-5-results-table">Step 5: Results table</h3>
+<div class="tbl"><table>
+<thead>
+<tr>
+<th>Test</th>
+<th>n</th>
+<th>Test statistic</th>
+<th>p-value</th>
+<th>Significant at 0.05?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Round to 2–3 decimal places; number the table; one value per cell.</p>
+<h3 id="step-6-accept-or-reject-the-null-hypothesis">Step 6: Accept or reject the null hypothesis</h3>
+<p>I used the [test] to determine whether the results were statistically significant.<br />
+The calculated [statistic] was [value] and the p-value was [value].<br />
+Because the p-value was [lower/higher] than the 0.05 significance level,<br />
+the results [are/are not] significant, so I [reject/fail to reject] the null hypothesis.</p>
+<h2 id="stage-9">Stage 9: The 75% draft</h2>
+<p class="stage-meta"><strong>Week 7 · Toddle Task 5 · Checkpoint 4 · About 2,000 words</strong></p>
+<p>Add your analysis from Stages 6–8 to the 50% draft. Your teacher will return a short list of priority gaps to fix before the complete draft.</p>
+<p><strong>Descriptive analysis</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />Preliminary calculations, if needed, with a worked example</label></p></li>
+<li><p><label><input type="checkbox" />Skew or normality check, with its justification</label></p></li>
+<li><p><label><input type="checkbox" />Central tendency and spread, each justified</label></p></li>
+<li><p><label><input type="checkbox" />Correlation coefficient, if relevant</label></p></li>
+<li><p><label><input type="checkbox" />Numbered, titled table of results by level of the independent variable</label></p></li>
+<li><p><label><input type="checkbox" />Worked examples or cited screenshots, large enough to check, labelled with the level used</label></p></li>
+</ul>
+<p><strong>Data presentation</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />Titled, numbered graphs with labelled axes, units and proportional scales</label></p></li>
+<li><p><label><input type="checkbox" />Graph type justified</label></p></li>
+<li><p><label><input type="checkbox" />Means, medians or frequencies compared across levels</label></p></li>
+<li><p><label><input type="checkbox" />Error bars described relative to the central value and to each other (spread, reliability, overlap)</label></p></li>
+<li><p><label><input type="checkbox" />Trendline justified with R²; trend described (slopes, optimum, plateau, inflection points)</label></p></li>
+</ul>
+<p><strong>Inferential analysis</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />Test chosen and justified</label></p></li>
+<li><p><label><input type="checkbox" />Null and alternative hypotheses stated</label></p></li>
+<li><p><label><input type="checkbox" />Cited calculation or screenshot</label></p></li>
+<li><p><label><input type="checkbox" />Results table: statistic, n, p-value compared with 0.05</label></p></li>
+<li><p><label><input type="checkbox" />Sentence accepting or rejecting the null hypothesis</label></p></li>
+</ul>
+<p><strong>Throughout</strong></p>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />Uncertainties in every raw data header</label></p></li>
+<li><p><label><input type="checkbox" />Consistent decimal places</label></p></li>
+<li><p><label><input type="checkbox" />Works cited and AI declaration updated</label></p></li>
+</ul>
+<h3 id="self-check-before-submitting-task-5">Self-check before submitting Task 5</h3>
+<ul class="task-list">
+<li><p><label><input type="checkbox" />Every number in the analysis can be traced back to my raw data</label></p></li>
+<li><p><label><input type="checkbox" />Every calculation, graph and test has a stated reason</label></p></li>
+<li><p><label><input type="checkbox" />About 2,000 words</label></p></li>
+</ul>
+    </article>
+    <p class="ia-print">Tick boxes are saved on this device only. <a href="#" onclick="window.print();return false">Print this page</a></p>
+    <div class="ia-pager"><a href="ia-research-design.html">&larr; Research design</a><a href="ia-conclusion-evaluation.html">Conclusion and evaluation &rarr;</a></div>
+  </main>
+  <footer class="site-foot">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</footer>
+</div>
+<script src="assets/ia.js"></script>
+</body>
+</html>

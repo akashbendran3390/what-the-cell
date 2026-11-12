@@ -2,10 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://whatthecell.org/</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/about.html</loc><lastmod>2026-11-12</lastmod></url>
+  <url><loc>https://whatthecell.org/big-questions.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/collaborative-science-project.html</loc><lastmod>2026-11-12</lastmod></url>
+  <url><loc>https://whatthecell.org/concept-challenges.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/course-map.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/data-questions.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/dp-biology.html</loc><lastmod>2026-11-12</lastmod></url>
+  <url><loc>https://whatthecell.org/exams.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/extended-essay.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/ia-conclusion-evaluation.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/ia-data-analysis.html</loc><lastmod>2026-11-12</lastmod></url>
@@ -87,5 +90,6 @@
   <url><loc>https://whatthecell.org/subtopics/sl-d4-1.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/subtopics/sl-d4-2.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/subtopics/sl-d4-3.html</loc><lastmod>2026-11-12</lastmod></url>
+  <url><loc>https://whatthecell.org/think-deeper.html</loc><lastmod>2026-11-12</lastmod></url>
   <url><loc>https://whatthecell.org/tok.html</loc><lastmod>2026-11-12</lastmod></url>
 </urlset>

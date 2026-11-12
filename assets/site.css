@@ -605,3 +605,4 @@ body{background-image:
 .dg .d-n{fill:none;stroke-width:3;stroke-linecap:round}
 .dg .d-teal-s{stroke:#2A8C8C}.dg .d-amber-s{stroke:#D08A1E}.dg .d-pink-s{stroke:#B0356F}
 .dg .d-teal-line{fill:none;stroke:#2A8C8C;stroke-width:2.5}.dg .d-dark{fill:#4B4453}
+.think-units li.think-path{border-bottom:0;padding-top:14px;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}

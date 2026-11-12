@@ -53,7 +53,7 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
   radial-gradient(circle at 72% 82%,rgb(255 255 255/.14) 0 36px,rgb(255 255 255/.45) 36px 39px,transparent 40px)}
 .site-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 20px;padding-block:18px 0}
 .wordmark{display:inline-flex;align-items:center;gap:9px;font:400 22px var(--display);color:#fff;text-decoration:none}
-.wordmark::before{content:"";width:24px;height:24px;flex:none;border-radius:58% 42% 52% 48%/48% 56% 44% 52%;background:radial-gradient(circle at 50% 50%,var(--yellow) 0 4px,var(--violet) 4.5px 7px,var(--pink) 7.5px)}
+.wordmark::before{content:"";width:32px;height:32px;flex:none;background:url(logo-mark.svg) center/contain no-repeat}
 .site-nav{display:flex;flex-wrap:wrap;gap:6px}
 .site-nav a{color:#fff;text-decoration:none;font:600 15px var(--ui);padding:4px 13px;border-radius:99px;background:rgb(255 255 255/.14)}
 .site-nav a:hover{background:rgb(255 255 255/.28)}

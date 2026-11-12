@@ -65,3 +65,8 @@
 @media print{.band,.ia-tabs,.ia-pager,.site-foot,.ia-print,.ia-dates input{display:none!important}.ia-doc{box-shadow:none;padding:0}}
 .ia-tabs a.ia-dl{background:var(--yellow);color:var(--on-bright);margin-left:auto}
 @media (max-width:640px){.ia-tabs a.ia-dl{margin-left:0}}
+.ia-cards-inline{margin:0}
+.ia-btn{display:inline-block;font:700 15px var(--ui);padding:9px 18px;border-radius:99px;background:var(--yellow);color:var(--on-bright);text-decoration:none}
+.ia-btn:hover{outline:2px solid var(--violet)}
+.ia-doc .ia-cards{margin:4px 0}
+.ia-doc .ia-card h3{color:var(--on-bright)}

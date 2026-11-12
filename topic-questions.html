@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!-- seo -->
-<meta name="description" content="Topic questions. A generator that builds a fresh set of practice questions for any topic and level, with answers. It is on its way. IB DP Biology resources from What the Cell.">
+<meta name="description" content="Topic questions. Build your own practice worksheet: choose the topics, the level and the kinds of question, then check your work against the mark scheme. IB DP Biology resources from What the Cell.">
 <link rel="canonical" href="https://whatthecell.org/topic-questions.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
@@ -12,7 +12,7 @@
 <meta name="theme-color" content="#2A1D5E">
 <meta property="og:site_name" content="What the Cell">
 <meta property="og:title" content="Topic questions | What the Cell">
-<meta property="og:description" content="Topic questions. A generator that builds a fresh set of practice questions for any topic and level, with answers. It is on its way. IB DP Biology resources from What the Cell.">
+<meta property="og:description" content="Topic questions. Build your own practice worksheet: choose the topics, the level and the kinds of question, then check your work against the mark scheme. IB DP Biology resources from What the Cell.">
 <meta property="og:url" content="https://whatthecell.org/topic-questions.html">
 <meta property="og:image" content="https://whatthecell.org/logo-512.png">
 <!-- /seo -->
@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..700&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
 <link rel="stylesheet" href="assets/site.css?v=2ee7a93d">
 <script src="assets/theme.js?v=d6b97089"></script>
-<link rel="stylesheet" href="assets/ia.css?v=6620171b">
+<link rel="stylesheet" href="assets/ia.css?v=5d1ee0da">
 </head>
 <body>
 <div class="band has-pic" style="--band-pic:url('art/banners/exams.jpg')">
@@ -37,9 +37,9 @@
       </nav>
     </header>
     <div class="intro">
-      <div class="eyebrow">Assessment &middot; coming soon</div>
+      <div class="eyebrow">Assessment &middot; practice generator</div>
       <h1>Topic questions</h1>
-      <p class="lede">A generator that builds a fresh set of practice questions for any topic and level, with answers. It is on its way.</p>
+      <p class="lede">Build your own practice worksheet: choose the topics, the level and the kinds of question, then check your work against the mark scheme.</p>
     </div>
   </div>
 </div>
@@ -48,23 +48,17 @@
     
 
     <article class="ia-doc">
+<p>Pick your level, the topics you want to practise, and the kinds of question. The generator builds a fresh worksheet each time, with marks and a mark scheme you can reveal when you have finished.</p>
 <p class="ia-callout">
-<strong>Coming soon.</strong> The topic question generator is being built. Until it is ready, use the practice you already have on the site, listed below.
+<strong>Being built unit by unit.</strong> The first topic is ready: B3.3 Muscle and motility (HL). AHL Body Systems comes next, then Plant Systems (SL and HL) and Cells (SL). Topics that are not ready yet are greyed out.
 </p>
-<h2 id="what-it-will-do">What it will do</h2>
+<div id="qgen-app" class="qgen"></div>
+<noscript><p>The generator needs JavaScript. Every subtopic page also has a worksheet to print and a self-check quiz.</p></noscript>
+<h2 id="other-ways-to-practise">Other ways to practise</h2>
 <ul>
-<li><strong>Pick a topic:</strong> any SL or AHL subtopic, a whole unit, or a mix for revision.</li>
-<li><strong>Pick a level and type:</strong> SL or HL; multiple choice, short answer, data-based or extended response.</li>
-<li><strong>Get a fresh set:</strong> a new mix of questions every time, written for this site in the style of the exam.</li>
-<li><strong>Check your work:</strong> answers and mark points to compare with, so you can practise on your own.</li>
-</ul>
-<h2 id="practise-now">Practise now</h2>
-<ul>
-<li><strong>Self-check quizzes:</strong> every subtopic page has a quick self-check with answers. Find your subtopic on the <a href="course-map.html">course map</a>.</li>
-<li><strong>Worksheets:</strong> each subtopic page has a worksheet to print.</li>
-<li><strong><a href="data-questions.html">Data questions</a>:</strong> graphs and tables to analyse, by unit, like Paper 1B and Paper 2 Section A.</li>
-<li><strong><a href="exams.html">Exams and command terms</a>:</strong> how each paper works, and what each command term asks you to do.</li>
-<li><strong><a href="think-deeper.html">Think deeper</a>:</strong> concept challenges and big questions to stretch your understanding.</li>
+<li><strong>Self-check quizzes and worksheets</strong> on every subtopic page. Find yours on the <a href="course-map.html">course map</a>.</li>
+<li><strong><a href="data-questions.html">Data questions</a>:</strong> graphs and tables to analyse, by unit.</li>
+<li><strong><a href="exams.html">Exams and command terms</a>:</strong> how each paper works and what each command term asks.</li>
 </ul>
     </article>
     <p class="ia-print"><a href="#" onclick="window.print();return false">Print this page</a></p>
@@ -73,5 +67,8 @@
   <footer class="site-foot">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</footer>
 </div>
 <script src="assets/ia.js?v=7372b16e"></script>
+<script src="assets/course-data.js?v=9680c879"></script>
+<script src="assets/qbank/index.js?v=d26c3e8c"></script>
+<script src="assets/qgen.js?v=bf3025f0"></script>
 </body>
 </html>

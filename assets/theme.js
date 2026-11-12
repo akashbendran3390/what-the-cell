@@ -38,4 +38,20 @@
     }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
+
+  // Grouped menu (2026-11-12): only one drop-down open at a time; a click elsewhere or Escape closes it.
+  function groups() { return Array.prototype.slice.call(document.querySelectorAll('.nav-group')); }
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (!d.classList || !d.classList.contains('nav-group') || !d.open) return;
+    groups().forEach(function (g) { if (g !== d) g.open = false; });
+  }, true);
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('.nav-group')) return;
+    groups().forEach(function (g) { g.open = false; });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    groups().forEach(function (g) { if (g.open) { g.open = false; g.querySelector('summary').focus(); } });
+  });
 })();

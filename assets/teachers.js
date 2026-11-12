@@ -5,9 +5,10 @@
     var m = document.getElementById('t-msg'); if (m) m.textContent = 'This browser cannot open the teacher area. Please use a current version of Chrome, Edge, Safari or Firefox.';
     return;
   }
-  var salt = Uint8Array.from(atob(main.dataset.salt), function (c) { return c.charCodeAt(0); });
+  // Several logins (2026-11-12): each one unlocks its own wrapped copy of the master key
+  var logins = JSON.parse(main.dataset.logins || '[]');
   var iter = parseInt(main.dataset.iter, 10);
-  var cacheKey = 'wtc-teacher-' + main.dataset.salt;
+  var cacheKey = 'wtc-teacher-' + main.dataset.build;
   var keys = null;
   var enc = new TextEncoder();
   var msg = document.getElementById('t-msg');
@@ -22,10 +23,23 @@
       crypto.subtle.importKey('raw', raw.slice(32, 64), { name: 'HMAC', hash: 'SHA-256' }, false, ['verify'])
     ]).then(function (k) { return { aes: k[0], mac: k[1], raw: raw }; });
   }
-  function derive(user, pass) {
+  function deriveWith(user, pass, salt) {
     return crypto.subtle.importKey('raw', enc.encode(user.trim().toLowerCase() + '\n' + pass), 'PBKDF2', false, ['deriveBits'])
       .then(function (base) { return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt, iterations: iter, hash: 'SHA-256' }, base, 512); })
       .then(function (bits) { return importKeys(new Uint8Array(bits)); });
+  }
+  // Try each login entry in turn; the right one unwraps the master key (its HMAC checks out)
+  function derive(user, pass) {
+    var i = 0;
+    function next() {
+      if (i >= logins.length) return Promise.reject(new Error('wrong'));
+      var l = logins[i++];
+      return deriveWith(user, pass, unb64(l.s))
+        .then(function (k) { return open(k, unb64(l.w).buffer); })
+        .then(function (master) { return importKeys(new Uint8Array(master)); })
+        .catch(next);
+    }
+    return next();
   }
   function open(k, buf) {
     var u = new Uint8Array(buf);

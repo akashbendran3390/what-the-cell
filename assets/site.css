@@ -43,8 +43,7 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
   radial-gradient(circle at calc(100% - 110px) 130px,rgb(247 168 207/.95) 0 22px,transparent 23px),
   radial-gradient(circle at calc(100% - 110px) 130px,rgb(247 168 207/.32) 0 76px,rgb(247 168 207/.75) 76px 80px,transparent 81px),
   radial-gradient(circle at 72% 78%,rgb(203 233 138/.95) 0 11px,transparent 12px),
-  radial-gradient(circle at 72% 78%,rgb(203 233 138/.26) 0 38px,rgb(203 233 138/.7) 38px 41px,transparent 42px),
-  radial-gradient(circle at 42% 13%,rgb(138 223 218/.28) 0 26px,rgb(138 223 218/.75) 26px 28px,transparent 29px)}
+  radial-gradient(circle at 72% 78%,rgb(203 233 138/.26) 0 38px,rgb(203 233 138/.7) 38px 41px,transparent 42px)}
 .band-in{position:relative;padding-block:0 52px;display:flex;flex-direction:column;gap:26px}
 .band.t-A{--base:var(--tA)}.band.t-B{--base:var(--tB)}.band.t-C{--base:var(--tC)}.band.t-D{--base:var(--tD)}
 .band.t-A,.band.t-B,.band.t-C,.band.t-D{background-image:
@@ -606,3 +605,31 @@ body{background-image:
 .dg .d-teal-s{stroke:#2A8C8C}.dg .d-amber-s{stroke:#D08A1E}.dg .d-pink-s{stroke:#B0356F}
 .dg .d-teal-line{fill:none;stroke:#2A8C8C;stroke-width:2.5}.dg .d-dark{fill:#4B4453}
 .think-units li.think-path{border-bottom:0;padding-top:14px;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+
+/* DP Biology hub cards and question generator placeholder (2026-11-12, replaced the plain extra cards and weekly questions) */
+.qgen-soon{border:2px dashed var(--line);border-radius:22px;padding:20px 24px;background:var(--surface)}
+.qgen-soon h2{font:700 22px/1.2 var(--ui);margin:6px 0 4px}
+.qgen-soon p{margin:0;color:var(--muted);max-width:60ch}
+.qgen-tag{display:inline-block;font:600 12.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:99px;background:var(--soft);color:var(--violet)}
+:root[data-theme="dark"] .qgen-tag{color:var(--lilac)}
+.hub-head{margin-bottom:-14px}
+.hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.hub-grid .hub-card:first-child{grid-column:1/-1}
+@media (min-width:1000px){.hub-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.hub-grid .hub-card:first-child{grid-column:auto}}
+@media (max-width:520px){.hub-grid{grid-template-columns:minmax(0,1fr)}}
+.hub-card{--c:var(--cyan);display:flex;flex-direction:column;background:var(--surface);border-radius:20px;overflow:hidden;text-decoration:none;color:var(--fg);box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;border-bottom:5px solid var(--c)}
+.hub-card img{display:block;width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;background:var(--soft);transition:transform .35s}
+.hub-grid .hub-card:first-child img{aspect-ratio:16/5;object-position:center 30%}
+@media (min-width:1000px){.hub-grid .hub-card:first-child img{aspect-ratio:16/10}}
+.hub-card:hover{transform:translateY(-4px)}
+.hub-card:hover img{transform:scale(1.04)}
+.hub-body{display:flex;flex-direction:column;gap:4px;padding:14px 16px 16px;position:relative;background:var(--surface)}
+.hub-kicker{font:600 11.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.hub-card h3{margin:0;font:700 17px/1.25 var(--ui);color:var(--fg)}
+.hub-desc{font-size:14px;line-height:1.4;color:var(--muted)}
+.hub-card:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+.hc-cyan{--c:var(--cyan)}.hc-lilac{--c:var(--lilac)}.hc-yellow{--c:var(--yellow)}.hc-violet{--c:var(--violet)}.hc-pink{--c:var(--pink)}
+.hc-lime{--c:var(--lime)}.hc-magenta{--c:var(--magenta)}.hc-orange{--c:var(--orange)}.hc-green{--c:var(--lime)}
+@media (prefers-reduced-motion:reduce){.hub-card,.hub-card img{transition:none}.hub-card:hover,.hub-card:hover img{transform:none}}
+/* Header circles stay clear of the menu: below 1240px the menu can reach them, so drop them there (2026-11-12) */
+@media (max-width:1240px){.band:not(.hero),.band.t-A,.band.t-B,.band.t-C,.band.t-D{background-image:none}}

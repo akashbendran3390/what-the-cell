@@ -70,3 +70,4 @@
 .ia-btn:hover{outline:2px solid var(--violet)}
 .ia-doc .ia-cards{margin:4px 0}
 .ia-doc .ia-card h3{color:var(--on-bright)}
+.ia-btn-alt{background:var(--soft);color:var(--fg)}

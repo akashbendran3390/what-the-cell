@@ -271,7 +271,9 @@ html.presenting-on{overflow:hidden}
 .videos .yt-player a.yt-out{display:inline;height:auto;background:none;box-shadow:none;padding:0;color:var(--accent);font-size:13px;text-decoration:underline}
 .site-note{font-size:13px;color:var(--muted)}
 .section-head{margin-bottom:-18px}
-.extras{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+.extras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (min-width:900px){.extras{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:420px){.extras{grid-template-columns:1fr}}
 .extra-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:20px 22px;border-radius:26px;text-decoration:none;color:var(--on-bright);box-shadow:var(--shadow);transition:transform .18s}
 .extra-card:hover{transform:translateY(-3px)}
 .extra-card .pill{background:var(--surface);color:var(--fg)}

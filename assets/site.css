@@ -41,15 +41,12 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
 /* Bands: the coloured top of every page */
 .band{position:relative;overflow:hidden;color:#fff;background-color:var(--base,var(--deep));border-radius:0 0 50% 50%/0 0 34px 34px;background-image:
   radial-gradient(circle at calc(100% - 110px) 130px,rgb(247 168 207/.95) 0 22px,transparent 23px),
-  radial-gradient(circle at calc(100% - 110px) 130px,rgb(247 168 207/.32) 0 76px,rgb(247 168 207/.75) 76px 80px,transparent 81px),
-  radial-gradient(circle at 72% 78%,rgb(203 233 138/.95) 0 11px,transparent 12px),
-  radial-gradient(circle at 72% 78%,rgb(203 233 138/.26) 0 38px,rgb(203 233 138/.7) 38px 41px,transparent 42px)}
+  radial-gradient(circle at calc(100% - 110px) 130px,rgb(247 168 207/.32) 0 76px,rgb(247 168 207/.75) 76px 80px,transparent 81px)}
 .band-in{position:relative;padding-block:0 52px;display:flex;flex-direction:column;gap:26px}
 .band.t-A{--base:var(--tA)}.band.t-B{--base:var(--tB)}.band.t-C{--base:var(--tC)}.band.t-D{--base:var(--tD)}
 .band.t-A,.band.t-B,.band.t-C,.band.t-D{background-image:
   radial-gradient(circle at calc(100% - 110px) 140px,rgb(255 255 255/.55) 0 22px,transparent 23px),
-  radial-gradient(circle at calc(100% - 110px) 140px,rgb(255 255 255/.14) 0 76px,rgb(255 255 255/.5) 76px 80px,transparent 81px),
-  radial-gradient(circle at 72% 82%,rgb(255 255 255/.14) 0 36px,rgb(255 255 255/.45) 36px 39px,transparent 40px)}
+  radial-gradient(circle at calc(100% - 110px) 140px,rgb(255 255 255/.14) 0 76px,rgb(255 255 255/.5) 76px 80px,transparent 81px)}
 .site-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 20px;padding-block:18px 0}
 .wordmark{display:inline-flex;align-items:center;gap:9px;font:400 22px var(--display);color:#fff;text-decoration:none}
 .wordmark::before{content:"";width:32px;height:32px;flex:none;background:url(logo-mark.svg) center/contain no-repeat}

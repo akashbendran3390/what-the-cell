@@ -54,8 +54,8 @@
     var inner = document.createElement('div'); inner.className = 'board-in';
     var h = document.createElement('h2'); h.textContent = card.querySelector('.cc-title').textContent; inner.appendChild(h);
     ov.setAttribute('aria-label', h.textContent);
-    var fig = card.querySelector('.cc-fig svg');
-    if (fig) { var f = fig.cloneNode(true); f.classList.add('board-fig'); inner.appendChild(f); }
+    var fig = card.querySelector('.cc-photo img');
+    if (fig) { var f = fig.cloneNode(true); f.removeAttribute('loading'); f.classList.add('board-photo'); inner.appendChild(f); }
     ['.cc-q', '.bq-hook', '.cc-opts', '.bq-think'].forEach(function (s) {
       var el = card.querySelector(s); if (!el) return;
       var c = el.cloneNode(true);
@@ -63,7 +63,11 @@
       inner.appendChild(c);
     });
     var hidden = document.createElement('div'); hidden.className = 'board-answer'; hidden.hidden = true;
-    if (isCc) { hidden.appendChild(card.querySelector('.cc-short').cloneNode(true)); }
+    if (isCc) {
+      hidden.appendChild(card.querySelector('.cc-short').cloneNode(true));
+      var dg = card.querySelector('.cc-diagram');
+      if (dg) { var dc = dg.cloneNode(true); dc.querySelectorAll('[id]').forEach(function (el) { el.id = el.id + '-b'; }); dc.querySelectorAll('[marker-end]').forEach(function (el) { el.setAttribute('marker-end', el.getAttribute('marker-end').replace(')', '-b)')); }); hidden.appendChild(dc); }
+    }
     else { card.querySelectorAll('.bq-sofar p').forEach(function (p) { hidden.appendChild(p.cloneNode(true)); }); }
     inner.appendChild(hidden);
     ov.appendChild(bar); ov.appendChild(inner);

@@ -67,14 +67,44 @@
     tabs.forEach(function (t) { t.addEventListener('click', function (e) { e.preventDefault(); pick(t.dataset.ttab); }); });
     box.querySelectorAll('[data-file]').forEach(function (b) {
       b.addEventListener('click', function () {
-        var label = b.textContent; b.textContent = 'Preparing...'; b.disabled = true;
+        var label = b.innerHTML; b.textContent = 'Preparing...'; b.disabled = true;
         fetchBin(b.dataset.file).then(function (buf) { return open(keys, buf); }).then(function (plain) {
           var url = URL.createObjectURL(new Blob([plain], { type: b.dataset.type || 'application/octet-stream' }));
           var a = document.createElement('a'); a.href = url; a.download = b.dataset.name; document.body.appendChild(a); a.click(); a.remove();
           setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-          b.textContent = label; b.disabled = false;
-        }).catch(function () { b.textContent = 'Could not open, try again'; b.disabled = false; });
+          b.innerHTML = label; b.disabled = false;
+        }).catch(function () { b.textContent = 'Could not open, try again'; b.disabled = false; setTimeout(function () { b.innerHTML = label; }, 3000); });
       });
+    });
+    // By-topic view (2026-11-13): level filter, search and open/close all units
+    var units = box.querySelectorAll('.t-unit');
+    var lvl = 'all', search = box.querySelector('#t-search'), empty = box.querySelector('#t-empty'), openAll = box.querySelector('#t-openall');
+    function filter() {
+      var q = search ? search.value.trim().toLowerCase() : '', any = false;
+      units.forEach(function (u) {
+        var lvlOk = lvl === 'all' || u.dataset.level === lvl, hits = 0;
+        u.querySelectorAll('.t-topic').forEach(function (t) {
+          var ok = lvlOk && (!q || q.split(/\s+/).every(function (w) { return t.dataset.q.indexOf(w) >= 0; }));
+          t.hidden = !ok; if (ok) hits++;
+        });
+        var x = u.querySelector('.t-unitx'); if (x) x.hidden = !!q;
+        u.hidden = !hits; if (hits) any = true;
+        if (q && hits) u.open = true;
+      });
+      if (empty) empty.hidden = any;
+    }
+    box.querySelectorAll('[data-lvl]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        lvl = b.dataset.lvl;
+        box.querySelectorAll('[data-lvl]').forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+        filter();
+      });
+    });
+    if (search) search.addEventListener('input', filter);
+    if (openAll) openAll.addEventListener('click', function () {
+      var shut = Array.prototype.some.call(units, function (u) { return !u.hidden && !u.open; });
+      units.forEach(function (u) { if (!u.hidden) u.open = shut; });
+      openAll.textContent = shut ? 'Close all units' : 'Open all units';
     });
     document.getElementById('t-logout').addEventListener('click', function () { ss(cacheKey, null); location.reload(); });
   }

@@ -42,7 +42,7 @@
     '<fieldset class="qg-row"><legend>1. Level</legend>' +
     '<label><input type="radio" name="lvl" value="SL"> SL (core topics only)</label>' +
     '<label><input type="radio" name="lvl" value="HL" checked> HL (core and AHL topics)</label></fieldset>' +
-    '<fieldset><legend>2. Topics</legend><p class="qg-hint">Topics with questions so far can be ticked. More are being added unit by unit.</p><div class="qg-units"></div></fieldset>' +
+    '<fieldset><legend>2. Topics</legend><p class="qg-hint">Tick the topics you want to practise.</p><div class="qg-units"></div></fieldset>' +
     '<fieldset class="qg-row"><legend>3. Question types</legend>' + TYPES.map(function (t) { return '<label><input type="checkbox" name="type" value="' + t[0] + '" checked> ' + t[1] + '</label>'; }).join('') + '</fieldset>' +
     '<fieldset class="qg-row"><legend>4. Length</legend><label>Number of questions <select name="n"><option>5</option><option selected>10</option><option>15</option><option>20</option><option value="999">All available</option></select></label></fieldset>' +
     '<div class="qg-actions"><button type="submit" class="qg-go">Make my worksheet</button><span class="qg-msg" role="status"></span></div>';

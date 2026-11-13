@@ -20,14 +20,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="assets/site.css?v=2ee7a93d">
+<link rel="stylesheet" href="assets/site.css?v=cff6898b">
 <script src="assets/theme.js?v=d6b97089"></script>
 <style>
 .band-in{position:relative}
 .dp-cells{position:absolute;right:0;bottom:30px;width:290px;height:auto;pointer-events:none}.intro{max-width:calc(100% - 300px)}
-.path{position:relative;overflow:hidden;padding-right:150px}
-.path-art{position:absolute;right:-26px;top:50%;transform:translateY(-50%);width:170px;height:170px;pointer-events:none}
-@media (max-width:760px){.intro{max-width:none}.dp-cells{position:static;width:240px;align-self:center}.path{padding-right:120px}.path-art{width:140px;height:140px}}
+@media (max-width:760px){.intro{max-width:none}.dp-cells{position:static;width:240px;align-self:center}}
 </style></head>
 <body>
 <div class="band has-glow glow-dp" style="--glow-pic:url('art/banners/dp-cells.jpg')">
@@ -51,46 +49,50 @@
 <div class="page">
   <main>
     <h2 class="section-head">Course resources</h2>
-    <div class="landing">
-      <section class="book" aria-labelledby="book-h">
-        <div class="book-spine" aria-hidden="true"></div>
-        <div class="book-body">
-          <div class="eyebrow">The textbook</div>
-          <div>
-            <h2 id="book-h">Biology for the IB Diploma</h2>
-            <p class="book-title">Clegg, Davis &amp; Talbot &middot; 3rd edition &middot; Hodder, 2023</p>
-          </div>
-          <ul class="themes">
-            <li class="t-A"><a href="course-map.html#book"><b>A</b><span class="t-name">Unity and diversity</span><span class="pg">pp. 2&ndash;180</span></a></li>
-            <li class="t-B"><a href="course-map.html#book"><b>B</b><span class="t-name">Form and function</span><span class="pg">pp. 181&ndash;379</span></a></li>
-            <li class="t-C"><a href="course-map.html#book"><b>C</b><span class="t-name">Interaction and interdependence</span><span class="pg">pp. 380&ndash;601</span></a></li>
-            <li class="t-D"><a href="course-map.html#book"><b>D</b><span class="t-name">Continuity and change</span><span class="pg">pp. 602&ndash;837</span></a></li>
-          </ul>
-          <p class="book-note">40 chapters. Each subtopic page gives the printed page number for every syllabus statement.</p>
-        </div>
-      </section>
-
-      <div class="paths">
-        <a class="path path-sl" href="course-map.html#sl">
-          <div class="eyebrow">Weeks 1&ndash;39</div>
-          <h2>SL path &rarr;</h2>
-          <p>Starts with Body Systems and ends with Ecosystems.</p>
-          <p class="facts">7 units &middot; 39 weeks &middot; 130 hours</p><svg class="path-art" viewBox="-90 -90 180 180" aria-hidden="true"><defs><clipPath id="pmoss"><circle r="80"/></clipPath></defs><image href="assets/art/moss.jpg" x="-80" y="-80" width="160" height="160" clip-path="url(#pmoss)" preserveAspectRatio="xMidYMid slice"/><circle r="82" fill="none" stroke="#3A9E9E" stroke-width="7"/></svg>
-        </a>
-        <a class="path path-ahl" href="course-map.html#ahl">
-          <div class="eyebrow">Weeks 40&ndash;62</div>
-          <h2>AHL path &rarr;</h2>
-          <p>Starts with AHL: Body Systems and ends with AHL: Ecosystems.</p>
-          <p class="facts">7 units &middot; 23 weeks &middot; 120 hours</p><svg class="path-art" viewBox="-90 -90 180 180" aria-hidden="true"><defs><clipPath id="pfrogs"><circle r="80"/></clipPath></defs><image href="assets/art/frogs.jpg" x="-80" y="-80" width="160" height="160" clip-path="url(#pfrogs)" preserveAspectRatio="xMidYMid slice"/><circle r="82" fill="none" stroke="#B0356F" stroke-width="7"/></svg>
-        </a>
-        <a class="path-all" href="course-map.html">See the full course map &rarr;</a>
-      </div>
+    <div class="cr-grid">
+      <a class="cr-card cr-sl" href="course-map.html#sl">
+        <span class="cr-pic"><img src="assets/art/moss.jpg" alt="" width="420" height="420"></span>
+        <span class="cr-body">
+          <span class="cr-when">Weeks 1 to 39</span>
+          <h3>Standard level</h3>
+          <span class="cr-desc">Everyone starts here: Body Systems first, Ecosystems last.</span>
+          <span class="cr-nums"><span><b>7</b>units</span><span><b>39</b>weeks</span><span><b>130</b>hours</span></span>
+        </span>
+      </a>
+      <a class="cr-card cr-ahl" href="course-map.html#ahl">
+        <span class="cr-pic"><img src="assets/art/frogs.jpg" alt="" width="420" height="420"></span>
+        <span class="cr-body">
+          <span class="cr-when">Weeks 40 to 62</span>
+          <h3>Higher level</h3>
+          <span class="cr-desc">HL students go further with the AHL units, again from Body Systems to Ecosystems.</span>
+          <span class="cr-nums"><span><b>7</b>units</span><span><b>23</b>weeks</span><span><b>120</b>hours</span></span>
+        </span>
+      </a>
+      <a class="cr-card cr-book" href="course-map.html#book">
+        <span class="cr-shelf" aria-hidden="true">
+          <span class="t-A"><b>A</b><i>Unity and diversity</i></span>
+          <span class="t-B"><b>B</b><i>Form and function</i></span>
+          <span class="t-C"><b>C</b><i>Interaction and interdependence</i></span>
+          <span class="t-D"><b>D</b><i>Continuity and change</i></span>
+        </span>
+        <span class="cr-body">
+          <span class="cr-when">Our textbook</span>
+          <h3>Biology for the IB Diploma</h3>
+          <span class="cr-desc">Clegg, Davis and Talbot, 3rd edition (Hodder, 2023). Each subtopic page gives the page for every syllabus statement.</span>
+          <span class="cr-nums"><span><b>4</b>themes</span><span><b>40</b>chapters</span><span><b>837</b>pages</span></span>
+        </span>
+      </a>
     </div>
+    <a class="cr-all" href="course-map.html">See the full course map &rarr;</a>
 
-    <a class="qgen-soon" href="topic-questions.html">
-      <span class="qgen-tag">New</span>
-      <span class="qgen-title">Topic question generator</span>
-      <span class="qgen-text">Choose a topic and level, and get a fresh set of practice questions with answers to check your work.</span>
+    <a class="qgen-feature" href="topic-questions.html">
+      <span class="qf-text">
+        <span class="qf-new">New</span>
+        <span class="qf-title">Topic questions</span>
+        <span class="qf-desc">Pick your level and topics, and get a fresh practice worksheet every time, with a mark scheme to check your answers.</span>
+        <span class="qf-go">Build a worksheet &rarr;</span>
+      </span>
+      <span class="qf-nums" aria-hidden="true"><span><b>942</b>questions</span><span><b>71</b>topics</span><span><b>4</b>question types</span></span>
     </a>
 
     <h2 class="hub-head">Assessment</h2>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="The DNA Factory: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/dna-factory.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="The DNA Factory">
+<meta property="og:description" content="The DNA Factory: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/dna-factory.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>The DNA Factory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'The DNA Factory',
+  sub: 'DP Biology D1.1 and D1.2 · simplified, not to scale',
+  startTitle: 'From DNA to protein',
+  intro: 'Watch DNA being copied at a replication fork, a gene being transcribed into mRNA, and the mRNA leaving the nucleus to be translated by a ribosome into a polypeptide.',
+  note: 'Bases: adenine red, thymine yellow, cytosine blue, guanine green, uracil purple. Old DNA strands are dark grey, new strands white, mRNA orange.',
+  rideLabel: 'Follow the information',
+  theme: { bg: '#0d0f1d', panel: 'rgba(14,16,34,.86)', accent: '#ffb703', dim: '#c4c7de', line: 'rgba(200,205,255,.22)' },
+  fog: 0.004,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    const BASE = [0xe63946, 0xffd166, 0x4ea8de, 0x52b788], PAIR = [1, 0, 3, 2], seq = []; for (let i = 0; i < 200; i++) seq.push(Math.floor(Math.random() * 4));
+    const oldM = M(0x5c5f6b), newM = M(0xf1f1f1), rnaM = M(0xff8c42);
+    // Instanced pieces for the replication fork: backbone beads and base rungs for up to 4 strands
+    const N = 70, X0 = -80, DX = 1.0;
+    const beadOld = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 8, 6), oldM, N * 2), beadNew = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 8, 6), newM, N * 2);
+    const rung = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.18, 0.18, 1, 6), M(0xffffff), N * 4); rung.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(N * 4 * 3), 3);
+    scene.add(beadOld, beadNew, rung);
+    const d = new THREE.Object3D(), col = new THREE.Color();
+    function place(mesh, i, p) { d.position.copy(p); d.rotation.set(0, 0, 0); d.scale.set(1, 1, 1); d.updateMatrix(); mesh.setMatrixAt(i, d.matrix); }
+    function rungAt(i, a, b, c) { const mid = a.clone().add(b).multiplyScalar(0.5), len = a.distanceTo(b); d.position.copy(mid); d.scale.set(1, Math.max(0.01, len), 1); d.quaternion.setFromUnitVectors(V(0, 1, 0), b.clone().sub(a).normalize()); d.updateMatrix(); rung.setMatrixAt(i, d.matrix); col.setHex(c); rung.setColorAt(i, col); }
+    const helicase = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.9, 10, 24), M(0x9b5de5)); helicase.rotation.y = Math.PI / 2; scene.add(helicase);
+    const polA = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 12), M(0x2a9d8f)), polB = polA.clone(); scene.add(polA, polB);
+    // Transcription: a gene with RNA polymerase moving along it, making mRNA
+    const TX0 = -10, TN = 34; const tOld = new THREE.InstancedMesh(new THREE.SphereGeometry(0.42, 8, 6), oldM, TN * 2), tRung = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.18, 0.18, 1, 6), M(0xffffff), TN); tRung.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(TN * 3), 3);
+    scene.add(tOld, tRung); const rnap = new THREE.Mesh(new THREE.SphereGeometry(2.6, 18, 14), M(0xf4a261, { transparent: true, opacity: 0.75 })); scene.add(rnap);
+    const mBeads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.4, 8, 6), rnaM, 60); scene.add(mBeads);
+    // Nuclear envelope with a pore, then a ribosome in the cytoplasm
+    const env = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), T(0x8f6bd8, 0.25)); env.scale.set(80, 60, 1); env.rotation.y = Math.PI / 2; env.position.x = 30; scene.add(env);
+    const pore = new THREE.Mesh(new THREE.TorusGeometry(3, 0.9, 10, 24), M(0xcdb6f2)); pore.rotation.y = Math.PI / 2; pore.position.set(30, 8, 0); scene.add(pore);
+    const mPath = new THREE.CatmullRomCurve3([V(TX0 + 17, 2.5, 0), V(20, 8, 0), V(30, 8, 0), V(40, 4, 0), V(48, 0, 0), V(70, 0, 0)]);
+    const big = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 18), M(0x5f6caf, { transparent: true, opacity: 0.85 })); big.scale.set(6, 4.2, 5); big.position.set(55, 3.5, 0); scene.add(big);
+    const small = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 18), M(0x8d99ae, { transparent: true, opacity: 0.85 })); small.scale.set(5, 2.4, 4); small.position.set(55, -2.2, 0); scene.add(small);
+    const ribRNA = new THREE.InstancedMesh(new THREE.SphereGeometry(0.4, 8, 6), rnaM, 40); scene.add(ribRNA);
+    const tr = []; for (let i = 0; i < 3; i++) { const g = new THREE.Group(); const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 5, 8), M(0xb5838d)); g.add(stem); const arm = stem.clone(); arm.scale.y = 0.6; arm.rotation.z = Math.PI / 2; arm.position.set(1.4, 2.2, 0); g.add(arm);
+      const aa = new THREE.Mesh(new THREE.SphereGeometry(0.9, 12, 10), M([0xe9c46a, 0x90be6d, 0xf28482][i])); aa.position.y = 3.2; g.add(aa); scene.add(g); tr.push({ g, aa }); }
+    const chain = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.9, 12, 10), M([0xe9c46a, 0x90be6d, 0xf28482, 0x84a59d][i % 4])); scene.add(m); chain.push(m); }
+    A.label('Helicase', V(-45, 5, 0)); A.label('DNA polymerase', V(-55, -6, 3)); A.label('New strands (white)', V(-70, 7, 0)); A.label('RNA polymerase', V(TX0 + 12, 5.5, 0)); A.label('mRNA', V(22, 11, 0)); A.label('Nuclear pore', V(30, 13, 0)); A.label('Nucleus', V(0, 22, -10), 300); A.label('Cytoplasm', V(60, 22, -10), 300); A.label('Ribosome', V(55, 10, 0)); A.label('tRNA', V(52, 13, 4)); A.label('Polypeptide', V(57, 18, 2));
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
+    return {
+      route: [V(-90, 6, 26), V(-62, 6, 22), V(-48, 4, 18), V(-30, 4, 20), V(0, 6, 20), V(22, 8, 18), V(40, 8, 22), V(55, 6, 24), V(56, 12, 26)], hero, camOffset: V(0, 0, 0), outside: { target: V(-5, 2, 0), dist: 105 },
+      outsideInfo: { n: 'The flow of information', s: 'DNA is copied before a cell divides (replication). A gene is copied into mRNA (transcription), and ribosomes use the mRNA to build a polypeptide (translation).', h: 'In eukaryotes transcription happens in the nucleus and translation in the cytoplasm, so the mRNA can be processed in between.', cs: 'D1.1.1, D1.2.1, D1.2.5', ch: 'D1.2.15' },
+      stops: [
+        { at: V(-62, 6, 22), look: V(-62, 0, 0), n: 'The double helix', s: 'DNA is two strands held together by hydrogen bonds between complementary bases: adenine with thymine, cytosine with guanine.', h: 'The two strands run in opposite directions (antiparallel): one 5′ to 3′, the other 3′ to 5′.', cs: 'D1.1.1', ch: 'A1.2.11' },
+        { at: V(-48, 4, 18), look: helicase.position, n: 'Helicase unzips the DNA', s: 'Helicase moves along the DNA, breaking the hydrogen bonds and separating the two strands at the replication fork.', h: 'Helicase uses energy from ATP. The separated strands are kept apart so both can act as templates.', cs: 'D1.1.3', ch: '' },
+        { at: V(-30, 4, 20), look: V(-62, 0, 0), n: 'DNA polymerase builds new strands', s: 'DNA polymerase adds free nucleotides to each template strand by complementary base pairing. Each new DNA molecule has one old and one new strand: replication is semi-conservative.', h: 'DNA polymerase III only adds nucleotides in the 5′ to 3′ direction, so one strand is made continuously (leading) and the other in short Okazaki fragments (lagging). Primase lays down RNA primers; DNA polymerase I replaces them with DNA and ligase joins the fragments.', cs: 'D1.1.2, D1.1.3', ch: 'D1.1.6, D1.1.7, D1.1.8' },
+        { at: V(0, 6, 20), look: V(TX0 + 14, 0, 0), n: 'Transcription', s: 'RNA polymerase separates the two strands of a gene and builds mRNA by complementary base pairing to one strand, the template. Uracil (purple) pairs with adenine instead of thymine.', h: 'RNA polymerase binds at the promoter and moves 5′ to 3′ along the new RNA. Only the template strand is read; the DNA zips back up behind it.', cs: 'D1.2.1, D1.2.2', ch: 'D1.2.12, D1.2.13' },
+        { at: V(22, 8, 18), look: pore.position, n: 'Out through a nuclear pore', s: 'The mRNA leaves the nucleus through a nuclear pore and goes to a ribosome in the cytoplasm.', h: 'Before leaving, eukaryotic mRNA is processed: introns are removed by splicing, and a cap and a tail are added.', cs: 'D1.2.4', ch: 'D1.2.15' },
+        { at: V(55, 6, 24), look: V(55, 2, 0), n: 'Translation at the ribosome', s: 'The ribosome reads the mRNA three bases (one codon) at a time. A tRNA with the matching anticodon brings the correct amino acid.', h: 'tRNAs enter at the A site, the growing chain is held at the P site, and empty tRNAs leave from the E site. Translation starts at the start codon AUG.', cs: 'D1.2.5, D1.2.6, D1.2.7', ch: 'D1.2.10, D1.2.17' },
+        { at: V(56, 12, 26), look: V(57, 14, 0), n: 'A growing polypeptide', s: 'Peptide bonds join the amino acids into a polypeptide. When the ribosome reaches a stop codon, the polypeptide is released.', h: 'The polypeptide then folds and may be modified, for example by cutting or by adding carbohydrate, before it can work.', cs: 'D1.2.10', ch: 'D1.2.18' }
+      ],
+      update(dt, A) {
+        const t = A.t; const fork = -14 - ((t * 3) % 56); helicase.position.set(fork, 0, 0);
+        let io = 0, inw = 0, ir = 0;
+        for (let i = 0; i < N; i++) { const x = X0 + i * DX, a = x * 0.6, b = seq[i];
+          if (x > fork) { const p1 = V(x, Math.cos(a) * 2, Math.sin(a) * 2), p2 = V(x, -Math.cos(a) * 2, -Math.sin(a) * 2); place(beadOld, io++, p1); place(beadOld, io++, p2); rungAt(ir++, p1, p2, BASE[b]); }
+          else { const sep = Math.min(5, (fork - x) * 0.7);
+            [1, -1].forEach(s => { const c = V(x, s * sep, 0); const p1 = c.clone().add(V(0, Math.cos(a) * 2, Math.sin(a) * 2)), p2 = c.clone().add(V(0, -Math.cos(a) * 2, -Math.sin(a) * 2));
+              const lagging = s < 0, show = !lagging || (A.level() === 'hl' ? ((fork - x) % 9) > 2 : true);
+              place(beadOld, io++, p1); if (show) { place(beadNew, inw++, p2); rungAt(ir++, p1, p2, BASE[s > 0 ? b : PAIR[b]]); } }); } }
+        beadOld.count = io; beadNew.count = inw; rung.count = ir; [beadOld, beadNew, rung].forEach(m => { m.instanceMatrix.needsUpdate = true; }); rung.instanceColor.needsUpdate = true;
+        polA.position.set(fork - 3, 5, 0); polB.position.set(fork - 3, -5, 0);
+        // transcription bubble
+        const bub = TX0 + ((t * 2) % (TN - 4)); rnap.position.set(bub, 0, 0); let ti = 0, tri = 0, mi = 0;
+        for (let i = 0; i < TN; i++) { const x = TX0 + i, a = x * 0.6, b = seq[100 + i], open = Math.abs(x - bub) < 3; const r = open ? 3.2 : 2;
+          const p1 = V(x, Math.cos(a) * r, Math.sin(a) * r), p2 = V(x, -Math.cos(a) * r, -Math.sin(a) * r); place(tOld, ti++, p1); place(tOld, ti++, p2);
+          if (!open) { const mid = p1.clone().add(p2).multiplyScalar(0.5), len = p1.distanceTo(p2); d.position.copy(mid); d.scale.set(1, len, 1); d.quaternion.setFromUnitVectors(V(0, 1, 0), p2.clone().sub(p1).normalize()); d.updateMatrix(); tRung.setMatrixAt(tri, d.matrix); col.setHex(BASE[b]); tRung.setColorAt(tri++, col); } }
+        tOld.count = ti; tRung.count = tri; tOld.instanceMatrix.needsUpdate = true; tRung.instanceMatrix.needsUpdate = true; tRung.instanceColor.needsUpdate = true;
+        for (let k = 0; k < 40; k++) { const u = ((t * 0.06) + k / 40) % 1; place(mBeads, mi++, mPath.getPointAt(u * 0.62)); } mBeads.count = mi; mBeads.instanceMatrix.needsUpdate = true;
+        let ri = 0; for (let k = 0; k < 30; k++) { const x = 40 + ((k * 1.2 + t * 2) % 36); place(ribRNA, ri++, V(x, 0.2, 0)); } ribRNA.count = ri; ribRNA.instanceMatrix.needsUpdate = true;
+        tr.forEach((o, i) => { const ph = ((t * 0.5) + i / 3) % 1; o.g.position.set(50 + ph * 10, 4 + (ph < 0.2 ? (0.2 - ph) * 40 : 0) + (ph > 0.8 ? (ph - 0.8) * 40 : 0), 0.5 + i); o.aa.visible = ph < 0.55; });
+        chain.forEach((m, i) => { const s = i * 1.6; m.position.set(55 + Math.sin(i * 0.9 + t * 0.3) * 2.5, 8 + s * 0.8, Math.cos(i * 0.9) * 2.5); m.visible = i < 6 + Math.floor((t * 0.8) % 12); });
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

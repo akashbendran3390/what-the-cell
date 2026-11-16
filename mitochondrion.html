@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Inside a Mitochondrion: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/mitochondrion.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Inside a Mitochondrion">
+<meta property="og:description" content="Inside a Mitochondrion: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/mitochondrion.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Inside a Mitochondrion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'Inside a Mitochondrion',
+  sub: 'DP Biology C1.2 · simplified, not to scale',
+  startTitle: 'Where most ATP is made',
+  intro: 'Follow glucose from the cytoplasm into a mitochondrion. See the matrix where the Krebs cycle runs, then zoom in to the inner membrane: electrons pass along a chain of proteins, protons are pumped, and ATP synthase spins to make ATP.',
+  note: 'Yellow dots: electrons. Red dots: protons (H+). Green: ATP. Blue: water formed when oxygen accepts electrons. The membrane patch at the bottom is magnified.',
+  rideLabel: 'Follow the energy',
+  theme: { bg: '#170f0a', panel: 'rgba(30,18,10,.86)', accent: '#ffb347', dim: '#d8c3b0', line: 'rgba(255,215,180,.22)' },
+  fog: 0.004,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    function capsule(r, half) { const pts = []; for (let i = 0; i <= 12; i++) { const a = -Math.PI / 2 + i * Math.PI / 24; pts.push(new THREE.Vector2(Math.cos(a) * r, -half + Math.sin(a) * r)); } for (let i = 0; i <= 12; i++) { const a = i * Math.PI / 24; pts.push(new THREE.Vector2(Math.cos(a) * r, half + Math.sin(a) * r)); } pts[0].x = 0.01; pts[pts.length - 1].x = 0.01; const g = new THREE.LatheGeometry(pts, 48); g.rotateZ(Math.PI / 2); return g; }
+    scene.add(new THREE.Mesh(capsule(14, 26), T(0xff8c42, 0.22)));
+    scene.add(new THREE.Mesh(capsule(12.6, 25), T(0xffb27a, 0.14)));
+    const cm = M(0xe8572a, { side: THREE.DoubleSide, transparent: true, opacity: 0.75 });
+    for (let i = 0; i < 12; i++) { const g = new THREE.Group(); g.position.x = -26 + i * 4.6; g.rotation.x = (i % 2 ? 0 : Math.PI) + A.rnd(-0.3, 0.3); const sh = new THREE.Mesh(new THREE.RingGeometry(A.rnd(3, 6), 12.4, 32, 1, 0, Math.PI), cm); sh.rotation.y = Math.PI / 2; g.add(sh); scene.add(g); }
+    // Krebs cycle ring in the matrix
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(4, 0.35, 8, 40), M(0xffd166, { emissive: 0x553300 })); ring.position.set(-4, 0, 4); scene.add(ring);
+    const krebs = []; for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.7, 10, 8), M(0xf4a261)); scene.add(m); krebs.push(m); }
+    const glu = new THREE.Mesh(new THREE.SphereGeometry(1.4, 12, 10), M(0xffffff)); scene.add(glu); const pyr = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.9, 10, 8), M(0xe9c46a)); scene.add(m); return m; });
+    // Magnified patch of inner membrane below: bilayer, four complexes, ATP synthase
+    const Y = -46; const bil = new THREE.Mesh(new THREE.BoxGeometry(70, 4, 30), M(0xf6c28b, { transparent: true, opacity: 0.6 })); bil.position.set(0, Y, 0); scene.add(bil);
+    A.label('Intermembrane space (protons build up)', V(-24, Y + 12, 0)); A.label('Matrix', V(-24, Y - 12, 0));
+    const cx = [-24, -12, 0, 10]; const comps = cx.map((x, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), M([0x9d4edd, 0x7b2cbf, 0x5a189a, 0x3c096c][i])); m.scale.set(3.2, 5, 3.2); m.position.set(x, Y, 0); scene.add(m); return m; });
+    const syn = new THREE.Group(); syn.position.set(24, Y, 0); scene.add(syn);
+    const stalk = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 8, 12), M(0x2a9d8f)); syn.add(stalk);
+    const rotor = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 2, 12), M(0x40916c)); rotor.position.y = 0; syn.add(rotor);
+    const headS = new THREE.Mesh(new THREE.SphereGeometry(4, 20, 14), M(0x52b788)); headS.position.y = -7; syn.add(headS);
+    A.label('Electron transport chain', V(-6, Y + 8, 6)); A.label('ATP synthase', V(24, Y + 7, 6)); A.label('Outer membrane', V(-10, 15, 0)); A.label('Inner membrane (cristae)', V(14, 11, 0)); A.label('Krebs cycle (in the matrix)', V(-4, 5.5, 4)); A.label('Glycolysis in the cytoplasm', V(-56, 14, 10));
+    const dot = (r, c) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), M(c, { emissive: c, emissiveIntensity: 0.25 })); scene.add(m); return m; };
+    const el = Array.from({ length: 10 }, () => ({ m: dot(0.45, 0xffe066), u: Math.random() })); const ePath = new THREE.CatmullRomCurve3([V(-30, Y - 4, 0), ...cx.map(x => V(x, Y, 0)), V(14, Y - 4, 0)]);
+    const pr = Array.from({ length: 30 }, (_, i) => ({ m: dot(0.4, 0xef233c), u: Math.random(), x: cx[i % 3] }));
+    const back = Array.from({ length: 10 }, () => ({ m: dot(0.4, 0xef233c), u: Math.random() }));
+    const atp = Array.from({ length: 8 }, () => ({ m: dot(0.6, 0x80ed99), u: Math.random() }));
+    const wat = Array.from({ length: 5 }, () => ({ m: dot(0.5, 0x4fb3ff), u: Math.random() }));
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
+    return {
+      route: [V(-80, 20, 40), V(-56, 14, 30), V(-30, 8, 30), V(-6, 6, 22), V(0, -20, 40), V(-12, Y + 6, 26), V(22, Y + 4, 24), V(14, Y - 6, 22)], hero, camOffset: V(0, 0, 0), outside: { target: V(0, -15, 0), dist: 130 },
+      outsideInfo: { n: 'A mitochondrion', s: 'Aerobic respiration finishes inside mitochondria, where most of a cell’s ATP is made.', h: 'The inner membrane is folded into cristae, giving a large area for the electron transport chain and ATP synthase.', cs: 'C1.2.4', ch: 'B2.2.4' },
+      stops: [
+        { at: V(-56, 14, 30), look: V(-50, 8, 0), n: 'Glycolysis', s: 'In the cytoplasm, glucose is split into two pyruvate molecules. This makes a small amount of ATP and needs no oxygen.', h: 'Glucose is phosphorylated, split into two triose phosphates, then oxidised; NAD is reduced, and there is a net gain of 2 ATP.', cs: 'C1.2.4, C1.2.5', ch: 'C1.2.7, C1.2.8' },
+        { at: V(-30, 8, 30), look: V(-10, 0, 0), n: 'Into the mitochondrion', s: 'If oxygen is available, pyruvate goes into the mitochondrion for aerobic respiration. A mitochondrion has two membranes; the inner one is folded into cristae.', h: 'In the link reaction pyruvate is decarboxylated and oxidised to an acetyl group, carried by coenzyme A into the Krebs cycle.', cs: 'C1.2.5', ch: 'C1.2.11, B2.2.4' },
+        { at: V(-6, 6, 22), look: V(-4, 0, 4), n: 'The Krebs cycle', s: 'In the matrix the remains of glucose are broken down completely, releasing carbon dioxide.', h: 'Each turn releases 2 CO2 and reduces 3 NAD and 1 FAD, which carry hydrogen and electrons to the inner membrane. One ATP is made per turn.', cs: 'C1.2.4', ch: 'C1.2.12' },
+        { at: V(-12, Y + 6, 26), look: V(-6, Y, 0), n: 'The electron transport chain', s: 'Electrons (yellow) pass along a chain of proteins in the inner membrane, releasing energy as they go.', h: 'Reduced NAD gives electrons to the chain. The energy released pumps protons (red) from the matrix into the intermembrane space, building a steep proton gradient.', cs: 'C1.2.4', ch: 'C1.2.13, C1.2.14' },
+        { at: V(22, Y + 4, 24), look: V(24, Y - 2, 0), n: 'ATP synthase', s: 'ATP synthase uses the energy of the protons flowing back through it to make ATP (green) from ADP and phosphate. Most of the cell’s ATP is made here.', h: 'This is chemiosmosis: protons diffuse down their gradient through ATP synthase, turning part of it like a motor and powering ATP production.', cs: 'C1.2.1, C1.2.4', ch: 'C1.2.15' },
+        { at: V(14, Y - 6, 22), look: V(14, Y - 4, 0), n: 'Oxygen, the final acceptor', s: 'At the end of the chain, oxygen accepts the electrons and protons, forming water (blue). Without oxygen the chain stops.', h: 'Because oxygen keeps the chain clear, NAD can be regenerated and the Krebs cycle continues. Cyanide blocks the chain, so ATP production almost stops.', cs: 'C1.2.5', ch: 'C1.2.16' }
+      ],
+      update(dt, A) { const t = A.t, run = A.paused ? 0 : dt;
+        const g = (t * 0.25) % 1; glu.position.set(-58 + g * 6, 8, 0); glu.visible = g < 0.5; pyr.forEach((p, i) => { p.visible = g >= 0.5; p.position.set(-52 + (g - 0.5) * 60, 8 - i * 2 - (g - 0.5) * 8, 0); });
+        krebs.forEach((k, i) => { const a = t * 0.8 + i * Math.PI / 3; k.position.set(-4 + Math.cos(a) * 4, Math.sin(a) * 4, 4); });
+        el.forEach(e => { e.u = (e.u + run * 0.15) % 1; e.m.position.copy(ePath.getPointAt(e.u)).add(V(0, 0, 2.6)); });
+        pr.forEach(p => { p.u = (p.u + run * 0.3) % 1; p.m.position.set(p.x + Math.sin(p.u * 9) * 1.5, Y - 6 + p.u * 18, A.rnd(-0.3, 0.3) + Math.cos(p.x) * 4); });
+        back.forEach(b => { b.u = (b.u + run * 0.4) % 1; b.m.position.set(24 + Math.sin(b.u * 12) * 0.6, Y + 10 - b.u * 16, 1.2); });
+        atp.forEach(a => { a.u = (a.u + run * 0.3) % 1; a.m.position.set(24 + Math.cos(a.u * 6.28) * (4 + a.u * 6), Y - 7 - a.u * 8, Math.sin(a.u * 6.28) * (4 + a.u * 6)); });
+        wat.forEach(w => { w.u = (w.u + run * 0.2) % 1; w.m.position.set(14 + w.u * 3, Y - 4 - w.u * 10, 2); });
+        rotor.rotation.y += run * 6; stalk.rotation.y += run * 6;
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

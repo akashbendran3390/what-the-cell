@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Natural Selection Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/natural-selection.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Natural Selection Lab">
+<meta property="og:description" content="Natural Selection Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/natural-selection.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Natural Selection Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#10150f; --ink:#f1f5ec; --dim:#b9c6b0; --panel:#182016; --panel2:#1f2a1c; --line:rgba(200,230,190,.2);
+  --accent:#9be564; --dark:#3a3a3a; --light:#e8e2cf; --warn:#ffb86b;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1240px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel)}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#132010}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:14px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.field{position:relative;padding:0;overflow:hidden}
+#field{display:block;width:100%;height:auto;aspect-ratio:16/10;cursor:crosshair;touch-action:manipulation}
+.banner{position:absolute;left:12px;top:12px;background:rgba(0,0,0,.62);padding:6px 10px;border-radius:8px;font-weight:700;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#132010;border-color:transparent}
+button:disabled{opacity:.45;cursor:not-allowed}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:8px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+h3{font:700 14px var(--body);margin:12px 0 4px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+p{margin:6px 0;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.stats div{background:var(--panel2);border-radius:10px;padding:8px 4px}
+.stats b{display:block;font:800 20px var(--display)}
+.stats span{font-size:12px;color:var(--dim)}
+#graph{width:100%;height:180px;display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+td:first-child,th:first-child{text-align:left}
+.hl-only{display:none}
+body.hl .hl-only{display:block}
+.note{font-size:12px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.intro{max-width:760px}
+.key{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:13px;color:var(--dim)}
+.sw{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid rgba(255,255,255,.3)}
+.tasks li{margin:4px 0;line-height:1.45}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Natural Selection Lab</h1><div class="sub">DP Biology D4.1 and A4.1 &middot; a model, not real data</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Be the bird</h2>
+    <p>A population of 60 moths rests on tree bark. Wing colour is controlled by one gene: the allele for dark wings (<b>D</b>) is dominant over the allele for pale wings (<b>d</b>). You are a bird: catch moths for a few seconds, then the survivors breed and the next generation appears. Watch how the allele frequencies change.</p>
+    <p class="note">Based on the peppered moth: in polluted areas soot darkened tree bark and dark moths became common; when the air was cleaned up, pale moths became common again.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div class="grid" id="lab" hidden>
+    <div>
+      <div class="card field"><canvas id="field" width="960" height="600" aria-label="Moths resting on bark. Click moths to catch them."></canvas><div class="banner" id="banner">Generation 1</div></div>
+      <div class="row">
+        <button type="button" class="go" id="b-hunt">Hunt for 8 seconds</button>
+        <button type="button" class="btn" id="b-auto">Let a bird hunt</button>
+        <button type="button" class="btn" id="b-run">Run 10 generations</button>
+        <button type="button" class="btn" id="b-reset">Start again</button>
+      </div>
+      <div class="row"><span class="key"><span class="sw" style="background:#3a3a3a"></span>Dark moth (DD or Dd)</span><span class="key"><span class="sw" style="background:#e8e2cf"></span>Pale moth (dd)</span></div>
+      <div class="card">
+        <h2>Try it</h2>
+        <ol class="tasks">
+          <li>Hunt on <b>pale bark</b> for five generations. Which moths are easiest to catch? What happens to the frequency of allele d?</li>
+          <li>Switch to <b>sooty bark</b> and keep going. Describe and explain the change.</li>
+          <li>Start again with the dark allele at 2%. How long before dark moths are common on sooty bark? Why is it slow at first?</li>
+          <li>Set predation to zero. Do the frequencies still change? (This is what happens without selection.)</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="seg" role="group" aria-label="Bark"><button type="button" id="bk-pale" aria-pressed="true">Pale bark</button><button type="button" id="bk-soot" aria-pressed="false">Sooty bark</button></div>
+        <label class="sl">Starting frequency of dark allele D <b id="o-start">10%</b><input type="range" id="s-start" min="0" max="100" value="10"></label>
+        <label class="sl">How hard the bird hunts (auto mode) <b id="o-pred">50%</b><input type="range" id="s-pred" min="0" max="90" value="50"></label>
+        <label class="sl">Mutation rate (d to D) <b id="o-mut">0%</b><input type="range" id="s-mut" min="0" max="5" value="0.5" step="0.5"></label>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>This generation</h2>
+        <div class="stats"><div><b id="n-dark">0</b><span>dark moths</span></div><div><b id="n-pale">0</b><span>pale moths</span></div><div><b id="n-gen">1</b><span>generation</span></div></div>
+        <h3>Frequency of each allele</h3>
+        <canvas id="graph" width="600" height="180" aria-label="Graph of allele frequency against generation"></canvas>
+        <p class="note"><span class="key"><span class="sw" style="background:#9be564"></span>dark allele D (p)</span><span class="key"><span class="sw" style="background:#ffb86b"></span>pale allele d (q)</span></p>
+        <div class="hl-only">
+          <h3>Gene pool and Hardy-Weinberg</h3>
+          <table><thead><tr><th></th><th>DD</th><th>Dd</th><th>dd</th></tr></thead><tbody>
+            <tr><td>Observed</td><td id="g-o1"></td><td id="g-o2"></td><td id="g-o3"></td></tr>
+            <tr><td>Expected (p&sup2;, 2pq, q&sup2;)</td><td id="g-e1"></td><td id="g-e2"></td><td id="g-e3"></td></tr></tbody></table>
+          <p class="note" id="hw-note"></p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2 id="i-h">What is happening</h2>
+        <p id="i-s"></p>
+        <p id="i-h2" class="hl-only"></p>
+        <p class="note" id="i-codes"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id), N=60, W=960, H=600;
+  const cv=$('field'), cx=cv.getContext('2d'), gc=$('graph'), gx=gc.getContext('2d');
+  let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+  let bark='pale', moths=[], gen=1, hist=[], hunting=false, huntEnd=0, caught=0, busy=false, barkImg=null;
+  // Bark texture drawn once per bark type
+  function makeBark(type){ const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+    const base= type==='pale' ? [214,208,190] : [58,56,52];
+    x.fillStyle=`rgb(${base})`; x.fillRect(0,0,W,H);
+    let s=type==='pale'?11:23; const rn=()=>{ s=(s*16807)%2147483647; return s/2147483647; };
+    for(let i=0;i<2600;i++){ const v=(rn()-0.5)*(type==='pale'?70:40); x.fillStyle=`rgba(${base.map(b=>Math.max(0,Math.min(255,b+v))).join(',')},0.7)`; x.fillRect(rn()*W,rn()*H,2+rn()*30,1+rn()*4); }
+    for(let i=0;i<70;i++){ x.strokeStyle= type==='pale' ? 'rgba(90,85,70,.35)' : 'rgba(10,10,10,.5)'; x.lineWidth=1+rn()*2; x.beginPath(); let px=rn()*W, py=0; x.moveTo(px,py); while(py<H){ py+=20+rn()*40; px+=(rn()-0.5)*14; x.lineTo(px,py);} x.stroke(); }
+    if(type==='pale') for(let i=0;i<160;i++){ x.fillStyle=`rgba(${150+rn()*60},${170+rn()*50},${120+rn()*40},.5)`; x.beginPath(); x.arc(rn()*W,rn()*H,4+rn()*16,0,7); x.fill(); }
+    return c; }
+  const barks={pale:makeBark('pale'), soot:makeBark('soot')};
+  function phen(m){ return m.g.includes('D') ? 'dark' : 'pale'; }
+  function place(){ moths.forEach(m=>{ m.x=40+Math.random()*(W-80); m.y=40+Math.random()*(H-80); m.a=Math.random()*6.28; m.alive=true; }); }
+  function newPop(pD){ moths=[]; for(let i=0;i<N;i++){ const a=()=>Math.random()<pD?'D':'d'; moths.push({g:[a(),a()].sort().join('')}); } place(); }
+  function counts(){ const c={DD:0,Dd:0,dd:0}; moths.forEach(m=>c[m.g]++); const n=moths.length||1; const p=(2*c.DD+c.Dd)/(2*n); return {c,n,p,q:1-p}; }
+  function drawMoth(m){ cx.save(); cx.translate(m.x,m.y); cx.rotate(m.a); const dark=phen(m)==='dark';
+    const wing=dark?'#3a3a3a':'#e8e2cf', spot=dark?'#222':'#7a756a';
+    cx.fillStyle=wing; cx.strokeStyle=dark?'#1d1d1d':'#a49d8a'; cx.lineWidth=1;
+    cx.beginPath(); cx.moveTo(0,-4); cx.lineTo(-22,8); cx.quadraticCurveTo(-12,14,0,8); cx.quadraticCurveTo(12,14,22,8); cx.closePath(); cx.fill(); cx.stroke();
+    cx.fillStyle=spot; for(let k=0;k<6;k++){ cx.fillRect(-16+k*6,4+(k%2)*2,2,2); }
+    cx.fillStyle=dark?'#151515':'#8b8474'; cx.fillRect(-1.5,-6,3,14); cx.restore(); }
+  function draw(){ cx.drawImage(barks[bark],0,0); moths.forEach(m=>{ if(m.alive) drawMoth(m); }); }
+  function drawGraph(){ const w=gc.width,h=gc.height,pad=28; gx.clearRect(0,0,w,h); gx.strokeStyle='rgba(200,230,190,.25)'; gx.fillStyle='#b9c6b0'; gx.font='12px Atkinson Hyperlegible, sans-serif'; gx.lineWidth=1;
+    [0,0.5,1].forEach(v=>{ const y=h-pad-(h-2*pad)*v; gx.beginPath(); gx.moveTo(pad,y); gx.lineTo(w-8,y); gx.stroke(); gx.fillText(v.toFixed(1),2,y+4); });
+    const n=Math.max(10,hist.length); gx.fillText('generation',w-80,h-6);
+    [['p','#9be564'],['q','#ffb86b']].forEach(([k,col])=>{ gx.strokeStyle=col; gx.lineWidth=2.5; gx.beginPath(); hist.forEach((r,i)=>{ const x=pad+(w-pad-8)*(i/(n-1)), y=h-pad-(h-2*pad)*r[k]; i?gx.lineTo(x,y):gx.moveTo(x,y); }); gx.stroke(); }); }
+  function stats(){ const {c,n,p,q}=counts(); const alive=moths.filter(m=>m.alive); $('n-dark').textContent=alive.filter(m=>phen(m)==='dark').length; $('n-pale').textContent=alive.filter(m=>phen(m)==='pale').length; $('n-gen').textContent=gen;
+    $('g-o1').textContent=c.DD; $('g-o2').textContent=c.Dd; $('g-o3').textContent=c.dd; $('g-e1').textContent=(p*p*n).toFixed(1); $('g-e2').textContent=(2*p*q*n).toFixed(1); $('g-e3').textContent=(q*q*n).toFixed(1);
+    $('hw-note').textContent=`p = ${p.toFixed(2)}, q = ${q.toFixed(2)}, p + q = 1. Selection acts on phenotypes, so after hunting the observed numbers can move away from the Hardy-Weinberg expectation.`; }
+  function record(){ const {p,q}=counts(); hist[gen-1]={p,q}; drawGraph(); }
+  // Selection and reproduction
+  function breed(){ const surv=moths.filter(m=>m.alive); const mut=+$('s-mut').value/100; if(surv.length<2){ info('extinct'); return false; }
+    const kids=[]; for(let i=0;i<N;i++){ const a=surv[Math.random()*surv.length|0], b=surv[Math.random()*surv.length|0]; let g=[a.g[Math.random()*2|0], b.g[Math.random()*2|0]].map(x=> x==='d'&&Math.random()<mut?'D':x); kids.push({g:g.sort().join('')}); }
+    moths=kids; gen++; place(); record(); stats(); draw(); info(); $('banner').textContent='Generation '+gen; return true; }
+  function autoHunt(){ const s=+$('s-pred').value/100; moths.forEach(m=>{ const seen=(phen(m)==='dark')!==(bark==='soot'); const risk= seen ? s : s*0.25; if(Math.random()<risk) m.alive=false; }); }
+  function setBusy(b){ busy=b; ['b-hunt','b-auto','b-run','b-reset'].forEach(id=>$(id).disabled=b); }
+  $('b-hunt').onclick=()=>{ if(busy) return; setBusy(true); hunting=true; caught=0; huntEnd=performance.now()+8000; tick(); };
+  function tick(){ const left=Math.max(0,huntEnd-performance.now()); $('banner').textContent=`Generation ${gen}: hunting, ${Math.ceil(left/1000)} s left, caught ${caught}`; if(left>0) return requestAnimationFrame(tick);
+    hunting=false; stats(); setTimeout(()=>{ breed(); setBusy(false); },700); }
+  cv.addEventListener('pointerdown',e=>{ if(!hunting) return; const r=cv.getBoundingClientRect(), x=(e.clientX-r.left)*W/r.width, y=(e.clientY-r.top)*H/r.height;
+    let best=null, bd=26; moths.forEach(m=>{ if(!m.alive) return; const d=Math.hypot(m.x-x,m.y-y); if(d<bd){ bd=d; best=m; } }); if(best){ best.alive=false; caught++; draw(); stats(); } });
+  $('b-auto').onclick=()=>{ if(busy) return; setBusy(true); autoHunt(); draw(); stats(); $('banner').textContent=`Generation ${gen}: the bird has eaten ${moths.filter(m=>!m.alive).length} moths`; setTimeout(()=>{ breed(); setBusy(false); },900); };
+  $('b-run').onclick=()=>{ if(busy) return; setBusy(true); let k=0; const step=()=>{ autoHunt(); if(!breed()||++k>=10){ setBusy(false); return; } setTimeout(step,250); }; step(); };
+  function reset(){ gen=1; hist=[]; newPop(+$('s-start').value/100); record(); stats(); draw(); info(); $('banner').textContent='Generation 1'; }
+  $('b-reset').onclick=()=>{ if(!busy) reset(); };
+  function setBark(b){ bark=b; $('bk-pale').setAttribute('aria-pressed',b==='pale'); $('bk-soot').setAttribute('aria-pressed',b==='soot'); draw(); info(); }
+  $('bk-pale').onclick=()=>setBark('pale'); $('bk-soot').onclick=()=>setBark('soot');
+  [['s-start','o-start','%'],['s-pred','o-pred','%'],['s-mut','o-mut','%']].forEach(([s,o,u])=>{ const f=()=>$(o).textContent=$(s).value+u; $(s).oninput=()=>{ f(); if(s==='s-start'&&gen===1&&!busy) reset(); }; f(); });
+  function info(state){ const {p}=counts();
+    if(state==='extinct'){ $('i-s').textContent='Almost every moth was eaten, so the population cannot recover. Start again with a gentler bird.'; return; }
+    const pale=bark==='pale';
+    $('i-s').textContent=(pale?'On pale bark, pale moths are camouflaged and dark moths stand out.':'On sooty bark, dark moths are camouflaged and pale moths stand out.')+' The moths that are well camouflaged are more likely to survive and reproduce, so they pass on their alleles. Over generations the allele for '+(pale?'pale':'dark')+' wings becomes more common. This is natural selection: the bark is the selection pressure, and only heritable variation can be selected.';
+    $('i-h2').textContent='Allele D now has frequency p = '+p.toFixed(2)+'. Selection here is directional: one extreme phenotype is favoured. Because D is dominant, the d allele is never removed completely: it hides in heterozygotes (Dd), which look dark. A rare new allele also rises slowly at first, because there are few copies to select.';
+    $('i-codes').textContent='Syllabus: D4.1.1, D4.1.3, D4.1.4, D4.1.5, D4.1.6'+(level==='hl'?', D4.1.9, D4.1.11, D4.1.12, D4.1.13':''); }
+  function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); info(); }
+  $('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+  $('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; reset(); };
+  setLevel(level);
+})();
+</script>
+
+</body>
+</html>

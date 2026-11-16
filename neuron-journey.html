@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Journey Along a Neuron: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/neuron-journey.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Journey Along a Neuron">
+<meta property="og:description" content="Journey Along a Neuron: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/neuron-journey.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Journey Along a Neuron</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'Journey Along a Neuron',
+  sub: 'DP Biology C2.2 · simplified, not to scale',
+  startTitle: 'Follow a nerve impulse',
+  intro: 'Travel from the dendrites of a motor neuron, past the cell body and along a myelinated axon to a synapse. Watch the impulse jump between nodes of Ranvier, and see a neurotransmitter carry the signal across the synaptic cleft.',
+  note: 'Orange dots are sodium ions, purple dots potassium ions, green dots calcium ions and blue dots neurotransmitter. The impulse is slowed down by about a million times.',
+  rideLabel: 'Ride with the impulse',
+  theme: { bg: '#0c1220', panel: 'rgba(12,20,36,.86)', accent: '#ffd166', dim: '#b9c4dc', line: 'rgba(180,200,255,.22)' },
+  fog: 0.005,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    const nerve = M(0xe9c9ff, { roughness: 0.5 });
+    // Cell body with nucleus and dendrites
+    const soma = new THREE.Mesh(new THREE.SphereGeometry(7, 32, 24), T(0xd9b8f5, 0.55)); soma.position.set(-70, 0, 0); scene.add(soma);
+    const nuc = new THREE.Mesh(new THREE.SphereGeometry(2.8, 24, 18), M(0x6a3fa0)); nuc.position.set(-71, 1, 0); scene.add(nuc);
+    function dend(start, dir, len, r, depth) { const end = start.clone().addScaledVector(dir, len); scene.add(tube([start, start.clone().lerp(end, 0.5).add(A.onSphere(1)), end], r, nerve, 12)); if (depth > 0) [-0.5, 0.5].forEach(a => dend(end, dir.clone().applyAxisAngle(V(0, 0, 1), a).applyAxisAngle(V(1, 0, 0), A.rnd(-0.6, 0.6)).normalize(), len * 0.7, r * 0.65, depth - 1)); }
+    [[-1, 0.6, 0], [-1, -0.5, 0.3], [-0.6, 0.9, -0.4], [-0.5, -1, -0.3], [-1, 0.1, -0.8]].forEach(d => dend(V(-74, 0, 0), V(...d).normalize(), 10, 1.1, 2));
+    // Axon from x=-63 to x=60 with myelin sheaths (Schwann cells) and nodes of Ranvier
+    scene.add(tube([V(-63, 0, 0), V(60, 0, 0)], 0.9, nerve, 60));
+    const nodes = []; for (let x = -54; x < 56; x += 12) nodes.push(x);
+    const myelin = T(0xfff3c4, 0.5);
+    for (let i = 0; i < nodes.length - 1; i++) { const m = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 10, 24), myelin); m.rotation.z = Math.PI / 2; m.position.set(nodes[i] + 6, 0, 0); scene.add(m); }
+    const glows = nodes.map(x => { const g = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.35, 8, 24), M(0xffd166, { emissive: 0x000000 })); g.rotation.y = Math.PI / 2; g.position.set(x, 0, 0); scene.add(g); return g; });
+    // Axon terminal, synaptic knob, cleft and the next cell
+    scene.add(tube([V(60, 0, 0), V(66, 2, 0), V(70, 2, 0)], 0.9, nerve, 12));
+    const knob = new THREE.Mesh(new THREE.SphereGeometry(5, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.75), T(0xd9b8f5, 0.45)); knob.rotation.z = -Math.PI / 2; knob.position.set(74, 2, 0); scene.add(knob);
+    const post = new THREE.Mesh(new THREE.BoxGeometry(2, 22, 22), T(0x9ad7ff, 0.35)); post.position.set(81, 2, 0); scene.add(post);
+    const rec = M(0x3fd0c0); for (let i = 0; i < 9; i++) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 1.6, 10), rec); r.rotation.z = Math.PI / 2; r.position.set(80, 2 + A.rnd(-4, 4), A.rnd(-4, 4)); scene.add(r); }
+    const ves = []; for (let i = 0; i < 16; i++) { const v = new THREE.Mesh(new THREE.SphereGeometry(0.85, 14, 10), T(0xffffff, 0.5)); const home = V(74 + A.rnd(-2, 1.5), 2 + A.rnd(-3, 3), A.rnd(-3, 3)); v.position.copy(home); scene.add(v); ves.push({ v, home }); }
+    const mito = new THREE.Mesh(new THREE.SphereGeometry(1.2, 12, 8), M(0xff8c42)); mito.position.set(72, -1, 1.5); mito.scale.set(1.6, 0.8, 0.8); scene.add(mito);
+    A.label('Dendrites', V(-84, 8, 0)); A.label('Cell body', V(-70, 9, 0)); A.label('Nucleus', V(-71, 4, 4)); A.label('Axon', V(-40, 4, 0)); A.label('Myelin sheath', V(-12, 4, 0)); A.label('Node of Ranvier', V(6, -4, 0)); A.label('Synaptic knob', V(74, 9, 0)); A.label('Synaptic cleft', V(78, -9, 0)); A.label('Postsynaptic membrane', V(83, 14, 0)); A.label('Vesicles', V(71, 6, 4));
+    // Ions and neurotransmitter
+    const sphere = r => new THREE.SphereGeometry(r, 8, 6); const naM = M(0xff8c42, { emissive: 0x552200 }), kM = M(0x9b5de5, { emissive: 0x2a0a4a }), caM = M(0x6bd66b), ntM = M(0x4fb3ff, { emissive: 0x0a2a55 });
+    const ions = []; for (let i = 0; i < 80; i++) { const na = i % 2 === 0; const m = new THREE.Mesh(sphere(0.35), na ? naM : kM); scene.add(m); ions.push({ m, na, node: i % nodes.length, ph: Math.random() }); }
+    const ca = []; for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(sphere(0.32), caM); scene.add(m); ca.push({ m, a: A.onSphere(1) }); }
+    const nt = []; for (let i = 0; i < 30; i++) { const m = new THREE.Mesh(sphere(0.28), ntM); scene.add(m); nt.push({ m, y: 2 + A.rnd(-3, 3), z: A.rnd(-3, 3) }); }
+    // Membrane potential trace
+    const PERIOD = 4.5; const apPos = t => { const f = (t % PERIOD) / PERIOD; return { f, x: -60 + f * 1.6 * 130 }; };
+    function vm(dtSince) { if (dtSince < 0 || dtSince > 0.9) return -70; const s = dtSince / 0.9; if (s < 0.25) return -70 + 100 * (s / 0.25); if (s < 0.55) return 30 - 110 * ((s - 0.25) / 0.3); return -80 + 10 * ((s - 0.55) / 0.45); }
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.6, 12, 8), M(0xffd166, { emissive: 0x664400 })); scene.add(hero);
+    let gctx = null;
+    const route = [V(-92, 10, 0), V(-82, 4, 0), V(-72, 0, 0), V(-60, 0, 0), V(-40, 0, 0), V(-6, 0, 0), V(6, 0, 0), V(40, 0, 0), V(62, 1, 0), V(72, 2, 0), V(78, 2, 0), V(81, 2, 0)];
+    return {
+      route, hero, camOffset: V(0, 4, 10), outside: { target: V(0, 0, 0), dist: 150 },
+      outsideInfo: { n: 'A motor neuron', s: 'Dendrites receive signals, the cell body holds the nucleus, and a long axon carries impulses to a synapse with another cell.', h: 'This neuron’s axon is myelinated: Schwann cells wrap round it, leaving small gaps (nodes of Ranvier) every millimetre or so.', cs: 'C2.2.1', ch: 'C2.2.11' },
+      stops: [
+        { at: V(-82, 4, 0), n: 'Dendrites', s: 'Dendrites receive signals from other neurons through synapses and carry them towards the cell body.', h: 'Many excitatory and inhibitory inputs arrive at once; the neuron adds them up, and only fires if the combined effect reaches the threshold.', cs: 'C2.2.1', ch: 'C2.2.14' },
+        { at: V(-60, 0, 0), n: 'Resting potential', s: 'At rest, the inside of the axon is about 70 mV negative compared with the outside. Sodium–potassium pumps use ATP to move 3 sodium ions out for every 2 potassium ions in.', h: 'The membrane is more permeable to potassium than to sodium, so potassium leaks out, adding to the charge difference.', cs: 'C2.2.2', ch: 'C2.2.2' },
+        { at: V(-40, 0, 0), n: 'Action potential', s: 'When the threshold is reached, sodium channels open and sodium ions (orange) rush in: depolarization. Then potassium channels open and potassium ions (purple) flow out: repolarization. Watch the trace on the right.', h: 'Local currents of sodium ions spread inside the axon and depolarize the next region to threshold, so the action potential travels in one direction. The region behind is briefly unable to fire (refractory).', cs: 'C2.2.3', ch: 'C2.2.8, C2.2.9, C2.2.10' },
+        { at: V(6, 0, 0), n: 'Myelin and nodes of Ranvier', s: 'The myelin sheath insulates the axon, so ion movement only happens at the nodes. The impulse jumps from node to node, which is much faster.', h: 'This saltatory conduction can reach about 100 m per second, compared with about 1 m per second in unmyelinated fibres of the same width.', cs: 'C2.2.4', ch: 'C2.2.11' },
+        { at: V(72, 2, 0), n: 'Synaptic knob', s: 'When the impulse arrives, calcium ions (green) enter the knob. Vesicles of neurotransmitter move to the membrane and release it into the cleft by exocytosis.', h: 'The knob has many mitochondria: ATP is needed to refill the vesicles and to pump calcium back out.', cs: 'C2.2.5, C2.2.6', ch: 'C2.2.6' },
+        { at: V(78, 2, 0), n: 'Synaptic cleft and receptors', s: 'The neurotransmitter (blue) diffuses across the cleft and binds to receptors on the next cell. Sodium channels open there, depolarizing the postsynaptic membrane.', h: 'The neurotransmitter is then broken down or taken back up, so each signal is brief. Chemicals such as neonicotinoids (which block acetylcholine receptors) or cocaine (which blocks reuptake) change transmission.', cs: 'C2.2.5, C2.2.7', ch: 'C2.2.12' }
+      ],
+      side: '<h3>Membrane potential</h3><canvas id="trace" width="540" height="200" style="display:block;width:100%;height:100px"></canvas><p style="margin:4px 0 0" id="vtext">-70 mV (resting)</p>',
+      update(dt, A) {
+        if (!gctx) { const c = document.getElementById('trace'); if (c) gctx = c.getContext('2d'); }
+        const t = A.t, ap = apPos(t);
+        // node glow: impulse jumps between nodes
+        glows.forEach((g, i) => { const on = Math.abs(nodes[i] - ap.x) < 6; g.material.emissive.setHex(on ? 0xffaa00 : 0x000000); g.scale.setScalar(on ? 1.4 : 1); });
+        ions.forEach(io => { const nx = nodes[io.node]; const since = (ap.x - nx) / 120 * PERIOD; const active = since > 0 && since < 0.9;
+          const rr = io.na ? (active && since < 0.3 ? 2.6 - since * 6 : 3.4) : (active && since > 0.3 ? 1 + (since - 0.3) * 4 : 1.2);
+          const a = io.ph * Math.PI * 2 + t * 0.4; io.m.position.set(nx + Math.sin(io.ph * 20) * 0.6, Math.cos(a) * rr, Math.sin(a) * rr); });
+        // synapse: when the impulse reaches the end, calcium in, vesicles release, neurotransmitter crosses
+        const s = ap.x > 60 ? Math.min(1, (ap.x - 60) / 50) : 0;
+        ca.forEach((c, i) => { c.m.position.set(76 - 3 * s, 2 + c.a.y * (5 - 3 * s), c.a.z * (5 - 3 * s)); c.m.visible = s > 0; });
+        ves.forEach((o, i) => { const go = Math.min(1, s * 1.6 - i * 0.03); o.v.position.copy(o.home).lerp(V(78.2, o.home.y, o.home.z), Math.max(0, go)); o.v.visible = !(go >= 1); });
+        nt.forEach((n, i) => { const k = Math.max(0, s * 1.4 - 0.4 - i * 0.01); n.m.visible = k > 0 && k < 1.2; n.m.position.set(78.4 + Math.min(1, k) * 1.4, n.y, n.z); });
+        if (gctx) { const W = 540, H = 200; gctx.clearRect(0, 0, W, H); gctx.strokeStyle = 'rgba(200,215,255,.25)'; [30, 0, -70].forEach(mv => { const y = H - 10 - (mv + 90) / 130 * (H - 20); gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(W, y); gctx.stroke(); });
+          gctx.strokeStyle = '#ffd166'; gctx.lineWidth = 3; gctx.beginPath(); const here = A.view() === 'ride' ? A.route.getPointAt(Math.min(0.999, A.u())).x : -40;
+          for (let i = 0; i <= 120; i++) { const tt = t - (120 - i) / 120 * PERIOD; const p = apPos(tt); const sinceH = (p.x - here) / 120 * PERIOD; const val = vm(sinceH); const y = H - 10 - (val + 90) / 130 * (H - 20); i ? gctx.lineTo(i / 120 * W, y) : gctx.moveTo(0, y); }
+          gctx.stroke(); const now = vm((ap.x - here) / 120 * PERIOD); const el = document.getElementById('vtext'); if (el) el.textContent = Math.round(now) + ' mV ' + (now > -60 ? (now > 0 ? '(depolarized)' : '(changing)') : '(resting)'); }
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); const d=ahead.clone().sub(camera.position).normalize();
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

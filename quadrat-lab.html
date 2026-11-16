@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Quadrat and Diversity Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/quadrat-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Quadrat and Diversity Lab">
+<meta property="og:description" content="Quadrat and Diversity Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/quadrat-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Quadrat and Diversity Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0f140f; --ink:#f1f6ee; --dim:#bccab4; --panel:#182118; --panel2:#202c1f; --line:rgba(200,230,190,.2);
+  --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel)}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2a1e00}
+.grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+#field{display:block;width:100%;height:auto;aspect-ratio:1/1;border-radius:14px;cursor:crosshair;touch-action:manipulation}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2a1e00;border-color:transparent}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}
+td:first-child,th:first-child{text-align:left}
+.big{font:800 32px var(--display)}
+.note{font-size:12px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tasks li{margin:4px 0;line-height:1.45}
+.intro{max-width:760px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center}
+.cmp div{background:var(--panel2);border-radius:10px;padding:8px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top"><div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Quadrat and Diversity Lab</h1><div class="sub">DP Biology A4.2 &middot; invented sites for practice</div></div></div>
+  <div class="card intro" id="intro">
+    <h2>Sample two sites and compare their biodiversity</h2>
+    <p>Two fields seen from above: a flower-rich meadow and a field that has been heavily fertilised and grazed. Place quadrats, count the plants of each species inside, and calculate Simpson&rsquo;s reciprocal index to compare how diverse the sites are.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="group" aria-label="Site"><button type="button" id="st-a" aria-pressed="true">Site A: old meadow</button><button type="button" id="st-b" aria-pressed="false">Site B: fertilised, grazed field</button></div>
+    <div class="grid">
+      <div>
+        <canvas id="field" width="800" height="800" aria-label="A field seen from above. Click to place a quadrat."></canvas>
+        <div class="row"><button type="button" class="go" id="b-rand">Place a random quadrat</button><button type="button" class="btn" id="b-ten">Place 10 random quadrats</button><button type="button" class="btn" id="b-clear">Clear this site</button></div>
+        <p class="note">Click anywhere on the field to place a quadrat yourself. Each quadrat is 1 m by 1 m.</p>
+        <div class="card"><h2>Try it</h2><ol class="tasks">
+          <li>Place quadrats only where you like the look of the field. Then clear and use random quadrats. Why should sampling be random?</li>
+          <li>How many quadrats do you need before the index stops changing much?</li>
+          <li>Both sites have the same species. Compare richness and evenness, and explain why the index is different.</li>
+          <li>Suggest which human activities could turn a site like A into a site like B.</li></ol></div>
+      </div>
+      <div>
+        <div class="card">
+          <h2 id="t-site">Site A: counts</h2>
+          <table><thead><tr><th>Species</th><th>n</th><th>n(n&minus;1)</th></tr></thead><tbody id="tb"></tbody><tfoot><tr><th>Total N</th><th id="tN">0</th><th id="tS">0</th></tr></tfoot></table>
+          <p>Quadrats placed: <b id="nq">0</b> &middot; Species found (richness): <b id="nr">0</b></p>
+          <p>Simpson&rsquo;s reciprocal index <span class="note">D = N(N&minus;1) &divide; &Sigma;n(n&minus;1)</span></p>
+          <div class="big" id="D">-</div>
+          <p class="note" id="calc"></p>
+        </div>
+        <div class="card" style="margin-top:14px"><h2>Compare the sites</h2><div class="cmp"><div><b>Site A</b><div class="big" id="DA">-</div></div><div><b>Site B</b><div class="big" id="DB">-</div></div></div>
+          <p id="i-s">A higher value of D means higher biodiversity: more species, and individuals spread more evenly among them.</p><p class="note">Syllabus: A4.2.1, A4.2.4, A4.2.6</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id), W=800, Q=56; // field is 800 px = 14 m, quadrat 1 m = 56 px
+  const SP=[{n:'Meadow grass',c:'#95d5b2',s:'grass'},{n:'White clover',c:'#f8f9fa',s:'clover'},{n:'Buttercup',c:'#ffd60a',s:'flower'},{n:'Ox-eye daisy',c:'#fefae0',s:'daisy'},{n:'Red clover',c:'#e5989b',s:'clover'},{n:'Knapweed',c:'#b5179e',s:'flower'},{n:'Bird’s-foot trefoil',c:'#f4a261',s:'flower'},{n:'Common spotted orchid',c:'#cdb4db',s:'spike'}];
+  // counts per site: meadow is even, B is dominated by grass and clover
+  const ABUND={a:[260,160,110,90,80,70,60,30], b:[900,250,40,8,6,3,2,1]};
+  const sites={}; let cur='a';
+  function seedRand(s){ return ()=>{ s=(s*16807)%2147483647; return s/2147483647; }; }
+  function makeSite(k){ const r=seedRand(k==='a'?101:202), plants=[];
+    ABUND[k].forEach((n,i)=>{ const clumps=1+Math.floor(r()*4), centres=Array.from({length:clumps},()=>[r()*W,r()*W]);
+      for(let j=0;j<n;j++){ let x,y; if(i===0||r()<0.35){ x=r()*W; y=r()*W; } else { const c=centres[j%clumps]; const a=r()*6.28, d=Math.sqrt(r())*150; x=(c[0]+Math.cos(a)*d+W)%W; y=(c[1]+Math.sin(a)*d+W)%W; } plants.push({x,y,i,a:r()*6.28}); } });
+    return {plants, quads:[], counts:SP.map(()=>0)}; }
+  sites.a=makeSite('a'); sites.b=makeSite('b');
+  function glyph(x,p){ const s=SP[p.i]; x.save(); x.translate(p.x,p.y); x.rotate(p.a); x.fillStyle=s.c; x.strokeStyle='rgba(0,0,0,.35)';
+    if(s.s==='grass'){ x.strokeStyle=s.c; x.lineWidth=2; for(let k=-1;k<=1;k++){ x.beginPath(); x.moveTo(0,4); x.lineTo(k*4,-6); x.stroke(); } }
+    else if(s.s==='clover'){ for(let k=0;k<3;k++){ x.beginPath(); x.arc(Math.cos(k*2.09)*3,Math.sin(k*2.09)*3,3,0,7); x.fill(); } }
+    else if(s.s==='daisy'){ for(let k=0;k<8;k++){ x.beginPath(); x.ellipse(Math.cos(k*0.785)*4,Math.sin(k*0.785)*4,3,1.4,k*0.785,0,7); x.fill(); } x.fillStyle='#ffd60a'; x.beginPath(); x.arc(0,0,2,0,7); x.fill(); }
+    else if(s.s==='spike'){ x.fillRect(-2,-7,4,14); }
+    else { for(let k=0;k<5;k++){ x.beginPath(); x.arc(Math.cos(k*1.256)*3,Math.sin(k*1.256)*3,2.6,0,7); x.fill(); } }
+    x.restore(); }
+  function draw(){ const S=sites[cur], c=$('field'), x=c.getContext('2d'); x.fillStyle= cur==='a' ? '#4f772d' : '#55a630'; x.fillRect(0,0,W,W);
+    const r=seedRand(cur==='a'?7:9); for(let i=0;i<500;i++){ x.fillStyle=`rgba(0,0,0,${r()*0.12})`; x.fillRect(r()*W,r()*W,6,6); }
+    S.plants.forEach(p=>glyph(x,p)); x.lineWidth=3; S.quads.forEach(q=>{ x.strokeStyle='#ffffff'; x.strokeRect(q[0],q[1],Q,Q); x.strokeStyle='rgba(255,209,102,.9)'; x.lineWidth=1; for(let k=1;k<5;k++){ x.beginPath(); x.moveTo(q[0]+k*Q/5,q[1]); x.lineTo(q[0]+k*Q/5,q[1]+Q); x.moveTo(q[0],q[1]+k*Q/5); x.lineTo(q[0]+Q,q[1]+k*Q/5); x.stroke(); } x.lineWidth=3; }); }
+  function simpson(cnt){ const N=cnt.reduce((a,b)=>a+b,0), S=cnt.reduce((a,n)=>a+n*(n-1),0); return {N,S,D: S>0 ? N*(N-1)/S : null}; }
+  function table(){ const S=sites[cur]; $('t-site').textContent=(cur==='a'?'Site A':'Site B')+': counts';
+    $('tb').innerHTML=SP.map((s,i)=>`<tr><td><span class="dot" style="background:${s.c}"></span>${s.n}</td><td>${S.counts[i]}</td><td>${S.counts[i]*(S.counts[i]-1)}</td></tr>`).join('');
+    const r=simpson(S.counts); $('tN').textContent=r.N; $('tS').textContent=r.S; $('nq').textContent=S.quads.length; $('nr').textContent=S.counts.filter(n=>n>0).length;
+    $('D').textContent= r.D ? r.D.toFixed(2) : '-'; $('calc').textContent= r.D ? `D = ${r.N} × ${r.N-1} ÷ ${r.S} = ${r.D.toFixed(2)}` : 'Place quadrats to collect data.';
+    ['a','b'].forEach(k=>{ const d=simpson(sites[k].counts).D; $('D'+k.toUpperCase()).textContent= d ? d.toFixed(2) : '-'; }); }
+  function quad(x,y){ const S=sites[cur]; x=Math.max(0,Math.min(W-Q,x-Q/2)); y=Math.max(0,Math.min(W-Q,y-Q/2)); S.quads.push([x,y]); S.plants.forEach(p=>{ if(p.x>=x&&p.x<x+Q&&p.y>=y&&p.y<y+Q) S.counts[p.i]++; }); }
+  $('field').addEventListener('pointerdown',e=>{ const r=$('field').getBoundingClientRect(); quad((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*W/r.height); draw(); table(); });
+  $('b-rand').onclick=()=>{ quad(Math.random()*W,Math.random()*W); draw(); table(); };
+  $('b-ten').onclick=()=>{ for(let i=0;i<10;i++) quad(Math.random()*W,Math.random()*W); draw(); table(); };
+  $('b-clear').onclick=()=>{ const S=sites[cur]; S.quads=[]; S.counts=SP.map(()=>0); draw(); table(); };
+  function site(k){ cur=k; $('st-a').setAttribute('aria-pressed',k==='a'); $('st-b').setAttribute('aria-pressed',k==='b'); draw(); table(); }
+  $('st-a').onclick=()=>site('a'); $('st-b').onclick=()=>site('b');
+  $('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; site('a'); };
+})();
+</script>
+
+</body>
+</html>

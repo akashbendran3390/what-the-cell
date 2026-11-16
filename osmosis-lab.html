@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Osmosis Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/osmosis-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Osmosis Lab">
+<meta property="og:description" content="Osmosis Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/osmosis-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Osmosis Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0b1218; --ink:#eef5fa; --dim:#b2c4d0; --panel:#122029; --panel2:#192b36; --line:rgba(190,220,240,.2);
+  --accent:#5bc0eb;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#03202e}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+canvas{display:block;width:100%;height:auto;border-radius:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#03202e;border-color:transparent}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right}
+td:first-child,th:first-child{text-align:left}
+.note{font-size:12px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.hl-only{display:none} body.hl .hl-only{display:block}
+.tasks li{margin:4px 0;line-height:1.45}
+.big{font:800 26px var(--display)}
+.intro{max-width:760px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Osmosis Lab</h1><div class="sub">DP Biology D2.3 &middot; results are simulated with realistic variation</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Water on the move</h2>
+    <p>Run the classic potato practical: soak cylinders of potato in sucrose solutions, weigh them, and find the concentration at which no water moves. Then watch what happens to animal and plant cells in different solutions.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-pot" aria-pressed="true">Potato practical</button><button type="button" id="t-cell" aria-pressed="false">Cells in solutions</button></div>
+    <div class="grid" id="p-pot">
+      <div class="card">
+        <canvas id="c-pot" width="900" height="520" aria-label="Graph of percentage change in mass against sucrose concentration"></canvas>
+        <div class="row"><button type="button" class="go" id="b-run">Soak cylinders for 24 hours</button><button type="button" class="btn" id="b-repeat">Add a repeat</button><button type="button" class="btn" id="b-clear">Clear results</button></div>
+        <h2>Try it</h2><ol class="tasks"><li>Run the practical. Which cylinders gained mass, and which lost it? Explain using osmosis.</li><li>Read the concentration where the line crosses zero. What does this tell you about the potato cells?</li><li>Add repeats. Why does the class use percentage change and several repeats?</li><li class="hl-only">HL: use the solute potential of the isotonic solution to estimate the water potential of the potato tissue.</li></ol>
+      </div>
+      <div>
+        <div class="card"><h2>Results</h2><table><thead><tr><th>Sucrose / mol dm<sup>-3</sup></th><th>Mean % change</th><th>n</th></tr></thead><tbody id="tb"></tbody></table>
+          <p>Concentration with no change (from the best-fit line): <b id="iso">-</b></p>
+          <div class="hl-only"><p>Solute potential of that solution: <b id="psi">-</b></p><p class="note">Using &psi;<sub>s</sub> = &minus;CRT, with R = 8.31 J K<sup>-1</sup> mol<sup>-1</sup> and T = 298 K. At the isotonic point the potato tissue has the same water potential as the solution (&psi;<sub>p</sub> of the solution is 0).</p></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h2>What is happening</h2><p>In dilute solutions the potato cells contain more solute than the solution, so water enters by osmosis and the cylinders gain mass. In concentrated solutions water leaves and they lose mass. Where there is no change, the solution and the cell contents are isotonic.</p><p class="hl-only">Water moves from higher to lower water potential. Adding solute lowers water potential, so pure water (&psi; = 0 kPa) has the highest possible value.</p><p class="note">Syllabus: D2.3.2, D2.3.3, D2.3.4<span class="hl-only" style="display:inline">, D2.3.9, D2.3.11</span></p></div>
+      </div>
+    </div>
+    <div class="grid" id="p-cell" hidden>
+      <div class="card">
+        <canvas id="c-cell" width="900" height="520" aria-label="A cell in a solution, with water arrows"></canvas>
+        <div class="row"><div class="seg" role="group" aria-label="Cell"><button type="button" id="ct-rbc" aria-pressed="true">Red blood cell</button><button type="button" id="ct-plant" aria-pressed="false">Plant cell</button></div></div>
+        <div class="row"><div class="seg" role="group" aria-label="Solution"><button type="button" data-s="hypo" aria-pressed="false">Pure water (hypotonic)</button><button type="button" data-s="iso" aria-pressed="true">Isotonic</button><button type="button" data-s="hyper" aria-pressed="false">Concentrated salt (hypertonic)</button></div></div>
+      </div>
+      <div>
+        <div class="card"><h2 id="cell-h"></h2><p id="cell-s"></p><div class="hl-only"><p class="big" id="cell-psi"></p><p class="note" id="cell-psi2"></p></div><p class="note">Syllabus: D2.3.5, D2.3.6, D2.3.7<span class="hl-only" style="display:inline">, D2.3.10</span></p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+  const CONC=[0,0.2,0.4,0.6,0.8,1.0], ISO=0.31; let data=CONC.map(()=>[]);
+  const nrm=()=>(Math.random()+Math.random()+Math.random()-1.5)*1.6;
+  function trueChange(c){ return 22*(ISO-c)/(0.5+Math.abs(ISO-c)*0.6)+ (c>ISO? -0 : 0); }
+  function soak(){ CONC.forEach((c,i)=>data[i].push(+(trueChange(c)+nrm()*1.6).toFixed(1))); pot(); }
+  function fit(){ const pts=[]; data.forEach((r,i)=>r.forEach(v=>pts.push([CONC[i],v]))); if(pts.length<2) return null; const n=pts.length, mx=pts.reduce((a,p)=>a+p[0],0)/n, my=pts.reduce((a,p)=>a+p[1],0)/n; let sxy=0,sxx=0; pts.forEach(([x,y])=>{ sxy+=(x-mx)*(y-my); sxx+=(x-mx)**2; }); const b=sxy/sxx, a=my-b*mx; return {a,b,x0:-a/b}; }
+  function pot(){ const c=$('c-pot'), x=c.getContext('2d'), W=c.width, H=c.height, L=80, R=W-20, T=20, B=H-60, sx=v=>L+(R-L)*v/1.0, sy=v=>T+(B-T)*(25-v)/50;
+    x.clearRect(0,0,W,H); x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillStyle='#b2c4d0'; x.strokeStyle='rgba(190,220,240,.25)';
+    for(let v=-25;v<=25;v+=5){ x.beginPath(); x.moveTo(L,sy(v)); x.lineTo(R,sy(v)); x.stroke(); x.fillText((v>0?'+':'')+v,L-40,sy(v)+5); }
+    CONC.forEach(v=>x.fillText(v.toFixed(1),sx(v)-10,B+22)); x.fillText('sucrose concentration / mol dm⁻³',W/2-110,H-12);
+    x.save(); x.translate(18,H/2+60); x.rotate(-Math.PI/2); x.fillText('change in mass / %',0,0); x.restore();
+    x.strokeStyle='#fff'; x.lineWidth=1.5; x.beginPath(); x.moveTo(L,sy(0)); x.lineTo(R,sy(0)); x.stroke();
+    data.forEach((r,i)=>r.forEach(v=>{ x.fillStyle='#5bc0eb'; x.beginPath(); x.arc(sx(CONC[i])+(Math.random()-0.5)*0,sy(v),5,0,7); x.fill(); }));
+    const f=fit(); if(f){ x.strokeStyle='#ffd166'; x.lineWidth=2.5; x.beginPath(); x.moveTo(sx(0),sy(f.a)); x.lineTo(sx(1),sy(f.a+f.b)); x.stroke(); if(f.x0>0&&f.x0<1){ x.fillStyle='#ffd166'; x.beginPath(); x.arc(sx(f.x0),sy(0),7,0,7); x.fill(); } }
+    $('tb').innerHTML=CONC.map((cc,i)=>{ const r=data[i]; return `<tr><td>${cc.toFixed(1)}</td><td>${r.length?((r.reduce((a,b)=>a+b,0)/r.length>0?'+':'')+(r.reduce((a,b)=>a+b,0)/r.length).toFixed(1)):'-'}</td><td>${r.length}</td></tr>`; }).join('');
+    if(f&&f.x0>0&&f.x0<1){ $('iso').textContent=f.x0.toFixed(2)+' mol dm⁻³'; $('psi').textContent=Math.round(-f.x0*8.31*298)+' kPa'; } else { $('iso').textContent='-'; $('psi').textContent='-'; } }
+  $('b-run').onclick=()=>{ data=CONC.map(()=>[]); soak(); }; $('b-repeat').onclick=soak; $('b-clear').onclick=()=>{ data=CONC.map(()=>[]); pot(); };
+  // Cells in solutions
+  let cell='rbc', sol='iso', t=0, shown=0; const target={rbc:{hypo:1.35,iso:1,hyper:0.75},plant:{hypo:1,iso:0.96,hyper:0.62}};
+  const TXT={
+    rbc:{hypo:['Haemolysis','Water enters the red blood cell by osmosis. With no cell wall to resist, it swells and can burst (haemolysis).','ψ inside ≈ −700 kPa, outside = 0 kPa: water moves in.'],
+         iso:['No net movement','The solution has the same solute concentration as the cytoplasm, so water enters and leaves at the same rate. This is why medical drips and saline for organs and wounds are isotonic.','ψ inside = ψ outside: no net movement.'],
+         hyper:['Crenation','Water leaves by osmosis and the cell shrinks and becomes wrinkled (crenated). It can no longer work properly.','ψ inside ≈ −700 kPa, outside ≈ −2500 kPa: water moves out.']},
+    plant:{hypo:['Turgid','Water enters the vacuole by osmosis. The cell wall stops the cell bursting: the cytoplasm pushes against it, making the cell turgid. Turgor pressure holds non-woody plants upright.','ψ = ψs + ψp = (−700) + (+700) = 0 kPa: no more water enters once the wall pushes back.'],
+           iso:['Flaccid','There is no net movement of water, so the cell is not pressing on its wall. Many flaccid cells together make a plant wilt.','ψ = ψs + ψp = (−700) + 0 = −700 kPa, equal to the solution.'],
+           hyper:['Plasmolysed','Water leaves the vacuole and the membrane pulls away from the cell wall. The space between fills with the outside solution. This is plasmolysis.','ψ of the solution (−2500 kPa) is lower than the cell’s, so water leaves until they match; ψp = 0.']}};
+  function drawCell(){ const c=$('c-cell'), x=c.getContext('2d'), W=c.width, H=c.height, cx=W/2, cy=H/2; t+=0.03; shown+=(target[cell][sol]-shown)*0.04;
+    x.fillStyle= sol==='hypo' ? '#cfe8ff' : sol==='iso' ? '#a9d6f5' : '#7fb6e0'; x.fillRect(0,0,W,H);
+    let s=11; const rn=()=>{ s=(s*16807)%2147483647; return s/2147483647; }; const nS= sol==='hypo'?0: sol==='iso'?40:110; for(let i=0;i<nS;i++){ x.fillStyle='rgba(230,57,70,.7)'; x.beginPath(); x.arc(rn()*W,rn()*H,4,0,7); x.fill(); }
+    if(cell==='rbc'){ const r=110*shown, burst=sol==='hypo'&&shown>1.3; x.save(); x.translate(cx,cy);
+      if(burst){ x.strokeStyle='#c1121f'; x.lineWidth=6; for(let k=0;k<10;k++){ const a=k*0.63; x.beginPath(); x.arc(0,0,r*1.05,a,a+0.4); x.stroke(); } x.fillStyle='rgba(193,18,31,.25)'; x.beginPath(); x.arc(0,0,r*1.25,0,7); x.fill(); }
+      else { x.fillStyle='#d62828'; x.beginPath(); for(let a=0;a<=6.3;a+=0.05){ const wob= sol==='hyper' ? 1+0.12*Math.sin(a*14) : 1; const rr=r*wob; x.lineTo(Math.cos(a)*rr,Math.sin(a)*rr*(sol==='hypo'?1:0.92)); } x.fill(); if(sol!=='hypo'){ x.fillStyle='#ef476f'; x.beginPath(); x.arc(0,0,r*0.45,0,7); x.fill(); } }
+      x.restore(); }
+    else { const w=320, h=220; x.fillStyle='#95d5b2'; x.strokeStyle='#2d6a4f'; x.lineWidth=14; x.strokeRect(cx-w/2,cy-h/2,w,h);
+      const k=Math.min(1,shown), pw=(w-16)*k, ph=(h-16)*(sol==='hyper'?k*0.95:k); x.fillStyle='#b7e4c7'; x.beginPath(); x.roundRect? x.roundRect(cx-pw/2,cy-ph/2,pw,ph,sol==='hyper'?60:8) : x.rect(cx-pw/2,cy-ph/2,pw,ph); x.fill();
+      x.fillStyle='rgba(91,192,235,.55)'; x.beginPath(); x.ellipse(cx,cy,pw*0.38,ph*0.36,0,0,7); x.fill(); for(let i=0;i<8;i++){ x.fillStyle='#2d6a4f'; x.beginPath(); x.ellipse(cx-pw/2+18+(i%4)*((pw-36)/3),cy+(i<4?-1:1)*(ph/2-14),9,5,0,0,7); x.fill(); }
+      x.fillStyle='#fff'; x.font='14px Atkinson Hyperlegible, sans-serif'; x.fillText('cell wall',cx+w/2+12,cy-h/2+10); x.fillText('vacuole',cx-28,cy+5); if(sol==='hyper') x.fillText('outside solution fills this gap',cx-w/2,cy+h/2+34); }
+    const dir= sol==='hypo'?1: sol==='hyper'?-1:0; x.strokeStyle='#0a4c7a'; x.fillStyle='#0a4c7a'; x.lineWidth=4;
+    for(let k=0;k<6;k++){ const a=k*1.047+0.5, r1=230, r2=170, ph=(t*0.6+k*0.17)%1; if(dir===0){ x.globalAlpha=0.5; [[r1,r2],[r2,r1]].forEach(([p,q],j)=>{ const m=(ph+j*0.5)%1, rr=p+(q-p)*m; x.beginPath(); x.arc(cx+Math.cos(a+j*0.12)*rr,cy+Math.sin(a+j*0.12)*rr*0.8,5,0,7); x.fill(); }); x.globalAlpha=1; continue; }
+      const from= dir>0? r1:r2, to= dir>0? r2:r1, rr=from+(to-from)*ph; x.beginPath(); x.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*0.8,6,0,7); x.fill(); }
+    x.fillStyle='#023047'; x.font='700 15px Atkinson Hyperlegible, sans-serif'; x.fillText('Blue dots: water molecules moving. Red dots: solute particles outside.',14,H-14);
+    if(!$('p-cell').hidden) requestAnimationFrame(drawCell); }
+  function cellText(){ const T=TXT[cell][sol]; $('cell-h').textContent=T[0]; $('cell-s').textContent=T[1]; $('cell-psi2').textContent=T[2]; $('cell-psi').textContent='Water potential'; }
+  function setCell(k){ cell=k; $('ct-rbc').setAttribute('aria-pressed',k==='rbc'); $('ct-plant').setAttribute('aria-pressed',k==='plant'); cellText(); }
+  $('ct-rbc').onclick=()=>setCell('rbc'); $('ct-plant').onclick=()=>setCell('plant');
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{ sol=b.dataset.s; document.querySelectorAll('[data-s]').forEach(o=>o.setAttribute('aria-pressed',o===b)); cellText(); });
+  function tab(k){ $('t-pot').setAttribute('aria-pressed',k==='pot'); $('t-cell').setAttribute('aria-pressed',k==='cell'); $('p-pot').hidden=k!=='pot'; $('p-cell').hidden=k!=='cell'; if(k==='cell'){ shown=target[cell][sol]; cellText(); drawCell(); } }
+  $('t-pot').onclick=()=>tab('pot'); $('t-cell').onclick=()=>tab('cell');
+  function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+  $('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+  $('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; pot(); };
+  setLevel(level);
+})();
+</script>
+
+</body>
+</html>

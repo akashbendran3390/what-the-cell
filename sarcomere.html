@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Inside a Sarcomere: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/sarcomere.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Inside a Sarcomere">
+<meta property="og:description" content="Inside a Sarcomere: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/sarcomere.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Inside a Sarcomere</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'Inside a Sarcomere',
+  sub: 'DP Biology B3.3 (HL) · simplified, not to scale',
+  startTitle: 'Watch a muscle contract',
+  intro: 'Zoom from a muscle fibre into one sarcomere and watch the filaments slide. Use the Contract button to send calcium in and start the cross-bridge cycle; let go and titin springs the sarcomere back.',
+  note: 'Red: thin actin filaments. Purple: thick myosin filaments with their heads. Blue: tropomyosin. Green dots: calcium ions. Grey springs: titin.',
+  rideLabel: 'Zoom in',
+  theme: { bg: '#170d14', panel: 'rgba(30,14,24,.86)', accent: '#ff9fb2', dim: '#d6bcc9', line: 'rgba(255,200,220,.22)' },
+  fog: 0.004,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    // Muscle fibre (outer) with striations and several nuclei, myofibrils inside, sarcoplasmic reticulum wrapping them
+    const fibre = new THREE.Mesh(new THREE.CylinderGeometry(26, 26, 200, 48, 1, true), T(0xc0485e, 0.18)); fibre.rotation.z = Math.PI / 2; fibre.position.x = -40; scene.add(fibre);
+    for (let i = 0; i < 4; i++) { const n = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 12), M(0x5b2a86)); n.scale.set(2, 1, 1); n.position.set(-120 + i * 50, 24 * Math.cos(i), 24 * Math.sin(i)); scene.add(n); }
+    const myo = [[0, 0], [12, 6], [-12, 6], [0, -12], [12, -8], [-12, -8], [6, 16], [-6, 16]];
+    myo.forEach(([y, z]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(4.8, 4.8, 200, 20, 1, true), T(0xe07a8f, 0.13)); m.rotation.z = Math.PI / 2; m.position.set(-40, y, z); scene.add(m);
+      for (let x = -140; x < 60; x += 22) { const b = new THREE.Mesh(new THREE.CylinderGeometry(4.9, 4.9, 6, 20, 1, true), T(0x7a1f35, 0.25)); b.rotation.z = Math.PI / 2; b.position.set(x, y, z); scene.add(b); } });
+    const sr = M(0x6fd3c7, { transparent: true, opacity: 0.45 }); for (let i = 0; i < 6; i++) { const pts = []; for (let k = 0; k <= 30; k++) { const a = k / 30 * Math.PI * 2; pts.push(V(-30 + i * 6 + Math.sin(a * 3) * 1.5, 6 * Math.cos(a), 6 * Math.sin(a))); } scene.add(tube(pts, 0.35, sr, 60, true)); }
+    // The sarcomere itself, magnified at the origin. Z discs move in as it contracts.
+    const sarc = new THREE.Group(); scene.add(sarc);
+    const zL = new THREE.Group(), zR = new THREE.Group(); sarc.add(zL, zR);
+    const zMat = M(0x2b1d2e);
+    [zL, zR].forEach(z => { const disc = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 0.4, 6), zMat); disc.rotation.z = Math.PI / 2; z.add(disc); });
+    const actM = M(0xe63946), tropM = M(0x4ea8de), headM = M(0xb084f5), thickM = M(0x7b2cbf), titM = M(0xbdbdbd);
+    const grid = []; for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) grid.push([i * 2.4 + (j % 2) * 1.2, j * 2.1]);
+    const thinPos = []; for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++) { const p = [i * 1.2 + 0.6, j * 1.05 + 0.5]; if (Math.abs(p[0]) < 3.6 && Math.abs(p[1]) < 3.4) thinPos.push(p); }
+    const thins = [];
+    [zL, zR].forEach((z, side) => thinPos.forEach(([y, zz]) => { const g = new THREE.Group(); const f = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 11, 6), actM); f.rotation.z = Math.PI / 2; f.position.x = side ? -5.5 : 5.5; g.add(f);
+      const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 11, 4), tropM); tr.rotation.z = Math.PI / 2; tr.position.set(side ? -5.5 : 5.5, 0.17, 0); g.add(tr); thins.push(tr); g.position.set(0, y, zz); z.add(g); }));
+    const heads = [];
+    grid.forEach(([y, z]) => { const f = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 15, 8), thickM); f.rotation.z = Math.PI / 2; f.position.set(0, y, z); sarc.add(f);
+      for (let x = -7; x <= 7; x += 1.1) { if (Math.abs(x) < 1.4) continue; for (let k = 0; k < 2; k++) { const a = k * Math.PI + x; const h = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), headM); h.scale.set(1.8, 0.8, 0.8); const piv = new THREE.Group(); piv.position.set(x, y + Math.cos(a) * 0.5, z + Math.sin(a) * 0.5); h.position.set(0, Math.cos(a) * 0.35, Math.sin(a) * 0.35); piv.add(h); sarc.add(piv); heads.push({ piv, dir: Math.sign(x) }); } } });
+    const titins = []; grid.forEach(([y, z]) => [-1, 1].forEach(s => { const pts = []; for (let k = 0; k <= 24; k++) pts.push(V(k / 24, Math.sin(k * 1.2) * 0.25, Math.cos(k * 1.2) * 0.25)); const t = tube(pts, 0.06, titM, 48); t.position.set(s * 7.5, y, z); sarc.add(t); titins.push({ t, s }); }));
+    const cal = []; for (let i = 0; i < 70; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 4), M(0x6bd66b, { emissive: 0x114411 })); m.visible = false; scene.add(m); cal.push({ m, p: V(A.rnd(-12, 12), A.rnd(-4, 4), A.rnd(-4, 4)) }); }
+    let contracting = false, k = 0, auto = true; const btn = A.button('b-contract', 'Contract', b => { auto = false; contracting = !contracting; b.textContent = contracting ? 'Relax' : 'Contract'; b.setAttribute('aria-pressed', contracting); });
+    A.label('Muscle fibre (one cell, many nuclei)', V(-120, 30, 0), 400); A.label('Myofibril', V(-70, 6, 6), 300); A.label('Sarcoplasmic reticulum', V(-28, 8, 0)); A.label('Z line', V(-13, 5, 0)); A.label('Actin (thin)', V(-8, -4.5, 2)); A.label('Myosin (thick)', V(0, 4.6, 0)); A.label('Titin', V(9, -3.5, 2)); A.label('Light band (I band)', V(-11, 7, 0)); A.label('Dark band (A band)', V(3, -6, 0));
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
+    return {
+      route: [V(-180, 40, 60), V(-120, 20, 40), V(-60, 8, 16), V(-30, 6, 30), V(-8, 4, 40), V(0, 3, 30), V(0, 2, 24)], hero, camOffset: V(0, 0, 0), outside: { target: V(-40, 0, 0), dist: 200 },
+      outsideInfo: { n: 'A skeletal muscle fibre', s: 'A muscle fibre is one long cell with many nuclei, packed with myofibrils. The repeating light and dark bands are the sarcomeres.', h: 'Because one fibre is so large and has many nuclei, it is debated whether it should be called a cell: it forms by many cells fusing together.', cs: 'B3.3.2', ch: 'B2.3.9' },
+      stops: [
+        { at: V(-120, 20, 40), n: 'A muscle fibre', s: 'Skeletal muscle is made of long fibres. Each fibre contains many nuclei and is packed with myofibrils.', h: 'The membrane around the fibre is the sarcolemma; its cytoplasm is the sarcoplasm, full of mitochondria to supply ATP.', cs: 'B3.3.2', ch: 'B2.3.9' },
+        { at: V(-60, 8, 16), n: 'Myofibrils and sarcoplasmic reticulum', s: 'Each myofibril is divided into repeating units called sarcomeres, which give the striped (striated) look.', h: 'The sarcoplasmic reticulum (green-blue tubes) stores calcium ions. A nerve impulse makes it release them into the myofibrils.', cs: 'B3.3.2', ch: 'B3.3.2' },
+        { at: V(-8, 4, 40), n: 'One sarcomere', s: 'A sarcomere runs from one Z line to the next. Thin actin filaments are attached to the Z lines; thick myosin filaments sit in the middle and overlap them.', h: 'The light I band contains only actin; the dark A band is the length of the myosin filaments.', cs: 'B3.3.2', ch: 'B3.3.2' },
+        { at: V(0, 3, 30), n: 'Calcium and binding sites', s: 'Press Contract. Calcium ions (green) flood in and bind to the actin filaments, so the binding sites for myosin are uncovered.', h: 'At rest, tropomyosin (blue) covers the binding sites. Calcium binds to troponin, which moves tropomyosin out of the way.', cs: 'B3.3.2', ch: 'B3.3.2' },
+        { at: V(0, 2, 24), n: 'The cross-bridge cycle', s: 'Myosin heads bind to actin, swivel and pull the actin towards the centre (the power stroke). The sarcomere shortens and the muscle contracts.', h: 'ATP binds and breaks the cross-bridge; hydrolysis of ATP re-cocks the head so it can bind again further along. Without ATP the heads stay locked on, which causes rigor mortis. Notice that the A band stays the same length while the I bands shrink.', cs: 'B3.3.2', ch: 'B3.3.2, B3.3.3' }
+      ],
+      side: '<h3>Sarcomere</h3><p id="sarc-state" style="margin:0">Relaxed</p><p style="margin:6px 0 0" id="sarc-len">Length: 100%</p>',
+      onStop(i) { if (auto && i >= 3) { contracting = true; btn.textContent = 'Relax'; btn.setAttribute('aria-pressed', 'true'); } },
+      update(dt, A) {
+        const run = A.paused ? 0 : dt;
+        k += (contracting ? 1 : -1) * run * 0.6; k = Math.max(0, Math.min(1, k));
+        const half = 11 - 3.2 * k; zL.position.x = -half; zR.position.x = half;
+        thins.forEach(tr => { tr.position.z = contracting ? 0.12 : 0; });
+        const beat = Math.sin(A.t * 9);
+        heads.forEach(h => { h.piv.rotation.z = contracting && k < 1 ? h.dir * (0.3 + 0.35 * beat) : h.dir * 0.6; });
+        titins.forEach(o => { const len = half - 7.5; o.t.scale.x = Math.max(0.2, len) * o.s; });
+        cal.forEach(c => { c.m.visible = k > 0.02; c.m.position.copy(c.p).multiplyScalar(contracting ? 0.6 : 1.4); });
+        const st = document.getElementById('sarc-state'); if (st) st.textContent = contracting ? (k < 1 ? 'Contracting: cross-bridges pulling actin inwards' : 'Fully contracted') : (k > 0 ? 'Relaxing: titin springs the sarcomere back' : 'Relaxed');
+        const sl = document.getElementById('sarc-len'); if (sl) sl.textContent = 'Length: ' + Math.round(half / 11 * 100) + '% · A band unchanged, I bands ' + (k > 0.05 ? 'shorter' : 'full width');
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); const d=ahead.clone().sub(camera.position).normalize();
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

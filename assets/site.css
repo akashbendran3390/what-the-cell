@@ -750,3 +750,10 @@ html.sim-open-page{overflow:hidden}
 .sim-feature-title{font:800 28px var(--ui)}
 .sim-feature-text{max-width:60ch;font-size:16px;line-height:1.45}
 .sim-feature .sim-open{background:var(--yellow);color:var(--on-bright);border-color:var(--yellow)}
+.sim-own[hidden]{display:none}
+.sim-tabs{display:flex;flex-wrap:wrap;gap:4px;background:var(--soft);padding:4px;border-radius:99px;margin:0 0 14px;width:max-content;max-width:100%}
+.sim-tabs button{font:700 14px var(--ui);border:0;background:transparent;color:var(--fg);padding:7px 14px;border-radius:99px;cursor:pointer}
+.sim-tabs button[aria-pressed="true"]{background:var(--deep);color:#fff}
+:root[data-theme="dark"] .sim-tabs button[aria-pressed="true"]{background:var(--violet)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sim-tabs button[aria-pressed="true"]{background:var(--violet)}}
+.sim-own-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}

@@ -28,6 +28,16 @@
     }
   });
 
+  // Type tabs in a topic page's box: All, Simulations, Interactives, Animations
+  document.querySelectorAll('.sim-tabs').forEach(function (bar) {
+    var box = bar.parentNode;
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-tab]'); if (!b) return;
+      bar.querySelectorAll('button').forEach(function (o) { o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+      box.querySelectorAll('.sim-card').forEach(function (c) { c.hidden = b.dataset.tab !== 'all' && c.dataset.type !== b.dataset.tab; });
+    });
+  });
+
   // Hub filters
   var search = document.getElementById('sim-search');
   if (!search) return;
@@ -42,6 +52,10 @@
         t.hidden = !cards; if (cards) shown++;
       });
       u.hidden = !shown; if (shown) any = true;
+    });
+    document.querySelectorAll('.sim-own').forEach(function (o) {
+      var ok = (kind === 'all' || o.dataset.type === kind) && (!q || q.split(/\s+/).every(function (w) { return o.dataset.q.indexOf(w) >= 0; }));
+      o.hidden = !ok; if (ok) any = true;
     });
     if (empty) empty.hidden = any;
   }

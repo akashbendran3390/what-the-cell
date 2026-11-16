@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Speciation Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/speciation-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Speciation Lab">
+<meta property="og:description" content="Speciation Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/speciation-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Speciation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0f1316; --ink:#eef4f6; --dim:#b4c3c9; --panel:#172026; --panel2:#1e2a31; --line:rgba(190,220,230,.2);
+  --accent:#ffb703; --a:#e76f51; --b:#2a9d8f;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1240px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel)}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#1d1600}
+.grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:14px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.field{position:relative;padding:0;overflow:hidden}
+#field{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.banner{position:absolute;left:12px;top:12px;background:rgba(0,0,0,.62);padding:6px 10px;border-radius:8px;font-weight:700;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#1d1600;border-color:transparent}
+button:disabled{opacity:.45;cursor:not-allowed}
+button[aria-pressed="true"].btn{outline:2px solid var(--accent)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:8px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+h3{font:700 13px var(--body);margin:12px 0 4px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+p{margin:6px 0;line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center}
+.stats div{background:var(--panel2);border-radius:10px;padding:8px 4px}
+.stats b{display:block;font:800 20px var(--display)}
+.stats span{font-size:12px;color:var(--dim)}
+canvas.graph{width:100%;height:150px;display:block}
+.hl-only{display:none} body.hl .hl-only{display:block} body.hl button.hl-only{display:inline-block}
+.note{font-size:12px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.intro{max-width:760px}
+.key{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:13px;color:var(--dim)}
+.sw{width:14px;height:14px;border-radius:50%;display:inline-block}
+.tasks li{margin:4px 0;line-height:1.45}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Speciation Lab</h1><div class="sub">DP Biology A4.1 &middot; a model, not real data</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Split a population and watch new species form</h2>
+    <p>A population of finch-like birds lives across a valley. The west side is dry with small hard seeds; the east side is wet with large seeds. Each bird has a beak size (shown by its size) and a courtship song (shown by its colour). Birds only mate with partners whose song is similar enough.</p>
+    <p>Raise a river to split the population, run many generations, then remove the river. Can the two groups still interbreed?</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div class="grid" id="lab" hidden>
+    <div>
+      <div class="card field"><canvas id="field" width="960" height="540" aria-label="Birds in a valley, dry on the west and wet on the east"></canvas><div class="banner" id="banner">Generation 0</div></div>
+      <div class="row">
+        <button type="button" class="btn" id="b-river" aria-pressed="false">Raise the river</button>
+        <button type="button" class="go" id="b-run">Run 20 generations</button>
+        <button type="button" class="btn" id="b-one">1 generation</button>
+        <button type="button" class="btn hl-only" id="b-poly">Polyploid mutation (HL)</button>
+        <button type="button" class="btn" id="b-reset">Start again</button>
+      </div>
+      <div class="card">
+        <h2>Try it</h2>
+        <ol class="tasks">
+          <li>Run 20 generations with no river. Do the two sides become different? Why not?</li>
+          <li>Raise the river and run about 100 generations. Describe how beak size and song change on each side, and explain why.</li>
+          <li>Remove the river. Watch "matings that work between the groups". Have the groups become separate species? What kind of reproductive isolation is this?</li>
+          <li class="hl-only">HL: start again with no river and press "Polyploid mutation". Run 20 generations. Explain why the polyploid birds form a new species at once, without any barrier.</li>
+        </ol>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h2>Settings</h2>
+        <label class="sl">Strength of natural selection <b id="o-sel">60%</b><input type="range" id="s-sel" min="0" max="100" value="60"></label>
+        <label class="sl">How different songs can be and still attract <b id="o-tol">0.20</b><input type="range" id="s-tol" min="5" max="50" value="20"></label>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>The population now</h2>
+        <div class="stats"><div><b id="n-gen">0</b><span>generation</span></div><div><b id="n-x">-</b><span>matings that work between west and east</span></div><div><b id="n-sp">1</b><span>groups that can interbreed</span></div></div>
+        <h3>Mean beak size</h3><canvas class="graph" id="g1" width="600" height="150"></canvas>
+        <h3>Mean song</h3><canvas class="graph" id="g2" width="600" height="150"></canvas>
+        <p class="note"><span class="key"><span class="sw" style="background:#e76f51"></span>west (dry)</span><span class="key"><span class="sw" style="background:#2a9d8f"></span>east (wet)</span></p>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>What is happening</h2>
+        <p id="i-s"></p>
+        <p id="i-h" class="hl-only"></p>
+        <p class="note" id="i-codes"></p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id), W=960, H=540, N=240;
+  const cv=$('field'), cx=cv.getContext('2d');
+  let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+  let pop=[], gen=0, river=false, hist=[], busy=false, everSplit=false, crossRate=null;
+  const OPT={w:0.25,e:0.75};
+  function rnd(a,b){ return a+Math.random()*(b-a); } function gauss(){ return (Math.random()+Math.random()+Math.random()-1.5)*0.82; }
+  function bird(side,t,m,pl){ return {side, t, m, pl:pl||2, x: side==='w'? rnd(30,W/2-40): rnd(W/2+40,W-30), y: rnd(60,H-30)}; }
+  function reset(){ pop=[]; gen=0; hist=[]; river=false; everSplit=false; crossRate=null; $('b-river').setAttribute('aria-pressed','false'); $('b-river').textContent='Raise the river';
+    for(let i=0;i<N;i++) pop.push(bird(i%2?'e':'w', 0.5+gauss()*0.06, 0.5+gauss()*0.04)); record(); draw(); stats(); info(); }
+  function fit(b){ const s=+$('s-sel').value/100, d=b.t-OPT[b.side]; return (1-s)+s*Math.exp(-d*d/(2*0.12*0.12)); }
+  function compatible(a,b){ return a.pl===b.pl && Math.abs(a.m-b.m) < +$('s-tol').value/100; }
+  function pick(list,ws,tot){ let r=Math.random()*tot; for(let i=0;i<list.length;i++){ r-=ws[i]; if(r<=0) return list[i]; } return list[list.length-1]; }
+  function step(){ const kids=[]; const groups= river ? {w:pop.filter(b=>b.side==='w'), e:pop.filter(b=>b.side==='e')} : {all:pop};
+    let tries=0, ok=0;
+    // test of interbreeding between birds from the west and east (who were separated), when the river is down
+    if(!river && everSplit){ for(let k=0;k<200;k++){ const a=pop[Math.random()*pop.length|0], b=pop[Math.random()*pop.length|0]; if(a.home===b.home||!a.home||!b.home) continue; tries++; if(compatible(a,b)) ok++; } crossRate= tries? ok/tries : null; }
+    Object.keys(groups).forEach(gk=>{ const g=groups[gk]; if(!g.length) return; const target= river ? Math.round(N*g.length/pop.length) : N;
+      const ws=g.map(fit), tot=ws.reduce((a,b)=>a+b,0);
+      let made=0, guard=0; while(made<target && guard<target*40){ guard++;
+        const a=pick(g,ws,tot); let b=null; for(let k=0;k<12;k++){ const c=pick(g,ws,tot); if(c!==a && compatible(a,c)){ b=c; break; } } if(!b && a.pl===4){ b=a; } if(!b) continue;
+        const side= river ? a.side : (Math.random()<0.5? a.side : b.side);
+        // song is partly shaped by beak size (as in real finches), so it shifts as beaks diverge, plus chance drift
+        const child=bird(side,(a.t+b.t)/2+gauss()*0.065,(a.m+b.m)/2+gauss()*0.025+(a.t+b.t-1)*0.012, a.pl);
+        child.home = river ? side : (a.home===b.home ? a.home : null); kids.push(child); made++; } });
+    if(kids.length<4){ info('extinct'); return false; }
+    pop=kids.slice(0,N); gen++; record(); return true; }
+  function means(side,key){ const g=pop.filter(b=>b.side===side); return g.length? g.reduce((a,b)=>a+b[key],0)/g.length : null; }
+  function record(){ hist.push({tw:means('w','t'),te:means('e','t'),mw:means('w','m'),me:means('e','m')}); }
+  function groupsCount(){ // cluster birds into interbreeding groups by song and ploidy
+    const tol=+$('s-tol').value/100, items=pop.map(b=>[b.pl,b.m]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]); let n=0, last=null;
+    items.forEach(([pl,m])=>{ if(!last||last[0]!==pl||m-last[1]>tol) n++; last=[pl,m]; }); return n; }
+  function stats(){ $('n-gen').textContent=gen; $('n-x').textContent= crossRate===null ? '-' : Math.round(crossRate*100)+'%'; $('n-sp').textContent=groupsCount(); $('banner').textContent='Generation '+gen+(river?' (river up)':''); }
+  function song(m){ return `hsl(${Math.round(Math.max(0,Math.min(1,m))*300)},75%,58%)`; }
+  function draw(){ const g=cx.createLinearGradient(0,0,W,0); g.addColorStop(0,'#c9a66b'); g.addColorStop(0.45,'#b9a46a'); g.addColorStop(0.55,'#6a994e'); g.addColorStop(1,'#386641'); cx.fillStyle=g; cx.fillRect(0,0,W,H);
+    cx.fillStyle='rgba(0,0,0,.25)'; cx.font='700 18px Atkinson Hyperlegible, sans-serif'; cx.fillText('West: dry, small hard seeds',20,H-14); cx.fillText('East: wet, large seeds',W-230,H-14);
+    if(river){ cx.fillStyle='#4895ef'; cx.beginPath(); cx.moveTo(W/2-22,0); for(let y=0;y<=H;y+=20) cx.lineTo(W/2-22+Math.sin(y/40)*12,y); for(let y=H;y>=0;y-=20) cx.lineTo(W/2+22+Math.sin(y/40)*12,y); cx.fill(); }
+    pop.forEach(b=>{ const r=5+b.t*9; cx.fillStyle=song(b.m); cx.beginPath(); cx.arc(b.x,b.y,r,0,7); cx.fill(); cx.strokeStyle='rgba(0,0,0,.45)'; cx.lineWidth=1.2; cx.stroke(); if(b.pl===4){ cx.strokeStyle='#fff'; cx.lineWidth=2.5; cx.beginPath(); cx.arc(b.x,b.y,r+3,0,7); cx.stroke(); } }); }
+  function graph(id,kw,ke){ const c=$(id), x=c.getContext('2d'), w=c.width, h=c.height, pad=24; x.clearRect(0,0,w,h); x.strokeStyle='rgba(190,220,230,.25)'; x.fillStyle='#b4c3c9'; x.font='12px Atkinson Hyperlegible, sans-serif';
+    [0,0.5,1].forEach(v=>{ const y=h-pad-(h-2*pad)*v; x.beginPath(); x.moveTo(pad,y); x.lineTo(w-6,y); x.stroke(); x.fillText(v.toFixed(1),0,y+4); });
+    const n=Math.max(20,hist.length); [[kw,'#e76f51'],[ke,'#2a9d8f']].forEach(([k,col])=>{ x.strokeStyle=col; x.lineWidth=2.5; x.beginPath(); let started=false; hist.forEach((r,i)=>{ if(r[k]===null) return; const X=pad+(w-pad-6)*(i/(n-1)), Y=h-pad-(h-2*pad)*Math.max(0,Math.min(1,r[k])); started?x.lineTo(X,Y):x.moveTo(X,Y); started=true; }); x.stroke(); }); }
+  function refresh(){ draw(); stats(); graph('g1','tw','te'); graph('g2','mw','me'); info(); }
+  function run(n){ if(busy) return; busy=true; let k=0; const go=()=>{ const ok=step(); refresh(); if(!ok||++k>=n){ busy=false; return; } setTimeout(go,60); }; go(); }
+  $('b-run').onclick=()=>run(20); $('b-one').onclick=()=>run(1);
+  $('b-river').onclick=()=>{ if(busy) return; river=!river; if(river){ everSplit=true; pop.forEach(b=>{ b.home=b.side; }); } else { crossRate=null; } $('b-river').setAttribute('aria-pressed',river); $('b-river').textContent= river?'Remove the river':'Raise the river'; refresh(); };
+  $('b-poly').onclick=()=>{ if(busy) return; const g=pop.filter(b=>b.pl===2); for(let i=0;i<6&&g.length;i++){ const b=g.splice(Math.random()*g.length|0,1)[0]; b.pl=4; } refresh(); };
+  $('b-reset').onclick=()=>{ if(!busy){ reset(); refresh(); } };
+  ['s-sel','s-tol'].forEach(s=>{ const o=s==='s-sel'?'o-sel':'o-tol'; const f=()=>$(o).textContent= s==='s-sel' ? $(s).value+'%' : (+$(s).value/100).toFixed(2); $(s).oninput=()=>{ f(); stats(); }; f(); });
+  function info(state){ if(state==='extinct'){ $('i-s').textContent='The population has died out: selection was too strong for the birds to adapt. Start again with weaker selection.'; return; }
+    const tw=means('w','t'), te=means('e','t'), mw=means('w','m'), me=means('e','m'), split= tw!==null&&te!==null&&Math.abs(tw-te)>0.2;
+    let s;
+    if(river) s='The river is a geographical barrier: birds on the two sides can no longer breed together, so their gene pools are separate. Different selection pressures (seed size) push beak size in different directions, and songs change with them, because beak shape affects the sounds a bird can make, as well as by chance.';
+    else if(everSplit && crossRate!==null && crossRate<0.3) s='The river is gone, but most matings between west and east birds fail because their songs no longer match. The groups are reproductively isolated: they have become separate species. This is allopatric speciation.';
+    else if(everSplit) s='The river is gone and the birds mix again. If their songs are still similar, they interbreed and the two groups merge back into one gene pool.';
+    else s='With no barrier, birds from both sides breed together, so genes flow across the valley. The population stays one gene pool and cannot split, even though the two sides favour different beaks.';
+    $('i-s').textContent=s;
+    $('i-h').textContent='Behavioural isolation (different songs) is a prezygotic barrier. Speciation that needs a geographical barrier is allopatric; speciation without one, as with polyploidy (white rings), is sympatric. A polyploid bird cannot produce fertile offspring with the original diploids, so it is a new species at once. In real life this is far more common in plants, which can self-fertilise.';
+    $('i-codes').textContent='Syllabus: A4.1.6, A4.1.7'+(level==='hl'?', A4.1.8, A4.1.10, A4.1.11':''); }
+  function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); info(); }
+  $('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+  $('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; reset(); refresh(); };
+  setLevel(level); window.speciationState=()=>({gen, river, last:hist[hist.length-1], first:hist[0]});
+})();
+</script>
+
+</body>
+</html>

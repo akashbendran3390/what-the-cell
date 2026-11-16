@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Out of Step: Phenology Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/phenology-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Out of Step: Phenology Lab">
+<meta property="og:description" content="Out of Step: Phenology Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/phenology-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Out of Step: Phenology Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#11140f; --ink:#f2f5ee; --dim:#bfc8b6; --panel:#1a2016; --panel2:#222b1d; --line:rgba(210,230,190,.2);
+  --accent:#f4d35e; --cat:#80b918; --chick:#ee964b; --beetle:#c08552;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1180px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#231d00}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+canvas.plot{width:100%;height:auto;display:block}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:9px 14px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#231d00;border-color:transparent}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:10px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.big{font:800 34px var(--display)}
+.meter{height:12px;border-radius:6px;background:var(--panel2);overflow:hidden;margin:6px 0}
+.meter span{display:block;height:100%;background:var(--accent);transition:width .3s}
+.note{font-size:12px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.key{display:inline-flex;align-items:center;gap:6px;margin-right:12px;font-size:13px;color:var(--dim)}
+.sw{width:14px;height:4px;border-radius:2px;display:inline-block}
+.hl-only{display:none} body.hl .hl-only{display:block} body.hl button.hl-only{display:inline-block}
+.tasks li{margin:4px 0;line-height:1.45}
+.intro{max-width:760px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Out of Step: Phenology Lab</h1><div class="sub">DP Biology D4.3 (HL) &middot; a model with invented but realistic numbers</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="false">SL</button><button type="button" id="lv-hl" aria-pressed="true">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>When timing goes wrong</h2>
+    <p>Phenology is the study of when things happen in the year: leaves opening, insects hatching, birds nesting. Different species use different cues. Many insects respond to temperature, while many birds time breeding by day length. Warm the climate and see what happens to animals that depend on each other.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-mis" aria-pressed="true">Birds and caterpillars</button><button type="button" id="t-gen" aria-pressed="false">Beetle generations</button></div>
+    <div class="grid" id="p-mis">
+      <div class="card">
+        <canvas class="plot" id="c-mis" width="900" height="420" aria-label="Graph of caterpillar numbers and chick food demand against date"></canvas>
+        <p class="note"><span class="key"><span class="sw" style="background:#80b918"></span>caterpillars on oak leaves (cue: temperature)</span><span class="key"><span class="sw" style="background:#ee964b"></span>food needed by chicks (cue: day length)</span></p>
+        <h2>Try it</h2>
+        <ol class="tasks"><li>Raise spring temperature from 0 to +3 &deg;C. Describe what happens to each peak and to breeding success.</li><li>Explain why the two peaks move by different amounts.</li><li class="hl-only">HL: at +3 &deg;C, press "10 years of natural selection" several times. Explain what is evolving and why it cannot keep up if warming is fast.</li></ol>
+      </div>
+      <div>
+        <div class="card">
+          <label class="sl">Spring warming compared with 1980 <b id="o-temp">+0.0 &deg;C</b><input type="range" id="s-temp" min="0" max="40" value="0"></label>
+          <p>Caterpillar peak: <b id="o-cat"></b><br>Chick demand peak: <b id="o-chk"></b><br>Gap: <b id="o-gap"></b></p>
+          <p>Chicks that get enough food</p><div class="big" id="o-succ">100%</div><div class="meter"><span id="m-succ"></span></div>
+          <div class="hl-only"><div class="row"><button type="button" class="btn hl-only" id="b-evo">10 years of natural selection</button><button type="button" class="btn hl-only" id="b-evoreset">Undo evolution</button></div><p class="note" id="o-evo">Laying date has not evolved yet.</p></div>
+        </div>
+        <div class="card" style="margin-top:14px"><h2>What is happening</h2><p id="i-mis"></p><p class="note">Syllabus: D4.3.9, D4.3.10<span class="hl-only" style="display:inline">, D4.3.12</span></p></div>
+      </div>
+    </div>
+    <div class="grid" id="p-gen" hidden>
+      <div class="card">
+        <canvas class="plot" id="c-gen" width="900" height="420" aria-label="Bar showing beetle generations through the year"></canvas>
+        <h2>Try it</h2>
+        <ol class="tasks"><li>Find the warming at which the beetles fit in a second generation each year.</li><li>Explain why two generations a year could lead to much more damage to spruce forests.</li></ol>
+      </div>
+      <div>
+        <div class="card">
+          <label class="sl">Summer warming compared with 1980 <b id="o-t2">+0.0 &deg;C</b><input type="range" id="s-t2" min="0" max="40" value="0"></label>
+          <p>Warmth collected over the season: <b id="o-dd"></b> degree-days</p>
+          <p>Each generation needs about <b>550</b> degree-days above 8 &deg;C to go from egg to adult.</p>
+          <p>Generations this year</p><div class="big" id="o-ng">1</div>
+          <p>Beetles at the end of the year (from 100)</p><div class="big" id="o-pop">-</div>
+        </div>
+        <div class="card" style="margin-top:14px"><h2>What is happening</h2><p id="i-gen"></p><p class="note">Syllabus: D4.3.11</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  let level='hl'; try{ level=localStorage.getItem('wtc-cell-level')||'hl'; }catch(e){}
+  let evo=0;
+  const MONTHS=[['Apr',91],['May',121],['Jun',152],['Jul',182]];
+  function dateName(d){ const m=[['March',60],['April',91],['May',121],['June',152],['July',182]]; let r=m[0]; m.forEach(x=>{ if(d>=x[1]) r=x; }); return Math.round(d-r[1]+1)+' '+r[0]; }
+  const gauss=(x,mu,s)=>Math.exp(-((x-mu)**2)/(2*s*s));
+  function mis(){ const T=+$('s-temp').value/10; const cat=150-5*T, chick=150-1*T+evo, gap=chick-cat;
+    let need=0, got=0; for(let d=90;d<=200;d++){ const c=gauss(d,cat,8), k=gauss(d,chick,8); need+=k; got+=Math.min(k,c); } const succ=Math.round(100*got/need);
+    $('o-temp').innerHTML='+'+T.toFixed(1)+' &deg;C'; $('o-cat').textContent=dateName(cat); $('o-chk').textContent=dateName(chick); $('o-gap').textContent=Math.abs(gap).toFixed(0)+' days'+(gap>0.5?' (chicks too late)':gap<-0.5?' (chicks too early)':''); $('o-succ').textContent=succ+'%'; $('m-succ').style.width=succ+'%';
+    $('i-mis').textContent= T<0.5 ? 'With no warming, caterpillars on oak leaves peak just when the chicks need the most food, so almost all chicks are well fed.' : 'Caterpillars develop faster in warmer springs, so their peak moves earlier. The birds start breeding when days reach a certain length, which does not change with climate, so their chicks hatch at almost the same date. The two events are now out of step: many chicks hatch after the caterpillar peak and go hungry. This is a phenological mismatch.';
+    const c=$('c-mis'), x=c.getContext('2d'), w=c.width, h=c.height, L=50, B=h-40, R=w-14, Tp=20, sx=d=>L+(R-L)*(d-90)/(200-90), sy=v=>B-(B-Tp)*v;
+    x.clearRect(0,0,w,h); x.strokeStyle='rgba(210,230,190,.25)'; x.fillStyle='#bfc8b6'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.lineWidth=1;
+    MONTHS.forEach(([n,d])=>{ x.beginPath(); x.moveTo(sx(d),Tp); x.lineTo(sx(d),B); x.stroke(); x.fillText('1 '+n,sx(d)+4,B+22); }); x.beginPath(); x.moveTo(L,B); x.lineTo(R,B); x.stroke();
+    x.save(); x.translate(16,B-40); x.rotate(-Math.PI/2); x.fillText('Amount (relative)',0,0); x.restore();
+    x.fillStyle='rgba(244,211,94,.25)'; x.beginPath(); x.moveTo(sx(90),B); for(let d=90;d<=200;d++) x.lineTo(sx(d),sy(Math.min(gauss(d,cat,8),gauss(d,chick,8)))); x.lineTo(sx(200),B); x.fill();
+    [[cat,'#80b918'],[chick,'#ee964b']].forEach(([mu,col])=>{ x.strokeStyle=col; x.lineWidth=4; x.beginPath(); for(let d=90;d<=200;d++){ const X=sx(d),Y=sy(gauss(d,mu,8)); d===90?x.moveTo(X,Y):x.lineTo(X,Y);} x.stroke(); });
+    x.fillStyle='#f4d35e'; x.fillText('overlap = food the chicks actually get',sx(Math.min(cat,chick))-60,Tp+14);
+    $('o-evo').textContent= evo===0 ? 'Laying date has not evolved yet.' : 'After selection, the mean laying date is '+Math.abs(evo).toFixed(1)+' days earlier than before.'; }
+  $('b-evo').onclick=()=>{ const T=+$('s-temp').value/10, cat=150-5*T, chick=150-1*T+evo, gap=chick-cat; const h2=0.3, S=Math.max(0,gap)*0.35; evo-=Math.min(gap>0?gap:0, 10*h2*S*0.12); mis(); };
+  $('b-evoreset').onclick=()=>{ evo=0; mis(); };
+  $('s-temp').oninput=mis;
+  function gen(){ const T=+$('s-t2').value/10; let dd=0; const temps=[]; for(let d=91;d<=290;d++){ const t=4+13*Math.sin(Math.PI*(d-91)/200)+T; temps.push(t); dd+=Math.max(0,t-8); }
+    const need=550; let acc=0, gens=[], start=91; temps.forEach((t,i)=>{ acc+=Math.max(0,t-8); if(acc>=need){ gens.push([start,91+i]); acc-=need; start=91+i; } });
+    const n=gens.length, pop=Math.round(100*Math.pow(6,n)/6*(n?1:0.5));
+    $('o-t2').innerHTML='+'+T.toFixed(1)+' &deg;C'; $('o-dd').textContent=Math.round(dd); $('o-ng').textContent=n; $('o-pop').textContent= pop.toLocaleString();
+    $('i-gen').textContent= n>=2 ? 'The warmer season gives enough warmth for a second generation before winter. Each generation multiplies the population, so numbers at the end of the year are many times higher, and many more trees are attacked. Bark beetle outbreaks have increased in this way in European and North American forests.' : 'Insects are ectotherms: their development speed depends on temperature. Here the season only gives enough warmth for one generation, so the population grows once a year.';
+    const c=$('c-gen'), x=c.getContext('2d'), w=c.width, h=c.height, L=50, R=w-14, sx=d=>L+(R-L)*(d-91)/(290-91);
+    x.clearRect(0,0,w,h); x.fillStyle='#bfc8b6'; x.font='15px Atkinson Hyperlegible, sans-serif';
+    const mon=[['Apr',91],['May',121],['Jun',152],['Jul',182],['Aug',213],['Sep',244],['Oct',274]]; x.strokeStyle='rgba(210,230,190,.25)'; mon.forEach(([m,d])=>{ x.beginPath(); x.moveTo(sx(d),30); x.lineTo(sx(d),h-40); x.stroke(); x.fillText(m,sx(d)+4,h-18); });
+    x.strokeStyle='#e9c46a'; x.lineWidth=3; x.beginPath(); temps.forEach((t,i)=>{ const X=sx(91+i), Y=h-40-(t/32)*(h-120); i?x.lineTo(X,Y):x.moveTo(X,Y); }); x.stroke(); x.fillStyle='#e9c46a'; x.fillText('daily mean temperature',L+6,40);
+    gens.forEach((g,i)=>{ x.fillStyle= i? '#bc4749':'#c08552'; x.fillRect(sx(g[0]),h-80,sx(g[1])-sx(g[0])-3,26); x.fillStyle='#fff'; x.fillText('Generation '+(i+1),sx(g[0])+8,h-62); });
+    if(!n){ x.fillStyle='#fff'; x.fillText('Not enough warmth to finish a generation',L+10,h-62); } }
+  $('s-t2').oninput=gen;
+  function tab(t){ $('t-mis').setAttribute('aria-pressed',t==='mis'); $('t-gen').setAttribute('aria-pressed',t==='gen'); $('p-mis').hidden=t!=='mis'; $('p-gen').hidden=t!=='gen'; }
+  $('t-mis').onclick=()=>tab('mis'); $('t-gen').onclick=()=>tab('gen');
+  function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+  $('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+  $('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; mis(); gen(); };
+  setLevel(level);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Where Did Cells Come From?: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/origin-of-cells.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Where Did Cells Come From?">
+<meta property="og:description" content="Where Did Cells Come From?: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/origin-of-cells.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Where Did Cells Come From?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'Where Did Cells Come From?',
+  sub: 'DP Biology A2.1 (HL) · simplified, not to scale',
+  startTitle: 'From chemistry to the first cells',
+  intro: 'Travel back four billion years. See the young Earth, the Miller-Urey experiment that made amino acids from simple gases, fatty acids gathering into vesicles, RNA copying itself, a deep-sea hydrothermal vent, and the tree of life growing from one common ancestor.',
+  note: 'This is a set of hypotheses and experiments, not a film of what happened. Coloured beads: amino acids. Orange and white: fatty acids. Purple: RNA.',
+  rideLabel: 'Travel through time',
+  theme: { bg: '#0d0f18', panel: 'rgba(16,18,32,.86)', accent: '#ffb703', dim: '#c7cbe0', line: 'rgba(200,205,250,.22)' },
+  fog: 0.004,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    const ball = new THREE.SphereGeometry(1, 10, 8);
+    // 1. Young Earth: ocean, volcanoes, lightning
+    const sea = new THREE.Mesh(new THREE.BoxGeometry(50, 1, 40), M(0x1d3557, { roughness: 0.3 })); sea.position.set(-82, -6, 0); scene.add(sea);
+    [[-92, -6], [-78, 8], [-70, -10]].forEach(([x, z], i) => { const v = new THREE.Mesh(new THREE.ConeGeometry(5 + i, 10 + i * 2, 20, 1, true), M(0x4a3b35)); v.position.set(x, -1 + i, z); scene.add(v);
+      const lava = new THREE.Mesh(new THREE.SphereGeometry(1.2, 10, 8), M(0xff5400, { emissive: 0xff3300 })); lava.position.set(x, 4 + i * 2, z); scene.add(lava); });
+    const bolt = tube([V(-84, 22, 2), V(-82, 16, 1), V(-85, 11, 3), V(-83, 4, 2)], 0.25, M(0xffffff, { emissive: 0xaaccff, transparent: true }), 16); scene.add(bolt);
+    const steam = Array.from({ length: 30 }, () => { const m = new THREE.Mesh(ball, T(0xd9d9d9, 0.35)); m.scale.setScalar(A.rnd(0.8, 1.8)); scene.add(m); return { m, u: Math.random(), x: [-92, -78, -70][Math.random() * 3 | 0] }; });
+    // 2. Miller-Urey apparatus
+    const glass = T(0xbde0fe, 0.25), mx = -45;
+    const flask1 = new THREE.Mesh(new THREE.SphereGeometry(4, 24, 16), glass); flask1.position.set(mx - 6, -6, 0); scene.add(flask1);
+    const water = new THREE.Mesh(new THREE.SphereGeometry(3.6, 24, 16, 0, 6.3, Math.PI / 2, Math.PI / 2), M(0x4895ef, { transparent: true, opacity: 0.7 })); water.position.copy(flask1.position); scene.add(water);
+    const heat = new THREE.Mesh(new THREE.ConeGeometry(1.5, 3, 12), M(0xff7b00, { emissive: 0xff4400 })); heat.position.set(mx - 6, -12, 0); heat.rotation.x = Math.PI; scene.add(heat);
+    const flask2 = new THREE.Mesh(new THREE.SphereGeometry(5, 24, 16), glass); flask2.position.set(mx + 4, 8, 0); scene.add(flask2);
+    [-1, 1].forEach(s => { const e = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 4, 6), M(0x999999)); e.position.set(mx + 4 + s * 2.2, 8, 0); e.rotation.z = s * 1.2; scene.add(e); });
+    const spark = new THREE.Mesh(new THREE.SphereGeometry(0.8, 10, 8), M(0xffffff, { emissive: 0x99ccff, transparent: true })); spark.position.set(mx + 4, 8, 0); scene.add(spark);
+    const loop = [V(mx - 6, -2, 0), V(mx - 6, 8, 0), V(mx - 1, 8, 0), V(mx + 4, 8, 0), V(mx + 9, 8, 0), V(mx + 9, -2, 0), V(mx + 6, -6, 0), V(mx - 2, -6, 0)];
+    scene.add(tube([loop[0], V(mx - 6, 4, 0), loop[1], loop[2], V(mx - 0.5, 8, 0)], 0.6, glass, 30)); scene.add(tube([V(mx + 8.5, 8, 0), loop[4], V(mx + 9, 3, 0), loop[5], loop[6], loop[7], V(mx - 2.2, -6, 0)], 0.6, glass, 40));
+    const cond = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 7, 16, 1, true), T(0x90e0ef, 0.35)); cond.position.set(mx + 9, 2, 0); scene.add(cond);
+    const loopPath = new THREE.CatmullRomCurve3(loop, true);
+    const gasCols = [0xffffff, 0x4cc9f0, 0xb5179e, 0xffd166];
+    const gas = Array.from({ length: 40 }, (_, i) => { const m = new THREE.Mesh(ball, M(gasCols[i % 4])); m.scale.setScalar(0.35); scene.add(m); return { m, u: Math.random() }; });
+    const aa = Array.from({ length: 14 }, (_, i) => { const m = new THREE.Mesh(ball, M([0xe63946, 0x52b788, 0xf9c74f, 0x4895ef][i % 4])); m.scale.setScalar(0.45); m.position.set(mx - 3 + A.rnd(-1.6, 1.6), -6.6 + A.rnd(-0.8, 0.4), A.rnd(-1.4, 1.4)); scene.add(m); return m; });
+    // 3. Fatty acids gathering into a vesicle
+    const vc = V(-10, 0, 0), nF = 160, fat = [], headG = new THREE.SphereGeometry(0.42, 8, 6), tailG = new THREE.CylinderGeometry(0.12, 0.12, 1.2, 5);
+    for (let i = 0; i < nF; i++) { const g = new THREE.Group(); const hd = new THREE.Mesh(headG, M(0xf4a261)); hd.position.y = 0.6; const tl = new THREE.Mesh(tailG, M(0xf6efe0)); g.add(hd, tl); scene.add(g);
+      const k = i % 2, idx = i >> 1, t = (idx + 0.5) / (nF / 2), ph = Math.acos(1 - 2 * t), th = idx * 2.399, dir = V(Math.sin(ph) * Math.cos(th), Math.cos(ph), Math.sin(ph) * Math.sin(th));
+      fat.push({ g, home: vc.clone().add(dir.clone().multiplyScalar(k ? 4.6 : 3.2)), dir: k ? dir : dir.clone().negate(), free: vc.clone().add(V(A.rnd(-12, 12), A.rnd(-9, 9), A.rnd(-9, 9))), spin: A.onSphere(1) }); }
+    // 4. RNA copying itself
+    const rx = 20, rna = [], rCols = [0xe63946, 0x52b788, 0xf9c74f, 0x4895ef], seq = Array.from({ length: 16 }, () => Math.random() * 4 | 0);
+    scene.add(tube(seq.map((_, i) => V(rx - 9 + i * 1.2, 2, 0)), 0.25, M(0x9d4edd), 40));
+    seq.forEach((b, i) => { const s = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.2, 0.4), M(rCols[b])); s.position.set(rx - 9 + i * 1.2, 1.1, 0); scene.add(s); });
+    const copy = seq.map((b, i) => { const s = new THREE.Mesh(new THREE.BoxGeometry(0.4, 1.2, 0.4), M(rCols[3 - b])); s.position.set(rx - 9 + i * 1.2, -0.3, 0); scene.add(s); return s; });
+    const copyBack = new THREE.Mesh(new THREE.BoxGeometry(1, 0.45, 0.45), M(0xc77dff)); scene.add(copyBack);
+    // A folded ribozyme next to it
+    const rz = []; for (let i = 0; i < 40; i++) { const a = i * 0.45; rz.push(V(rx + Math.cos(a) * (2 + Math.sin(i * 0.7)), 9 + Math.sin(a) * 2.4, Math.sin(i * 0.33) * 2)); } scene.add(tube(rz, 0.3, M(0x9d4edd), 120));
+    // 5. Hydrothermal vent on the deep sea floor
+    const vx = 52, floor = new THREE.Mesh(new THREE.BoxGeometry(40, 1, 30), M(0x2b2d42)); floor.position.set(vx, -16, 0); scene.add(floor);
+    const chim = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 4, 16, 14), M(0x3d3027, { roughness: 1 })); chim.position.set(vx, -8, 0); scene.add(chim);
+    for (let i = 0; i < 12; i++) { const k = new THREE.Mesh(new THREE.DodecahedronGeometry(A.rnd(0.8, 1.6)), M(0x5c4033)); k.position.set(vx + A.rnd(-3, 3), -14 + A.rnd(0, 12), A.rnd(-2.5, 2.5)); scene.add(k); }
+    const plume = Array.from({ length: 50 }, () => { const m = new THREE.Mesh(ball, T(0x111111, 0.55)); scene.add(m); return { m, u: Math.random(), o: A.onSphere(1) }; });
+    const pores = Array.from({ length: 10 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.7, 10, 8), T(0xffb703, 0.5)); m.position.set(vx + A.rnd(-2.5, 2.5), -12 + A.rnd(0, 7), A.rnd(1.5, 3)); scene.add(m); return m; });
+    // 6. The tree of life from LUCA
+    const tx = 86, trM = M(0x8ac926);
+    const luca = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 12), M(0xffb703, { emissive: 0x553300 })); luca.position.set(tx, -12, 0); scene.add(luca);
+    scene.add(tube([V(tx, -12, 0), V(tx, -4, 0)], 0.6, trM, 8));
+    const tips = [[-9, 14, 0x4cc9f0, 'Bacteria'], [3, 14, 0xf72585, 'Archaea'], [9, 14, 0x8ac926, 'Eukaryotes']];
+    scene.add(tube([V(tx, -4, 0), V(tx - 4, 4, 0), V(tx - 9, 14, 0)], 0.45, M(0x4cc9f0), 20)); scene.add(tube([V(tx, -4, 0), V(tx + 3, 2, 0), V(tx + 4, 6, 0)], 0.5, trM, 16));
+    scene.add(tube([V(tx + 4, 6, 0), V(tx + 3, 10, 0), V(tx + 3, 14, 0)], 0.4, M(0xf72585), 12)); scene.add(tube([V(tx + 4, 6, 0), V(tx + 7, 10, 0), V(tx + 9, 14, 0)], 0.4, trM, 12));
+    tips.forEach(([dx, y, c, n]) => { const s = new THREE.Mesh(new THREE.SphereGeometry(1.2, 12, 10), M(c)); s.position.set(tx + dx, y, 0); scene.add(s); A.label(n, V(tx + dx, y + 2.5, 0)); });
+    A.label('Young Earth: no oxygen, volcanoes, lightning', V(-82, 18, 0), 400); A.label('Spark (lightning)', V(mx + 4, 14, 0)); A.label('Boiling water (ocean)', V(mx - 6, -2, 4)); A.label('Amino acids collect', V(mx - 3, -9, 3)); A.label('Fatty acids form a vesicle', V(-10, 7, 0));
+    A.label('RNA copying itself', V(rx, 4.5, 0)); A.label('A folded RNA acting as a catalyst', V(rx, 13, 0)); A.label('Hydrothermal vent', V(vx, 4, 0)); A.label('LUCA', V(tx, -15, 2));
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
+    const tmpQ = new THREE.Quaternion(), up = V(0, 1, 0);
+    return {
+      route: [V(-110, 30, 60), V(-82, 14, 40), V(-45, 4, 30), V(-10, 2, 24), V(20, 4, 24), V(52, -2, 30), V(86, 2, 36)], hero, camOffset: V(0, 0, 0), outside: { target: V(0, 0, 0), dist: 190 },
+      outsideInfo: { n: 'From chemistry to cells', s: 'Life needs cells, and today cells only come from other cells. So how did the first cells arise? Scientists combine experiments and evidence to test possible steps.', h: 'Four things were needed: carbon compounds, a membrane to enclose them, a molecule that could carry information and copy itself, and a way to catalyse reactions.', cs: 'A2.1.2, A2.1.3', ch: '' },
+      stops: [
+        { at: V(-82, 14, 40), look: V(-82, 0, 0), n: 'The young Earth', s: 'About 4 billion years ago the atmosphere had almost no oxygen. It held gases such as carbon dioxide, methane, ammonia and water vapour, with lightning, volcanoes and strong ultraviolet light.', h: 'Without oxygen there was no ozone layer, so high-energy UV reached the surface. These energy sources could have driven reactions that made carbon compounds without living things.', cs: 'A2.1.1', ch: '' },
+        { at: V(-45, 4, 30), look: V(-45, 0, 0), n: 'The Miller-Urey experiment', s: 'In 1953 Miller and Urey boiled water and passed the vapour, with simple gases, past electric sparks. After a week the water held amino acids.', h: 'This showed carbon compounds can form without life. But the gas mix they used is now thought to differ from the real early atmosphere, so it supports the idea rather than proving how it happened.', cs: 'A2.1.4', ch: '' },
+        { at: V(-10, 2, 24), look: vc, n: 'Vesicles form by themselves', s: 'Fatty acids have a water-loving head and a water-hating tail. In water they gather on their own into a double layer that closes into a hollow sphere: a vesicle.', h: 'A vesicle encloses a space where chemicals can be kept together, separate from the surroundings, like the membrane of a cell.', cs: 'A2.1.5', ch: '' },
+        { at: V(20, 4, 24), look: V(20, 3, 0), n: 'RNA: genes and catalyst in one', s: 'RNA can store information in its base sequence and can be copied by base pairing.', h: 'Some RNA molecules fold up and act as catalysts (ribozymes). So RNA could have been both the first genetic material and the first enzyme, solving the problem of which came first.', cs: 'A2.1.6', ch: '' },
+        { at: V(52, -2, 30), look: V(52, -8, 0), n: 'A hydrothermal vent', s: 'On the deep sea floor, hot water rich in minerals gushes from vents. Some scientists think the first cells lived here.', h: 'Vents provide energy from chemical gradients, and tiny mineral pores could have acted as compartments. Genes shared by all living things suggest LUCA lived in hot conditions without oxygen and used hydrogen, as vent microbes do.', cs: 'A2.1.9', ch: '' },
+        { at: V(86, 2, 36), look: V(86, 0, 0), n: 'LUCA and the tree of life', s: 'All living things share the same genetic code and many of the same genes, so they probably descend from one last universal common ancestor (LUCA).', h: 'Dates come from fossils and chemical traces in old rocks, and from molecular clocks: counting differences between sequences and using known mutation rates. LUCA is estimated to have lived over 4 billion years ago.', cs: 'A2.1.7', ch: 'A2.1.8' }
+      ],
+      update(dt, A) { const t = A.t, run = A.paused ? 0 : dt;
+        bolt.material.opacity = Math.sin(t * 7) > 0.85 ? 1 : 0; spark.material.opacity = Math.sin(t * 9) > 0.6 ? 1 : 0.1;
+        steam.forEach(s => { s.u = (s.u + run * 0.1) % 1; s.m.position.set(s.x + Math.sin(s.u * 9) * 2, 6 + s.u * 16, Math.cos(s.u * 7) * 2); });
+        gas.forEach(g => { g.u = (g.u + run * 0.07) % 1; g.m.position.copy(loopPath.getPointAt(g.u)); });
+        aa.forEach((a, i) => a.position.y = -6.6 + Math.sin(t + i) * 0.2);
+        const f = Math.min(1, Math.max(0, (Math.sin(t * 0.4) + 1) / 2 * 1.4 - 0.2)), e = f * f * (3 - 2 * f);
+        fat.forEach(F => { F.g.position.copy(F.free).lerp(F.home, e); tmpQ.setFromUnitVectors(up, F.dir); F.g.quaternion.copy(tmpQ); if (e < 0.99) F.g.rotateOnAxis(F.spin, (1 - e) * t); });
+        const c = (t * 0.25) % 1, n = Math.floor(c * copy.length * 1.2); copy.forEach((s, i) => s.visible = i < n); copyBack.visible = n > 0; copyBack.scale.x = Math.min(n, copy.length) * 1.2; copyBack.position.set(rx - 9.6 + Math.min(n, copy.length) * 0.6, -1.1, 0);
+        plume.forEach(p => { p.u = (p.u + run * 0.25) % 1; p.m.position.set(vx + p.o.x * p.u * 4, 0 + p.u * 14, p.o.z * p.u * 4); p.m.scale.setScalar(0.6 + p.u * 2); });
+        pores.forEach((p, i) => p.material.opacity = 0.3 + 0.3 * Math.sin(t * 2 + i));
+        luca.scale.setScalar(1 + 0.1 * Math.sin(t * 3));
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

@@ -12,20 +12,34 @@ function initViewer() {
   const src = n => v.dataset.base + 's' + String(n).padStart(2, '0') + '.' + (v.dataset.ext || 'png');
   const videoBox = document.getElementById('viewer-videos'), videoData = document.getElementById('slide-videos');
   const videos = videoData ? JSON.parse(videoData.textContent) : {};
+  // Simulations and animations for each slide (build-sims.ps1, 2026-11-16)
+  const simData = document.getElementById('slide-sims');
+  const sims = simData ? JSON.parse(simData.textContent) : {};
   function showVideos(n) {
     if (!videoBox) return;
-    const list = videos[n] || [];
-    videoBox.hidden = !list.length;
+    const list = videos[n] || [], simList = sims[n] || [];
+    videoBox.hidden = !list.length && !simList.length;
     videoBox.textContent = '';
-    if (!list.length) return;
-    const label = document.createElement('span'); label.className = 'viewer-watch'; label.textContent = 'Watch with this slide';
-    videoBox.append(label);
-    list.forEach(([title, channel, id]) => {
-      const a = document.createElement('a');
-      a.href = 'https://www.youtube.com/watch?v=' + id; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = title + ' (' + channel + ')';
-      videoBox.append(a);
-    });
+    if (list.length) {
+      const label = document.createElement('span'); label.className = 'viewer-watch'; label.textContent = 'Watch with this slide';
+      videoBox.append(label);
+      list.forEach(([title, channel, id]) => {
+        const a = document.createElement('a');
+        a.href = 'https://www.youtube.com/watch?v=' + id; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = title + ' (' + channel + ')';
+        videoBox.append(a);
+      });
+    }
+    if (simList.length) {
+      const label = document.createElement('span'); label.className = 'viewer-watch'; label.textContent = 'Try with this slide';
+      videoBox.append(label);
+      simList.forEach(([title, by, url, kind]) => {
+        const a = document.createElement('a'); a.className = 'viewer-sim';
+        a.href = url; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = kind + ': ' + title + ' (' + by + ')';
+        videoBox.append(a);
+      });
+    }
   }
   let at = 1;
   function show(n) {

@@ -744,3 +744,9 @@ html.sim-open-page{overflow:hidden}
 .viewer-videos .viewer-sim{color:var(--yellow)}
 :root[data-theme="dark"] .sim-type{background:var(--violet)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sim-type{background:var(--violet)}}
+.sim-own{margin:0 0 26px}.sim-own>h2{font:700 22px var(--ui);margin:0 0 8px}
+.sim-feature{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:22px 24px;border-radius:22px;text-decoration:none;color:#eef6ff;background:radial-gradient(circle at 85% 30%,rgba(255,140,66,.55) 0 9%,transparent 10%),radial-gradient(circle at 93% 72%,rgba(143,107,216,.7) 0 11%,transparent 12%),radial-gradient(circle at 92% 80%,rgba(46,158,68,.55) 0 7%,transparent 8%),linear-gradient(120deg,#0b2238,#173a5c);box-shadow:var(--shadow)}
+.sim-feature:hover{outline:3px solid var(--yellow)}
+.sim-feature-title{font:800 28px var(--ui)}
+.sim-feature-text{max-width:60ch;font-size:16px;line-height:1.45}
+.sim-feature .sim-open{background:var(--yellow);color:var(--on-bright);border-color:var(--yellow)}

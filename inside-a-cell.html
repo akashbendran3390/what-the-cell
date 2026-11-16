@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Inside a Cell: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/inside-a-cell.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Inside a Cell">
+<meta property="og:description" content="Inside a Cell: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/inside-a-cell.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Inside a Cell</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one full-screen 3D view; HUD panels float over it at the corners. Deliberately single-theme (dark, like a microscope view). */
+:root{
+  --cyto:#081a2c; --ink:#eef6ff; --dim:#9fb6cc; --panel:rgba(8,22,38,.82); --line:rgba(150,200,240,.22);
+  --teal:#3fd0c0; --coral:#ff7a59; --gold:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--cyto);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+canvas#c:active{cursor:grabbing}
+.hud{position:absolute;display:flex;gap:8px;z-index:5}
+.top{top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);letter-spacing:-.01em;text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg,.tools{display:flex;gap:6px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--teal);color:#05202a}
+#info{position:absolute;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(420px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;z-index:5;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+#info .tourbtns{display:flex;gap:8px;margin-top:10px}
+#info .tourbtns button{background:rgba(255,255,255,.1)}
+#info .tourbtns button.go{background:var(--gold);color:#2b1d00}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 13px var(--body);padding:3px 9px;border-radius:999px;background:rgba(8,22,38,.7);border:1px solid var(--line);white-space:nowrap;pointer-events:auto;cursor:pointer;transition:opacity .2s}
+.lab.on{background:var(--gold);color:#2b1d00;border-color:var(--gold)}
+#find{position:absolute;top:calc(env(safe-area-inset-top,0px) + 70px);left:50%;transform:translateX(-50%);background:var(--coral);color:#2a0b02;font:800 16px var(--display);padding:8px 16px;border-radius:999px;z-index:6;text-align:center;max-width:calc(100% - 32px)}
+#pad{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);display:grid;grid-template-columns:repeat(3,48px);gap:6px;z-index:5}
+#pad button{width:48px;height:48px;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;font-size:18px}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(8,26,44,.55),rgba(4,12,22,.92));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:520px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 10px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--gold);color:#2b1d00;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}
+@media (hover:hover) and (pointer:fine){#pad{display:none}}
+@media (max-width:640px){.brand p{display:none}.brand h1{font-size:20px}#info h2{font-size:18px}#info p{font-size:14px}}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0" aria-label="3D view inside a cell. Use W, A, S, D to move and drag to look around."></canvas>
+  <div id="labels"></div>
+  <div class="hud top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Inside a Cell</h1><p>DP Biology A2.2 and B2.2 &middot; not to scale</p></div>
+    <div class="switches">
+
+    <div class="seg" role="group" aria-label="Cell type">
+      <button type="button" id="m-animal" aria-pressed="true">Animal cell</button>
+      <button type="button" id="m-plant" aria-pressed="false">Plant cell</button>
+      <button type="button" id="m-bacteria" aria-pressed="false">Bacterium</button>
+    </div>
+    <div class="seg" role="group" aria-label="Level">
+      <button type="button" id="l-sl" aria-pressed="true">SL</button>
+      <button type="button" id="l-hl" aria-pressed="false">HL</button>
+    </div>
+    </div>
+    <div class="tools">
+      <button type="button" id="b-tour">Tour: making a protein</button>
+      <button type="button" id="b-find">Find it</button>
+      <button type="button" id="b-help">Controls</button>
+    </div>
+  </div>
+  <div id="find" hidden></div>
+  <section id="info" aria-live="polite">
+    <div class="eyebrow">Explore</div>
+    <h2>Fly up to anything</h2>
+    <p>Move towards an organelle and its name and job appear here. Click a floating label to fly straight to it.</p>
+  </section>
+  <div id="pad" aria-label="Movement buttons">
+    <button type="button" data-k="up" aria-label="Rise">&#8679;</button><button type="button" data-k="fw" aria-label="Forward">&#9650;</button><button type="button" data-k="down" aria-label="Sink">&#8681;</button>
+    <button type="button" data-k="tl" aria-label="Turn left">&#9664;</button><button type="button" data-k="bk" aria-label="Back">&#9660;</button><button type="button" data-k="tr" aria-label="Turn right">&#9654;</button>
+  </div>
+  <div id="start">
+    <div class="card">
+      <h2>You are inside a cell</h2>
+      <p>Fly through the cytoplasm, find each structure and see what it does. Switch between an animal cell, a plant cell and a bacterium, choose SL or HL for the level of detail, take the guided tour, or try Find it.</p>
+      <table>
+        <tr><td><kbd>W</kbd> <kbd>S</kbd> or <kbd>&#8593;</kbd> <kbd>&#8595;</kbd></td><td>Move forward and back</td></tr>
+        <tr><td><kbd>A</kbd> <kbd>D</kbd></td><td>Move sideways</td></tr>
+        <tr><td><kbd>&#8592;</kbd> <kbd>&#8594;</kbd> or drag</td><td>Look around</td></tr>
+        <tr><td><kbd>E</kbd> <kbd>Q</kbd></td><td>Rise and sink</td></tr>
+        <tr><td><kbd>Shift</kbd></td><td>Move faster</td></tr>
+      </table>
+      <p class="note">On a tablet, drag to look and use the arrow buttons. Organelles are shown much larger than they really are, and the cell is crowded with far more ribosomes and proteins than this.</p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Enter the cell</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+(function(){
+'use strict';
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+// ---------- facts (written for What the Cell, in our own words) ----------
+// s = SL text, h = extra HL text, cs = SL statements, ch = HL statements added on top
+const INFO = {
+  membrane:{n:'Plasma membrane',s:'A phospholipid bilayer with proteins in it. It controls what enters and leaves the cell.',h:'Unsaturated fatty acids and, in animal cells, cholesterol keep it fluid, so pieces can bud off as vesicles or fuse with it in endocytosis and exocytosis.',cs:'A2.2.4, B2.1.1',ch:'B2.1.11, B2.1.12, B2.1.13'},
+  cytoplasm:{n:'Cytoplasm',s:'The watery fluid inside the membrane, where most of the cell’s reactions happen.',h:'With no compartments, every enzyme and substrate in a prokaryote shares this one space.',cs:'A2.2.4, A2.2.5',ch:'B2.2.3'},
+  nucleus:{n:'Nucleus',s:'Holds the DNA as chromosomes. A double membrane, the nuclear envelope, separates it from the cytoplasm.',h:'Keeping the nucleus apart means mRNA can be processed, with introns removed, before any ribosome reads it.',cs:'A2.2.6, B2.2.2',ch:'B2.2.6'},
+  pore:{n:'Nuclear pores',s:'Gaps in the nuclear envelope that let mRNA leave the nucleus.',h:'Each pore is a large protein complex that controls traffic: mRNA and ribosome subunits go out, while proteins such as polymerases come in.',cs:'B2.2.2',ch:'B2.2.6'},
+  nucleolus:{n:'Nucleolus',s:'A dense region inside the nucleus where the parts of ribosomes are made.',h:'rRNA is transcribed here and joined to proteins to form ribosome subunits, which then leave through the pores.',cs:'A2.2.6',ch:''},
+  rer:{n:'Rough endoplasmic reticulum',s:'Flattened membrane sacs covered in ribosomes. Proteins made here are sent out of the cell.',h:'A signal sequence at the start of the polypeptide brings the ribosome to the ER, and the chain is threaded into the lumen, where it folds before leaving in a vesicle.',cs:'A2.2.6',ch:'B2.2.7'},
+  ser:{n:'Smooth endoplasmic reticulum',s:'A network of tubes with no ribosomes. It makes lipids such as phospholipids and steroids.',h:'In liver cells it also breaks down toxins, and in muscle fibres it stores calcium ions for contraction.',cs:'A2.2.6',ch:''},
+  ribosome:{n:'Free ribosomes (80S)',s:'They translate mRNA into protein. Free ribosomes make proteins that stay inside the cell.',h:'Each has a large and a small subunit of rRNA and protein. Free and bound ribosomes are the same; where one sits depends on the protein it is making.',cs:'A2.2.4, A2.2.6',ch:'B2.2.7'},
+  golgi:{n:'Golgi apparatus',s:'A stack of flattened sacs that modifies proteins and packs them into vesicles.',h:'Vesicles from the ER fuse with the cis face. Proteins are modified, for example by adding carbohydrate, as they pass through, and leave in vesicles from the trans face.',cs:'A2.2.6',ch:'B2.2.8'},
+  vesicle:{n:'Vesicles',s:'Small membrane bubbles that carry substances around the cell and out of it.',h:'Some form with a coat of clathrin. Secretory vesicles fuse with the plasma membrane and release their contents by exocytosis.',cs:'A2.2.6',ch:'B2.2.9, B2.1.13'},
+  mito:{n:'Mitochondrion',s:'The site of aerobic respiration, which makes most of the cell’s ATP. It has a double membrane.',h:'The inner membrane folds into cristae, giving a large area for electron transport chains and ATP synthase, and the narrow space between the membranes lets a proton gradient build up. Its own 70S ribosomes and circular DNA are evidence for endosymbiosis.',cs:'A2.2.6',ch:'B2.2.4, A2.2.12'},
+  lyso:{n:'Lysosome',s:'A vesicle full of digestive enzymes that breaks down worn-out organelles and material taken into the cell.',h:'Its membrane keeps these enzymes, which work best at the acidic pH inside, away from the rest of the cell.',cs:'A2.2.6',ch:'B2.2.3'},
+  centriole:{n:'Centrioles',s:'Two short cylinders at right angles. In animal cells they help organize the spindle for cell division.',h:'Each is made of nine triplets of microtubules. Plant cells build spindles without centrioles.',cs:'A2.2.8',ch:''},
+  cytoskeleton:{n:'Cytoskeleton',s:'A network of protein fibres that gives the cell its shape and moves things around inside it.',h:'Microtubules act as tracks for motor proteins that carry vesicles and organelles.',cs:'A2.2.6',ch:''},
+  wall:{n:'Cell wall',s:'A tough layer of cellulose outside the membrane. It supports the cell and stops it bursting.',h:'Cellulose microfibrils are strong in tension, so the wall can resist the turgor pressure pushing out on it.',cs:'A2.2.8',ch:'D2.3.6'},
+  chloro:{n:'Chloroplast',s:'The site of photosynthesis. Its green pigment, chlorophyll, absorbs light.',h:'Thylakoid membranes stacked in grana give a large area for light absorption and ATP production, while the stroma holds the Calvin cycle enzymes. Like a mitochondrion it has a double membrane, 70S ribosomes and circular DNA.',cs:'A2.2.6',ch:'B2.2.5, A2.2.12'},
+  vacuole:{n:'Large central vacuole',s:'A big sac of cell sap. Water inside it keeps the cell firm (turgid).',h:'Its membrane, the tonoplast, pumps ions in, so water follows by osmosis and turgor pressure builds up.',cs:'A2.2.8',ch:'D2.3.6'},
+  bwall:{n:'Cell wall (peptidoglycan)',s:'A layer of peptidoglycan outside the membrane. It protects the bacterium and stops it bursting.',h:'Penicillin stops bacteria building peptidoglycan, which is why it kills them without harming our cells.',cs:'A2.2.5',ch:'C1.1.17'},
+  nucleoid:{n:'Nucleoid (circular DNA)',s:'One loop of DNA lying free in the cytoplasm. There is no nucleus and the DNA is not wrapped around proteins (naked DNA).',h:'With no nuclear membrane in the way, ribosomes can start translating an mRNA while it is still being transcribed.',cs:'A2.2.5',ch:'D1.2'},
+  plasmid:{n:'Plasmids',s:'Small extra rings of DNA. They often carry useful genes, such as antibiotic resistance.',h:'Bacteria can copy plasmids and pass them to other cells, which spreads resistance. Scientists use plasmids to carry genes in genetic modification.',cs:'A2.2.5',ch:'C3.2.14'},
+  ribo70:{n:'Ribosomes (70S)',s:'Smaller than the 80S ribosomes of eukaryotes. They make all the cell’s proteins.',h:'Some antibiotics block 70S ribosomes, so they stop bacteria making proteins but leave human 80S ribosomes working.',cs:'A2.2.5',ch:'C3.2.13'},
+  pili:{n:'Pili',s:'Short hair-like threads on the surface that help the bacterium stick to things.',h:'Some pili pull two cells together so a plasmid can be passed from one to the other.',cs:'A2.2.5',ch:''},
+  flagellum:{n:'Flagellum',s:'A long whip on the outside that spins to move the bacterium.',h:'It is turned by a rotary motor in the membrane, powered by a flow of protons, and is built quite differently from the flagellum of a sperm cell.',cs:'A2.2.5',ch:''}
+};
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+function textOf(k){ const i=INFO[k]; return i.s+(level==='hl'&&i.h?' '+i.h:''); }
+function codesOf(k){ const i=INFO[k]; return i.cs+(level==='hl'&&i.ch?', '+i.ch:''); }
+// ---------- three.js setup ----------
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+const scene = new THREE.Scene(); scene.fog=new THREE.FogExp2(0x0b2238, 0.011);
+const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 600);
+camera.rotation.order = 'YXZ';
+scene.add(new THREE.HemisphereLight(0xcfe8ff, 0x2a1838, 0.85));
+const head = new THREE.PointLight(0xffffff, 0.7, 120); camera.add(head); scene.add(camera);
+const sun = new THREE.DirectionalLight(0xffffff, 0.45); sun.position.set(30,60,40); scene.add(sun);
+let world = new THREE.Group(); scene.add(world);
+let labels = [], anims = [], bounds = null, tourSteps = [], findKeys = [];
+function M(color, o){ o=o||{}; return new THREE.MeshStandardMaterial(Object.assign({color, roughness:0.55, metalness:0.05}, o)); }
+function T(color, opacity, side){ return M(color,{transparent:true, opacity, side: side||THREE.FrontSide, depthWrite:false}); }
+function rnd(a,b){ return a + Math.random()*(b-a); }
+function onSphere(r){ const u=Math.random()*2-1, th=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(th), r*u, r*s*Math.sin(th)); }
+function lipidTexture(base, dot){
+  const cv=document.createElement('canvas'); cv.width=512; cv.height=256; const g=cv.getContext('2d');
+  g.fillStyle=base; g.fillRect(0,0,512,256); g.fillStyle=dot;
+  for(let y=4;y<256;y+=8){ for(let x=(y/8%2)*4;x<512;x+=8){ g.beginPath(); g.arc(x,y,3,0,Math.PI*2); g.fill(); } }
+  const t=new THREE.CanvasTexture(cv); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(10,5); return t;
+}
+function label(key, pos, r){
+  const el=document.createElement('div'); el.className='lab'; el.textContent=INFO[key].n; el.style.opacity=0;
+  el.addEventListener('click', ()=> flyTo(pos, r));
+  document.getElementById('labels').appendChild(el);
+  labels.push({key, pos:pos.clone(), r, el});
+}
+function clearWorld(){
+  scene.remove(world); world.traverse(o=>{ if(o.geometry) o.geometry.dispose(); if(o.material){ (Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{ if(m.map) m.map.dispose(); m.dispose(); }); } });
+  world = new THREE.Group(); scene.add(world); labels.forEach(l=>l.el.remove()); labels=[]; anims=[];
+}
+function tube(points, r, mat, seg){ const c=new THREE.CatmullRomCurve3(points); return new THREE.Mesh(new THREE.TubeGeometry(c, seg||48, r, 6, false), mat); }
+function randomCurve(center, radius, n){ const p=[]; let v=center.clone().add(onSphere(rnd(0,radius))); for(let i=0;i<n;i++){ p.push(v.clone()); v.add(onSphere(rnd(3,7))); if(v.distanceTo(center)>radius) v.lerp(center,0.4); } return p; }
+// ---------- organelle builders ----------
+function buildNucleus(c, R){
+  const g=new THREE.Group(); g.position.copy(c); world.add(g);
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(R,48,32), T(0x8f6bd8,0.32,THREE.DoubleSide)));
+  g.add(new THREE.Mesh(new THREE.SphereGeometry(R*0.94,48,32), T(0xb79cf0,0.18,THREE.DoubleSide)));
+  const poreMat=M(0xcdb6f2,{emissive:0x1a0f33}); const pg=new THREE.TorusGeometry(R*0.035,R*0.012,8,16);
+  for(let i=0;i<70;i++){ const p=onSphere(R*0.97); const m=new THREE.Mesh(pg,poreMat); m.position.copy(p); m.lookAt(p.clone().multiplyScalar(2)); g.add(m); }
+  const nl=new THREE.Mesh(new THREE.SphereGeometry(R*0.3,32,24), M(0x3b1f66,{roughness:0.9})); nl.position.set(R*0.25,R*0.15,0); g.add(nl);
+  const chrom=M(0xd36fd0,{emissive:0x2b0a2a});
+  for(let i=0;i<26;i++) g.add(tube(randomCurve(new THREE.Vector3(), R*0.75, 9), R*0.025, chrom, 40));
+  label('nucleus', c.clone().add(new THREE.Vector3(0,R*1.05,0)), R);
+  label('pore', c.clone().add(new THREE.Vector3(R*0.7,-R*0.72,0)), R*0.2);
+  label('nucleolus', c.clone().add(nl.position), R*0.3);
+  return g;
+}
+function buildRER(c, R, phi0, ribos){
+  const g=new THREE.Group(); g.position.copy(c); world.add(g);
+  const sheet=T(0x5fb0e8,0.42,THREE.DoubleSide);
+  for(let i=0;i<5;i++){ const r=R+3+i*2.3; g.add(new THREE.Mesh(new THREE.SphereGeometry(r,40,16,phi0,1.7,0.9,1.3), sheet)); }
+  const im=new THREE.InstancedMesh(new THREE.SphereGeometry(0.32,8,6), M(0x16324f), ribos); const d=new THREE.Object3D();
+  for(let k=0;k<ribos;k++){ const r=R+3+Math.floor(Math.random()*5)*2.3+(Math.random()<0.5?0.35:-0.35); const ph=phi0+Math.random()*1.7, th=0.9+Math.random()*1.3;
+    d.position.set(-r*Math.cos(ph)*Math.sin(th), r*Math.cos(th), r*Math.sin(ph)*Math.sin(th)); d.updateMatrix(); im.setMatrixAt(k,d.matrix); }
+  g.add(im);
+  const ph=phi0+0.85, th=1.55, r=R+8; const anchor=new THREE.Vector3(-r*Math.cos(ph)*Math.sin(th), r*Math.cos(th), r*Math.sin(ph)*Math.sin(th)).add(c);
+  label('rer', anchor, 6); return anchor;
+}
+function buildGolgi(c, toward){
+  // Stack of six curved cisternae; the convex (cis) face points towards the nucleus and ER.
+  const g=new THREE.Group(); g.position.copy(c); world.add(g);
+  g.quaternion.setFromUnitVectors(new THREE.Vector3(0,-1,0), toward.clone().sub(c).normalize());
+  const cols=[0xf4a259,0xf6ad62,0xf8b96d,0xfac47a,0xf7a072,0xf08a5d];
+  for(let i=0;i<6;i++){ const w=7-i*0.45, Rs=12, th=Math.asin(w/Rs);
+    const m=new THREE.Mesh(new THREE.SphereGeometry(Rs,48,10,0,Math.PI*2,0,th), M(cols[i],{side:THREE.DoubleSide,roughness:0.45}));
+    m.scale.set(1,0.38,1); m.position.y=i*1.25-Rs*Math.cos(th)*0.38; g.add(m); }
+  const vm=M(0xffd9a8);
+  for(let i=0;i<16;i++){ const a=Math.random()*Math.PI*2, rr=rnd(7,9.5); const v=new THREE.Mesh(new THREE.SphereGeometry(rnd(0.7,1.2),16,12),vm); v.position.set(Math.cos(a)*rr, rnd(-1,8), Math.sin(a)*rr); g.add(v); }
+  label('golgi', c.clone(), 7);
+}// Capsule (rod) shape along the x axis, used for mitochondria and the bacterium
+function capsuleGeo(r, half, seg){ const pts=[]; const n=16;
+  for(let i=0;i<=n;i++){ const a=-Math.PI/2+i*(Math.PI/2)/n; pts.push(new THREE.Vector2(Math.cos(a)*r, -half+Math.sin(a)*r)); }
+  for(let i=0;i<=n;i++){ const a=i*(Math.PI/2)/n; pts.push(new THREE.Vector2(Math.cos(a)*r, half+Math.sin(a)*r)); }
+  pts[0].x=0.001; pts[pts.length-1].x=0.001;
+  const g=new THREE.LatheGeometry(pts, seg||40); g.rotateZ(Math.PI/2); return g; }
+function buildMito(pos, quiet){
+  const g=new THREE.Group(); g.position.copy(pos); g.rotation.set(rnd(0,6),rnd(0,6),rnd(0,6)); world.add(g);
+  g.add(new THREE.Mesh(capsuleGeo(3.4,4.8), T(0xff8c42,0.38,THREE.DoubleSide)));
+  g.add(new THREE.Mesh(capsuleGeo(2.95,4.4), T(0xffa86b,0.22,THREE.DoubleSide)));
+  // Cristae: shelves folded in from the inner membrane, alternating from each side
+  const cm=M(0xe8572a,{side:THREE.DoubleSide,roughness:0.45});
+  for(let i=0;i<11;i++){ const x=-5.6+i*1.12; const sg=new THREE.Group(); sg.position.x=x; sg.rotation.x=(i%2?0:Math.PI)+rnd(-0.35,0.35);
+    const sh=new THREE.Mesh(new THREE.RingGeometry(rnd(0.5,1.1),2.8,28,1,rnd(-0.2,0.2),Math.PI*rnd(0.85,1.15)), cm); sh.rotation.y=Math.PI/2; sg.add(sh); g.add(sg); }
+  const dots=new THREE.InstancedMesh(new THREE.SphereGeometry(0.16,6,4), M(0x7a2410), 50); const d=new THREE.Object3D();
+  for(let k=0;k<50;k++){ d.position.set(rnd(-6.5,6.5),rnd(-1.8,1.8),rnd(-1.8,1.8)); d.updateMatrix(); dots.setMatrixAt(k,d.matrix); } g.add(dots);
+  // A small loop of mitochondrial DNA (shown for HL endosymbiosis)
+  const loop=new THREE.Mesh(new THREE.TorusGeometry(0.9,0.09,6,32), M(0xffe08a,{emissive:0x5a3a00})); loop.position.set(2,0.6,0.4); g.add(loop);
+  if(!reduceMotion) anims.push(()=>{ g.rotation.y+=0.0015; });
+  if(!quiet) label('mito', pos.clone(), 7);
+}
+// Ribosomes drawn as a large and a small subunit; size 1 = 80S, about 0.8 = 70S
+function buildRibosomes(n, place, size, color){
+  size=size||1; const mat=M(color||0x0f2b44,{roughness:0.8});
+  const big=new THREE.InstancedMesh(new THREE.SphereGeometry(0.34*size,10,8), mat, n), small=new THREE.InstancedMesh(new THREE.SphereGeometry(0.24*size,8,6), mat, n);
+  const d=new THREE.Object3D(), q=new THREE.Quaternion(), off=new THREE.Vector3();
+  for(let k=0;k<n;k++){ const p=place(); q.setFromEuler(new THREE.Euler(rnd(0,6),rnd(0,6),rnd(0,6))); d.position.copy(p); d.quaternion.copy(q); d.updateMatrix(); big.setMatrixAt(k,d.matrix);
+    off.set(0,0.42*size,0).applyQuaternion(q); d.position.copy(p).add(off); d.updateMatrix(); small.setMatrixAt(k,d.matrix); }
+  world.add(big, small);
+}
+function buildSER(c, n, spread){
+  const mat=M(0x7ec8a8,{roughness:0.5});
+  for(let i=0;i<n;i++){ const pts=[]; let v=c.clone().add(onSphere(rnd(0,spread*0.4))); for(let k=0;k<6;k++){ pts.push(v.clone()); v.add(onSphere(rnd(2.5,4.5))); }
+    world.add(tube(pts,0.55,mat,30)); }
+  label('ser', c.clone(), spread*0.5);
+}function buildCytoskeleton(n, place, R){
+  const mat=T(0x9ad9ff,0.13);
+  for(let i=0;i<n;i++){ const a=place(), b=place(); const mid=a.clone().lerp(b,0.5).add(onSphere(rnd(4,10))); world.add(tube([a,mid,b],0.1,mat,24)); }
+}
+function vesicleTraffic(path){
+  const curve=new THREE.CatmullRomCurve3(path); const vm=M(0xffd9a8,{emissive:0x3a2200});
+  for(let i=0;i<7;i++){ const v=new THREE.Mesh(new THREE.SphereGeometry(1.1,16,12),vm); world.add(v); const off=i/7;
+    anims.push(t=>{ const u=((reduceMotion?0:t*0.035)+off)%1; v.position.copy(curve.getPointAt(u)); v.scale.setScalar(u>0.94?Math.max(0.01,(1-u)/0.06):1); }); }
+  label('vesicle', curve.getPointAt(0.62), 3);
+}
+// ---------- the two cells ----------
+function buildAnimal(){
+  const R=72; bounds={type:'sphere', r:R-3};
+  const mem=new THREE.Mesh(new THREE.SphereGeometry(R,64,48), M(0xf0a8c8,{map:lipidTexture('#e58fb6','#ffd3e6'), side:THREE.BackSide, roughness:0.8}));
+  world.add(mem);
+  const pm=M(0x7d3c98); for(let i=0;i<120;i++){ const p=onSphere(R-0.5); const m=new THREE.Mesh(new THREE.CylinderGeometry(0.9,0.9,3.2,10),pm); m.position.copy(p); m.lookAt(0,0,0); m.rotateX(Math.PI/2); world.add(m); }
+  label('membrane', new THREE.Vector3(0,-R+6,-18), 4);
+  const nc=new THREE.Vector3(0,0,0), NR=15; buildNucleus(nc, NR);
+  const rerAnchor=buildRER(nc, NR, -1.0, 900);
+  const gc=new THREE.Vector3(-30,-4,40); buildGolgi(gc, nc);
+  buildSER(new THREE.Vector3(-28,-14,-24), 14, 14);
+  label('cytoplasm', new THREE.Vector3(40,-30,-20), 4);
+  [[38,-14,26],[30,22,-34],[-12,-34,-30],[46,8,0],[-42,-20,-8],[8,38,22],[-26,28,-40]].forEach(p=>buildMito(new THREE.Vector3(...p)));
+  const lm=M(0x8e1d3a,{roughness:0.4}); [[20,-30,10],[-8,-40,30],[10,30,-20],[-50,12,-24],[34,10,40]].forEach((p,i)=>{ const m=new THREE.Mesh(new THREE.SphereGeometry(2.4,24,16),lm); m.position.set(...p); world.add(m); if(i===0) label('lyso', m.position, 2.4); });
+  const cg=new THREE.Group(); cg.position.set(-20,-24,18); const cm=M(0x5dd39e); const c1=new THREE.Mesh(new THREE.CylinderGeometry(1,1,4.5,9,1,true),cm); const c2=c1.clone(); c2.rotation.z=Math.PI/2; c2.position.x=2.6; cg.add(c1,c2); world.add(cg); label('centriole', cg.position.clone().add(new THREE.Vector3(1,3.5,0)), 3);
+  const place=()=>{ let p; do{ p=onSphere(rnd(20,R-4)); } while(p.distanceTo(gc)<12); return p; };
+  buildRibosomes(1400, place); buildCytoskeleton(28, ()=>onSphere(rnd(18,R-3))); label('cytoskeleton', new THREE.Vector3(0,48,30), 6);
+  label('ribosome', new THREE.Vector3(26,-24,-44), 4);
+  const exit=new THREE.Vector3(-40,-6,58).normalize().multiplyScalar(R-1);
+  vesicleTraffic([rerAnchor.clone().add(new THREE.Vector3(-4,0,6)), new THREE.Vector3(-28,2,16), new THREE.Vector3(-26,-2,30), gc.clone().add(new THREE.Vector3(-6,-2,10)), exit]);
+  // Tour of the secretory pathway
+  const pore=nc.clone().add(new THREE.Vector3(0,0,NR+0.5));
+  tourSteps=[
+    {at:new THREE.Vector3(0,4,34), look:nc, e:'Step 1 of 6', h:'Transcription in the nucleus', p:'The gene for the protein is copied into mRNA inside the nucleus.', x:'Before it leaves, the mRNA is processed: introns are cut out and the exons joined. The nuclear envelope keeps this apart from ribosomes.'},
+    {at:pore.clone().add(new THREE.Vector3(0,0,8)), look:pore, e:'Step 2 of 6', h:'Out through a nuclear pore', p:'The mRNA leaves the nucleus through a nuclear pore.', x:'Pore complexes control traffic in both directions, so only finished mRNA gets out.'},
+    {at:rerAnchor.clone().add(new THREE.Vector3(-12,4,-4)), look:rerAnchor, e:'Step 3 of 6', h:'Translation on the rough ER', p:'Ribosomes on the rough ER translate the mRNA into a polypeptide.', x:'A signal sequence at the start of the chain brings the ribosome to the ER, and the polypeptide is threaded into the lumen, where it folds.'},
+    {at:new THREE.Vector3(-42,10,18), look:new THREE.Vector3(-28,2,18), e:'Step 4 of 6', h:'A vesicle to the Golgi', p:'A piece of ER membrane buds off as a vesicle and carries the protein to the Golgi apparatus.', x:'Because membranes are fluid, the vesicle can pinch off and later fuse with the cis face of the Golgi.'},
+    {at:gc.clone().add(new THREE.Vector3(2,16,8)), look:gc, e:'Step 5 of 6', h:'Modified and packaged', p:'In the Golgi the protein is changed and packed into a new vesicle.', x:'Carbohydrate may be added to make a glycoprotein. Finished proteins leave in vesicles from the trans face.'},
+    {at:exit.clone().multiplyScalar(0.8).add(new THREE.Vector3(10,6,0)), look:exit, e:'Step 6 of 6', h:'Exocytosis', p:'The vesicle fuses with the plasma membrane and releases the protein outside the cell.', x:'Every step used ATP from the mitochondria. Insulin and digestive enzymes leave cells this way.'}
+  ];
+  findKeys=['nucleus','nucleolus','rer','ser','golgi','mito','lyso','centriole','vesicle'];
+  camera.position.set(30,8,50); lookAt(nc);
+}
+function buildPlant(){
+  const W=78, H=46, D=46; bounds={type:'box', x:W-3, y:H-3, z:D-3};
+  const box=new THREE.BoxGeometry(W*2,H*2,D*2,1,1,1);
+  world.add(new THREE.Mesh(box, M(0xa7d39a,{map:lipidTexture('#8fc47f','#d5f0c7'), side:THREE.BackSide, roughness:0.85})));
+  const wall=new THREE.Mesh(new THREE.BoxGeometry(W*2+6,H*2+6,D*2+6), T(0x6b8f3a,0.35,THREE.BackSide)); world.add(wall);
+  const wl=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(W*2+2,H*2+2,D*2+2)), new THREE.LineBasicMaterial({color:0x3d5a1e})); world.add(wl);
+  label('wall', new THREE.Vector3(W-2,H-6,0), 3); label('membrane', new THREE.Vector3(0,-H+4,D-6), 3);
+  const vac=new THREE.Mesh(new THREE.SphereGeometry(1,48,32), T(0x7fc8f8,0.22,THREE.DoubleSide)); vac.scale.set(44,33,33); vac.position.set(14,0,0); world.add(vac);
+  const ton=new THREE.Mesh(new THREE.SphereGeometry(1,48,32), M(0x9ad7ff,{transparent:true,opacity:0.12,wireframe:true})); ton.scale.copy(vac.scale).multiplyScalar(1.001); ton.position.copy(vac.position); world.add(ton);
+  label('vacuole', new THREE.Vector3(14,0,0), 30);
+  const nc=new THREE.Vector3(-58,14,18), NR=11; buildNucleus(nc, NR);
+  const rerAnchor=buildRER(nc, NR, 2.6, 500);
+  const gc=new THREE.Vector3(-56,-24,-20); buildGolgi(gc, nc);
+  buildSER(new THREE.Vector3(-62,-10,30), 10, 12);
+  [[-40,-32,26],[-66,-30,4],[58,-36,-30],[-30,34,-34]].forEach(p=>buildMito(new THREE.Vector3(...p)));
+  const chlPos=[[-30,38,30],[10,40,32],[50,38,-10],[64,-30,30],[24,-38,36],[-14,-40,-36],[40,30,36],[66,10,-36],[-36,-36,-10]];
+  chlPos.forEach((p,i)=>{ const g=new THREE.Group(); g.position.set(...p); g.rotation.set(rnd(-0.4,0.4),rnd(0,6),rnd(-0.4,0.4)); world.add(g);
+    const o=new THREE.Mesh(new THREE.SphereGeometry(1,32,20), T(0x2e9e44,0.35,THREE.DoubleSide)); o.scale.set(8,3.4,4.4); g.add(o);
+    const gm=M(0x1f7a33); const lam=M(0x56c26a);
+    for(let s=0;s<5;s++){ const st=new THREE.Group(); st.position.set(-5.2+s*2.6,rnd(-0.5,0.5),rnd(-1.2,1.2)); for(let k=0;k<6;k++){ const d=new THREE.Mesh(new THREE.CylinderGeometry(0.95,0.95,0.22,16),gm); d.position.y=-1.1+k*0.42; st.add(d); } g.add(st); }
+    const la=new THREE.Mesh(new THREE.BoxGeometry(12,0.08,1.4),lam); g.add(la);
+    if(i===0) label('chloro', g.position.clone().add(new THREE.Vector3(0,5,0)), 8); });
+  const place=()=>{ let p; do{ p=new THREE.Vector3(rnd(-W+4,W-4),rnd(-H+4,H-4),rnd(-D+4,D-4)); } while(((p.x-14)/46)**2+(p.y/35)**2+(p.z/35)**2<1); return p; };
+  buildRibosomes(900, place); buildCytoskeleton(30, place); label('ribosome', new THREE.Vector3(-30,-30,38), 4);
+  const exit=new THREE.Vector3(-W+1,-30,-34);
+  vesicleTraffic([rerAnchor.clone(), new THREE.Vector3(-62,-8,-6), gc.clone().add(new THREE.Vector3(0,2,4)), gc.clone().add(new THREE.Vector3(-6,-4,-6)), exit]);
+  tourSteps=[
+    {at:new THREE.Vector3(-30,18,40), look:nc, e:'Step 1 of 4', h:'A nucleus pushed to the side', p:'The large vacuole fills most of the cell, so the nucleus and cytoplasm form a thin layer near the wall.', x:'Plant cells build their spindle without centrioles, and they store food as starch rather than glycogen.'},
+    {at:new THREE.Vector3(-10,30,10), look:new THREE.Vector3(10,40,32), e:'Step 2 of 4', h:'Chloroplasts', p:'Chloroplasts sit near the surface where light reaches them. Inside, stacks of thylakoids called grana hold the chlorophyll.', x:'The thylakoid membranes carry out the light-dependent reactions; the stroma around them holds the Calvin cycle enzymes. Their 70S ribosomes and circular DNA point to an origin by endosymbiosis.'},
+    {at:new THREE.Vector3(14,0,48), look:new THREE.Vector3(14,0,0), e:'Step 3 of 4', h:'The large vacuole', p:'Cell sap in the vacuole presses the cytoplasm outwards against the wall and keeps the plant firm.', x:'Solutes pumped across the tonoplast lower the water potential of the sap, so water enters by osmosis and turgor pressure builds up.'},
+    {at:new THREE.Vector3(56,30,20), look:new THREE.Vector3(W,30,20), e:'Step 4 of 4', h:'Wall and membrane', p:'The plasma membrane lies just inside a cellulose cell wall, which stops the cell bursting. Animal cells have no wall.', x:'Cellulose microfibrils are strong in tension, so the wall can withstand high turgor pressure.'}
+  ];
+  findKeys=['nucleus','chloro','vacuole','wall','golgi','mito','rer','ser'];
+  camera.position.set(-20,0,36); lookAt(nc);
+}
+function buildBacterium(){
+  // A rod-shaped bacterium seen from inside: no nucleus and no membrane-bound organelles.
+  const R=30, HALF=62; bounds={type:'capsule', half:HALF, r:R-3};
+  world.add(new THREE.Mesh(capsuleGeo(R,HALF,64), M(0xe9c46a,{map:lipidTexture('#d9b45a','#f6dfa0'), side:THREE.BackSide, roughness:0.85, transparent:true, opacity:0.6, depthWrite:false})));
+  world.add(new THREE.Mesh(capsuleGeo(R+2.6,HALF,64), T(0x9c7b3c,0.35,THREE.BackSide)));
+  label('membrane', new THREE.Vector3(-20,-R+4,8), 3); label('bwall', new THREE.Vector3(20,R-3,-8), 3);
+  // Pili all over the surface, a flagellum at one pole (outside the wall, seen through it)
+  const pm=M(0xcfa960);
+  for(let i=0;i<70;i++){ const x=rnd(-HALF,HALF), a=rnd(0,Math.PI*2); const base=new THREE.Vector3(x,Math.cos(a)*(R+2.6),Math.sin(a)*(R+2.6)); const out=new THREE.Vector3(0,Math.cos(a),Math.sin(a));
+    const m=new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.18,7,6), pm); m.position.copy(base).addScaledVector(out,3.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), out); world.add(m); }
+  label('pili', new THREE.Vector3(-36,R-4,-12), 3);
+  const fg=new THREE.Group(); fg.position.set(HALF+R+2,0,0); world.add(fg); const hp=[];
+  for(let i=0;i<=200;i++){ const s=i/200; hp.push(new THREE.Vector3(s*110, Math.cos(s*Math.PI*10)*4*Math.min(1,s*4), Math.sin(s*Math.PI*10)*4*Math.min(1,s*4))); }
+  fg.add(tube(hp,0.6,M(0xb8893a),400)); const hook=new THREE.Mesh(new THREE.TorusGeometry(2.2,0.6,8,20),M(0x8a5a2b)); hook.rotation.y=Math.PI/2; hook.position.x=-1.5; fg.add(hook);
+  if(!reduceMotion) anims.push(()=>{ fg.rotation.x+=0.08; });
+  label('flagellum', new THREE.Vector3(HALF+12,4,0), 3);
+  // Nucleoid: one long circular chromosome, tangled in the middle of the cell
+  const pts=[]; let v=new THREE.Vector3(-30,0,0);
+  for(let i=0;i<150;i++){ const ang=i/150*Math.PI*2; const target=new THREE.Vector3(Math.cos(ang)*34,Math.sin(ang*3)*6,Math.sin(ang)*12); v.lerp(target,0.35).add(onSphere(rnd(1,3))); v.y=Math.max(-14,Math.min(14,v.y)); v.z=Math.max(-14,Math.min(14,v.z)); pts.push(v.clone()); }
+  const dna=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,true),1500,0.32,6,true), M(0x9b5de5,{emissive:0x2a0a4a,roughness:0.4})); world.add(dna);
+  label('nucleoid', new THREE.Vector3(0,8,0), 14);
+  // Plasmids: small extra rings of DNA
+  const pmat=M(0xff6b6b,{emissive:0x3a0505}); const plas=[[30,-14,14],[-38,12,-14],[44,10,-10],[-10,-18,-12]];
+  plas.forEach((p,i)=>{ const m=new THREE.Mesh(new THREE.TorusKnotGeometry(1.8,0.22,100,8,2,5),pmat); m.position.set(...p); m.rotation.set(rnd(0,3),rnd(0,3),0); world.add(m); if(!reduceMotion) anims.push(()=>{ m.rotation.y+=0.004; }); if(i===0) label('plasmid', m.position, 2.5); });
+  // 70S ribosomes, some strung along mRNA as it is transcribed (coupled transcription and translation)
+  const inside=()=>{ let p; do{ p=new THREE.Vector3(rnd(-HALF-R+6,HALF+R-6),rnd(-R+4,R-4),rnd(-R+4,R-4)); } while(!insideCapsule(p,HALF,R-4)); return p; };
+  buildRibosomes(1500, inside, 0.8, 0x24364a);
+  const mmat=M(0xffd166,{emissive:0x4a3200});
+  [[-6,6,10],[18,-6,-8],[-24,-6,6]].forEach((s,j)=>{ const a=new THREE.Vector3(...s); const strand=[a.clone()]; for(let k=1;k<6;k++) strand.push(strand[k-1].clone().add(new THREE.Vector3(rnd(-2,2),rnd(1.5,3)*(j%2?-1:1),rnd(2,4)))); world.add(tube(strand,0.15,mmat,60));
+    const c=new THREE.CatmullRomCurve3(strand); buildRibosomes(9, (()=>{ let q=0; return ()=>c.getPointAt(0.12+0.09*(q++)); })(), 0.8, 0x24364a); if(j===0) label('ribo70', c.getPointAt(0.5), 3); });
+  label('cytoplasm', new THREE.Vector3(-50,-12,16), 4);
+  tourSteps=[
+    {at:new THREE.Vector3(-22,10,24), look:new THREE.Vector3(0,0,0), e:'Step 1 of 4', h:'No nucleus', p:'There is no nucleus. The DNA is one circular chromosome lying in the cytoplasm, in a region called the nucleoid.', x:'The DNA is not wrapped around histones, so it is called naked DNA. Prokaryotes have no membrane-bound organelles at all.'},
+    {at:new THREE.Vector3(36,-8,24), look:new THREE.Vector3(30,-14,14), e:'Step 2 of 4', h:'Plasmids', p:'Small extra rings of DNA. They can carry useful genes such as antibiotic resistance.', x:'Plasmids can be copied and passed to other bacteria, even of other species, which spreads resistance. They are also used as vectors in genetic modification.'},
+    {at:new THREE.Vector3(-8,14,22), look:new THREE.Vector3(-6,8,14), e:'Step 3 of 4', h:'70S ribosomes', p:'These ribosomes are smaller (70S) than those in eukaryotic cells (80S).', x:'With no nuclear membrane, ribosomes start translating an mRNA while it is still being transcribed from the DNA.'},
+    {at:new THREE.Vector3(HALF+12,8,14), look:new THREE.Vector3(HALF+R+30,0,0), e:'Step 4 of 4', h:'Wall, membrane and flagellum', p:'A peptidoglycan cell wall lies outside the plasma membrane. Outside the wall, the flagellum spins to move the cell.', x:'Penicillin blocks the building of peptidoglycan, so it kills bacteria without harming human cells, which have no such wall.'}
+  ];
+  findKeys=['nucleoid','plasmid','ribo70','flagellum','pili','bwall'];
+  camera.position.set(-50,6,10); lookAt(new THREE.Vector3(0,0,0));
+}
+function insideCapsule(p, half, r){ const ax=Math.max(-half,Math.min(half,p.x)); return (p.x-ax)**2+p.y*p.y+p.z*p.z < r*r; }
+// ---------- camera control ----------
+let yaw=0, pitch=0; const keys={}; let fly=null;
+function lookAt(target){ const d=target.clone().sub(camera.position).normalize(); yaw=Math.atan2(-d.x,-d.z); pitch=Math.asin(Math.max(-1,Math.min(1,d.y))); }
+function flyTo(pos, r, look){ const dir=camera.position.clone().sub(pos).normalize(); const to=look?pos.clone():pos.clone().add(dir.multiplyScalar(r+10)); const lk=look||pos; fly={from:camera.position.clone(), to, y0:yaw, p0:pitch, look:lk, t:0, dur:reduceMotion?0.01:1.6}; }
+function clampInside(p){ if(!bounds) return; if(bounds.type==='sphere'){ const l=p.length(); if(l>bounds.r) p.multiplyScalar(bounds.r/l); }
+  else if(bounds.type==='capsule'){ const ax=Math.max(-bounds.half,Math.min(bounds.half,p.x)); const d=new THREE.Vector3(p.x-ax,p.y,p.z); const l=d.length(); if(l>bounds.r){ d.multiplyScalar(bounds.r/l); p.set(ax+d.x,d.y,d.z); } }
+  else { p.x=Math.max(-bounds.x,Math.min(bounds.x,p.x)); p.y=Math.max(-bounds.y,Math.min(bounds.y,p.y)); p.z=Math.max(-bounds.z,Math.min(bounds.z,p.z)); } }
+window.addEventListener('keydown', e=>{ keys[e.code]=true; if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault(); });
+window.addEventListener('keyup', e=>{ keys[e.code]=false; });
+let drag=null;
+canvas.addEventListener('pointerdown', e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); canvas.focus(); });
+canvas.addEventListener('pointermove', e=>{ if(!drag) return; yaw-=(e.clientX-drag.x)*0.004; pitch-=(e.clientY-drag.y)*0.004; pitch=Math.max(-1.45,Math.min(1.45,pitch)); drag={x:e.clientX,y:e.clientY}; fly=null; });
+canvas.addEventListener('pointerup', ()=>{ drag=null; });
+document.querySelectorAll('#pad button').forEach(b=>{ const k=b.dataset.k; const on=e=>{ e.preventDefault(); keys['pad-'+k]=true; }, off=()=>{ keys['pad-'+k]=false; };
+  b.addEventListener('pointerdown',on); b.addEventListener('pointerup',off); b.addEventListener('pointerleave',off); b.addEventListener('pointercancel',off); });
+const info=document.getElementById('info');
+function showInfo(e,h,p,c,extra){ info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p>'+(c?'<div class="codes"></div>':'')+(extra||''); info.querySelector('.eyebrow').textContent=e; info.querySelector('h2').textContent=h; info.querySelector('p').textContent=p; if(c) info.querySelector('.codes').textContent='Syllabus: '+c; }
+// ---------- modes: explore, tour, find ----------
+let mode='explore', tourAt=0, findList=[], findAt=0, found=0, current=null;
+const findBox=document.getElementById('find');
+function startTour(){ mode='tour'; tourAt=0; findBox.hidden=true; showStep(); }
+function showStep(){ const s=tourSteps[tourAt]; fly={from:camera.position.clone(), to:s.at.clone(), look:s.look.clone(), t:0, dur:reduceMotion?0.01:2.2};
+  showInfo(s.e,s.h,s.p+(level==='hl'&&s.x?' '+s.x:''),null,'<div class="tourbtns"><button type="button" id="t-prev">Back</button><button type="button" class="go" id="t-next">'+(tourAt===tourSteps.length-1?'Finish':'Next')+'</button><button type="button" id="t-stop">Explore freely</button></div>');
+  document.getElementById('t-prev').onclick=()=>{ if(tourAt>0){ tourAt--; showStep(); } };
+  document.getElementById('t-next').onclick=()=>{ if(tourAt<tourSteps.length-1){ tourAt++; showStep(); } else endMode(); };
+  document.getElementById('t-stop').onclick=endMode; }
+function startFind(){ mode='find'; findList=findKeys.slice().sort(()=>Math.random()-0.5); findAt=0; found=0; nextFind(); }
+function nextFind(){ if(findAt>=findList.length){ findBox.textContent='You found all '+found+'. Well done!'; setTimeout(()=>{ if(mode==='find') endMode(); },3500); return; }
+  findBox.hidden=false; findBox.textContent='Find the '+INFO[findList[findAt]].n.toLowerCase()+'  ('+(findAt+1)+' of '+findList.length+')';
+  showInfo('Find it','Fly to the '+INFO[findList[findAt]].n.toLowerCase(),'Labels are hidden. Use what you know about its shape and where it sits in the cell.',null,'<div class="tourbtns"><button type="button" id="f-skip">Skip</button><button type="button" id="f-stop">Stop</button></div>');
+  document.getElementById('f-skip').onclick=()=>{ findAt++; nextFind(); }; document.getElementById('f-stop').onclick=endMode; }
+function endMode(){ mode='explore'; findBox.hidden=true; current=null; showInfo('Explore','Fly up to anything','Move towards an organelle and its name and job appear here. Click a floating label to fly straight to it.'); }
+document.getElementById('b-tour').onclick=startTour;
+document.getElementById('b-find').onclick=startFind;
+document.getElementById('b-help').onclick=()=>{ document.getElementById('start').hidden=false; };
+document.getElementById('b-start').onclick=()=>{ document.getElementById('start').hidden=true; canvas.focus(); };
+let cellKind='animal';
+function setCell(kind){ cellKind=kind; clearWorld(); if(kind==='plant') buildPlant(); else if(kind==='bacteria') buildBacterium(); else buildAnimal();
+  ['animal','plant','bacteria'].forEach(k=>document.getElementById('m-'+k).setAttribute('aria-pressed',k===kind));
+  document.getElementById('b-tour').textContent = kind==='animal' ? 'Tour: making a protein' : kind==='plant' ? 'Tour: plant cell' : 'Tour: bacterium';
+  scene.fog.density = kind==='bacteria' ? 0.0075 : 0.011; fly=null; endMode(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.getElementById('l-sl').setAttribute('aria-pressed',l==='sl'); document.getElementById('l-hl').setAttribute('aria-pressed',l==='hl'); current=null; if(mode==='tour') showStep(); }
+document.getElementById('l-sl').onclick=()=>setLevel('sl'); document.getElementById('l-hl').onclick=()=>setLevel('hl');
+document.getElementById('m-bacteria').onclick=()=>setCell('bacteria');
+document.getElementById('m-animal').onclick=()=>setCell('animal');
+document.getElementById('m-plant').onclick=()=>setCell('plant');
+// ---------- loop ----------
+function resize(){ const w=canvas.clientWidth, h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize', resize);
+renderer.setClearColor(0x0b2238);
+const v=new THREE.Vector3(); let last=performance.now(), clock=0;
+function frame(now){
+  const dt=Math.min(0.05,(now-last)/1000); last=now; clock+=dt;
+  const fast=keys.ShiftLeft||keys.ShiftRight; const sp=(fast?36:16)*dt;
+  const turn=(keys.ArrowLeft||keys['pad-tl']?1:0)-(keys.ArrowRight||keys['pad-tr']?1:0); if(turn){ yaw+=turn*1.6*dt; fly=null; }
+  const f=(keys.KeyW||keys.ArrowUp||keys['pad-fw']?1:0)-(keys.KeyS||keys.ArrowDown||keys['pad-bk']?1:0);
+  const s=(keys.KeyD?1:0)-(keys.KeyA?1:0); const u=(keys.KeyE||keys['pad-up']?1:0)-(keys.KeyQ||keys['pad-down']?1:0);
+  if(f||s||u){ fly=null; const fw=new THREE.Vector3(-Math.sin(yaw)*Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw)*Math.cos(pitch)); const rt=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+    camera.position.addScaledVector(fw,f*sp).addScaledVector(rt,s*sp); camera.position.y+=u*sp; clampInside(camera.position); }
+  if(fly){ fly.t+=dt/fly.dur; const k=Math.min(1,fly.t); const e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    camera.position.lerpVectors(fly.from, fly.to, e); const d=fly.look.clone().sub(camera.position).normalize(); const ty=Math.atan2(-d.x,-d.z), tp=Math.asin(Math.max(-1,Math.min(1,d.y)));
+    let dy=ty-yaw; while(dy>Math.PI) dy-=2*Math.PI; while(dy<-Math.PI) dy+=2*Math.PI; yaw+=dy*Math.min(1,dt*6); pitch+=(tp-pitch)*Math.min(1,dt*6); if(k>=1 && Math.abs(dy)<0.01) fly=null; }
+  camera.rotation.set(pitch,yaw,0);
+  anims.forEach(a=>a(clock));
+  // nearest organelle and labels
+  let best=null, bestD=1e9; const w=canvas.clientWidth, h=canvas.clientHeight;
+  labels.forEach(l=>{ const d=camera.position.distanceTo(l.pos)-l.r; if(d<bestD){ bestD=d; best=l; }
+    v.copy(l.pos).project(camera); const vis=v.z<1 && Math.abs(v.x)<1.1 && Math.abs(v.y)<1.1 && d<70 && mode!=='find';
+    if(vis){ l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=Math.max(0.25,Math.min(1,1.2-d/70)); l.el.style.display=''; } else l.el.style.display='none';
+    l.el.classList.toggle('on', l===best && bestD<12); });
+  if(best && bestD<12 && mode!=='tour'){
+    if(mode==='find'){ if(best.key===findList[findAt]){ found++; findAt++; findBox.textContent='Found it: '+INFO[best.key].n+'!'; const k=best.key; showInfo('Found it',INFO[k].n,textOf(k),codesOf(k)); setTimeout(()=>{ if(mode==='find') nextFind(); },1600); } }
+    else if(current!==best.key){ current=best.key; showInfo('You are next to',INFO[best.key].n,textOf(best.key),codesOf(best.key)); }
+  }
+  renderer.render(scene,camera); requestAnimationFrame(frame);
+}
+setLevel(level); setCell('animal'); resize(); requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>

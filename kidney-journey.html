@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Journey Through a Nephron: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/kidney-journey.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Journey Through a Nephron">
+<meta property="og:description" content="Journey Through a Nephron: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/kidney-journey.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Journey Through a Nephron</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'Journey Through a Nephron',
+  sub: 'DP Biology D3.3 (HL) · simplified, not to scale',
+  startTitle: 'Follow the filtrate',
+  intro: 'Travel with the filtrate through one nephron: squeezed out of the blood in the glomerulus, then through the tubules where useful substances are taken back. Watch the coloured particles to see what leaves and what stays. Use the ADH button at the collecting duct.',
+  note: 'Particles: blue water, yellow glucose, orange sodium ions, green urea, purple plasma proteins, red blood cells. Real nephrons are about 3 cm long and far thinner than shown.',
+  rideLabel: 'Ride with the filtrate',
+  theme: { bg: '#1b0f12', panel: 'rgba(32,16,20,.86)', accent: '#ffcf5a', dim: '#d7bcb6', line: 'rgba(255,210,190,.22)' },
+  fog: 0.004,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    // Background: cortex (top) and a medulla that gets saltier (darker) with depth
+    const cv = document.createElement('canvas'); cv.width = 16; cv.height = 256; const g = cv.getContext('2d');
+    const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, '#5a3a33'); gr.addColorStop(0.38, '#5a3a33'); gr.addColorStop(0.4, '#6b3d22'); gr.addColorStop(1, '#a3561c');
+    g.fillStyle = gr; g.fillRect(0, 0, 16, 256);
+    const bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(260, 200), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, opacity: 0.55 }));
+    bgPlane.position.set(0, -5, -30); scene.add(bgPlane);
+    A.label('Cortex', V(-70, 62, -28), 400); A.label('Medulla (saltier with depth)', V(-62, -40, -28), 400);
+    // Filtrate route through the nephron
+    const F = [V(-34, 44, 0), V(-28, 50, 4), V(-22, 41, -4), V(-15, 50, 4), V(-9, 41, -3), V(-4, 47, 2), V(0, 38, 0), V(2, 20, 0), V(2, -10, 0), V(3, -48, 0), V(8, -56, 0), V(13, -48, 0), V(13, -10, 0), V(13, 28, 0), V(17, 40, 3), V(23, 33, -3), V(27, 42, 3), V(32, 36, 0), V(38, 40, 0), V(40, 10, 0), V(40, -40, 0), V(40, -78, 0)];
+    const route = new THREE.CatmullRomCurve3(F, false, 'catmullrom', 0.3);
+    const seg = (a, b) => { const pts = []; for (let i = 0; i <= 40; i++) pts.push(route.getPointAt(a + (b - a) * i / 40)); return pts; };
+    const near = p => { let best = 0, bd = 1e9; for (let i = 0; i <= 600; i++) { const d = route.getPointAt(i / 600).distanceTo(p); if (d < bd) { bd = d; best = i / 600; } } return best; };
+    const U = { pctEnd: near(V(0, 38, 0)), descEnd: near(V(3, -48, 0)), ascEnd: near(V(13, 28, 0)), dctEnd: near(V(38, 40, 0)), cdMid: near(V(40, -10, 0)) };
+    const wall = (col, op) => T(col, op);
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(seg(0, U.pctEnd)), 160, 2.4, 14, false), wall(0xf2a477, 0.38)));
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(seg(U.pctEnd, U.descEnd)), 80, 1.3, 12, false), wall(0x8ec5ff, 0.4)));
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(seg(U.descEnd, U.ascEnd)), 100, 1.8, 12, false), wall(0xffb067, 0.45)));
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(seg(U.ascEnd, U.dctEnd)), 120, 2.0, 12, false), wall(0xf7c58c, 0.4)));
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(seg(U.dctEnd, 1)), 120, 3.0, 14, false), wall(0xd9d1ff, 0.38)));
+    // Microvilli on the proximal tubule (brush border), drawn as a fuzzy band of short hairs
+    const hair = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.035, 0.035, 0.45, 4), M(0xffd6b8), 700); const d = new THREE.Object3D();
+    for (let i = 0; i < 700; i++) { const uu = Math.random() * U.pctEnd, p = route.getPointAt(uu), t = route.getTangentAt(uu); const n = new THREE.Vector3().crossVectors(t, V(0, 0, 1)).normalize().applyAxisAngle(t, Math.random() * Math.PI * 2);
+      d.position.copy(p).addScaledVector(n, 2.15); d.quaternion.setFromUnitVectors(V(0, 1, 0), n.clone().negate()); d.updateMatrix(); hair.setMatrixAt(i, d.matrix); }
+    scene.add(hair);
+    // Glomerulus inside Bowman's capsule, with afferent (wide) and efferent (narrow) arterioles
+    const G = V(-40, 45, 0);
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(8, 40, 28, 0, Math.PI * 2, 0.5, Math.PI - 0.5), T(0xf2a477, 0.3)); cap.position.copy(G); cap.rotation.z = Math.PI / 2 + 0.6; scene.add(cap);
+    const red = M(0xd62828, { roughness: 0.4 });
+    for (let i = 0; i < 9; i++) { const pts = []; let p = G.clone().add(A.onSphere(2)); for (let k = 0; k < 7; k++) { pts.push(p.clone()); p.add(A.onSphere(2.2)); if (p.distanceTo(G) > 5.2) p.lerp(G, 0.5); } scene.add(tube(pts, 0.55, red, 40)); }
+    const blood = [V(-74, 52, 0), V(-58, 50, 0), V(-46, 46, 0), V(-41, 46, 1), V(-38, 44, -1), V(-42, 43, 0), V(-48, 39, 0), V(-58, 36, 2), V(-36, 30, 6), V(-6, 34, 6), V(6, 10, 6), V(7, -50, 6), V(18, -46, 6), V(18, 20, 6), V(34, 30, 6), V(46, 0, 6), V(46, -70, 6)];
+    const bRoute = new THREE.CatmullRomCurve3(blood, false, 'catmullrom', 0.3);
+    scene.add(tube(blood.slice(0, 4), 1.9, T(0xd62828, 0.35), 40));      // afferent arteriole: wide
+    scene.add(tube(blood.slice(5, 8), 1.1, T(0xd62828, 0.35), 40));      // efferent arteriole: narrow
+    scene.add(tube(blood.slice(7), 0.7, T(0xd62828, 0.3), 220));          // peritubular capillaries and vasa recta
+    A.label('Afferent arteriole', V(-62, 56, 0)); A.label('Efferent arteriole', V(-58, 32, 0)); A.label('Glomerulus', V(-40, 52, 4)); A.label('Bowman’s capsule', V(-44, 36, 6));
+    A.label('Proximal convoluted tubule', V(-14, 55, 4)); A.label('Descending limb', V(-6, -20, 2)); A.label('Ascending limb', V(20, -20, 2)); A.label('Distal convoluted tubule', V(25, 48, 3)); A.label('Collecting duct', V(48, -20, 0)); A.label('Capillaries', V(30, -55, 8));
+    // ADH control
+    let adh = true; const adhBtn = A.button('b-adh', 'ADH: high', b => { adh = !adh; b.textContent = adh ? 'ADH: high' : 'ADH: low'; b.setAttribute('aria-pressed', !adh); updateSide(); });
+    // Particles. Filtrate particles leave the tubule at a set point (reabsorption) or reach the urine.
+    const kinds = { water: { c: 0x4fb3ff, r: 0.42, n: 170 }, glucose: { c: 0xffd166, r: 0.6, n: 40 }, na: { c: 0xff8c42, r: 0.48, n: 60 }, urea: { c: 0x69d27a, r: 0.55, n: 40 } };
+    const parts = [];
+    function exitFor(k) { const r = Math.random();
+      if (k === 'glucose') return A.rnd(0.03, U.pctEnd);
+      if (k === 'water') { if (r < 0.65) return A.rnd(0.03, U.pctEnd); if (r < 0.8) return A.rnd(U.pctEnd, U.descEnd); return 'cd'; }
+      if (k === 'na') { if (r < 0.65) return A.rnd(0.03, U.pctEnd); if (r < 0.9) return A.rnd(U.descEnd, U.ascEnd); if (r < 0.97) return A.rnd(U.ascEnd, U.dctEnd); return 2; }
+      return 2; }
+    Object.keys(kinds).forEach(k => { const def = kinds[k], geo = k === 'glucose' ? new THREE.OctahedronGeometry(def.r) : new THREE.SphereGeometry(def.r, 8, 6), mat = M(def.c, { emissive: def.c, emissiveIntensity: 0.25 });
+      for (let i = 0; i < def.n; i++) { const m = new THREE.Mesh(geo, mat); scene.add(m); parts.push({ k, m, u: Math.random(), ex: exitFor(k), out: 0, off: A.onSphere(A.rnd(0, 1.1)), dir: A.onSphere(1) }); } });
+    const bparts = []; const rbcGeo = new THREE.TorusGeometry(0.7, 0.38, 8, 14), protGeo = new THREE.IcosahedronGeometry(0.9);
+    for (let i = 0; i < 45; i++) { const prot = i % 3 === 0; const m = new THREE.Mesh(prot ? protGeo : rbcGeo, M(prot ? 0x9b5de5 : 0xc1121f)); scene.add(m); bparts.push({ m, u: Math.random(), off: A.onSphere(0.6) }); }
+    let urine = { water: 0, other: 0 };
+    function updateSide() { A.side('<h3>What reaches the urine</h3><div class="row"><span class="dot" style="background:#4fb3ff"></span>Water: ' + (adh ? 'little (ADH high)' : 'a lot (ADH low)') + '</div><div class="row"><span class="dot" style="background:#69d27a"></span>Urea: all of it</div><div class="row"><span class="dot" style="background:#ffd166"></span>Glucose: none</div><div class="row"><span class="dot" style="background:#ff8c42"></span>Sodium: very little</div><div class="row"><span class="dot" style="background:#9b5de5"></span>Proteins and cells: never filtered</div><p style="margin:6px 0 0">' + (adh ? 'Small volume of concentrated urine.' : 'Large volume of dilute urine.') + '</p>'); }
+    updateSide();
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.9, 16, 12), M(0xffffff, { emissive: 0x555555 })); scene.add(hero);
+    return {
+      route: F, hero, camOffset: V(0, 3, 9), outside: { target: V(0, 0, 0), dist: 150 },
+      outsideInfo: { n: 'One nephron', s: 'Each kidney has about a million nephrons like this one. The glomeruli and convoluted tubules sit in the cortex; the loops of Henle and collecting ducts run down into the medulla.', h: 'The deeper the loop of Henle reaches into the medulla, the saltier the medulla can become, and the more concentrated the urine can be.', cs: 'D3.3.7', ch: 'D3.3.9' },
+      stops: [
+        { at: V(-34, 44, 0), n: 'Ultrafiltration', s: 'Blood arrives in the wide afferent arteriole and leaves through the narrower efferent arteriole, so the pressure in the glomerulus is high. Water and small molecules are forced into Bowman’s capsule. Proteins and blood cells are too big and stay in the blood.', h: 'The filter has three layers: the capillary wall with pores, the basement membrane (the real filter) and the podocytes with slits between their feet. About 180 litres of filtrate are made each day.', cs: 'D3.3.7', ch: 'D3.3.8' },
+        { at: V(-15, 50, 4), n: 'Proximal convoluted tubule', s: 'Selective reabsorption: all the glucose and most of the water and sodium are taken back into the blood. Watch the yellow glucose leave. Urea stays in the tubule.', h: 'The tubule cells have microvilli (the fuzzy lining) for a large surface and many mitochondria for active transport. Glucose is carried in by cotransport with sodium ions.', cs: 'D3.3.8', ch: 'D3.3.8' },
+        { at: V(2, -20, 0), n: 'Descending limb of the loop of Henle', s: 'Water leaves the descending limb by osmosis, because the fluid around it in the medulla is salty.', h: 'This limb is permeable to water but not very permeable to salt.', cs: 'D3.3.9', ch: 'D3.3.9' },
+        { at: V(13, -20, 0), n: 'Ascending limb of the loop of Henle', s: 'Sodium ions (orange) are pumped out of the ascending limb into the medulla. This makes the medulla salty.', h: 'The ascending limb is impermeable to water, so water cannot follow the salt out. This keeps a high solute concentration in the medulla, which the collecting duct uses to reabsorb water.', cs: 'D3.3.9', ch: 'D3.3.9' },
+        { at: V(27, 42, 3), n: 'Distal convoluted tubule', s: 'A little more sodium is taken back here, adjusting the salt balance of the blood.', h: 'The filtrate is now more dilute than blood plasma, because salt left the ascending limb without water.', cs: 'D3.3.8', ch: '' },
+        { at: V(40, -10, 0), n: 'Collecting duct and ADH', s: 'Use the ADH button. With a lot of ADH, the duct lets water out into the salty medulla, so the urine is small in volume and concentrated. With little ADH, more water stays in the duct.', h: 'ADH from the pituitary makes duct cells insert aquaporins into their membranes. When the blood is too dilute, less ADH is released, aquaporins are removed, and more water is lost: negative feedback.', cs: 'D3.3.10', ch: 'D3.3.10' },
+        { at: V(40, -70, 0), n: 'Urine', s: 'What is left flows to the renal pelvis and the bladder: urea, a little salt and some water. There is no glucose or protein in healthy urine.', h: 'Glucose in urine is a sign of diabetes: blood glucose is so high that the tubule carriers cannot take all of it back.', cs: 'D3.3.7', ch: 'D3.3.4' }
+      ],
+      update(dt, A) {
+        const run = A.paused ? 0 : dt;
+        parts.forEach(p => {
+          if (p.out > 0) { p.out += run; p.m.position.addScaledVector(V(0, 0, 1), run * 6).addScaledVector(p.dir, run * 1.5); p.m.scale.setScalar(Math.max(0.01, 1 - p.out / 1.4)); if (p.out > 1.4) { p.out = 0; p.u = 0; p.ex = exitFor(p.k); p.m.scale.setScalar(1); } return; }
+          p.u += run * 0.03; let ex = p.ex; if (ex === 'cd') ex = adh ? (Math.random() < 0.012 ? A.rnd(U.dctEnd, U.cdMid) : 2) : 2;
+          if (p.ex === 'cd' && adh && p.u > U.dctEnd && p.u < U.cdMid + 0.1 && Math.random() < 0.02) { p.out = 0.001; return; }
+          if (typeof p.ex === 'number' && p.ex < 1 && p.u >= p.ex) { p.out = 0.001; return; }
+          if (p.u >= 1) { p.u = 0; p.ex = exitFor(p.k); }
+          p.m.position.copy(route.getPointAt(Math.min(0.999, p.u))).add(p.off); });
+        bparts.forEach(b => { b.u = (b.u + run * 0.025) % 1; b.m.position.copy(bRoute.getPointAt(b.u)).add(b.off); b.m.rotation.x += run; });
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); const d=ahead.clone().sub(camera.position).normalize();
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

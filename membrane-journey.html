@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Journey Across a Membrane: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/membrane-journey.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Journey Across a Membrane">
+<meta property="og:description" content="Journey Across a Membrane: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/membrane-journey.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Journey Across a Membrane</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+window.JOURNEY = {
+  title: 'Journey Across a Membrane',
+  sub: 'DP Biology B2.1 · simplified, not to scale',
+  startTitle: 'Fly over a cell membrane',
+  intro: 'Glide over a patch of plasma membrane and stop at each way substances cross it: simple diffusion, osmosis through aquaporins, facilitated diffusion through channels and active transport by pumps. At HL you also see cotransport and a vesicle forming.',
+  note: 'Outside the cell is above the membrane, the cytoplasm below. White dots: oxygen. Blue: water. Purple: potassium ions. Orange: sodium ions. Yellow: glucose.',
+  rideLabel: 'Fly over the membrane',
+  theme: { bg: '#0b1622', panel: 'rgba(10,24,36,.86)', accent: '#ffd166', dim: '#bccbd8', line: 'rgba(180,215,240,.22)' },
+  fog: 0.005,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    // Phospholipid bilayer: heads (spheres) and two tails each, both layers
+    const X = 60, Z = 26, S = 1.6; const nx = Math.floor(2 * X / S), nz = Math.floor(2 * Z / S), n = nx * nz * 2;
+    const heads = new THREE.InstancedMesh(new THREE.SphereGeometry(0.62, 10, 8), M(0xf4a261, { roughness: 0.45 }), n);
+    const tails = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.13, 0.13, 2.6, 5), M(0xf6e7c8), n * 2);
+    const d = new THREE.Object3D(); let hi = 0, ti = 0; const holes = [V(-34, 0, 0), V(-14, 0, -4), V(4, 0, 2), V(22, 0, -2), V(40, 0, 4), V(-24, 0, 12)];
+    const freeAt = (x, z) => holes.every(h => (h.x - x) ** 2 + (h.z - z) ** 2 > 16);
+    for (let i = 0; i < nx; i++) for (let k = 0; k < nz; k++) { const x = -X + i * S + (k % 2) * 0.8, z = -Z + k * S; if (!freeAt(x, z)) continue;
+      [1, -1].forEach(side => { d.position.set(x, side * 3.4, z); d.rotation.set(0, 0, 0); d.updateMatrix(); heads.setMatrixAt(hi++, d.matrix);
+        [-0.3, 0.3].forEach(o => { d.position.set(x + o, side * 1.6, z); d.updateMatrix(); tails.setMatrixAt(ti++, d.matrix); }); }); }
+    heads.count = hi; tails.count = ti; scene.add(heads, tails);
+    // Cholesterol among the lipids
+    const chol = M(0xffe066); for (let i = 0; i < 60; i++) { const x = A.rnd(-X, X), z = A.rnd(-Z, Z); if (!freeAt(x, z)) continue; const c = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 2.2, 6), chol); c.position.set(x, A.rnd() > 0.5 ? 1.4 : -1.4, z); scene.add(c); }
+    // Proteins at the holes
+    const P = holes;
+    const aqua = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 8, 4, 1, true), M(0x4ea8de, { side: THREE.DoubleSide })); aqua.position.copy(P[0]); scene.add(aqua);
+    const chan = new THREE.Group(); chan.position.copy(P[1]); scene.add(chan); for (let i = 0; i < 5; i++) { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 8.5, 10), M(0x6a4c93)); s.position.set(Math.cos(i * 1.256) * 2, 0, Math.sin(i * 1.256) * 2); chan.add(s); }
+    const gate = new THREE.Mesh(new THREE.CircleGeometry(1.4, 16), M(0x3d2b5e, { side: THREE.DoubleSide })); gate.rotation.x = -Math.PI / 2; gate.position.y = 4.4; chan.add(gate);
+    const pump = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), M(0x9b2226)); pump.scale.set(3, 5, 3); pump.position.copy(P[2]); scene.add(pump);
+    const glyc = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 8, 16), M(0x2a9d8f)); glyc.position.copy(P[3]); scene.add(glyc);
+    let gpt = V(P[3].x, 4, P[3].z); for (let i = 0; i < 7; i++) { const s = new THREE.Mesh(new THREE.OctahedronGeometry(0.7), M(0x90be6d)); gpt = gpt.clone().add(V(A.rnd(-0.8, 0.8), 1.3, A.rnd(-0.8, 0.8))); s.position.copy(gpt); scene.add(s); }
+    const co = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), M(0xe76f51)); co.scale.set(2.6, 4.6, 2.6); co.position.copy(P[4]); scene.add(co);
+    const periph = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 12), M(0x8ecae6)); periph.position.set(10, -4.8, 12); scene.add(periph);
+    // A vesicle forming (endocytosis) at P[5]
+    const ves = new THREE.Mesh(new THREE.SphereGeometry(3.6, 24, 18), T(0xf4a261, 0.45)); ves.position.copy(P[5]); scene.add(ves);
+    A.label('Phospholipid bilayer', V(-50, 6, 20)); A.label('Hydrophilic heads', V(-46, 4.5, -20)); A.label('Hydrophobic tails', V(-40, 0, 26)); A.label('Cholesterol', V(30, 2, 22));
+    A.label('Aquaporin', V(P[0].x, 6.5, P[0].z)); A.label('Channel protein', V(P[1].x, 7, P[1].z)); A.label('Pump protein', V(P[2].x, 7.5, P[2].z)); A.label('Glycoprotein', V(P[3].x, 12, P[3].z)); A.label('Cotransporter', V(P[4].x, 7.5, P[4].z)); A.label('Peripheral protein', V(10, -8, 12)); A.label('Vesicle forming', V(P[5].x, 7, P[5].z)); A.label('Outside the cell', V(0, 16, -24), 400); A.label('Cytoplasm', V(0, -16, -24), 400);
+    // Particles
+    const dot = (r, c) => new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), M(c, { emissive: c, emissiveIntensity: 0.2 }));
+    const flows = [];
+    function flow(count, color, r, from, to, speed, label) { for (let i = 0; i < count; i++) { const m = dot(r, color); scene.add(m); flows.push({ m, from, to, u: Math.random(), speed, off: A.onSphere(A.rnd(0, 0.8)) }); } }
+    flow(10, 0xffffff, 0.35, V(-48, 9, -10), V(-48, -9, -10), 0.25);                 // oxygen straight through the bilayer
+    flow(14, 0x4fb3ff, 0.3, V(P[0].x, 9, P[0].z), V(P[0].x, -9, P[0].z), 0.3);        // water through the aquaporin
+    flow(10, 0x9b5de5, 0.38, V(P[1].x, -9, P[1].z), V(P[1].x, 9, P[1].z), 0.3);       // potassium out through the channel
+    flow(9, 0xff8c42, 0.38, V(P[2].x, -9, P[2].z), V(P[2].x, 9, P[2].z), 0.2);        // sodium pumped out
+    flow(6, 0x9b5de5, 0.38, V(P[2].x + 1, 9, P[2].z), V(P[2].x + 1, -9, P[2].z), 0.2);// potassium pumped in
+    flow(8, 0xffd166, 0.45, V(P[4].x, 9, P[4].z), V(P[4].x, -9, P[4].z), 0.18);       // glucose in by cotransport
+    flow(8, 0xff8c42, 0.38, V(P[4].x + 1, 9, P[4].z), V(P[4].x + 1, -9, P[4].z), 0.18);// with sodium
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.5, 10, 8), M(0xffffff)); hero.visible = false; scene.add(hero);
+    const route = [V(-70, 22, 30), V(-48, 14, 18), V(-34, 14, 16), V(-14, 14, 12), V(4, 14, 16), V(22, 14, 14), V(40, 14, 18), V(-24, 14, 28), V(-10, 20, 40)];
+    return {
+      route, hero, camOffset: V(0, 0, 0), outside: { target: V(0, 0, 0), dist: 120 },
+      outsideInfo: { n: 'The fluid mosaic model', s: 'A membrane is a double layer of phospholipids with proteins scattered through it like tiles in a mosaic. The molecules can move sideways, so the membrane is fluid.', h: 'Unsaturated fatty acid tails and cholesterol control how fluid the membrane is, so it stays flexible across a range of temperatures.', cs: 'B2.1.10', ch: 'B2.1.11, B2.1.12' },
+      stops: [
+        { at: V(-48, 14, 18), look: V(-48, 0, -10), n: 'The phospholipid bilayer and simple diffusion', s: 'Hydrophilic phosphate heads face the water on each side; hydrophobic tails face inwards. Small non-polar molecules such as oxygen (white) diffuse straight through.', h: 'Large or charged particles cannot cross the hydrophobic core, so the bilayer acts as a barrier: that is why cells need membrane proteins.', cs: 'B2.1.1, B2.1.2, B2.1.3', ch: 'B2.1.8' },
+        { at: V(-34, 14, 16), look: P[0], n: 'Osmosis through aquaporins', s: 'Water (blue) crosses the membrane quickly through aquaporins, channel proteins for water. It moves from where solutes are less concentrated to where they are more concentrated.', h: 'Aquaporins let water through in single file but block ions, because of the size and charge of the pore.', cs: 'B2.1.5', ch: '' },
+        { at: V(-14, 14, 12), look: P[1], n: 'Facilitated diffusion through a channel', s: 'Channel proteins have a pore that lets particular ions, here potassium (purple), diffuse down their concentration gradient. No energy is used.', h: 'Some channels are gated: in neurons, voltage-gated channels open and close as the membrane potential changes.', cs: 'B2.1.6', ch: 'B2.1.14' },
+        { at: V(4, 14, 16), look: P[2], n: 'Active transport by a pump', s: 'Pump proteins use energy from ATP to move ions against their concentration gradient.', h: 'The sodium–potassium pump moves 3 sodium ions out (orange) and 2 potassium ions in (purple) for each ATP. The pump changes shape when it is phosphorylated.', cs: 'B2.1.7', ch: 'B2.1.15' },
+        { at: V(22, 14, 14), look: V(P[3].x, 4, P[3].z), n: 'Glycoproteins', s: 'Glycoproteins have carbohydrate chains on the outside of the membrane. They help cells recognise each other and stick together.', h: 'Glycoproteins and glycolipids form the glycocalyx; differences in them give the ABO blood groups.', cs: 'B2.1.9', ch: 'B2.1.17' },
+        { at: V(40, 14, 18), look: P[4], n: 'Cotransport', s: 'This protein carries glucose (yellow) in together with sodium ions (orange).', h: 'Sodium flowing back in down its gradient (made by the sodium–potassium pump) drives glucose in against its gradient: indirect active transport, as in the kidney tubule and small intestine.', cs: 'B2.1.7', ch: 'B2.1.16' },
+        { at: V(-24, 14, 28), look: P[5], n: 'A vesicle forming', s: 'Part of the membrane folds in and pinches off as a vesicle, taking material into the cell (endocytosis). Vesicles can also fuse with the membrane to release material (exocytosis).', h: 'This only works because the membrane is fluid: the lipids can flow and reseal around the vesicle.', cs: 'B2.1.10', ch: 'B2.1.13' }
+      ],
+      update(dt, A) {
+        const run = A.paused ? 0 : dt;
+        flows.forEach(f => { f.u = (f.u + run * f.speed) % 1; f.m.position.copy(f.from).lerp(f.to, f.u).add(f.off); });
+        const k = (Math.sin(A.t * 0.8) + 1) / 2; ves.position.y = -2 - 6 * k; ves.scale.setScalar(0.7 + 0.3 * k);
+        gate.rotation.y = Math.sin(A.t * 2) > 0 ? 0 : 1.2;
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+function showStop(){ const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>

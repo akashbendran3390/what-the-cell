@@ -54,6 +54,8 @@ button[aria-pressed="true"]{background:var(--teal);color:#05202a}
 #info .tourbtns{display:flex;gap:8px;margin-top:10px}
 #info .tourbtns button{background:rgba(255,255,255,.1)}
 #info .tourbtns button.go{background:var(--gold);color:#2b1d00}
+#info a.inside{display:inline-block;font:700 14px var(--body);color:#2b1d00;background:var(--gold);border-radius:999px;padding:8px 14px;text-decoration:none}
+#info a.inside:hover{filter:brightness(1.08)}
 #labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
 .lab{position:absolute;transform:translate(-50%,-50%);font:700 13px var(--body);padding:3px 9px;border-radius:999px;background:rgba(8,22,38,.7);border:1px solid var(--line);white-space:nowrap;pointer-events:auto;cursor:pointer;transition:opacity .2s}
 .lab.on{background:var(--gold);color:#2b1d00;border-color:var(--gold)}
@@ -403,6 +405,9 @@ canvas.addEventListener('pointerup', ()=>{ drag=null; });
 document.querySelectorAll('#pad button').forEach(b=>{ const k=b.dataset.k; const on=e=>{ e.preventDefault(); keys['pad-'+k]=true; }, off=()=>{ keys['pad-'+k]=false; };
   b.addEventListener('pointerdown',on); b.addEventListener('pointerup',off); b.addEventListener('pointerleave',off); b.addEventListener('pointercancel',off); });
 const info=document.getElementById('info');
+// Go inside (2026-11-17): organelles that have their own close-up walk-through
+const INSIDE={nucleus:['nucleus.html','Go inside the nucleus'],pore:['nucleus.html','Go inside the nucleus'],nucleolus:['nucleus.html','Go inside the nucleus'],mito:['mitochondrion.html','Go inside the mitochondrion'],chloro:['chloroplast.html','Go inside the chloroplast'],rer:['translation.html','Watch a ribosome make a protein'],ribosome:['translation.html','Watch a ribosome make a protein'],membrane:['membrane-journey.html','Go into the membrane'],nucleoid:['dna-replication.html','Watch DNA being copied']};
+function goIn(k){ const g=INSIDE[k]; return g?'<div class="tourbtns"><a class="inside" href="'+g[0]+'">'+g[1]+' &rarr;</a></div>':''; }
 function showInfo(e,h,p,c,extra){ info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p>'+(c?'<div class="codes"></div>':'')+(extra||''); info.querySelector('.eyebrow').textContent=e; info.querySelector('h2').textContent=h; info.querySelector('p').textContent=p; if(c) info.querySelector('.codes').textContent='Syllabus: '+c; }
 // ---------- modes: explore, tour, find ----------
 let mode='explore', tourAt=0, findList=[], findAt=0, found=0, current=null;
@@ -418,7 +423,7 @@ function nextFind(){ if(findAt>=findList.length){ findBox.textContent='You found
   findBox.hidden=false; findBox.textContent='Find the '+INFO[findList[findAt]].n.toLowerCase()+'  ('+(findAt+1)+' of '+findList.length+')';
   showInfo('Find it','Fly to the '+INFO[findList[findAt]].n.toLowerCase(),'Labels are hidden. Use what you know about its shape and where it sits in the cell.',null,'<div class="tourbtns"><button type="button" id="f-skip">Skip</button><button type="button" id="f-stop">Stop</button></div>');
   document.getElementById('f-skip').onclick=()=>{ findAt++; nextFind(); }; document.getElementById('f-stop').onclick=endMode; }
-function endMode(){ mode='explore'; findBox.hidden=true; current=null; showInfo('Explore','Fly up to anything','Move towards an organelle and its name and job appear here. Click a floating label to fly straight to it.'); }
+function endMode(){ mode='explore'; findBox.hidden=true; current=null; showInfo('Explore','Fly up to anything','Move towards an organelle and its name and job appear here. Click a floating label to fly straight to it. The nucleus, mitochondria, chloroplasts and ribosomes have a Go inside button that opens a close-up.'); }
 document.getElementById('b-tour').onclick=startTour;
 document.getElementById('b-find').onclick=startFind;
 document.getElementById('b-help').onclick=()=>{ document.getElementById('start').hidden=false; };
@@ -458,8 +463,8 @@ function frame(now){
     if(vis){ l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=Math.max(0.25,Math.min(1,1.2-d/70)); l.el.style.display=''; } else l.el.style.display='none';
     l.el.classList.toggle('on', l===best && bestD<12); });
   if(best && bestD<12 && mode!=='tour'){
-    if(mode==='find'){ if(best.key===findList[findAt]){ found++; findAt++; findBox.textContent='Found it: '+INFO[best.key].n+'!'; const k=best.key; showInfo('Found it',INFO[k].n,textOf(k),codesOf(k)); setTimeout(()=>{ if(mode==='find') nextFind(); },1600); } }
-    else if(current!==best.key){ current=best.key; showInfo('You are next to',INFO[best.key].n,textOf(best.key),codesOf(best.key)); }
+    if(mode==='find'){ if(best.key===findList[findAt]){ found++; findAt++; findBox.textContent='Found it: '+INFO[best.key].n+'!'; const k=best.key; showInfo('Found it',INFO[k].n,textOf(k),codesOf(k),goIn(k)); setTimeout(()=>{ if(mode==='find') nextFind(); },1600); } }
+    else if(current!==best.key){ current=best.key; showInfo('You are next to',INFO[best.key].n,textOf(best.key),codesOf(best.key),goIn(best.key)); }
   }
   renderer.render(scene,camera); requestAnimationFrame(frame);
 }

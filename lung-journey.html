@@ -48,6 +48,8 @@ button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 .nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .nav button{background:rgba(255,255,255,.1)}
 .nav button.go{background:var(--accent);color:#1d1400}
+.nav button.zoom{background:transparent;border:1.5px solid var(--accent);color:var(--accent);padding:7px 13px}
+.nav button.zoom:hover{background:rgba(255,209,102,.12)}
 #side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
 #side h3{margin:0 0 4px;font:800 16px var(--display)}
 #side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
@@ -109,6 +111,125 @@ window.JOURNEY = {
   fog: 0.005,
   build(A) {
     const { V, M, T, tube, scene, THREE } = A;
+    // ===================== close-ups (2026-11-17) =====================
+    const cl = (x, a, b) => Math.max(a, Math.min(b, x)), ramp = (p, a, b) => cl((p - a) / (b - a), 0, 1), ease = k => k * k * (3 - 2 * k);
+    function rbcGeo(R, seg) { const pts = []; const n = 20; const z = r => 0.5 * R * Math.sqrt(Math.max(0, 1 - (r / R) ** 2)) * (0.207 + 2.003 * (r / R) ** 2 - 1.123 * (r / R) ** 4);
+      for (let i = 0; i <= n; i++) { const r = R * Math.sin(i / n * Math.PI / 2); pts.push(new THREE.Vector2(Math.max(0.001, r), z(r) * 1.5 + 0.02 * R)); }
+      for (let i = n; i >= 0; i--) { const r = R * Math.sin(i / n * Math.PI / 2); pts.push(new THREE.Vector2(Math.max(0.001, r), -z(r) * 1.5 - 0.02 * R)); } return new THREE.LatheGeometry(pts, seg || 24); }
+    const rbcM = c => M(c, { roughness: 0.38, emissive: c, emissiveIntensity: 0.12 });
+
+    // ---------- 1. Gas exchange in an alveolus ----------
+    const D_ALV = { n: 'Gas exchange in an alveolus', bg: '#0d1626', dist: 70, target: V(0, 0, 0), yaw: 0.6, pitch: 0.3,
+      steps: [
+        { n: 'An alveolus cut open', s: 'This is one alveolus, cut in half and enlarged about 400 times. Air fills the inside. A network of capillaries (red and purple) wraps round the outside.', cs: 'B3.1.4' },
+        { n: 'A very thin wall', s: 'Most of the wall is made of type I pneumocytes: flattened cells only about 0.2 µm thick. The capillary wall is also one cell thick, so gases only have to diffuse about 0.5 µm.', cs: 'B3.1.2, B3.1.4', at: V(0, 0, 10), dist: 40 },
+        { n: 'A moist lining and surfactant', s: 'The inside is lined with a thin film of moisture (blue), so oxygen can dissolve before it diffuses. Rounder type II pneumocytes (gold) secrete surfactant, which lowers surface tension so the alveoli do not collapse and stick together when you breathe out.', cs: 'B3.1.4', at: V(-6, -4, 6), dist: 38 },
+        { n: 'Oxygen diffuses in', s: 'Air in the alveolus has a higher concentration of oxygen (white) than blood arriving from the body. Oxygen diffuses across the wall into the blood, where red blood cells pick it up.', cs: 'B3.1.2, B3.1.3', at: V(0, 0, 8), dist: 46 },
+        { n: 'Carbon dioxide diffuses out', s: 'Blood arriving from the body has more carbon dioxide (grey) than the air in the alveolus, so carbon dioxide diffuses out into the alveolus and is breathed out.', cs: 'B3.1.2, B3.1.3', at: V(0, 0, 8), dist: 46 },
+        { n: 'Keeping the gradients steep', s: 'Ventilation keeps bringing fresh air with lots of oxygen and removing carbon dioxide. Blood flow keeps carrying oxygenated blood away and bringing new deoxygenated blood. So the concentration gradients never disappear.', cs: 'B3.1.3' },
+        { n: 'A huge surface', s: 'About 300 million alveoli give the lungs a total surface area of about 70 m2, and a dense capillary network covers it. Large area, thin, moist, permeable and with steep gradients: all the features of a good gas-exchange surface.', cs: 'B3.1.2, B3.1.4' }
+      ],
+      build(D) { const g = D.scene; let step = 0, tt = 0;
+        // alveolar wall: hemisphere-ish shell, cut open
+        const shell = new THREE.Mesh(new THREE.SphereGeometry(20, 64, 48, 0, Math.PI * 2, 0, Math.PI * 0.62), M(0xf4b6c2, { side: THREE.DoubleSide, roughness: 0.6, transparent: true, opacity: 0.55 })); shell.rotation.x = -Math.PI / 2; g.add(shell);
+        const film = new THREE.Mesh(new THREE.SphereGeometry(19.5, 64, 48, 0, Math.PI * 2, 0, Math.PI * 0.62), new THREE.MeshPhysicalMaterial({ color: 0x8fd3ff, transparent: true, opacity: 0.28, roughness: 0.1, side: THREE.BackSide, depthWrite: false })); film.rotation.x = -Math.PI / 2; g.add(film);
+        const onS = (a, b, r) => V(Math.sin(a) * Math.cos(b), Math.sin(a) * Math.sin(b), -Math.cos(a)).multiplyScalar(r).applyAxisAngle(V(1, 0, 0), 0); // a: from back pole
+        // type I nuclei bulges and type II cells
+        for (let i = 0; i < 18; i++) { const p = A.onSphere(1); if (p.z > 0.55) continue; const m = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), M(0x8a5fb0)); m.position.copy(p.multiplyScalar(20.3)); m.lookAt(0, 0, 0); m.scale.set(1.6, 1.0, 0.45); g.add(m); }
+        const t2 = []; for (let i = 0; i < 5; i++) { let p; do { p = A.onSphere(1); } while (p.z > 0.4); const c = new THREE.Group(); c.position.copy(p.clone().multiplyScalar(19.2)); c.lookAt(0, 0, 0); g.add(c);
+          const body = new THREE.Mesh(new THREE.SphereGeometry(2.2, 18, 12), M(0xf2b84b, { roughness: 0.5 })); body.scale.set(1, 1, 0.8); c.add(body);
+          for (let k = 0; k < 6; k++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.4, 8, 6), M(0xfff1b8, { emissive: 0x443300 })); d.position.set(A.rnd(-1.2, 1.2), A.rnd(-1.2, 1.2), 1.6); c.add(d); } t2.push(c); }
+        // capillaries wrapped round the outside
+        const caps = []; for (let i = 0; i < 7; i++) { const b = -1.2 + i * 0.4, pts = []; for (let k = 0; k <= 12; k++) { const a = -1.4 + k * 0.233; const r = 22.4; pts.push(V(Math.sin(a) * r * Math.cos(b * 0.5), r * Math.sin(b * 0.6) + Math.sin(k + i) * 0.8, -Math.cos(a) * r * Math.cos(b * 0.5))); }
+          const c = new THREE.CatmullRomCurve3(pts); caps.push(c); const geo = new THREE.TubeGeometry(c, 60, 1.5, 12, false); const col = geo.attributes.position; const cols = new Float32Array(col.count * 3); const cA = new THREE.Color(0x6b2f8f), cB = new THREE.Color(0xc8102e), tmp = new THREE.Color();
+          for (let j = 0; j < col.count; j++) { const u = Math.floor(j / 13) / 60; tmp.lerpColors(cA, cB, cl((u - 0.3) / 0.4, 0, 1)); cols[j * 3] = tmp.r; cols[j * 3 + 1] = tmp.g; cols[j * 3 + 2] = tmp.b; } geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+          g.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, transparent: true, opacity: 0.5, roughness: 0.4, depthWrite: false }))); }
+        const rg = rbcGeo(1.1, 16); const cells = []; for (let i = 0; i < 42; i++) { const m = new THREE.Mesh(rg, rbcM(0x6b1f52)); g.add(m); cells.push({ m, c: caps[i % caps.length], u: Math.random(), r: A.rnd(0, 6) }); }
+        const oG = new THREE.SphereGeometry(0.35, 8, 6), o2 = [], co2 = []; const pair = (mat) => { const o = new THREE.Group(); const a = new THREE.Mesh(oG, mat), b = new THREE.Mesh(oG, mat); a.position.x = -0.28; b.position.x = 0.28; o.add(a, b); g.add(o); return o; };
+        const oM = M(0xffffff, { emissive: 0x555555 }), cM = M(0x8a8f99);
+        for (let i = 0; i < 50; i++) { const o = pair(oM); const c = caps[i % caps.length]; const u = A.rnd(0.25, 0.75); o2.push({ o, from: A.onSphere(A.rnd(4, 15)).setZ(A.rnd(-14, 4)), to: c.getPointAt(u), q: Math.random() }); }
+        for (let i = 0; i < 30; i++) { const o = pair(cM); o.add(new THREE.Mesh(new THREE.SphereGeometry(0.42, 8, 6), M(0x333333))); const c = caps[(i + 2) % caps.length]; co2.push({ o, from: c.getPointAt(A.rnd(0.2, 0.5)), to: A.onSphere(A.rnd(4, 14)).setZ(A.rnd(-14, 4)), q: Math.random() }); }
+        const lb = [D.label('Air inside the alveolus', V(0, 4, -6)), D.label('Type I pneumocyte (thin wall)', V(-15, 12, -8)), D.label('Type II pneumocyte (surfactant)', t2[0].position.clone().multiplyScalar(0.85)), D.label('Moist lining', V(10, -10, -10)), D.label('Capillary', V(18, 8, -16)), D.label('Deoxygenated blood in', V(-24, -6, 0)), D.label('Oxygenated blood out', V(24, -6, 0))];
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) tt += dt; const run = A.paused ? 0 : dt;
+            cells.forEach(c => { c.u = (c.u + run * 0.06) % 1; c.m.position.copy(c.c.getPointAt(c.u)); const k = cl((c.u - 0.3) / 0.4, 0, 1); c.m.material.color.lerpColors(new THREE.Color(0x6b1f52), new THREE.Color(0xc8102e), k); c.m.material.emissive.copy(c.m.material.color); c.m.rotation.set(c.r + c.u * 20, c.u * 12, 0); });
+            const showO = step >= 3 && step !== 4 || step === 0, showC = step >= 4 && step !== 3 || step === 0;
+            o2.forEach(p => { p.o.visible = showO; p.q = (p.q + run * 0.22) % 1; p.o.position.copy(p.from).lerp(p.to, ease(p.q)); p.o.rotation.y += run * 2; });
+            co2.forEach(p => { p.o.visible = showC; p.q = (p.q + run * 0.2) % 1; p.o.position.copy(p.from).lerp(p.to, ease(p.q)); p.o.rotation.y += run * 2; });
+            film.material.opacity = step === 2 ? 0.45 + 0.1 * Math.sin(tt * 3) : 0.22; t2.forEach(c => { c.scale.setScalar(step === 2 ? 1.15 + 0.08 * Math.sin(tt * 4) : 1); });
+            lb[3].dataset.off = step === 2 || step === 0 ? '0' : '1'; lb[2].dataset.off = step === 2 || step === 0 ? '0' : '1'; } };
+      } };
+
+    // ---------- 2. Breathing in and out ----------
+    const D_VENT = { n: 'Breathing in and out', bg: '#0d1626', dist: 105, target: V(0, 0, 0), yaw: 0.0, pitch: 0.08, still: true,
+      side: '<h3 id="vt-h">Breathing in</h3><div class="row">Thorax volume: <b id="vt-v" style="margin-left:auto">-</b></div><div class="row">Pressure in lungs: <b id="vt-p" style="margin-left:auto">-</b></div><div class="row" style="color:var(--dim)">compared with the air outside</div>',
+      steps: [
+        { n: 'The thorax', s: 'The lungs sit in the thorax, an airtight space enclosed by the ribs and the intercostal muscles between them, with the dome-shaped diaphragm underneath. Muscles can only pull, so breathing uses pairs of antagonistic muscles.', cs: 'B3.1.5' },
+        { n: 'Breathing in (inspiration)', s: 'The diaphragm contracts and flattens, moving down. The external intercostal muscles contract and pull the ribs up and out. Both make the thorax bigger.', cs: 'B3.1.5' },
+        { n: 'Volume up, pressure down', s: 'As the volume of the thorax and lungs increases, the pressure inside falls below the pressure of the air outside. Air flows in down the pressure gradient until the pressures are equal.', cs: 'B3.1.5' },
+        { n: 'Breathing out (expiration)', s: 'At rest, breathing out is mostly passive: the diaphragm and external intercostals relax, the diaphragm domes up and the ribs fall, and elastic recoil of the lungs helps. Volume falls, pressure rises above the air outside, and air flows out.', cs: 'B3.1.5' },
+        { n: 'Forced breathing out', s: 'When you breathe out hard, the internal intercostal muscles contract and pull the ribs down and in, and the abdominal muscles push the diaphragm up. These are antagonistic to the muscles used for breathing in.', cs: 'B3.1.5' },
+        { n: 'Watch a few breaths', s: 'Follow the numbers on the right as the thorax changes size: whenever lung pressure is below the outside pressure, air flows in.', cs: 'B3.1.5' }
+      ],
+      build(D) { const g = D.scene; let step = 0, tt = 0, ph = 0;
+        const bone = M(0xf2ead8, { roughness: 0.5 }); const ribs = [];
+        for (let i = 0; i < 8; i++) { [-1, 1].forEach(s => { const piv = new THREE.Group(); piv.position.set(s * 3, 30 - i * 7.5, -14); g.add(piv); const r = new THREE.Mesh(new THREE.TorusGeometry(24 + i * 0.8, 1, 8, 40, Math.PI * 0.9), bone); r.rotation.set(Math.PI / 2, 0, s > 0 ? -0.06 : Math.PI + 0.06); r.position.z = 0; piv.add(r); ribs.push({ piv, s, i }); }); }
+        const spine = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 80, 16), M(0xe8dcc0)); spine.position.set(0, 0, -16); g.add(spine);
+        const ster = new THREE.Mesh(new THREE.BoxGeometry(4, 40, 2), bone); ster.position.set(0, 12, 30); g.add(ster);
+        const lungG = new THREE.SphereGeometry(1, 40, 30); const lungs = [-1, 1].map(s => { const m = new THREE.Mesh(lungG, M(0xf4a3b4, { roughness: 0.6, transparent: true, opacity: 0.75 })); m.position.set(s * 14, 4, 6); g.add(m); return m; });
+        const dia = new THREE.Mesh(new THREE.SphereGeometry(36, 48, 16, 0, Math.PI * 2, 0, 0.9), M(0xb5485e, { side: THREE.DoubleSide, roughness: 0.6 })); g.add(dia);
+        const ext = M(0xe06666, { emissive: 0x330000 }), intl = M(0x5b8def, { emissive: 0x001133 }); const ims = [];
+        for (let i = 0; i < 7; i++) for (let k = 0; k < 5; k++) { const x = -18 + k * 9; const e = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 8, 6), ext); e.rotation.z = 0.5; g.add(e); const n = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 8, 6), intl); n.rotation.z = -0.5; g.add(n); ims.push({ e, n, i, x }); }
+        const air = []; for (let i = 0; i < 30; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.6, 8, 6), M(0x7ee0ff, { emissive: 0x114455 })); g.add(m); air.push({ m, q: Math.random(), s: i % 2 ? 1 : -1 }); }
+        const trach = tube([V(0, 60, 6), V(0, 30, 6), V(0, 24, 6)], 2, T(0xf3d2c1, 0.6), 20); g.add(trach); g.add(tube([V(0, 24, 6), V(-8, 18, 6), V(-12, 12, 6)], 1.4, T(0xf3d2c1, 0.6), 12)); g.add(tube([V(0, 24, 6), V(8, 18, 6), V(12, 12, 6)], 1.4, T(0xf3d2c1, 0.6), 12));
+        const lbs = [D.label('Ribs', V(30, 22, 10)), D.label('External intercostal muscles', V(-34, 14, 24)), D.label('Internal intercostal muscles', V(-34, 6, 24)), D.label('Diaphragm', V(0, -30, 20)), D.label('Lungs', V(14, 4, 20)), D.label('Trachea', V(4, 50, 6))];
+        return { onStep(i) { step = i; ph = 0; },
+          update(dt) { if (!A.paused) tt += dt; if (!A.paused) ph += dt / 4;
+            // b: 0 = fully out, 1 = fully in; forced: -0.4
+            let b; if (step === 0) b = 0.4; else if (step === 1 || step === 2) b = ease(cl(ph % 1.3, 0, 1)); else if (step === 3) b = 1 - ease(cl(ph % 1.3, 0, 1)); else if (step === 4) b = 0.4 - 0.8 * ease(cl(ph % 1.3, 0, 1)); else b = 0.5 - 0.5 * Math.cos(tt * 1.4);
+            const vel = step === 5 ? Math.sin(tt * 1.4) : step === 1 || step === 2 ? (ph % 1.3 < 1 ? 1 : 0) : step === 3 ? (ph % 1.3 < 1 ? -1 : 0) : step === 4 ? (ph % 1.3 < 1 ? -1.4 : 0) : 0;
+            ribs.forEach(r => { r.piv.rotation.x = -0.22 * b; r.piv.scale.set(1 + 0.05 * b, 1, 1 + 0.06 * b); });
+            dia.position.y = -26 - 7 * b; dia.scale.set(1, 0.55 - 0.32 * b, 1); dia.position.z = 6;
+            lungs.forEach((m, k) => { m.scale.set(11 + 1.5 * b, 20 + 4 * b, 12 + 1.5 * b); m.position.y = 4 - 2 * b; });
+            const extOn = vel > 0.1, intOn = vel < -1.2 || step === 4 && vel < 0; ims.forEach(o => { const y = 26 - o.i * 7.5 + 1.5 * b; o.e.position.set(o.x, y, 26 + 2 * b); o.n.position.set(o.x, y, 25.4 + 2 * b);
+              o.e.material.emissive.setHex(extOn ? 0xaa2200 : 0x330000); o.n.material.emissive.setHex(intOn ? 0x0044cc : 0x001133); o.e.visible = true; o.n.visible = step === 4 || step === 0; });
+            air.forEach(a => { if (!A.paused) a.q = (a.q + dt * 0.4 * Math.abs(vel)) % 1; const k = vel >= 0 ? a.q : 1 - a.q; const p = k < 0.5 ? V(0, 62 - k * 70, 6) : V(a.s * (k - 0.5) * 26, 27 - (k - 0.5) * 30, 6); a.m.position.copy(p); a.m.visible = Math.abs(vel) > 0.1; });
+            const vol = (5.0 + 1.0 * b).toFixed(1), pr = (-vel * 0.25).toFixed(2);
+            const h = document.getElementById('vt-h'); if (h) { h.textContent = vel > 0.1 ? 'Breathing in' : vel < -0.1 ? (step === 4 ? 'Forced breathing out' : 'Breathing out') : 'Pause'; document.getElementById('vt-v').textContent = vol + ' dm3'; document.getElementById('vt-p').textContent = (pr > 0 ? '+' : '') + pr + ' kPa'; }
+            lbs[2].dataset.off = step === 4 || step === 0 ? '0' : '1'; } };
+      } };
+
+    // ---------- 3. Lung volumes ----------
+    const D_VOL = { n: 'Lung volumes', bg: '#0d1626', dist: 75, target: V(0, 4, 0), yaw: 0, pitch: 0.1, still: true,
+      side: '<h3>Spirometer trace</h3><canvas id="sp-tr" width="560" height="260" style="display:block;width:100%;height:130px"></canvas><p id="sp-t" style="margin:4px 0 0;color:var(--dim)"></p>',
+      steps: [
+        { n: 'Measuring lung volumes', s: 'A spirometer records the volume of air breathed in and out. The trace on the right goes up when you breathe in and down when you breathe out.', cs: 'B3.1.6' },
+        { n: 'Tidal volume', s: 'Tidal volume is the volume breathed in or out in one normal breath at rest, about 0.5 dm3.', cs: 'B3.1.6' },
+        { n: 'Inspiratory reserve volume', s: 'After a normal breath in, you can still breathe in an extra amount by breathing in as deeply as possible: the inspiratory reserve volume, about 3 dm3.', cs: 'B3.1.6' },
+        { n: 'Expiratory reserve volume', s: 'After a normal breath out, you can force out an extra amount: the expiratory reserve volume, about 1.2 dm3.', cs: 'B3.1.6' },
+        { n: 'Vital capacity', s: 'Vital capacity is the largest volume you can breathe out after the deepest possible breath in: tidal volume + inspiratory reserve + expiratory reserve, about 4.7 dm3.', h: 'Some air (the residual volume, about 1.2 dm3) always stays in the lungs, so they never empty completely.', cs: 'B3.1.6' },
+        { n: 'During exercise', s: 'During exercise tidal volume increases and you breathe faster, so more air moves in and out each minute (ventilation rate = tidal volume x breaths per minute).', cs: 'B3.1.6' }
+      ],
+      build(D) { const g = D.scene; let step = 0, tt = 0;
+        const lungG = new THREE.SphereGeometry(1, 40, 30); const lungs = [-1, 1].map(s => { const m = new THREE.Mesh(lungG, M(0xf4a3b4, { roughness: 0.6 })); m.position.set(s * 13, 4, 0); g.add(m); return m; });
+        g.add(tube([V(0, 40, 0), V(0, 22, 0)], 2, M(0xf3d2c1), 10)); D.label('Lungs', V(0, -20, 0));
+        // trace: volume above residual in dm3 over time; built per step
+        function vAt(t) { const brk = 2.5; const base = 2.4 + 0.25 * Math.sin(t * 2 * Math.PI / brk);
+          if (step === 2) { const k = (t % 12); if (k > 6 && k < 9) return 2.65 + 3 * Math.sin((k - 6) / 3 * Math.PI) ; }
+          if (step === 3) { const k = (t % 12); if (k > 6 && k < 9) return 2.15 - 1.2 * Math.sin((k - 6) / 3 * Math.PI); }
+          if (step === 4) { const k = (t % 14); if (k > 5 && k < 7) return 2.4 + 3.25 * Math.sin((k - 5) / 2 * Math.PI / 2); if (k >= 7 && k < 10) return 5.65 - 4.7 * ease((k - 7) / 3); if (k >= 10 && k < 11.5) return 0.95 + 1.2 * ease((k - 10) / 1.5); }
+          if (step === 5) return 2.6 + 0.9 * Math.sin(t * 2 * Math.PI / 1.4);
+          return base; }
+        const hist = []; let gc = null;
+        return { onStep(i) { step = i; tt = 0; hist.length = 0; const t = document.getElementById('sp-t'); if (t) t.textContent = ['', 'Tidal volume about 0.5 dm3', 'Inspiratory reserve about 3 dm3', 'Expiratory reserve about 1.2 dm3', 'Vital capacity about 4.7 dm3', 'Exercise: bigger, faster breaths'][i]; },
+          update(dt) { if (!A.paused) tt += dt; const v = vAt(tt); hist.push(v); if (hist.length > 360) hist.shift(); const s = 0.75 + v * 0.11; lungs.forEach(m => m.scale.set(10 * s, 18 * s, 10 * s));
+            if (!gc) { const c = document.getElementById('sp-tr'); if (c) gc = c.getContext('2d'); } if (!gc) return; const W = 560, H = 260; gc.clearRect(0, 0, W, H);
+            const y = vv => H - 14 - vv / 6.2 * (H - 28); gc.strokeStyle = 'rgba(200,220,255,.2)'; gc.fillStyle = 'rgba(200,220,255,.7)'; gc.font = '18px sans-serif';
+            for (let k = 0; k <= 6; k++) { gc.beginPath(); gc.moveTo(40, y(k)); gc.lineTo(W, y(k)); gc.stroke(); gc.fillText(k + '', 8, y(k) + 6); }
+            gc.strokeStyle = '#7ee0ff'; gc.lineWidth = 3; gc.beginPath(); hist.forEach((vv, i) => { const x = 40 + i / 360 * (W - 40); i ? gc.lineTo(x, y(vv)) : gc.moveTo(x, y(vv)); }); gc.stroke();
+            const band = (a, b2, col) => { gc.fillStyle = col; gc.fillRect(W - 40, y(b2), 28, y(a) - y(b2)); };
+            if (step === 1) band(2.15, 2.65, 'rgba(255,209,102,.6)'); if (step === 2) band(2.65, 5.65, 'rgba(255,140,66,.6)'); if (step === 3) band(0.95, 2.15, 'rgba(155,93,229,.7)'); if (step === 4) band(0.95, 5.65, 'rgba(128,237,153,.6)'); } };
+      } };
     const lungs = new THREE.Group(); scene.add(lungs);
     const lobeL = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), T(0xf4a3b4, 0.16)); lobeL.scale.set(22, 34, 18); lobeL.position.set(-28, 2, 0); lungs.add(lobeL);
     const lobeR = lobeL.clone(); lobeR.position.x = 28; lungs.add(lobeR);
@@ -127,7 +248,7 @@ window.JOURNEY = {
     // Capillary network wrapping the alveoli; blood flows in deoxygenated (purple) and leaves oxygenated (red)
     const caps = []; for (let i = 0; i < 10; i++) { const pts = []; let p = sac.clone().add(A.onSphere(10)).add(V(-8, 0, 0)); for (let k = 0; k < 8; k++) { pts.push(p.clone()); p.add(V(2.6, A.rnd(-2.5, 2.5), A.rnd(-2.5, 2.5))); const dd = p.distanceTo(sac); if (dd < 6.5) p.add(p.clone().sub(sac).normalize().multiplyScalar(6.5 - dd)); }
       const curve = new THREE.CatmullRomCurve3(pts); caps.push(curve); scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.5, 8, false), T(i % 2 ? 0xc1121f : 0x7b5cd6, 0.55))); }
-    const cells = []; for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.22, 6, 12), M(0x7b5cd6)); scene.add(m); cells.push({ m, c: caps[i % caps.length], u: Math.random() }); }
+    const cells = []; for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(rbcGeo(0.6, 16), rbcM(0x6b1f52)); scene.add(m); cells.push({ m, c: caps[i % caps.length], u: Math.random() }); }
     const o2 = [], co2 = []; const oGeo = new THREE.SphereGeometry(0.28, 8, 6);
     for (let i = 0; i < 60; i++) { const m = new THREE.Mesh(oGeo, M(0xffffff, { emissive: 0x666666 })); scene.add(m); o2.push({ m, t: Math.random(), a: alveoli[i % alveoli.length], c: caps[i % caps.length] }); }
     for (let i = 0; i < 35; i++) { const m = new THREE.Mesh(oGeo, M(0x8a8f99)); scene.add(m); co2.push({ m, t: Math.random(), a: alveoli[i % alveoli.length], c: caps[(i + 3) % caps.length] }); }
@@ -139,14 +260,14 @@ window.JOURNEY = {
     let breathIn = true;
     const hero = new THREE.Mesh(new THREE.SphereGeometry(0.8, 14, 10), M(0x7ee0ff, { emissive: 0x1a5566 })); scene.add(hero);
     return {
-      route, hero, camOffset: V(2, 2.5, 7), outside: { target: V(0, 5, 0), dist: 170 },
+      route, hero, camOffset: V(2, 2.5, 7), outside: { target: V(0, 5, 0), dist: 170 }, dives: [D_ALV, D_VENT, D_VOL],
       outsideInfo: { n: 'Ventilation', s: 'Breathing in: the diaphragm contracts and flattens, and the external intercostal muscles pull the ribs up and out. The volume of the thorax increases, the pressure inside falls, and air flows in. Breathing out reverses this.', h: 'In forced exhalation the internal intercostals pull the ribs down and in, and abdominal muscles push the diaphragm up: the two sets of intercostal muscles are an antagonistic pair.', cs: 'B3.1.5', ch: 'B3.3.8' },
       stops: [
-        { at: V(0, 70, 0), n: 'Trachea', s: 'Air enters through the trachea. C-shaped rings of cartilage hold it open so it does not collapse when the pressure inside falls.', h: 'Mucus from goblet cells traps dust and pathogens, and cilia sweep it up and away from the lungs.', cs: 'B3.1.4', ch: '' },
-        { at: V(-14, 21, 0), n: 'Bronchi', s: 'The trachea divides into two bronchi, one to each lung.', h: 'The bronchi keep dividing about 20 times, giving a branching tree of smaller and smaller airways.', cs: 'B3.1.4', ch: '' },
+        { at: V(0, 70, 0), n: 'Trachea', s: 'Air enters through the trachea. C-shaped rings of cartilage hold it open so it does not collapse when the pressure inside falls.', h: 'Mucus from goblet cells traps dust and pathogens, and cilia sweep it up and away from the lungs.', cs: 'B3.1.4', ch: '', dives: [D_VENT] },
+        { at: V(-14, 21, 0), n: 'Bronchi', s: 'The trachea divides into two bronchi, one to each lung.', h: 'The bronchi keep dividing about 20 times, giving a branching tree of smaller and smaller airways.', cs: 'B3.1.4', ch: '', dives: [D_VOL] },
         { at: V(-32, -4, 4), n: 'Bronchioles', s: 'Narrow bronchioles carry air deep into each lung. They have no cartilage but have smooth muscle in their walls.', h: 'Contraction of this smooth muscle narrows the airways, as happens in an asthma attack.', cs: 'B3.1.4', ch: '' },
-        { at: V(-42, -24, 8), n: 'Alveoli', s: 'The airways end in clusters of tiny air sacs, the alveoli. Together they give a huge surface area (about the size of a tennis court) for gas exchange.', h: 'The alveolar wall is made of type I pneumocytes, extremely thin cells that keep the diffusion distance short. Type II pneumocytes secrete surfactant, which stops the alveoli sticking together when you breathe out.', cs: 'B3.1.2, B3.1.4', ch: 'B2.3.8' },
-        { at: V(-44, -28, 9), n: 'Gas exchange', s: 'Oxygen (white) diffuses from the air in the alveolus into the blood. Carbon dioxide (grey) diffuses the other way. The walls of the alveolus and the capillary are each one cell thick.', h: 'Steep concentration gradients are kept by ventilation, which brings fresh air, and by blood flow, which carries oxygenated blood away. Look at the capillaries: blood arrives purple and leaves red.', cs: 'B3.1.2, B3.1.3', ch: 'B3.1.3' }
+        { at: V(-42, -24, 8), n: 'Alveoli', s: 'The airways end in clusters of tiny air sacs, the alveoli. Together they give a huge surface area (about the size of a tennis court) for gas exchange.', h: 'The alveolar wall is made of type I pneumocytes, extremely thin cells that keep the diffusion distance short. Type II pneumocytes secrete surfactant, which stops the alveoli sticking together when you breathe out.', cs: 'B3.1.2, B3.1.4', ch: 'B2.3.8', dives: [D_ALV] },
+        { at: V(-44, -28, 9), n: 'Gas exchange', s: 'Oxygen (white) diffuses from the air in the alveolus into the blood. Carbon dioxide (grey) diffuses the other way. The walls of the alveolus and the capillary are each one cell thick.', h: 'Steep concentration gradients are kept by ventilation, which brings fresh air, and by blood flow, which carries oxygenated blood away. Look at the capillaries: blood arrives purple and leaves red.', cs: 'B3.1.2, B3.1.3', ch: 'B3.1.3', dives: [D_ALV] }
       ],
       side: '<h3>Breathing</h3><p id="breath" style="margin:0">Breathing in</p><div class="row"><span class="dot" style="background:#ffffff"></span>Oxygen into the blood</div><div class="row"><span class="dot" style="background:#8a8f99"></span>Carbon dioxide out of the blood</div><div class="row"><span class="dot" style="background:#7b5cd6"></span>Deoxygenated blood</div><div class="row"><span class="dot" style="background:#c1121f"></span>Oxygenated blood</div>',
       update(dt, A) {
@@ -154,7 +275,7 @@ window.JOURNEY = {
         lungs.scale.set(vol, 1 + 0.08 * s, vol); dia.position.y = -78 - 4 * s; dia.scale.y = 1 - 0.18 * s; ribs.position.y = 1.5 * s; ribs.scale.set(1 + 0.03 * s, 1, 1 + 0.03 * s);
         const nowIn = s > 0; if (nowIn !== breathIn) { breathIn = nowIn; const b = document.getElementById('breath'); if (b) b.textContent = nowIn ? 'Breathing in: diaphragm contracts, ribs move up and out' : 'Breathing out: diaphragm relaxes, ribs move down and in'; }
         const run = A.paused ? 0 : dt;
-        cells.forEach(c => { c.u = (c.u + run * 0.08) % 1; c.m.position.copy(c.c.getPointAt(c.u)); c.m.material.color.setHex(c.u > 0.5 ? 0xc1121f : 0x7b5cd6); c.m.rotation.y += run; });
+        cells.forEach(c => { c.u = (c.u + run * 0.08) % 1; c.m.position.copy(c.c.getPointAt(c.u)); c.m.material.color.setHex(c.u > 0.5 ? 0xc8102e : 0x6b1f52); c.m.material.emissive.copy(c.m.material.color); c.m.rotation.y += run; });
         o2.forEach(p => { p.t = (p.t + run * 0.25) % 1; const target = p.c.getPointAt(0.5 + 0.3 * (p.t)); p.m.position.copy(p.a.position).lerp(target, p.t); });
         co2.forEach(p => { p.t = (p.t + run * 0.22) % 1; const from = p.c.getPointAt(0.3); p.m.position.copy(from).lerp(p.a.position, p.t); });
       }
@@ -167,7 +288,11 @@ window.JOURNEY = {
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
    rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
    hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
-   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes.
+   Close-ups (2026-11-17): a stop may carry dive (or dives: [..]) = {n, bg, target, dist, yaw, pitch, side,
+   steps:[{n,s,h,cs,ch,at,dist}], build(api) -> {update(dt,api,step), onStep(i,step)}}. W.dives lists close-ups for the outside view.
+   A close-up is built once, in its own scene, the first time it is opened; its labels show only while it is open.
+   The page may open one itself with api.openDive(d); location.hash #zoom-<n> opens W.dives[n] at load. */
 (function(){
 'use strict';
 const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -188,7 +313,7 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
   T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
   tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
-  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
   anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
   onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
   side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
@@ -201,35 +326,73 @@ const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd1
 const camOff=W.camOffset||api.V(0,3,5);
 let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
 api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
-function showStop(){ const info=$('info');
+// ---------- close-ups ----------
+const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
+const dSun=new THREE.DirectionalLight(0xffffff,0.6); dSun.position.set(30,60,50); diveScene.add(dSun);
+const dCam=new THREE.PerspectiveCamera(50,1,0.1,900); dCam.add(new THREE.PointLight(0xffffff,0.35,300)); diveScene.add(dCam);
+let dive=null, dStep=0, dYaw=0.5, dPitch=0.25, dDist=60, dDistGoal=60, sideBefore=null;
+const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
+function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
+function openDive(d){
+  if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
+  diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
+  dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
+  dYaw=d.yaw!=null?d.yaw:0.5; dPitch=d.pitch!=null?d.pitch:0.25;
+  renderer.setClearColor(new THREE.Color(d.bg||th.bg||'#0b1a2a')); sideBefore=$('side').hidden?null:$('side').innerHTML;
+  if(d.side) api.side(d.side); else $('side').hidden=true; showDive(); }
+function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
+function closeDive(){ leaveDive(); showStop(); }
+api.openDive=openDive;
+function showDive(){ const info=$('info'), st=dive.steps[dStep];
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
+  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
+  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+  $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
+  dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
+  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
+function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+function showStop(){ if(dive) return showDive(); const info=$('info');
   if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
     info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
     info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
-    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
   const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
   info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
   info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
-  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
-function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
 $('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
 $('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
-window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); else if(e.code==='Escape'&&dive) closeDive(); });
 let drag=null;
 canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
 canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
-  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+  if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
+  else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
-canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
 window.addEventListener('resize',resize);
 const v=new THREE.Vector3(); let last=performance.now();
 function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
   const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
   hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
+    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
+    dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
+      if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
+    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
   if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
   if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
     camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
@@ -237,11 +400,13 @@ function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
   else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;
-  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+  labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
   renderer.render(scene,camera); requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
+{ const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
+window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

@@ -721,6 +721,7 @@ body{background-image:
 .sim-type{font:700 12px var(--ui);text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:99px;color:#fff;background:var(--deep)}
 .sim-type.sim-interactive{background:var(--violet)}
 .sim-type.sim-anim{background:var(--magenta)}
+.sim-type.sim-walk{background:#0f766e}
 .sim-slide{font:600 12.5px var(--mono);background:var(--soft);color:var(--fg);border:0;border-radius:8px;padding:3px 8px}
 button.sim-slide{cursor:pointer}button.sim-slide:hover{outline:2px solid var(--violet)}
 .sim-by{margin:0;font:600 13.5px var(--ui);color:var(--muted)}
@@ -757,3 +758,12 @@ html.sim-open-page{overflow:hidden}
 :root[data-theme="dark"] .sim-tabs button[aria-pressed="true"]{background:var(--violet)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sim-tabs button[aria-pressed="true"]{background:var(--violet)}}
 .sim-own-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+/* Who made each simulation (2026-11-17): What the Cell teal, PhET orange, other sites slate */
+.sim-card.src-own{border-color:#0f766e;border-left-width:8px}
+.sim-card.src-phet{border-color:#f08a24;border-left-width:8px}
+.sim-card.src-other{border-left:8px solid #7b8aa0}
+.sim-feature.src-own{border-left:8px solid #2dd4bf}
+.sim-key{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 0 14px;font:600 14px var(--ui);color:var(--fg)}
+.sim-key span{display:inline-flex;align-items:center;gap:7px}
+.sim-key span::before{content:"";width:22px;height:12px;border-radius:4px;background:#7b8aa0}
+.sim-key .k-own::before{background:#0f766e}.sim-key .k-phet::before{background:#f08a24}

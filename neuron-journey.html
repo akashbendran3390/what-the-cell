@@ -48,6 +48,8 @@ button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 .nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .nav button{background:rgba(255,255,255,.1)}
 .nav button.go{background:var(--accent);color:#1d1400}
+.nav button.zoom{background:transparent;border:1.5px solid var(--accent);color:var(--accent);padding:7px 13px}
+.nav button.zoom:hover{background:rgba(255,209,102,.12)}
 #side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
 #side h3{margin:0 0 4px;font:800 16px var(--display)}
 #side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
@@ -138,18 +140,193 @@ window.JOURNEY = {
     const PERIOD = 4.5; const apPos = t => { const f = (t % PERIOD) / PERIOD; return { f, x: -60 + f * 1.6 * 130 }; };
     function vm(dtSince) { if (dtSince < 0 || dtSince > 0.9) return -70; const s = dtSince / 0.9; if (s < 0.25) return -70 + 100 * (s / 0.25); if (s < 0.55) return 30 - 110 * ((s - 0.25) / 0.3); return -80 + 10 * ((s - 0.55) / 0.45); }
     const hero = new THREE.Mesh(new THREE.SphereGeometry(0.6, 12, 8), M(0xffd166, { emissive: 0x664400 })); scene.add(hero);
+    // ===================== close-ups (2026-11-17) =====================
+    const cl = (x, a, b) => Math.max(a, Math.min(b, x)), ramp = (p, a, b) => cl((p - a) / (b - a), 0, 1), ease = k => k * k * (3 - 2 * k);
+    // A patch of phospholipid bilayer: heads as instanced spheres, tails as short lines. Lies in the x-z plane at y=0.
+    function bilayer(g, W, Dp, gapAt) { const heads = []; for (let x = -W / 2; x <= W / 2; x += 1.25) for (let z = -Dp / 2; z <= Dp / 2; z += 1.25) { if (gapAt && gapAt.some(p => Math.hypot(x - p.x, z - p.z) < p.r)) continue; heads.push([x, z]); }
+      const hg = new THREE.SphereGeometry(0.5, 8, 6), hm = new THREE.MeshStandardMaterial({ color: 0xf2c879, roughness: 0.5 }); const inst = new THREE.InstancedMesh(hg, hm, heads.length * 2); const mt = new THREE.Matrix4(); let k = 0;
+      heads.forEach(([x, z]) => { mt.makeTranslation(x, 2, z); inst.setMatrixAt(k++, mt); mt.makeTranslation(x, -2, z); inst.setMatrixAt(k++, mt); }); g.add(inst);
+      const tp = []; heads.forEach(([x, z]) => { tp.push(x - 0.15, 1.6, z, x - 0.15, 0.15, z, x + 0.15, 1.6, z, x + 0.15, 0.15, z, x - 0.15, -1.6, z, x - 0.15, -0.15, z, x + 0.15, -1.6, z, x + 0.15, -0.15, z); });
+      const tg = new THREE.BufferGeometry(); tg.setAttribute('position', new THREE.Float32BufferAttribute(tp, 3)); g.add(new THREE.LineSegments(tg, new THREE.LineBasicMaterial({ color: 0xd9b26a, transparent: true, opacity: 0.6 }))); }
+    // A channel: ring of subunits around a pore through the bilayer. open() widens it.
+    function channel(g, x, z, col, n) { const grp = new THREE.Group(); grp.position.set(x, 0, z); g.add(grp); const subs = [];
+      for (let i = 0; i < (n || 4); i++) { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 5.4, 14), M(col, { roughness: 0.45 })); grp.add(s); subs.push({ s, a: i * Math.PI * 2 / (n || 4) }); }
+      const o = { grp, k: 0, set(k) { o.k = k; subs.forEach(u => { const r = 0.95 + 0.75 * k; u.s.position.set(Math.cos(u.a) * r, 0, Math.sin(u.a) * r); }); } }; o.set(0); return o; }
+    const ionMat = { na: M(0xff8c42, { emissive: 0x552200 }), k: M(0x9b5de5, { emissive: 0x2a0a4a }), ca: M(0x6bd66b, { emissive: 0x0a3a0a }), cl: M(0xbdf26b, { emissive: 0x2a3a00 }), nt: M(0x4fb3ff, { emissive: 0x0a2a55 }) };
+    const ion = (g, kind, r) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r || 0.45, 10, 8), ionMat[kind]); g.add(m); return m; };
+
+    // ---------- 1. Synaptic transmission ----------
+    const D_SYN = { n: 'Synaptic transmission', bg: '#0b1222', dist: 62, target: V(0, 0, 0), yaw: 0.12, pitch: 0.15,
+      steps: [
+        { n: 'A synapse', s: 'A synapse is a junction between two neurons (or a neuron and a muscle). The end of the first neuron (presynaptic knob, left) is separated from the next cell (right) by a gap of about 20 nm, the synaptic cleft. Electrical impulses cannot jump the gap, so a chemical carries the signal across.', cs: 'C2.2.5' },
+        { n: '1. An impulse arrives', s: 'An action potential travels down the axon and depolarizes the membrane of the presynaptic knob.', cs: 'C2.2.6' },
+        { n: '2. Calcium ions enter', s: 'The depolarization opens voltage-gated calcium channels. Calcium ions (green) diffuse into the knob, because there are far more of them outside.', cs: 'C2.2.6', at: V(-6, 0, 0), dist: 40 },
+        { n: '3. Vesicles release neurotransmitter', s: 'Calcium makes vesicles full of neurotransmitter move to the presynaptic membrane and fuse with it. The neurotransmitter (blue) is released into the cleft by exocytosis.', cs: 'C2.2.6', at: V(-4, 0, 0), dist: 36 },
+        { n: '4. Diffusion across the cleft', s: 'The neurotransmitter molecules diffuse across the narrow cleft to the postsynaptic membrane in a fraction of a millisecond.', cs: 'C2.2.6', at: V(0, 0, 0), dist: 34 },
+        { n: '5. Binding to receptors', s: 'The neurotransmitter binds to receptor proteins on the postsynaptic membrane. Each receptor is also an ion channel: binding makes it open.', cs: 'C2.2.7', at: V(3, 0, 0), dist: 34 },
+        { n: '6. The next cell depolarizes', s: 'Sodium ions (orange) flow in through the open receptors and depolarize the postsynaptic membrane: an excitatory postsynaptic potential. If enough sodium enters to reach threshold, a new action potential starts in the next neuron.', h: 'One synapse is rarely enough: many small potentials must add up (summation) to reach threshold.', cs: 'C2.2.7', ch: 'C2.2.14', at: V(6, 0, 0), dist: 40 },
+        { n: '7. The signal is switched off', s: 'Acetylcholinesterase (green enzymes in the cleft) breaks acetylcholine down. The choline part is taken back into the presynaptic knob, so the receptors close and the signal stops quickly.', h: 'Other neurotransmitters, such as dopamine, are removed whole by reuptake pumps instead.', cs: 'C2.2.7', at: V(0, 0, 0), dist: 38 },
+        { n: '8. Recycling', s: 'In the knob, choline is joined to acetyl groups again and loaded into new vesicles. This uses ATP from the many mitochondria (orange) in the knob.', cs: 'C2.2.6', at: V(-8, 0, 0), dist: 40 },
+        { n: 'Chemicals that change transmission', s: 'Some chemicals from outside the body act at synapses. Neonicotinoid insecticides (yellow) bind to acetylcholine receptors and are not broken down by acetylcholinesterase, so the receptors stay open; in insects this causes paralysis and death.', h: 'Cocaine blocks dopamine reuptake pumps, so dopamine stays in the cleft and keeps stimulating the next neuron.', ch: 'C2.2.12', cs: 'C2.2.12', at: V(3, 0, 0), dist: 36 },
+        { n: 'Inhibitory synapses', s: 'At an inhibitory synapse the neurotransmitter (such as GABA) opens chloride channels. Negative chloride ions (lime) flow in and make the inside even more negative (hyperpolarized), so the next neuron is less likely to fire.', ch: 'C2.2.13', cs: 'C2.2.13', at: V(5, 0, 0), dist: 40 },
+        { n: 'Watch it all', s: 'The whole sequence plays on a loop: impulse, calcium in, exocytosis, diffusion, binding, sodium in, breakdown and recycling. In a real synapse this takes about one millisecond.', cs: 'C2.2.5, C2.2.6, C2.2.7' }
+      ],
+      build(D) { const g = D.scene; let step = 0, lt = 0, tt = 0;
+        const pre = new THREE.Mesh(new THREE.SphereGeometry(16, 48, 36), T(0xd9b8f5, 0.3)); pre.position.x = -19; g.add(pre);
+        const preM = new THREE.Mesh(new THREE.SphereGeometry(16.05, 48, 36), new THREE.MeshBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); preM.position.x = -19; g.add(preM);
+        g.add(tube([V(-60, 0, 0), V(-34, 0, 0)], 3, T(0xd9b8f5, 0.3), 10));
+        const postC = V(41, 0, 0), postR = 38; const post = new THREE.Mesh(new THREE.SphereGeometry(postR, 64, 48), T(0x9ad7ff, 0.25)); post.position.copy(postC); g.add(post);
+        const postM = new THREE.Mesh(new THREE.SphereGeometry(postR + 0.05, 64, 48), new THREE.MeshBasicMaterial({ color: 0xffaa33, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); postM.position.copy(postC); g.add(postM);
+        const onPre = (a, b, d) => { const dir = V(Math.cos(b) * Math.cos(a), Math.sin(a), Math.sin(b) * Math.cos(a)); return V(-19, 0, 0).add(dir.multiplyScalar(16 + (d || 0))); };
+        const onPost = (a, b, d) => { const dir = V(-Math.cos(b) * Math.cos(a), Math.sin(a), Math.sin(b) * Math.cos(a)); return postC.clone().add(dir.multiplyScalar(postR + (d || 0))); };
+        // calcium channels (presynaptic), receptors (postsynaptic)
+        const caCh = [[0.42, 0.1], [-0.42, -0.1], [0.05, 0.45], [0.0, -0.45]].map(([a, b]) => { const c = new THREE.Group(); const p = onPre(a, b); c.position.copy(p); c.lookAt(V(-19, 0, 0)); g.add(c);
+          const subs = [0, 1, 2, 3].map(i => { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 2.4, 10), M(0x6bd66b)); s.rotation.x = Math.PI / 2; c.add(s); return { s, a: i * Math.PI / 2 }; }); return { c, subs, p }; });
+        const recs = []; for (let i = 0; i < 10; i++) { const a = (i % 5 - 2) * 0.09, b = (Math.floor(i / 5) - 0.5) * 0.18 + (i % 2) * 0.04; const p = onPost(a, b); const c = new THREE.Group(); c.position.copy(p); c.lookAt(postC); g.add(c);
+          const subs = [0, 1, 2, 3, 4].map(j => { const s = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 2.6, 10), M(0x3fd0c0)); s.rotation.x = Math.PI / 2; c.add(s); return { s, a: j * Math.PI * 2 / 5 }; }); recs.push({ c, subs, p }); }
+        // vesicles with neurotransmitter inside
+        const ves = []; for (let i = 0; i < 18; i++) { const home = onPre(A.rnd(-0.5, 0.5), A.rnd(-0.5, 0.5), -A.rnd(3, 9)); const v = new THREE.Group(); v.position.copy(home); g.add(v);
+          v.add(new THREE.Mesh(new THREE.SphereGeometry(1.3, 16, 12), T(0xffffff, 0.35))); for (let k = 0; k < 6; k++) { const d = ion(v, 'nt', 0.25); d.position.copy(A.onSphere(0.7)); }
+          const dock = onPre(A.rnd(-0.22, 0.22), A.rnd(-0.22, 0.22), -1.2); ves.push({ v, home, dock, rel: i < 8 }); }
+        // neurotransmitter in the cleft
+        const nts = []; ves.filter(o => o.rel).forEach((o, vi) => { for (let k = 0; k < 6; k++) { const m = ion(g, 'nt', 0.32); const r = recs[(vi * 6 + k) % recs.length]; nts.push({ m, from: o.dock.clone().add(V(1.6, 0, 0)), to: r.p.clone().add(V(-0.9, A.rnd(-0.3, 0.3), A.rnd(-0.3, 0.3))), w: A.onSphere(1.5), r }); } });
+        const chol = nts.map(n => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), M(0xbfd7ff)); g.add(m); return m; });
+        // calcium ions, sodium ions, chloride ions
+        const cas = caCh.flatMap(c => [0, 1, 2, 3, 4].map(() => ({ m: ion(g, 'ca', 0.4), out: c.p.clone().add(V(3.5, A.rnd(-2.5, 2.5), A.rnd(-2.5, 2.5))), inn: c.p.clone().add(V(-A.rnd(3, 8), A.rnd(-3, 3), A.rnd(-3, 3))) })));
+        const nas = recs.flatMap(r => [0, 1, 2].map(() => ({ m: ion(g, 'na', 0.45), out: r.p.clone().add(V(-1.8, A.rnd(-1.5, 1.5), A.rnd(-1.5, 1.5))), inn: r.p.clone().add(V(A.rnd(3, 9), A.rnd(-3, 3), A.rnd(-3, 3))), r })));
+        nas.forEach(o => { o.cl = new THREE.Mesh(new THREE.SphereGeometry(0.5, 10, 8), ionMat.cl); g.add(o.cl); });
+        // acetylcholinesterase in the cleft, neonicotinoid blockers, mitochondria in the knob
+        const ache = []; for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.9, 14, 10, 0.5, Math.PI * 2 - 1), M(0x2a9d8f, { side: THREE.DoubleSide })); m.position.set(A.rnd(-1.5, 1.5), A.rnd(-5, 5), A.rnd(-5, 5)); g.add(m); ache.push({ m, home: m.position.clone() }); }
+        const blockers = recs.map(r => { const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.55), M(0xffd60a, { emissive: 0x443300 })); m.position.copy(r.p).add(V(-1.0, 0, 0)); g.add(m); return m; });
+        for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 10), M(0xf08a3c)); m.scale.set(3, 1.3, 1.3); m.position.copy(onPre(A.rnd(-0.7, 0.7), A.rnd(-0.7, 0.7), -A.rnd(9, 12))); m.rotation.set(A.rnd(0, 3), A.rnd(0, 3), 0); g.add(m); }
+        const lab = (t, p, sts) => ({ el: D.label(t, p), sts });
+        const labs = [lab('Presynaptic knob', V(-22, 12, 0), [0, 1, 11]), lab('Synaptic cleft', V(1, -11, 0), [0, 4, 11]), lab('Postsynaptic neuron', V(16, 13, 0), [0, 6, 11]), lab('Voltage-gated calcium channel', V(-2.5, 8, 0), [0, 2]),
+          lab('Vesicle of neurotransmitter', V(-12, -5, 0), [0, 3, 8]), lab('Receptor (ligand-gated channel)', V(5, 6, 4), [0, 5, 9, 10]), lab('Acetylcholinesterase', V(0, -6, 4), [7]), lab('Mitochondrion', V(-28, 4, 0), [8]), lab('Neonicotinoid', V(1, 3, -4), [9]), lab('Chloride ions', V(9, -3, 3), [10]), lab('Sodium ions', V(9, -3, 3), [6])];
+        return { onStep(i) { step = i; lt = 0; labs.forEach(l => { l.el.dataset.off = l.sts.includes(i) ? '0' : '1'; }); },
+          update(dt) { if (!A.paused) { lt += dt / 3.2; tt += dt; } if (lt > 1.25) lt = 0; const L = Math.min(1, lt);
+            let P; if (step === 0) P = -0.5; else if (step <= 8) P = step - 1 + L; else if (step === 9) P = 5.5; else if (step === 10) P = 4 + L * 2; else P = (tt / 1.4) % 9.5;
+            const blockMode = step === 9, inhib = step === 10;
+            preM.material.opacity = 0.35 * Math.sin(Math.PI * ramp(P, 0, 1.3));
+            caCh.forEach(c => { const k = P > 0.8 && P < 7 ? 1 : 0; c.subs.forEach(u => { const r = 0.6 + 0.5 * k; u.s.position.set(Math.cos(u.a) * r, Math.sin(u.a) * r, 0); }); });
+            cas.forEach((o, i) => { const k = ease(ramp(P, 1, 2)); o.m.visible = P > 0.5 && P < 8; o.m.position.copy(o.out).lerp(o.inn, k).add(V(0, Math.sin(tt * 3 + i) * 0.2, 0)); });
+            ves.forEach(o => { if (!o.rel) { o.v.visible = true; o.v.position.copy(o.home); return; } const go = ease(ramp(P, 2, 2.7)), fuse = ramp(P, 2.7, 3), back = ramp(P, 7.2, 8.4);
+              if (P < 7.2) { o.v.position.copy(o.home).lerp(o.dock, go); o.v.scale.setScalar(1 - 0.85 * fuse); o.v.visible = fuse < 1; } else { o.v.visible = true; o.v.scale.setScalar(0.4 + 0.6 * back); o.v.position.copy(o.dock).lerp(o.home, back); } });
+            nts.forEach((n, i) => { const k = ease(ramp(P, 2.9, 4)); const wob = Math.sin(k * Math.PI); n.m.visible = (P > 2.85 && P < 6.6) || blockMode && false;
+              n.m.position.copy(n.from).lerp(n.to, k).addScaledVector(n.w, wob); if (P > 6) { const br = ramp(P, 6, 6.6); n.m.scale.setScalar(1 - br * 0.6); }  else n.m.scale.setScalar(1);
+              const c = chol[i]; const back = ramp(P, 6.5, 7.6); c.visible = !inhib && !blockMode && P > 6.4 && P < 7.6; c.position.copy(n.to).lerp(n.from, ease(back)).add(V(0, 0.4, 0)); });
+            if (inhib) nts.forEach(n => { n.m.visible = P > 4 || true; n.m.position.copy(n.to); });
+            if (blockMode) nts.forEach(n => { n.m.visible = false; });
+            const open = blockMode ? 1 : inhib ? 1 : (P > 4.3 && P < 6.8 ? 1 : 0);
+            recs.forEach(r => { r.subs.forEach(u => { const rr = 0.55 + 0.45 * open; u.s.position.set(Math.cos(u.a) * rr, Math.sin(u.a) * rr, 0); u.s.material.color.setHex(inhib ? 0x8d6ad8 : 0x3fd0c0); }); });
+            nas.forEach((o, i) => { const k = blockMode ? ((tt * 0.5 + i * 0.13) % 1) : inhib ? ramp(P, 4.2, 6) : ease(ramp(P, 5, 6)); o.m.visible = !inhib && (blockMode || (P > 4.6 && P < 7.5)); o.cl.visible = inhib;
+              const p = o.out.clone().lerp(o.inn, k); o.m.position.copy(p); o.cl.position.copy(p); });
+            const ep = inhib ? 0 : blockMode ? 0.3 : 0.4 * Math.sin(Math.PI * ramp(P, 5.3, 7)); postM.material.color.setHex(inhib ? 0x4a7dff : 0xffaa33); postM.material.opacity = inhib ? 0.3 * ramp(P, 4.5, 5.5) : ep;
+            ache.forEach((a, i) => { const k = !blockMode && !inhib ? Math.sin(Math.PI * ramp(P, 5.8, 7.2)) : 0; a.m.position.copy(a.home).lerp(nts[i * 7 % nts.length].to.clone().add(V(-1.2, 0, 0)), k * 0.8); a.m.rotation.y += dt * 2; });
+            blockers.forEach(b => { b.visible = blockMode; b.rotation.y += dt; }); } };
+      } };
+
+    // ---------- 2. Resting potential and the sodium-potassium pump ----------
+    const D_REST = { n: 'Resting potential', bg: '#0b1222', dist: 58, target: V(0, 0, 0), yaw: 0.35, pitch: 0.18,
+      side: '<h3>Inside the axon</h3><p style="margin:0">Outside: lots of Na<sup>+</sup> (orange), little K<sup>+</sup>.<br>Inside: lots of K<sup>+</sup> (purple), little Na<sup>+</sup>.</p><p style="margin:6px 0 0;font:800 22px var(--display)" id="rp-mv">-70 mV</p>',
+      steps: [
+        { n: 'The axon membrane at rest', s: 'This is a tiny patch of axon membrane: tissue fluid above, cytoplasm below. At rest there are many more sodium ions outside and many more potassium ions inside, and the inside is about 70 mV negative compared with the outside.', cs: 'C2.2.2' },
+        { n: 'The sodium-potassium pump', s: 'This protein pump uses energy from ATP to move ions against their concentration gradients. Each cycle carries 3 sodium ions out and 2 potassium ions in.', cs: 'C2.2.2', ch: 'B2.1.15', at: V(-8, 0, 0), dist: 34 },
+        { n: 'Step by step', s: 'Three sodium ions bind inside. ATP is split and a phosphate attaches, changing the pump’s shape so it opens to the outside and releases the sodium. Two potassium ions bind outside; the phosphate is released, the pump flips back and lets potassium go inside.', ch: 'B2.1.15', cs: 'C2.2.2', at: V(-8, 0, 0), dist: 30 },
+        { n: 'Potassium leaks out', s: 'The membrane also has potassium leak channels (purple). Some potassium diffuses back out through them, but few sodium channels are open, so positive charge builds up outside.', cs: 'C2.2.2', at: V(10, 0, 0), dist: 34 },
+        { n: 'The result: -70 mV', s: 'Pumping out more positive ions than are pumped in, plus potassium leaking out, leaves the inside negative: the resting potential. The neuron is now ready to fire.', h: 'Up to a quarter of the body’s ATP at rest is used by sodium-potassium pumps, much of it in the brain.', cs: 'C2.2.2' }
+      ],
+      build(D) { const g = D.scene; let step = 0, tt = 0, cyc = 0; bilayer(g, 50, 26, [{ x: -8, z: 0, r: 3.4 }, { x: 10, z: 0, r: 2.6 }, { x: 18, z: -6, r: 2.6 }]);
+        const pump = new THREE.Group(); pump.position.set(-8, 0, 0); g.add(pump); const pa = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 7, 20, 1, false, 0, Math.PI), M(0x3a86ff, { side: THREE.DoubleSide })); const pb = pa.clone(); pb.rotation.y = Math.PI; pump.add(pa, pb);
+        const atp = new THREE.Mesh(new THREE.SphereGeometry(0.7, 12, 8), M(0x80ed99, { emissive: 0x114411 })); g.add(atp); const pho = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 8), M(0xffe066, { emissive: 0x443300 })); g.add(pho);
+        const leaks = [V(10, 0, 0), V(18, 0, -6)].map(p => { const c = channel(g, p.x, p.z, 0x9b5de5, 4); c.set(0.6); return c; });
+        const bg = []; for (let i = 0; i < 70; i++) { const out = Math.random() < 0.5; const kind = out ? (Math.random() < 0.82 ? 'na' : 'k') : (Math.random() < 0.82 ? 'k' : 'na'); const m = ion(g, kind, 0.42); const p = V(A.rnd(-24, 24), out ? A.rnd(4, 13) : -A.rnd(4, 13), A.rnd(-12, 12)); m.position.copy(p); bg.push({ m, p, ph: A.rnd(0, 6) }); }
+        const pNa = [0, 1, 2].map(() => ion(g, 'na', 0.5)), pK = [0, 1].map(() => ion(g, 'k', 0.5)); const lk = [0, 1, 2].map(() => ({ m: ion(g, 'k', 0.45), q: Math.random() }));
+        const mk = (t, p) => D.label(t, p); const lb = [mk('Tissue fluid (outside)', V(-20, 12, -12)), mk('Cytoplasm (inside)', V(-20, -12, -12)), mk('Sodium-potassium pump', V(-8, 6, 4)), mk('Potassium leak channel', V(12, 5, 4)), mk('ATP', V(-11, -6, 3))];
+        const mv = () => document.getElementById('rp-mv');
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) { tt += dt; cyc = (cyc + dt / (step === 2 ? 6 : 3.5)) % 1; } const c = cyc;
+            bg.forEach(b => { b.m.position.set(b.p.x + Math.sin(tt + b.ph) * 0.5, b.p.y + Math.cos(tt * 0.8 + b.ph) * 0.4, b.p.z); });
+            // pump cycle: 0-.25 Na bind inside, .25-.35 ATP -> phosphorylate, .35-.5 open out, release Na; .5-.7 K bind outside; .7-.8 dephosphorylate; .8-1 open in, release K
+            const outward = c > 0.32 && c < 0.75; pa.position.y = outward ? 0.6 : -0.6; pb.position.y = outward ? 0.6 : -0.6; pa.rotation.z = outward ? 0.1 : -0.1; pb.rotation.z = outward ? -0.1 : 0.1;
+            pNa.forEach((m, i) => { const st = V(-14 + i * 2.5, -9, 3), site = V(-8.6 + i * 0.6, -0.5, 0.6 * i - 0.6), end = V(-14 + i * 3, 9, -3); let p;
+              if (c < 0.25) p = st.clone().lerp(site, ease(c / 0.25)); else if (c < 0.36) p = site.clone(); else if (c < 0.55) p = site.clone().lerp(end, ease((c - 0.36) / 0.19)); else p = end; m.position.copy(p); m.visible = c < 0.7; });
+            pK.forEach((m, i) => { const st = V(-4 + i * 3, 9, 3), site = V(-7.4 + i * 0.8, 0.5, 0.4), end = V(-3 + i * 3, -9, -2); let p;
+              if (c < 0.5) p = st; else if (c < 0.66) p = st.clone().lerp(site, ease((c - 0.5) / 0.16)); else if (c < 0.8) p = site.clone(); else p = site.clone().lerp(end, ease((c - 0.8) / 0.2)); m.position.copy(p); m.visible = c > 0.45; });
+            atp.visible = c > 0.15 && c < 0.33; atp.position.set(-10.5, -4.5 + (c - 0.15) * 10, 2); pho.visible = c > 0.3 && c < 0.78; pho.position.set(-9, -3.2, 2.4);
+            lk.forEach((o, i) => { if (!A.paused) o.q = (o.q + dt * 0.3) % 1; const ch = leaks[i % 2].grp.position; o.m.position.set(ch.x, -8 + o.q * 16, ch.z); });
+            lb[4].dataset.off = atp.visible ? '0' : '1'; const el = mv(); if (el) el.textContent = '-70 mV'; } };
+      } };
+
+    // ---------- 3. Action potential: voltage-gated channels ----------
+    const D_AP = { n: 'An action potential', bg: '#0b1222', dist: 56, target: V(0, 0, 0), yaw: 0.3, pitch: 0.2,
+      side: '<h3>Membrane potential</h3><canvas id="ap-tr" width="540" height="220" style="display:block;width:100%;height:110px"></canvas><p style="margin:2px 0 0;font:800 18px var(--display)" id="ap-mv">-70 mV</p>',
+      steps: [
+        { n: 'Two kinds of gated channel', s: 'Along the axon are voltage-gated sodium channels (orange) and voltage-gated potassium channels (purple). They are closed at rest, and open when the membrane potential changes.', cs: 'C2.2.8', ch: 'B2.1.14' },
+        { n: 'Threshold', s: 'A small depolarization (from a stimulus or from the region next door) raises the potential from -70 mV to about -50 mV, the threshold. Then the sodium channels open.', cs: 'C2.2.8' },
+        { n: 'Depolarization', s: 'Sodium ions rush in down their concentration gradient. The inside becomes positive, up to about +30 mV.', cs: 'C2.2.8' },
+        { n: 'Repolarization', s: 'The sodium channels close, and the potassium channels open. Potassium ions flow out, so the inside becomes negative again.', cs: 'C2.2.8' },
+        { n: 'Overshoot and recovery', s: 'The potassium channels close slowly, so the potential briefly drops below -70 mV (hyperpolarization). Then the sodium-potassium pumps restore the resting potential.', h: 'During this refractory period the region cannot fire again, so impulses only travel one way.', cs: 'C2.2.8', ch: 'C2.2.10' },
+        { n: 'Local currents', s: 'Sodium ions that entered diffuse along inside the axon to the next region, depolarizing it to threshold. Its channels open, and so the action potential moves along the axon.', cs: 'C2.2.9' },
+        { n: 'Watch it repeat', s: 'The trace on the right shows each action potential as a spike. All action potentials are the same size: a stronger stimulus causes more of them per second, not bigger ones.', cs: 'C2.2.10' }
+      ],
+      build(D) { const g = D.scene; let step = 0, tt = 0, ph = 0; bilayer(g, 56, 24, [-14, 6].flatMap(x => [{ x, z: -3, r: 2.6 }, { x: x + 8, z: 4, r: 2.6 }]));
+        const naC = [-14, 6].map(x => channel(g, x, -3, 0xff8c42, 4)), kC = [-6, 14].map(x => channel(g, x, 4, 0x9b5de5, 4));
+        const na = [], k = []; naC.forEach(c => { for (let i = 0; i < 6; i++) na.push({ m: ion(g, 'na'), c, o: V(A.rnd(-3, 3), 0, A.rnd(-3, 3)), d: A.rnd(0, 0.2) }); });
+        kC.forEach(c => { for (let i = 0; i < 5; i++) k.push({ m: ion(g, 'k'), c, o: V(A.rnd(-3, 3), 0, A.rnd(-3, 3)), d: A.rnd(0, 0.2) }); });
+        const loc = []; for (let i = 0; i < 10; i++) loc.push({ m: ion(g, 'na', 0.4), y: -A.rnd(4, 8), z: A.rnd(-6, 6), d: Math.random() });
+        D.label('Voltage-gated sodium channel', V(-14, 6, -3)); D.label('Voltage-gated potassium channel', V(-6, -6, 4)); D.label('Outside', V(-24, 10, -10)); D.label('Inside the axon', V(-24, -10, -10));
+        let gc = null; const hist = [];
+        function vAt(p) { if (p < 0.1) return -70; if (p < 0.18) return -70 + 20 * (p - 0.1) / 0.08; if (p < 0.32) return -50 + 80 * ease((p - 0.18) / 0.14); if (p < 0.5) return 30 - 110 * ease((p - 0.32) / 0.18); if (p < 0.8) return -80 + 10 * ease((p - 0.5) / 0.3); return -70; }
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) { tt += dt; ph = (ph + dt / (step >= 6 ? 2.2 : 5)) % 1; }
+            let p = ph; if (step === 0) p = 0.02; else if (step === 1) p = 0.05 + ph * 0.15; else if (step === 2) p = 0.18 + ph * 0.15; else if (step === 3) p = 0.32 + ph * 0.18; else if (step === 4) p = 0.5 + ph * 0.5;
+            const naOpen = p > 0.18 && p < 0.33 ? 1 : 0, kOpen = p > 0.32 && p < 0.62 ? 1 : 0; naC.forEach(c => c.set(c.k + (naOpen - c.k) * Math.min(1, dt * 8))); kC.forEach(c => c.set(c.k + (kOpen - c.k) * Math.min(1, dt * 8)));
+            na.forEach(o => { const q = ramp(p, 0.18 + o.d * 0.3, 0.32); const y = 9 - 18 * ease(q); const gp = o.c.grp.position; const r = Math.abs(y) < 3 ? 0.2 : 1; o.m.position.set(gp.x + o.o.x * r, y, gp.z + o.o.z * r); });
+            k.forEach(o => { const q = ramp(p, 0.33 + o.d * 0.3, 0.55); const y = -9 + 18 * ease(q); const gp = o.c.grp.position; const r = Math.abs(y) < 3 ? 0.2 : 1; o.m.position.set(gp.x + o.o.x * r, y, gp.z + o.o.z * r); });
+            loc.forEach(o => { const vis = step === 5 || step === 6; o.m.visible = vis; if (!A.paused) o.d = (o.d + dt * 0.25) % 1; o.m.position.set(-14 + o.d * 44, o.y, o.z); });
+            const v = vAt(p); hist.push(v); if (hist.length > 180) hist.shift();
+            if (!gc) { const c = document.getElementById('ap-tr'); if (c) gc = c.getContext('2d'); }
+            if (gc) { const W = 540, H = 220; gc.clearRect(0, 0, W, H); gc.strokeStyle = 'rgba(200,215,255,.25)'; gc.fillStyle = 'rgba(200,215,255,.7)'; gc.font = '20px sans-serif';
+              [30, -50, -70].forEach(mv => { const y = H - 12 - (mv + 90) / 130 * (H - 24); gc.beginPath(); gc.moveTo(60, y); gc.lineTo(W, y); gc.stroke(); gc.fillText(mv + '', 4, y + 6); });
+              gc.strokeStyle = '#ffd166'; gc.lineWidth = 3; gc.beginPath(); hist.forEach((vv, i) => { const x = 60 + i / 180 * (W - 60), y = H - 12 - (vv + 90) / 130 * (H - 24); i ? gc.lineTo(x, y) : gc.moveTo(x, y); }); gc.stroke(); }
+            const el = document.getElementById('ap-mv'); if (el) el.textContent = Math.round(v) + ' mV'; } };
+      } };
+
+    // ---------- 4. Saltatory conduction: myelinated vs unmyelinated ----------
+    const D_SALT = { n: 'Myelin and saltatory conduction', bg: '#0b1222', dist: 90, target: V(0, 0, 0), yaw: 0.25, pitch: 0.3,
+      steps: [
+        { n: 'A race between two axons', s: 'Both axons are the same width. The top one is unmyelinated: the impulse must pass every bit of membrane. The bottom one is wrapped in myelin, so the impulse only happens at the gaps.', cs: 'C2.2.4' },
+        { n: 'Myelin', s: 'Myelin is made by Schwann cells (in nerves) that wrap round the axon many times, laying down layers of membrane rich in lipid. It is an electrical insulator: ions cannot cross the membrane where it is covered.', cs: 'C2.2.4', ch: 'C2.2.11', at: V(0, -10, 0), dist: 45 },
+        { n: 'Jumping from node to node', s: 'Action potentials only occur at the nodes of Ranvier, the small gaps between Schwann cells. Local currents jump from one node to the next: saltatory conduction.', cs: 'C2.2.4', ch: 'C2.2.11', at: V(0, -10, 0), dist: 55 },
+        { n: 'Who wins?', s: 'The myelinated impulse arrives many times sooner. Myelinated fibres can conduct at up to about 100 m per second; unmyelinated ones at about 1 m per second.', h: 'Wider axons also conduct faster. Squid have giant unmyelinated axons for fast escape responses, while vertebrates use myelin to keep nerves thin.', cs: 'C2.2.4' }
+      ],
+      build(D) { const g = D.scene; let tt = 0; const L = 90, x0 = -45;
+        const ax = y => g.add(tube([V(x0, y, 0), V(x0 + L, y, 0)], 1.2, M(0xe9c9ff), 40));
+        ax(10); ax(-10); const nodes = []; for (let x = x0 + 2; x < x0 + L; x += 11) nodes.push(x);
+        for (let i = 0; i < nodes.length - 1; i++) { const sc = new THREE.Group(); sc.position.set(nodes[i] + 5.5, -10, 0); g.add(sc); const m = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 9.6, 28), M(0xfff3c4, { roughness: 0.4, transparent: true, opacity: 0.85 })); m.rotation.z = Math.PI / 2; sc.add(m);
+          for (let k = 1; k < 4; k++) { const r = new THREE.Mesh(new THREE.TorusGeometry(1.2 + k * 0.45, 0.06, 6, 40), M(0xd9c48a)); r.rotation.y = Math.PI / 2; r.position.x = -4.85; sc.add(r); }
+          const nuc = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), M(0x6a3fa0)); nuc.scale.set(1.6, 0.7, 0.9); nuc.position.set(0, 3, 0); sc.add(nuc); }
+        const glowT = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 6, 20), M(0xffaa00, { emissive: 0xff8800, transparent: true, opacity: 0.8 })); glowT.rotation.z = Math.PI / 2; g.add(glowT);
+        const glowB = new THREE.Mesh(new THREE.TorusGeometry(1.8, 0.6, 10, 24), M(0xffaa00, { emissive: 0xff8800 })); glowB.rotation.y = Math.PI / 2; g.add(glowB);
+        const arc = new THREE.Mesh(new THREE.TorusGeometry(5.5, 0.18, 6, 30, Math.PI), M(0xffd166, { emissive: 0x664400, transparent: true, opacity: 0.8 })); g.add(arc);
+        D.label('Unmyelinated axon', V(x0 - 2, 15, 0)); D.label('Myelinated axon', V(x0 - 2, -16, 0)); D.label('Schwann cell (myelin)', V(nodes[2] + 5, -4, 0)); D.label('Node of Ranvier', V(nodes[4], -15, 3));
+        return { update(dt) { if (!A.paused) tt += dt; const T2 = 7; const f = (tt % T2) / T2;
+          const xt = x0 + Math.min(1, f * 1.05) * L * 0.16; glowT.position.set(xt, 10, 0);
+          const fb = Math.min(1, f * 6); const ni = Math.min(nodes.length - 1, Math.floor(fb * (nodes.length - 1) + 0.0001)); glowB.position.set(nodes[ni], -10, 0);
+          const pn = fb * (nodes.length - 1) - ni; arc.visible = ni < nodes.length - 1; arc.position.set(nodes[ni] + 5.5, -10, 0); arc.material.opacity = 0.9 * (1 - pn); } };
+      } };
     let gctx = null;
     const route = [V(-92, 10, 0), V(-82, 4, 0), V(-72, 0, 0), V(-60, 0, 0), V(-40, 0, 0), V(-6, 0, 0), V(6, 0, 0), V(40, 0, 0), V(62, 1, 0), V(72, 2, 0), V(78, 2, 0), V(81, 2, 0)];
     return {
-      route, hero, camOffset: V(0, 4, 10), outside: { target: V(0, 0, 0), dist: 150 },
+      route, hero, camOffset: V(0, 4, 10), outside: { target: V(0, 0, 0), dist: 150 }, dives: [D_SYN, D_REST, D_AP, D_SALT],
       outsideInfo: { n: 'A motor neuron', s: 'Dendrites receive signals, the cell body holds the nucleus, and a long axon carries impulses to a synapse with another cell.', h: 'This neuron’s axon is myelinated: Schwann cells wrap round it, leaving small gaps (nodes of Ranvier) every millimetre or so.', cs: 'C2.2.1', ch: 'C2.2.11' },
       stops: [
         { at: V(-82, 4, 0), n: 'Dendrites', s: 'Dendrites receive signals from other neurons through synapses and carry them towards the cell body.', h: 'Many excitatory and inhibitory inputs arrive at once; the neuron adds them up, and only fires if the combined effect reaches the threshold.', cs: 'C2.2.1', ch: 'C2.2.14' },
-        { at: V(-60, 0, 0), n: 'Resting potential', s: 'At rest, the inside of the axon is about 70 mV negative compared with the outside. Sodium–potassium pumps use ATP to move 3 sodium ions out for every 2 potassium ions in.', h: 'The membrane is more permeable to potassium than to sodium, so potassium leaks out, adding to the charge difference.', cs: 'C2.2.2', ch: 'C2.2.2' },
-        { at: V(-40, 0, 0), n: 'Action potential', s: 'When the threshold is reached, sodium channels open and sodium ions (orange) rush in: depolarization. Then potassium channels open and potassium ions (purple) flow out: repolarization. Watch the trace on the right.', h: 'Local currents of sodium ions spread inside the axon and depolarize the next region to threshold, so the action potential travels in one direction. The region behind is briefly unable to fire (refractory).', cs: 'C2.2.3', ch: 'C2.2.8, C2.2.9, C2.2.10' },
-        { at: V(6, 0, 0), n: 'Myelin and nodes of Ranvier', s: 'The myelin sheath insulates the axon, so ion movement only happens at the nodes. The impulse jumps from node to node, which is much faster.', h: 'This saltatory conduction can reach about 100 m per second, compared with about 1 m per second in unmyelinated fibres of the same width.', cs: 'C2.2.4', ch: 'C2.2.11' },
-        { at: V(72, 2, 0), n: 'Synaptic knob', s: 'When the impulse arrives, calcium ions (green) enter the knob. Vesicles of neurotransmitter move to the membrane and release it into the cleft by exocytosis.', h: 'The knob has many mitochondria: ATP is needed to refill the vesicles and to pump calcium back out.', cs: 'C2.2.5, C2.2.6', ch: 'C2.2.6' },
-        { at: V(78, 2, 0), n: 'Synaptic cleft and receptors', s: 'The neurotransmitter (blue) diffuses across the cleft and binds to receptors on the next cell. Sodium channels open there, depolarizing the postsynaptic membrane.', h: 'The neurotransmitter is then broken down or taken back up, so each signal is brief. Chemicals such as neonicotinoids (which block acetylcholine receptors) or cocaine (which blocks reuptake) change transmission.', cs: 'C2.2.5, C2.2.7', ch: 'C2.2.12' }
+        { at: V(-60, 0, 0), n: 'Resting potential', s: 'At rest, the inside of the axon is about 70 mV negative compared with the outside. Sodium–potassium pumps use ATP to move 3 sodium ions out for every 2 potassium ions in.', h: 'The membrane is more permeable to potassium than to sodium, so potassium leaks out, adding to the charge difference.', cs: 'C2.2.2', ch: 'C2.2.2', dives: [D_REST] },
+        { at: V(-40, 0, 0), n: 'Action potential', s: 'When the threshold is reached, sodium channels open and sodium ions (orange) rush in: depolarization. Then potassium channels open and potassium ions (purple) flow out: repolarization. Watch the trace on the right.', h: 'Local currents of sodium ions spread inside the axon and depolarize the next region to threshold, so the action potential travels in one direction. The region behind is briefly unable to fire (refractory).', cs: 'C2.2.3', ch: 'C2.2.8, C2.2.9, C2.2.10', dives: [D_AP] },
+        { at: V(6, 0, 0), n: 'Myelin and nodes of Ranvier', s: 'The myelin sheath insulates the axon, so ion movement only happens at the nodes. The impulse jumps from node to node, which is much faster.', h: 'This saltatory conduction can reach about 100 m per second, compared with about 1 m per second in unmyelinated fibres of the same width.', cs: 'C2.2.4', ch: 'C2.2.11', dives: [D_SALT] },
+        { at: V(72, 2, 0), n: 'Synaptic knob', s: 'When the impulse arrives, calcium ions (green) enter the knob. Vesicles of neurotransmitter move to the membrane and release it into the cleft by exocytosis.', h: 'The knob has many mitochondria: ATP is needed to refill the vesicles and to pump calcium back out.', cs: 'C2.2.5, C2.2.6', ch: 'C2.2.6', dives: [D_SYN] },
+        { at: V(78, 2, 0), n: 'Synaptic cleft and receptors', s: 'The neurotransmitter (blue) diffuses across the cleft and binds to receptors on the next cell. Sodium channels open there, depolarizing the postsynaptic membrane.', h: 'The neurotransmitter is then broken down or taken back up, so each signal is brief. Chemicals such as neonicotinoids (which block acetylcholine receptors) or cocaine (which blocks reuptake) change transmission.', cs: 'C2.2.5, C2.2.7', ch: 'C2.2.12', dives: [D_SYN] }
       ],
       side: '<h3>Membrane potential</h3><canvas id="trace" width="540" height="200" style="display:block;width:100%;height:100px"></canvas><p style="margin:4px 0 0" id="vtext">-70 mV (resting)</p>',
       update(dt, A) {
@@ -179,7 +356,11 @@ window.JOURNEY = {
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
    rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
    hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
-   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes. */
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes.
+   Close-ups (2026-11-17): a stop may carry dive (or dives: [..]) = {n, bg, target, dist, yaw, pitch, side,
+   steps:[{n,s,h,cs,ch,at,dist}], build(api) -> {update(dt,api,step), onStep(i,step)}}. W.dives lists close-ups for the outside view.
+   A close-up is built once, in its own scene, the first time it is opened; its labels show only while it is open.
+   The page may open one itself with api.openDive(d); location.hash #zoom-<n> opens W.dives[n] at load. */
 (function(){
 'use strict';
 const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -200,7 +381,7 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
   T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
   tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
-  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70}); },
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
   anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
   onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
   side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
@@ -213,35 +394,73 @@ const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd1
 const camOff=W.camOffset||api.V(0,3,5);
 let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
 api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
-function showStop(){ const info=$('info');
+// ---------- close-ups ----------
+const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
+const dSun=new THREE.DirectionalLight(0xffffff,0.6); dSun.position.set(30,60,50); diveScene.add(dSun);
+const dCam=new THREE.PerspectiveCamera(50,1,0.1,900); dCam.add(new THREE.PointLight(0xffffff,0.35,300)); diveScene.add(dCam);
+let dive=null, dStep=0, dYaw=0.5, dPitch=0.25, dDist=60, dDistGoal=60, sideBefore=null;
+const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
+function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
+function openDive(d){
+  if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
+  diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
+  dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
+  dYaw=d.yaw!=null?d.yaw:0.5; dPitch=d.pitch!=null?d.pitch:0.25;
+  renderer.setClearColor(new THREE.Color(d.bg||th.bg||'#0b1a2a')); sideBefore=$('side').hidden?null:$('side').innerHTML;
+  if(d.side) api.side(d.side); else $('side').hidden=true; showDive(); }
+function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
+function closeDive(){ leaveDive(); showStop(); }
+api.openDive=openDive;
+function showDive(){ const info=$('info'), st=dive.steps[dStep];
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
+  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
+  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+  $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
+  dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
+  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
+function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+function showStop(){ if(dive) return showDive(); const info=$('info');
   if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
     info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
     info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
-    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); if(W.onView) W.onView('out'); return; }
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
   const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
   info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
   info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
-  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1);
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
-function go(d){ if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-function setView(v){ view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
 $('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
 $('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
-window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); });
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); else if(e.code==='Escape'&&dive) closeDive(); });
 let drag=null;
 canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
 canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
-  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+  if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
+  else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
-canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
 window.addEventListener('resize',resize);
 const v=new THREE.Vector3(); let last=performance.now();
 function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
   const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
   hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
+    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
+    dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
+      if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
+    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
   if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
   if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
     camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
@@ -249,11 +468,13 @@ function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
   else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;
-  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+  labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
   renderer.render(scene,camera); requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
+{ const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
+window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

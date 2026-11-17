@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Copying DNA: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/dna-replication.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Copying DNA">
+<meta property="og:description" content="Copying DNA: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/dna-replication.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Copying DNA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+.nav button.zoom{background:transparent;border:1.5px solid var(--accent);color:var(--accent);padding:7px 13px}
+.nav button.zoom:hover{background:rgba(255,209,102,.12)}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+// Copying DNA (2026-11-17, teacher's request: a full replication walk-through). The fork stays in the middle of the
+// screen while DNA feeds through it from the right. Simplified and not to scale.
+window.JOURNEY = {
+  title: 'Copying DNA',
+  sub: 'DP Biology D1.1 · DNA replication · simplified, not to scale',
+  startTitle: 'Watch DNA being copied',
+  intro: 'Stand at a replication fork. The double helix comes in from the right, helicase unzips it, and DNA polymerases build two new strands. Old strands are dark grey and new strands white, so you can see that each new molecule keeps one old strand.',
+  note: 'Bases: adenine red, thymine yellow, cytosine blue, guanine green. RNA primers are pink. The real fork moves about 50 bases per second in humans; here it is slowed right down.',
+  rideLabel: 'Step through replication',
+  theme: { bg: '#0b0f1e', panel: 'rgba(12,16,34,.88)', accent: '#ffb703', dim: '#c4c7de', line: 'rgba(200,205,255,.22)' },
+  fog: 0.003,
+  build(A) {
+    const { V, M, T, scene, THREE } = A;
+    const COL = [0xe63946, 0xffd166, 0x4ea8de, 0x52b788], PAIR = [1, 0, 3, 2], NAME = ['A', 'T', 'C', 'G'];
+    const N = 220, DX = 0.78; const seq = []; let s0 = 7; for (let i = 0; i < N; i++) { s0 = (s0 * 9301 + 49297) % 233280; seq.push(Math.floor(s0 / 233280 * 4)); }
+    const cl = (x, a, b) => Math.max(a, Math.min(b, x)), ease = k => k * k * (3 - 2 * k);
+    // instanced beads (sugar-phosphate backbone) for 4 strands and half-rungs (bases) for 4 strands
+    const beadG = new THREE.SphereGeometry(0.42, 10, 8), rungG = new THREE.CylinderGeometry(0.2, 0.2, 1, 8);
+    const beads = new THREE.InstancedMesh(beadG, new THREE.MeshStandardMaterial({ roughness: 0.4 }), N * 4); beads.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(N * 4 * 3), 3);
+    const rungs = new THREE.InstancedMesh(rungG, new THREE.MeshStandardMaterial({ roughness: 0.45 }), N * 4); rungs.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(N * 4 * 3), 3);
+    scene.add(beads, rungs); const dmy = new THREE.Object3D(), col = new THREE.Color();
+    const OLD = new THREE.Color(0x5c6370), NEW = new THREE.Color(0xf1f1f1), PRIMER = new THREE.Color(0xff7eb6), BAD = new THREE.Color(0xff00ff);
+    function bead(k, p, c, s) { dmy.position.copy(p); dmy.rotation.set(0, 0, 0); dmy.scale.setScalar(s); dmy.updateMatrix(); beads.setMatrixAt(k, dmy.matrix); beads.setColorAt(k, c); }
+    function rung(k, a, b, c, s) { if (s <= 0.01) { dmy.scale.setScalar(0); dmy.updateMatrix(); rungs.setMatrixAt(k, dmy.matrix); return; } const mid = a.clone().add(b).multiplyScalar(0.5); dmy.position.copy(mid);
+      dmy.quaternion.setFromUnitVectors(V(0, 1, 0), b.clone().sub(a).normalize()); dmy.scale.set(s, Math.max(0.01, a.distanceTo(b)), s); dmy.updateMatrix(); rungs.setMatrixAt(k, dmy.matrix); rungs.setColorAt(k, col.setHex(c)); }
+    // enzymes
+    const helicase = new THREE.Group(); scene.add(helicase); for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.5, 16, 12), M(0x9b5de5, { roughness: 0.4 })); const a = i / 6 * Math.PI * 2; m.position.set(0, Math.cos(a) * 3.6, Math.sin(a) * 3.6); helicase.add(m); }
+    const blob = (r, c, op) => { const g = new THREE.SphereGeometry(r, 24, 18); const p = g.attributes.position; for (let i = 0; i < p.count; i++) { const v = V(p.getX(i), p.getY(i), p.getZ(i)); const k = 1 + 0.12 * Math.sin(v.x * 2.1 + v.y * 1.7) * Math.cos(v.z * 1.9); p.setXYZ(i, v.x * k, v.y * k, v.z * k); } g.computeVertexNormals(); const m = new THREE.Mesh(g, op ? T(c, op) : M(c, { roughness: 0.45 })); scene.add(m); return m; };
+    const pol3a = blob(2.6, 0x2a9d8f, 0.7), pol3b = blob(2.6, 0x2a9d8f, 0.7), primase = blob(1.5, 0xff7eb6, 0.85), pol1 = blob(1.8, 0x90be6d, 0.8), ligase = blob(1.4, 0xf9c74f, 0.85);
+    const clamp = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.35, 8, 24), M(0x8ecae6)); clamp.rotation.y = Math.PI / 2; scene.add(clamp);
+    // free nucleotides drifting around
+    const free = []; for (let i = 0; i < 70; i++) { const g = new THREE.Group(); const b = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6), M(0xf1f1f1)); const r = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.1, 6), M(COL[i % 4])); r.position.y = -0.6; g.add(b, r); scene.add(g); free.push({ g, p: V(A.rnd(-50, 40), A.rnd(-16, 16), A.rnd(-14, 14)), w: A.rnd(0, 6) }); }
+    // labels
+    const L = (t, p, far) => A.label(t, p, far || 90);
+    L('Parent DNA (double helix)', V(30, 6, 0)); L('Helicase', V(1, 6.5, 2)); L('Leading strand', V(-14, 6, 3)); L('Lagging strand (Okazaki fragments)', V(-14, -11, 3)); L('DNA polymerase III', V(-3, 11, 0));
+    L('Primase', V(-1, -10, 4)); L('DNA polymerase I', V(-22, -3, 4)); L('Ligase', V(-27, -10, 4)); L('Free nucleotides', V(10, -14, 8)); L('Two daughter molecules', V(-44, 0, 0), 140);
+    L('Sugar-phosphate backbone', V(22, -5, 3)); L('Base pair', V(18, 1, 4));
+    // simulation state
+    let F = 60, run = true, mode = 0, proof = 0; const FRAG = 12, RATE = 3.0;
+    const helix = (i, s) => { const th = i * 0.6; return [V(0, 3 * Math.cos(th), 3 * Math.sin(th)), V(0, -3 * Math.cos(th), -3 * Math.sin(th))]; };
+    function update(dt) { if (!A.paused && run) F += dt * 2.0; if (F > N - 34) F = 70; const pr = proof;
+      let bk = 0, rk = 0; const fi = Math.floor(F);
+      for (let i = 0; i < N; i++) { const x = (i - F) * DX, s = F - i, a = seq[i], b = PAIR[a];
+        const [hA, hB] = helix(i); const sep = ease(cl(s / 5, 0, 1)), w = ease(cl((s - 16) / 12, 0, 1)), ph = i * 0.6 * w;
+        const tA = V(0, 6.5 + 2.5 * Math.cos(ph), 2.5 * Math.sin(ph)), nA = V(0, 6.5 - 2.5 * Math.cos(ph), -2.5 * Math.sin(ph));
+        const tB = V(0, -6.5 - 2.5 * Math.cos(ph), -2.5 * Math.sin(ph)), nB = V(0, -6.5 + 2.5 * Math.cos(ph), 2.5 * Math.sin(ph));
+        const pA = (s <= 0 ? hA : hA.clone().lerp(tA, sep)).setX(x), pB = (s <= 0 ? hB : hB.clone().lerp(tB, sep)).setX(x);
+        bead(bk++, pA, OLD, 1); bead(bk++, pB, OLD, 1);
+        // leading strand: built continuously 3 bases behind the fork
+        const lead = s >= 3.5 ? ease(cl(s - 3.5, 0, 1)) : 0; const qA = nA.clone().setX(x), qB = nB.clone().setX(x);
+        const bad = mode === 6 && i === Math.floor(F - 6) && pr < 0.5; bead(bk++, qA.clone().lerp(pA, 1 - lead), bad ? BAD : NEW, lead);
+        // lagging strand: fragment k is primed when the fork has passed its far end, then extended back towards the fork... away from it
+        const k = Math.floor(i / FRAG), R = k * FRAG + FRAG - 1, start = R + 4; const prog = (F - start) * RATE; const built = s >= 0 && F >= start && (R - i) <= prog;
+        const isPrimer = R - i < 3; const nextDone = (F - ((k + 1) * FRAG + FRAG - 1 + 4)) * RATE >= FRAG + 6; const lag = built ? ease(cl(prog - (R - i), 0, 1)) : 0;
+        bead(bk++, qB.clone().lerp(pB, 1 - lag), isPrimer && !nextDone ? PRIMER : NEW, lag);
+        // bases (half-rungs)
+        if (s <= 0) { const mid = pA.clone().add(pB).multiplyScalar(0.5); rung(rk++, pA, mid, COL[a], 1); rung(rk++, pB, mid, COL[b], 1); rung(rk++, pA, pA, 0, 0); rung(rk++, pA, pA, 0, 0); }
+        else { const mA = pA.clone().lerp(qA, 0.5), mB = pB.clone().lerp(qB, 0.5); const gap = 1 - 0.55 * sep;
+          rung(rk++, pA, pA.clone().lerp(mA, lead > 0 ? 1 : gap), COL[a], 1); rung(rk++, pB, pB.clone().lerp(mB, lag > 0 ? 1 : gap), COL[b], 1);
+          rung(rk++, qA.clone().lerp(pA, 1 - lead), mA, bad ? 0xff00ff : COL[b], lead); rung(rk++, qB.clone().lerp(pB, 1 - lag), mB, COL[a], lag); } }
+      beads.instanceMatrix.needsUpdate = true; beads.instanceColor.needsUpdate = true; rungs.instanceMatrix.needsUpdate = true; rungs.instanceColor.needsUpdate = true;
+      helicase.position.set(0.3, 0, 0); helicase.rotation.x += dt * (A.paused ? 0 : 3);
+      pol3a.position.set(-3.5 * DX, 6.5, -1.2); pol3a.rotation.y += dt * 0.5; clamp.position.set(-3.5 * DX, 4.6, 0);
+      // lagging-strand enzymes: find the fragment being built and the primer being replaced
+      const kNow = Math.floor((F - 4 - FRAG + 1) / FRAG); const Rn = kNow * FRAG + FRAG - 1; const progN = (F - (Rn + 4)) * RATE; const front = Rn - Math.min(FRAG - 1, progN);
+      pol3b.position.set((front - F) * DX - 1, -6.5, -1.2); primase.position.set(((kNow + 1) * FRAG + FRAG - 1 - F) * DX + 0.5, -4, 1.5); primase.visible = F > (kNow + 1) * FRAG + FRAG - 1 - 1;
+      const kOld = kNow - 2, Ro = kOld * FRAG + FRAG - 1; pol1.position.set((Ro - 1 - F) * DX, -4.6, 1.6); ligase.position.set((Ro - 2 - F - FRAG) * DX, -4.6, 1.6);
+      free.forEach(f => { f.g.position.set(f.p.x + Math.sin(A.t * 0.4 + f.w) * 1.5, f.p.y + Math.cos(A.t * 0.3 + f.w) * 1.2, f.p.z); f.g.rotation.set(A.t * 0.3 + f.w, A.t * 0.2, 0); });
+      if (mode === 6) { proof = (A.t % 4) / 4; } }
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.1, 4, 4), M(0xffffff)); hero.visible = false; scene.add(hero);
+    const cams = [V(26, 4, 30), V(6, 6, 22), V(2, 0, 34), V(-4, 8, 24), V(-8, -8, 26), V(-18, -6, 26), V(-6, 8, 22), V(-30, 2, 60)];
+    return {
+      route: cams, hero, camOffset: V(0, 0, 0), outside: { target: V(-4, 0, 0), dist: 62 },
+      outsideInfo: { n: 'A replication fork', s: 'Drag to turn the fork. Parent DNA enters on the right; two daughter molecules leave on the left, each made of one old (grey) and one new (white) strand.', cs: 'D1.1.1, D1.1.2' },
+      stops: [
+        { at: cams[0], look: V(20, 0, 0), n: 'The DNA double helix', s: 'DNA has two strands twisted into a double helix. Each strand has a backbone of sugars and phosphates, with a base sticking inwards. The bases pair up: adenine with thymine, cytosine with guanine, held by hydrogen bonds.', h: 'The strands are antiparallel: one runs 5′ to 3′ and the other 3′ to 5′. Each pair is a purine with a pyrimidine, so every rung is the same width.', cs: 'A1.2.6', ch: 'A1.2.11, A1.2.12' },
+        { at: cams[1], look: V(0, 0, 0), n: 'Helicase unzips the DNA', s: 'Helicase (purple ring) moves along the DNA, unwinding the helix and breaking the hydrogen bonds between base pairs. The two strands separate, forming a replication fork.', cs: 'D1.1.3' },
+        { at: cams[2], look: V(-4, 0, 0), n: 'Complementary base pairing', s: 'Each separated strand acts as a template. Free nucleotides pair with the exposed bases: A with T and C with G. So each new strand is complementary to its template and identical to the strand that was there before.', cs: 'D1.1.2', ch: 'A1.2.8' },
+        { at: cams[3], look: V(-3, 6, 0), n: 'DNA polymerase', s: 'DNA polymerase (teal) joins the nucleotides together, linking each one to the end of the growing strand by a covalent bond in the backbone.', h: 'DNA polymerases can only add nucleotides to the 3′ end of a strand, so new DNA is always made in the 5′ to 3′ direction. On the leading strand (top) this is towards the fork, so it is made continuously. A sliding clamp (blue ring) keeps polymerase III attached.', cs: 'D1.1.3', ch: 'D1.1.6, D1.1.7' },
+        { at: cams[4], look: V(-6, -6, 0), n: 'The lagging strand', s: 'The bottom template runs the other way, so its new strand has to be made in short pieces, each built away from the fork.', h: 'Primase lays down a short RNA primer (pink). DNA polymerase III extends it with DNA, making an Okazaki fragment. As the fork opens further, a new primer is laid and the next fragment begins.', cs: 'D1.1.7', ch: 'D1.1.7, D1.1.8' },
+        { at: cams[5], look: V(-22, -6, 0), n: 'Joining the fragments', s: 'The short pieces must be joined into one continuous strand.', h: 'DNA polymerase I removes each RNA primer and replaces it with DNA nucleotides. DNA ligase then seals the gap in the backbone between neighbouring fragments.', cs: 'D1.1.7', ch: 'D1.1.8' },
+        { at: cams[6], look: V(-4, 6, 0), n: 'Proofreading', s: 'Very few mistakes survive: DNA polymerase checks each new base pair.', h: 'If DNA polymerase III adds a wrong nucleotide (magenta), it detects the mismatch, removes the nucleotide from the 3′ end and puts in the correct one. This keeps the error rate below about one in a billion bases.', cs: 'D1.1.1', ch: 'D1.1.9' },
+        { at: cams[7], look: V(-36, 0, 0), n: 'Semi-conservative replication', s: 'Two identical DNA molecules leave the fork. Each has one old strand (grey) and one new strand (white): replication is semi-conservative. Both copies carry exactly the same base sequence as the parent.', h: 'This was shown by Meselson and Stahl, who grew bacteria on heavy nitrogen and followed the density of their DNA over generations.', cs: 'D1.1.1, D1.1.2', ch: 'D2.1.5' }
+      ],
+      onStop(i) { mode = i; run = i !== 0; },
+      update(dt) { update(dt); }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes.
+   Close-ups (2026-11-17): a stop may carry dive (or dives: [..]) = {n, bg, target, dist, yaw, pitch, side,
+   steps:[{n,s,h,cs,ch,at,dist}], build(api) -> {update(dt,api,step), onStep(i,step)}}. W.dives lists close-ups for the outside view.
+   A close-up is built once, in its own scene, the first time it is opened; its labels show only while it is open.
+   The page may open one itself with api.openDive(d); location.hash #zoom-<n> opens W.dives[n] at load. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+// ---------- close-ups ----------
+const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
+const dSun=new THREE.DirectionalLight(0xffffff,0.6); dSun.position.set(30,60,50); diveScene.add(dSun);
+const dCam=new THREE.PerspectiveCamera(50,1,0.1,900); dCam.add(new THREE.PointLight(0xffffff,0.35,300)); diveScene.add(dCam);
+let dive=null, dStep=0, dYaw=0.5, dPitch=0.25, dDist=60, dDistGoal=60, sideBefore=null;
+const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
+function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
+function openDive(d){
+  if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
+  diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
+  dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
+  dYaw=d.yaw!=null?d.yaw:0.5; dPitch=d.pitch!=null?d.pitch:0.25;
+  renderer.setClearColor(new THREE.Color(d.bg||th.bg||'#0b1a2a')); sideBefore=$('side').hidden?null:$('side').innerHTML;
+  if(d.side) api.side(d.side); else $('side').hidden=true; showDive(); }
+function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
+function closeDive(){ leaveDive(); showStop(); }
+api.openDive=openDive;
+function showDive(){ const info=$('info'), st=dive.steps[dStep];
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
+  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
+  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+  $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
+  dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
+  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
+function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+function showStop(){ if(dive) return showDive(); const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); else if(e.code==='Escape'&&dive) closeDive(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
+  else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
+    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
+    dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
+      if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
+    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+{ const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
+window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
+})();
+
+</script>
+</body>
+</html>

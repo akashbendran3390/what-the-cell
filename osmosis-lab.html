@@ -56,6 +56,11 @@ td:first-child,th:first-child{text-align:left}
 .tasks li{margin:4px 0;line-height:1.45}
 .big{font:800 26px var(--display)}
 .intro{max-width:760px}
+.how{margin:10px 0;background:var(--panel2);border-radius:10px;padding:8px 12px}.how summary{cursor:pointer;font-weight:700}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider input{flex:1;min-width:140px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px}
+.steps-mini{display:flex;gap:6px;flex-wrap:wrap}
 .back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
 </style>
 </head>
@@ -67,17 +72,34 @@ td:first-child,th:first-child{text-align:left}
   </div>
   <div class="card intro" id="intro">
     <h2>Water on the move</h2>
-    <p>Run the classic potato practical: soak cylinders of potato in sucrose solutions, weigh them, and find the concentration at which no water moves. Then watch what happens to animal and plant cells in different solutions.</p>
+    <p>Start by zooming in to the molecules to see <b>why</b> water moves. Then run the classic potato practical: soak cylinders of potato in sucrose solutions, weigh them, and find the concentration at which no water moves. Then watch what happens to animal and plant cells in different solutions.</p>
     <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
       <button type="button" class="go" id="b-start">Start the lab</button>
   </div>
   <div id="lab" hidden>
-    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-pot" aria-pressed="true">Potato practical</button><button type="button" id="t-cell" aria-pressed="false">Cells in solutions</button></div>
-    <div class="grid" id="p-pot">
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-mol" aria-pressed="true">1. What is osmosis?</button><button type="button" id="t-pot" aria-pressed="false">2. Potato practical</button><button type="button" id="t-cell" aria-pressed="false">3. Cells in solutions</button></div>
+    <div class="grid" id="p-mol">
       <div class="card">
+        <canvas id="c-mol" width="900" height="520" aria-label="Water and sugar molecules on two sides of a partially permeable membrane"></canvas>
+        <div class="slider"><label for="s-left">Sugar on the left</label><input type="range" id="s-left" min="0" max="40" value="8"><b id="v-left">8</b></div>
+        <div class="slider"><label for="s-right">Sugar on the right</label><input type="range" id="s-right" min="0" max="40" value="30"><b id="v-right">30</b></div>
+        <div class="row steps-mini"><button type="button" class="btn" data-pre="0,0">Pure water both sides</button><button type="button" class="btn" data-pre="15,15">Equal solutions</button><button type="button" class="btn" data-pre="8,30">More sugar on the right</button><button type="button" class="btn" data-pre="0,38">Pure water vs strong solution</button><button type="button" class="btn" id="b-reset">Reset levels</button></div>
+        <p class="note">Blue: water molecules (small enough to pass through the membrane). Orange: sugar molecules (too big to pass). Pale blue rings: water held round sugar molecules, which cannot move freely.</p>
+      </div>
+      <div>
+        <div class="card"><h2 id="m-h">What is happening?</h2><div class="explain"><p id="m-s"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Water crossing left &rarr; right</span><b id="m-lr">-</b><span>Water crossing right &rarr; left</span><b id="m-rl">-</b><span>Net movement of water</span><b id="m-net">-</b><span>Free water molecules (left / right)</span><b id="m-free">-</b></div>
+          <p class="hl-only" id="m-psi"></p><p class="note">Syllabus: D2.3.1, D2.3.2, B2.1.5<span class="hl-only" style="display:inline">, D2.3.8, D2.3.9</span></p></div>
+        <div class="card" style="margin-top:14px"><h2>Key ideas</h2><ol class="tasks"><li><b>Osmosis</b> is the net movement of water across a partially permeable membrane, from a less concentrated solution (more free water) to a more concentrated solution (less free water).</li><li>Water molecules always move both ways at random. Osmosis is the <b>difference</b> between the two flows.</li><li>Solute molecules attract water molecules (hydrogen bonds), so fewer water molecules are free to move on the side with more solute.</li><li>When both sides have the same solute concentration (isotonic), the two flows balance and there is no net movement.</li></ol></div>
+      </div>
+    </div>
+    <div class="grid" id="p-pot" hidden>
+      <div class="card">
+        <canvas id="c-tubes" width="900" height="300" aria-label="Six tubes of sucrose solution with potato cylinders"></canvas>
+        <p class="note" id="tubes-note">Each tube holds a potato cylinder in a different sucrose solution. Press Soak to see what happens.</p>
         <canvas id="c-pot" width="900" height="520" aria-label="Graph of percentage change in mass against sucrose concentration"></canvas>
         <div class="row"><button type="button" class="go" id="b-run">Soak cylinders for 24 hours</button><button type="button" class="btn" id="b-repeat">Add a repeat</button><button type="button" class="btn" id="b-clear">Clear results</button></div>
-        <h2>Try it</h2><ol class="tasks"><li>Run the practical. Which cylinders gained mass, and which lost it? Explain using osmosis.</li><li>Read the concentration where the line crosses zero. What does this tell you about the potato cells?</li><li>Add repeats. Why does the class use percentage change and several repeats?</li><li class="hl-only">HL: use the solute potential of the isotonic solution to estimate the water potential of the potato tissue.</li></ol>
+        <details class="how"><summary>How the practical is done (and a worked example)</summary><ol class="tasks"><li>Cut cylinders of potato the same diameter with a cork borer and trim them to the same length.</li><li>Blot each one dry and weigh it (initial mass).</li><li>Put one in each sucrose solution (0.0 to 1.0 mol dm<sup>-3</sup>) for 24 hours at the same temperature.</li><li>Take them out, blot dry the same way and weigh again (final mass).</li><li>Work out percentage change = (final &minus; initial) &divide; initial &times; 100.</li></ol><p><b>Worked example:</b> a cylinder of 2.50 g that ends at 2.85 g changed by (2.85 &minus; 2.50) &divide; 2.50 &times; 100 = <b>+14%</b>. Percentage change lets you compare cylinders that started at different masses.</p></details><h2>Try it</h2><ol class="tasks"><li>Run the practical. Which cylinders gained mass, and which lost it? Explain using osmosis.</li><li>Read the concentration where the line crosses zero. What does this tell you about the potato cells?</li><li>Add repeats. Why does the class use percentage change and several repeats?</li><li class="hl-only">HL: use the solute potential of the isotonic solution to estimate the water potential of the potato tissue.</li></ol>
       </div>
       <div>
         <div class="card"><h2>Results</h2><table><thead><tr><th>Sucrose / mol dm<sup>-3</sup></th><th>Mean % change</th><th>n</th></tr></thead><tbody id="tb"></tbody></table>
@@ -116,8 +138,69 @@ td:first-child,th:first-child{text-align:left}
     x.strokeStyle='#fff'; x.lineWidth=1.5; x.beginPath(); x.moveTo(L,sy(0)); x.lineTo(R,sy(0)); x.stroke();
     data.forEach((r,i)=>r.forEach(v=>{ x.fillStyle='#5bc0eb'; x.beginPath(); x.arc(sx(CONC[i])+(Math.random()-0.5)*0,sy(v),5,0,7); x.fill(); }));
     const f=fit(); if(f){ x.strokeStyle='#ffd166'; x.lineWidth=2.5; x.beginPath(); x.moveTo(sx(0),sy(f.a)); x.lineTo(sx(1),sy(f.a+f.b)); x.stroke(); if(f.x0>0&&f.x0<1){ x.fillStyle='#ffd166'; x.beginPath(); x.arc(sx(f.x0),sy(0),7,0,7); x.fill(); } }
-    $('tb').innerHTML=CONC.map((cc,i)=>{ const r=data[i]; return `<tr><td>${cc.toFixed(1)}</td><td>${r.length?((r.reduce((a,b)=>a+b,0)/r.length>0?'+':'')+(r.reduce((a,b)=>a+b,0)/r.length).toFixed(1)):'-'}</td><td>${r.length}</td></tr>`; }).join('');
+    tubes(); $('tb').innerHTML=CONC.map((cc,i)=>{ const r=data[i]; return `<tr><td>${cc.toFixed(1)}</td><td>${r.length?((r.reduce((a,b)=>a+b,0)/r.length>0?'+':'')+(r.reduce((a,b)=>a+b,0)/r.length).toFixed(1)):'-'}</td><td>${r.length}</td></tr>`; }).join('');
     if(f&&f.x0>0&&f.x0<1){ $('iso').textContent=f.x0.toFixed(2)+' mol dm⁻³'; $('psi').textContent=Math.round(-f.x0*8.31*298)+' kPa'; } else { $('iso').textContent='-'; $('psi').textContent='-'; } }
+  // ---------- 1. What is osmosis? A particle model (2026-11-17) ----------
+  // Water particles move at random and can pass the pores; sugar particles cannot. Each sugar holds up to 4 water
+  // molecules in a shell, so they cannot cross. Free water crosses both ways; the side with less free water gains water,
+  // and its liquid level rises. Crossings are counted over the last 4 seconds.
+  const mol=(function(){ const c=$('c-mol'), x=c.getContext('2d'), W=c.width, H=c.height, MID=W/2, BOT=H-40, TOP=60, base=260;
+    let parts=[], lv=[base,base], cross=[], tt=0, run=true; const R=()=>Math.random();
+    function make(nl,nr){ parts=[]; const total=380; [0,1].forEach(s=>{ const n=s?nr:nl; for(let i=0;i<n;i++) parts.push({s, sugar:true, x:0,y:0,vx:0,vy:0, held:0});
+      for(let i=0;i<total/2;i++) parts.push({s, sugar:false, x:0,y:0,vx:0,vy:0, bound:null}); }); lv=[base,base];
+      parts.forEach(p=>{ place(p); p.vx=(R()-0.5)*2; p.vy=(R()-0.5)*2; }); cross=[]; }
+    function place(p){ const x0=p.s?MID+10:30, x1=p.s?W-30:MID-10; p.x=x0+R()*(x1-x0); p.y=BOT-R()*lv[p.s]; }
+    function counts(){ const n=[0,0]; parts.forEach(p=>{ n[p.s]++; }); return n; }
+    function step(){ tt+=1/60; const n=counts();
+      // liquid level on each side grows with the number of molecules there
+      [0,1].forEach(s=>{ const want=base*n[s]/(n[0]+n[1])*2; lv[s]+=(want-lv[s])*0.05; });
+      // bind water round sugar
+      parts.forEach(p=>{ if(p.sugar) p.held=0; });
+      parts.forEach(p=>{ if(p.sugar) return; if(p.bound&&p.bound.s===p.s&&p.bound.held<4){ const d=Math.hypot(p.x-p.bound.x,p.y-p.bound.y); if(d<22){ p.bound.held++; return; } } p.bound=null; });
+      parts.forEach(p=>{ if(p.sugar||p.bound) return; for(const q of parts){ if(!q.sugar||q.s!==p.s||q.held>=4) continue; if(Math.abs(p.x-q.x)<16&&Math.abs(p.y-q.y)<16){ p.bound=q; q.held++; break; } } });
+      parts.forEach(p=>{ if(p.bound){ const q=p.bound, a=(parts.indexOf(p)%4)*Math.PI/2+tt*2; p.x+=(q.x+Math.cos(a)*11-p.x)*0.3; p.y+=(q.y+Math.sin(a)*11-p.y)*0.3; return; }
+        const sp=p.sugar?0.7:2.2; p.vx+=(R()-0.5)*0.8; p.vy+=(R()-0.5)*0.8; const v=Math.hypot(p.vx,p.vy); if(v>sp){ p.vx*=sp/v; p.vy*=sp/v; }
+        p.x+=p.vx; p.y+=p.vy; const top=BOT-lv[p.s];
+        if(p.y>BOT-4){ p.y=BOT-4; p.vy=-Math.abs(p.vy); } if(p.y<top+4){ p.y=top+4; p.vy=Math.abs(p.vy); }
+        if(p.x<24){ p.x=24; p.vx=Math.abs(p.vx); } if(p.x>W-24){ p.x=W-24; p.vx=-Math.abs(p.vx); }
+        // the membrane: pores every 26 px; sugar never passes, water passes through a pore if below the other side's level
+        const side=p.x<MID?0:1; if(side!==p.s){ const pore=((p.y-TOP)%26+26)%26<11; const otherTop=BOT-lv[side];
+          if(!p.sugar&&pore&&p.y>otherTop+4){ cross.push([tt,p.s]); p.s=side; } else { p.x=p.s?MID+3:MID-3; p.vx=-p.vx; } } });
+      cross=cross.filter(k=>tt-k[0]<4); }
+    function draw(){ x.clearRect(0,0,W,H); x.fillStyle='#0f1c24'; x.fillRect(0,0,W,H);
+      [0,1].forEach(s=>{ const x0=s?MID:20, w=MID-20; x.fillStyle='rgba(91,192,235,.18)'; x.fillRect(x0,BOT-lv[s],w,lv[s]); x.strokeStyle='rgba(190,220,240,.6)'; x.lineWidth=2; x.beginPath(); x.moveTo(x0,BOT-lv[s]); x.lineTo(x0+w,BOT-lv[s]); x.stroke(); });
+      x.strokeStyle='#cfd8dc'; x.lineWidth=4; x.strokeRect(20,TOP-30,W-40,BOT-TOP+30);
+      x.strokeStyle='#ffd166'; x.lineWidth=6; for(let y=TOP-30;y<BOT;y+=26){ x.beginPath(); x.moveTo(MID,y); x.lineTo(MID,Math.min(BOT,y+15)); x.stroke(); }
+      parts.forEach(p=>{ if(p.sugar){ x.fillStyle='#f4a261'; x.beginPath(); x.arc(p.x,p.y,8,0,7); x.fill(); x.strokeStyle='rgba(173,216,255,.35)'; x.lineWidth=5; x.beginPath(); x.arc(p.x,p.y,13,0,7); x.stroke(); } });
+      parts.forEach(p=>{ if(!p.sugar){ x.fillStyle=p.bound?'rgba(120,180,230,.55)':'#4fb3ff'; x.beginPath(); x.arc(p.x,p.y,3.6,0,7); x.fill(); } });
+      x.fillStyle='#eef5fa'; x.font='700 16px Atkinson Hyperlegible, sans-serif'; x.fillText('Left side',36,TOP-8); x.fillText('Right side',W-120,TOP-8); x.fillText('partially permeable membrane',MID-112,BOT+28);
+      const lr=cross.filter(k=>k[1]===0).length, rl=cross.filter(k=>k[1]===1).length;
+      if(Math.abs(lr-rl)>3){ const dir=lr>rl?1:-1; x.strokeStyle='#80ed99'; x.fillStyle='#80ed99'; x.lineWidth=6; const y=TOP+12; x.beginPath(); x.moveTo(MID-70*dir,y); x.lineTo(MID+70*dir,y); x.stroke(); x.beginPath(); x.moveTo(MID+82*dir,y); x.lineTo(MID+62*dir,y-12); x.lineTo(MID+62*dir,y+12); x.fill(); x.font='700 15px Atkinson Hyperlegible, sans-serif'; x.fillText('net movement of water',MID-80,y+30); }
+      return [lr,rl]; }
+    let frame=0; function loop(){ if($('p-mol').hidden){ requestAnimationFrame(loop); return; } for(let k=0;k<2;k++) step(); const [lr,rl]=draw(); if(++frame%15===0) explain(lr,rl); requestAnimationFrame(loop); }
+    function explain(lr,rl){ const sl=+$('s-left').value, sr=+$('s-right').value; let free=[0,0]; parts.forEach(p=>{ if(!p.sugar&&!p.bound) free[p.s]++; });
+      $('m-lr').textContent=(lr/4).toFixed(1)+' per second'; $('m-rl').textContent=(rl/4).toFixed(1)+' per second'; $('m-free').textContent=free[0]+' / '+free[1];
+      const net=lr-rl; $('m-net').textContent=Math.abs(net)<=3?'about none':(net>0?'to the right':'to the left');
+      let h,s; if(sl===sr){ h=sl===0?'Pure water on both sides':'Equal solutions (isotonic)'; s='Both sides have the same number of free water molecules, so water crosses the membrane equally in both directions. There is no net movement of water and the levels stay the same.'; }
+      else { const hi=sr>sl?'right':'left', lo=sr>sl?'left':'right'; h='Osmosis: water moves to the '+hi; s='The '+hi+' side has more sugar. Each sugar molecule holds water molecules round it, so the '+hi+' side has fewer free water molecules. Water molecules still cross both ways at random, but more cross from the '+lo+' (more free water) to the '+hi+' than come back. So there is a net movement of water to the '+hi+', and its level rises.'+(Math.min(sl,sr)===0?' The '+lo+' side is pure water, the most free water possible.':''); }
+      $('m-h').textContent=h; $('m-s').textContent=s;
+      const psi=v=>v===0?0:-Math.round(v/40*1.2*8.31*298); $('m-psi').textContent='Solute potential: left about '+psi(sl)+' kPa, right about '+psi(sr)+' kPa. Water moves from higher (less negative) to lower (more negative) water potential.'; }
+    function setVals(l,r){ $('s-left').value=l; $('s-right').value=r; $('v-left').textContent=l; $('v-right').textContent=r; make(l,r); }
+    $('s-left').oninput=$('s-right').oninput=()=>setVals(+$('s-left').value,+$('s-right').value);
+    document.querySelectorAll('[data-pre]').forEach(b=>b.onclick=()=>{ const [l,r]=b.dataset.pre.split(',').map(Number); setVals(l,r); });
+    $('b-reset').onclick=()=>setVals(+$('s-left').value,+$('s-right').value);
+    setVals(8,30); requestAnimationFrame(loop);
+    setInterval(()=>{ if(!$('p-mol').hidden){ const lr=cross.filter(k=>k[1]===0).length, rl=cross.filter(k=>k[1]===1).length; explain(lr,rl); } },500);
+    window.osmDebug={ run(n){ for(let i=0;i<n;i++) step(); const r=draw(); explain(r[0],r[1]); return lv.map(v=>Math.round(v)); } }; return {};
+  })();
+  // ---------- 2. Potato practical: picture of the six tubes ----------
+  function tubes(){ const c=$('c-tubes'), x=c.getContext('2d'), W=c.width, H=c.height; x.clearRect(0,0,W,H); const has=data[0].length>0;
+    CONC.forEach((cc,i)=>{ const cx=80+i*148, top=40, bot=H-50; x.fillStyle='rgba(91,192,235,'+(0.12+cc*0.45)+')'; x.fillRect(cx-40,top+30,80,bot-top-30); x.strokeStyle='#cfd8dc'; x.lineWidth=3; x.beginPath(); x.moveTo(cx-40,top); x.lineTo(cx-40,bot); x.lineTo(cx+40,bot); x.lineTo(cx+40,top); x.stroke();
+      const m=has?data[i].reduce((a,b)=>a+b,0)/data[i].length:0, k=1+m/100; const h=110*k, w=26*Math.sqrt(k); x.fillStyle='#f1e3b5'; x.strokeStyle='#c9a227'; x.lineWidth=2; x.fillRect(cx-w/2,bot-14-h,w,h); x.strokeRect(cx-w/2,bot-14-h,w,h);
+      if(has&&Math.abs(m)>1.5){ x.fillStyle=m>0?'#80ed99':'#ef476f'; x.font='700 22px Atkinson Hyperlegible, sans-serif'; x.fillText(m>0?'← water in':'water out →',cx-56,top+20); }
+      x.fillStyle='#eef5fa'; x.font='700 15px Atkinson Hyperlegible, sans-serif'; x.fillText(cc.toFixed(1)+' mol dm⁻³',cx-44,H-26);
+      x.fillStyle='#b2c4d0'; x.font='13px Atkinson Hyperlegible, sans-serif'; x.fillText(!has?'':Math.abs(m)<2?'about isotonic':m>0?'hypotonic':'hypertonic',cx-40,H-8); });
+    $('tubes-note').textContent=has?'Cylinders in dilute solutions took in water and got bigger (hypotonic solutions). In strong solutions they lost water and shrank (hypertonic). Near 0.3 mol dm⁻³ there was almost no change: that solution is isotonic with the potato cells.':'Each tube holds a potato cylinder in a different sucrose solution (darker = more sucrose). Press Soak to see what happens.'; }
   $('b-run').onclick=()=>{ data=CONC.map(()=>[]); soak(); }; $('b-repeat').onclick=soak; $('b-clear').onclick=()=>{ data=CONC.map(()=>[]); pot(); };
   // Cells in solutions
   let cell='rbc', sol='iso', t=0, shown=0; const target={rbc:{hypo:1.35,iso:1,hyper:0.75},plant:{hypo:1,iso:0.96,hyper:0.62}};
@@ -148,8 +231,8 @@ td:first-child,th:first-child{text-align:left}
   function setCell(k){ cell=k; $('ct-rbc').setAttribute('aria-pressed',k==='rbc'); $('ct-plant').setAttribute('aria-pressed',k==='plant'); cellText(); }
   $('ct-rbc').onclick=()=>setCell('rbc'); $('ct-plant').onclick=()=>setCell('plant');
   document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{ sol=b.dataset.s; document.querySelectorAll('[data-s]').forEach(o=>o.setAttribute('aria-pressed',o===b)); cellText(); });
-  function tab(k){ $('t-pot').setAttribute('aria-pressed',k==='pot'); $('t-cell').setAttribute('aria-pressed',k==='cell'); $('p-pot').hidden=k!=='pot'; $('p-cell').hidden=k!=='cell'; if(k==='cell'){ shown=target[cell][sol]; cellText(); drawCell(); } }
-  $('t-pot').onclick=()=>tab('pot'); $('t-cell').onclick=()=>tab('cell');
+  function tab(k){ ['mol','pot','cell'].forEach(n=>{ $('t-'+n).setAttribute('aria-pressed',k===n); $('p-'+n).hidden=k!==n; }); if(k==='pot'){ pot(); } if(k==='cell'){ shown=target[cell][sol]; cellText(); drawCell(); } }
+  $('t-mol').onclick=()=>tab('mol'); $('t-pot').onclick=()=>tab('pot'); $('t-cell').onclick=()=>tab('cell');
   function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
   $('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
   $('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; pot(); };

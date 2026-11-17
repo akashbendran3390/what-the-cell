@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Inside a Chloroplast: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/chloroplast.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Inside a Chloroplast">
+<meta property="og:description" content="Inside a Chloroplast: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/chloroplast.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Inside a Chloroplast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
+#app{position:fixed;inset:0}
+canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cursor:grab}
+.top{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:8px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;pointer-events:none}
+.top > *{pointer-events:auto}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
+.brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
+.switches{display:flex;gap:8px;flex-wrap:wrap}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
+button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+button:hover{background:rgba(255,255,255,.08)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
+#info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+#info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
+#info p{margin:0;font-size:15px;line-height:1.45}
+#info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+.nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.nav button{background:rgba(255,255,255,.1)}
+.nav button.go{background:var(--accent);color:#1d1400}
+.nav button.zoom{background:transparent;border:1.5px solid var(--accent);color:var(--accent);padding:7px 13px}
+.nav button.zoom:hover{background:rgba(255,209,102,.12)}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
+#labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
+#start h2{margin:0;font:800 30px/1.05 var(--display)}
+#start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
+#start table{border-collapse:collapse;font-size:14px}
+#start td{padding:4px 12px 4px 0;vertical-align:top}
+kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" tabindex="0"></canvas>
+  <div id="labels"></div>
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
+    <div class="switches">
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
+    </div>
+  </div>
+  <section id="info" aria-live="polite"></section>
+  <div id="side" hidden></div>
+  <div id="start">
+    <div class="card">
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
+      <table>
+        <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
+        <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
+      </table>
+      <p class="note" id="s-note"></p>
+      <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start</button>
+    </div>
+  </div>
+</div>
+<script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
+<script>
+// Inside a Chloroplast (2026-11-17, teacher's request: dive into the chloroplast from Inside a Cell).
+// Chloroplast above; a magnified patch of thylakoid membrane below; the Calvin cycle in the stroma.
+window.JOURNEY = {
+  title: 'Inside a Chloroplast',
+  sub: 'DP Biology C1.3 · simplified, not to scale',
+  startTitle: 'Where light becomes sugar',
+  intro: 'Fly into a chloroplast. See the stacks of thylakoids where light is absorbed, then zoom in to a thylakoid membrane: water is split, electrons flow, protons are pumped and ATP and reduced NADP are made. Finish in the stroma, where the Calvin cycle uses them to fix carbon dioxide.',
+  note: 'Yellow dots: electrons. Red dots: protons (H+). White pairs: oxygen. Green: ATP. Pink: reduced NADP. Grey: carbon dioxide. The membrane patch at the bottom is magnified many times.',
+  rideLabel: 'Follow the energy',
+  theme: { bg: '#07160d', panel: 'rgba(8,26,14,.86)', accent: '#b5e48c', dim: '#c3dcc5', line: 'rgba(190,240,190,.22)' },
+  fog: 0.004,
+  build(A) {
+    const { V, M, T, tube, scene, THREE } = A;
+    const cl = (x, a, b) => Math.max(a, Math.min(b, x)), ease = k => k * k * (3 - 2 * k);
+    // envelope: two membranes, lens-shaped
+    const lens = (r, op, c) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), T(c, op)); m.scale.set(r * 2.1, r * 0.9, r * 1.2); scene.add(m); return m; };
+    lens(16, 0.18, 0x55a630); lens(15.2, 0.12, 0x80b918);
+    // grana: stacks of thylakoid discs joined by stroma lamellae
+    const thyM = M(0x2b9348, { roughness: 0.45 }), lamM = M(0x55a630, { roughness: 0.5, transparent: true, opacity: 0.8 }); const grana = [];
+    [[-20, -3, 4], [-10, 3, -5], [0, -2, 6], [10, 2, -3], [20, -2, 3], [-4, 6, 8], [6, -6, -8]].forEach(([x, y, z]) => { const g = new THREE.Group(); g.position.set(x, y, z); scene.add(g); grana.push(g);
+      for (let k = 0; k < 7; k++) { const d = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 0.6, 28), thyM); d.position.y = k * 0.8 - 2.4; g.add(d); } });
+    for (let i = 0; i < grana.length - 1; i++) scene.add(tube([grana[i].position, grana[i].position.clone().lerp(grana[i + 1].position, 0.5).add(V(0, 1.5, 0)), grana[i + 1].position], 0.35, lamM, 16));
+    const starch = []; [[-15, -6, -6], [14, 6, 5]].forEach(p => { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), M(0xf1f1e6)); m.scale.set(3, 1.8, 2.2); m.position.set(...p); scene.add(m); starch.push(m); });
+    for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.32, 6, 5), M(0x6d597a)); m.position.set(A.rnd(-26, 26), A.rnd(-9, 9), A.rnd(-12, 12)); scene.add(m); }
+    scene.add(tube(Array.from({ length: 12 }, (_, i) => V(16 + Math.cos(i / 12 * Math.PI * 2) * 3, -8 + Math.sin(i / 12 * Math.PI * 2) * 1.5, -9 + Math.sin(i) * 0.6)), 0.18, M(0xffd166), 40, true));
+    // light from above: white light in, green reflected, red and blue absorbed
+    const rays = []; [[0xffffff, 0], [0xff4d4d, 1], [0x4d7dff, 1], [0x4dff88, 2]].forEach(([c, kind], i) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 30, 8), M(c, { emissive: c, emissiveIntensity: 0.6, transparent: true, opacity: 0.7 })); scene.add(m); rays.push({ m, kind, i }); });
+    // magnified thylakoid membrane below: PSII, cytochrome complex, PSI, ATP synthase
+    const Y = -46; const mem = new THREE.Mesh(new THREE.BoxGeometry(80, 4, 26), M(0x95d5b2, { transparent: true, opacity: 0.55 })); mem.position.set(0, Y, 0); scene.add(mem);
+    const comp = (x, c, sx, sy) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 22, 16), M(c, { roughness: 0.45 })); m.scale.set(sx, sy, sx); m.position.set(x, Y, 0); scene.add(m); return m; };
+    const ps2 = comp(-26, 0x2d6a4f, 4, 4.6), cyt = comp(-10, 0x6a4c93, 2.8, 4.2), ps1 = comp(6, 0x1b4332, 4, 4.4), fnr = comp(13, 0xc77dff, 1.6, 1.6); fnr.position.y = Y - 5;
+    const ant = []; [ps2, ps1].forEach(p => { for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; const m = new THREE.Mesh(new THREE.SphereGeometry(0.8, 10, 8), M(0x40916c, { emissive: 0x000000 })); m.position.set(p.position.x + Math.cos(a) * 6, Y + 1.2, Math.sin(a) * 6); scene.add(m); ant.push(m); } });
+    const syn = new THREE.Group(); syn.position.set(28, Y, 0); scene.add(syn); syn.add(new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 8, 12), M(0x2a9d8f))); const rotor = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 2, 12), M(0x40916c)); syn.add(rotor); const knob = new THREE.Mesh(new THREE.SphereGeometry(4, 20, 14), M(0x52b788)); knob.position.y = -7; syn.add(knob);
+    // Calvin cycle ring in the stroma (right of the membrane, below)
+    const CC = V(0, Y - 26, 0); const ring = new THREE.Mesh(new THREE.TorusGeometry(9, 0.4, 8, 60), M(0xb5e48c, { emissive: 0x223311 })); ring.position.copy(CC); scene.add(ring);
+    const rub = new THREE.Mesh(new THREE.SphereGeometry(2.2, 20, 14), M(0x9ef01a, { roughness: 0.4 })); rub.position.copy(CC).add(V(0, 9, 0)); scene.add(rub);
+    const ccMol = []; for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.75, 10, 8), M(0xffe066)); scene.add(m); ccMol.push(m); }
+    const dot = (r, c) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), M(c, { emissive: c, emissiveIntensity: 0.25 })); scene.add(m); return m; };
+    const pair = (c) => { const g = new THREE.Group(); const a = dot(0.4, c), b = dot(0.4, c); scene.remove(a); scene.remove(b); a.position.x = -0.32; b.position.x = 0.32; g.add(a, b); scene.add(g); return g; };
+    const ePath = new THREE.CatmullRomCurve3([V(-26, Y + 2, 2), V(-18, Y + 1, 3), V(-10, Y, 3), V(-2, Y + 1, 3), V(6, Y + 2, 2), V(10, Y - 3, 2), V(13, Y - 5, 2)]);
+    const els = Array.from({ length: 10 }, () => ({ m: dot(0.45, 0xffe066), u: Math.random() }));
+    const h2o = Array.from({ length: 6 }, () => ({ m: dot(0.55, 0x4fb3ff), u: Math.random() })), o2 = Array.from({ length: 5 }, () => ({ m: pair(0xffffff), u: Math.random() }));
+    const prot = Array.from({ length: 34 }, (_, i) => ({ m: dot(0.38, 0xef233c), u: Math.random(), x: [-26, -10][i % 2] })), back = Array.from({ length: 10 }, () => ({ m: dot(0.38, 0xef233c), u: Math.random() }));
+    const atp = Array.from({ length: 8 }, () => ({ m: dot(0.6, 0x80ed99), u: Math.random() })), nadph = Array.from({ length: 6 }, () => ({ m: dot(0.6, 0xff8fab), u: Math.random() }));
+    const co2 = Array.from({ length: 6 }, () => ({ m: pair(0x8a8f99), u: Math.random() })), tp = Array.from({ length: 4 }, () => ({ m: dot(0.7, 0xf4a261), u: Math.random() }));
+    const photons = Array.from({ length: 6 }, (_, i) => ({ m: dot(0.5, 0xfff3b0), u: Math.random(), t: i % 2 ? ps1 : ps2 }));
+    const L = (t, p, far) => A.label(t, p, far || 80);
+    L('Outer and inner membrane', V(-26, 13, 0)); L('Granum (stack of thylakoids)', V(-10, 8, -5)); L('Stroma', V(16, -2, 10)); L('Starch grain', V(-15, -9.5, -6)); L('Circular DNA', V(16, -11, -9)); L('70S ribosomes', V(22, 6, 8));
+    L('Thylakoid lumen (protons build up)', V(-20, Y - 9, 12)); L('Stroma side', V(-20, Y + 9, 12)); L('Photosystem II', V(-26, Y + 7, 3)); L('Cytochrome complex', V(-10, Y + 7, 3)); L('Photosystem I', V(6, Y + 7, 3)); L('ATP synthase', V(28, Y + 7, 3));
+    L('Water split (photolysis)', V(-32, Y - 6, 4)); L('NADP reduced', V(16, Y - 9, 3)); L('Calvin cycle', V(-12, CC.y, 0)); L('Rubisco fixes CO2', V(0, CC.y + 13, 0)); L('Triose phosphate', V(12, CC.y - 6, 0));
+    const hero = new THREE.Mesh(new THREE.SphereGeometry(0.1, 4, 4), M(0xffffff)); hero.visible = false; scene.add(hero);
+    const cams = [V(-40, 20, 60), V(0, 36, 34), V(-10, 10, 24), V(-18, Y + 6, 30), V(-28, Y - 2, 22), V(18, Y - 2, 26), V(10, Y - 4, 22), V(0, CC.y + 4, 28), V(14, CC.y - 2, 30)];
+    return {
+      route: cams, hero, camOffset: V(0, 0, 0), outside: { target: V(0, -20, 0), dist: 130 },
+      outsideInfo: { n: 'A chloroplast', s: 'Drag to turn the chloroplast. The magnified thylakoid membrane is below it, and the Calvin cycle below that.', h: 'Chloroplasts have their own circular DNA and 70S ribosomes and a double membrane: evidence that they came from photosynthetic bacteria taken in by an ancestral cell (endosymbiosis).', cs: 'C1.3.1', ch: 'A2.2.12' },
+      stops: [
+        { at: cams[0], look: V(0, 0, 0), n: 'A chloroplast', s: 'Photosynthesis happens in chloroplasts. Light energy is converted into chemical energy stored in carbon compounds such as glucose. A chloroplast has a double membrane, stacks of flattened sacs called thylakoids, and a fluid called stroma.', cs: 'C1.3.1', ch: 'A2.2.12, B2.2.5' },
+        { at: cams[1], look: V(0, 8, 0), n: 'Absorbing light', s: 'Chlorophyll absorbs red and blue light strongly and reflects green light, which is why leaves look green. Other pigments, such as carotenoids, absorb other wavelengths.', h: 'An action spectrum (rate of photosynthesis at each wavelength) closely matches the absorption spectrum of the pigments, showing they are what drive photosynthesis.', cs: 'C1.3.5', ch: 'C1.3.6' },
+        { at: cams[2], look: V(-10, 3, -5), n: 'Grana and thylakoids', s: 'The light-dependent reactions happen on the thylakoid membranes. Stacking them in grana gives a large membrane area for pigments and enzymes.', h: 'The small space inside each thylakoid (the lumen) is where protons are concentrated.', cs: 'C1.3.1', ch: 'C1.3.14' },
+        { at: cams[3], look: V(-10, Y, 0), n: 'Photosystems', s: 'Pigments are grouped with proteins in photosystems. Light energy is passed from pigment to pigment to a special chlorophyll at the centre, which gives off an excited electron.', h: 'Grouping many pigments in a photosystem (antenna complex) lets it catch light over a wide area and range of wavelengths and funnel the energy to one reaction centre.', cs: 'C1.3.9', ch: 'C1.3.9, C1.3.10' },
+        { at: cams[4], look: V(-28, Y - 4, 0), n: 'Water is split', s: 'Photosystem II replaces the electrons it loses by splitting water (photolysis). This releases oxygen as a waste product, which diffuses out of the leaf.', h: '2H2O gives 4H+ + 4e- + O2. The protons stay in the lumen and add to the gradient.', cs: 'C1.3.3, C1.3.2', ch: 'C1.3.11' },
+        { at: cams[5], look: V(28, Y - 2, 0), n: 'ATP by chemiosmosis', s: 'As electrons pass along the chain, energy is used to pump protons into the thylakoid lumen. Protons flow back out through ATP synthase, which makes ATP.', h: 'This is chemiosmosis, the same mechanism as in mitochondria, but here protons build up inside the thylakoid and ATP is made on the stroma side.', cs: 'C1.3.1', ch: 'C1.3.12' },
+        { at: cams[6], look: V(13, Y - 5, 0), n: 'NADP is reduced', s: 'Light boosts the electrons again at photosystem I. They are passed to NADP, which also takes a proton, forming reduced NADP: a carrier of hydrogen for the next stage.', ch: 'C1.3.13', cs: 'C1.3.2' },
+        { at: cams[7], look: CC, n: 'Fixing carbon dioxide', s: 'In the stroma, carbon dioxide is combined with a five-carbon compound, RuBP, by the enzyme rubisco. This is carbon fixation.', h: 'The unstable six-carbon product splits into two molecules of glycerate 3-phosphate. ATP and reduced NADP from the light-dependent reactions convert these into triose phosphate.', cs: 'C1.3.2', ch: 'C1.3.15, C1.3.16' },
+        { at: cams[8], look: CC.clone().add(V(8, -4, 0)), n: 'The Calvin cycle and its products', s: 'Some triose phosphate is used to make glucose, starch, cellulose, amino acids and lipids. The rest is recycled to regenerate RuBP so the cycle keeps going.', h: 'Regenerating RuBP needs more ATP. The two stages depend on each other: without light there is no ATP or reduced NADP, so the Calvin cycle stops; without the Calvin cycle, NADP and ADP are not freed up for the light-dependent reactions.', cs: 'C1.3.2', ch: 'C1.3.17, C1.3.18, C1.3.19' }
+      ],
+      update(dt, A) { const run = A.paused ? 0 : dt, t = A.t;
+        rays.forEach(r => { const k = (t * 0.6 + r.i * 0.18) % 1; if (r.kind === 0) { r.m.position.set(-6 + r.i, 34 - k * 0, 0); r.m.scale.y = 0.6; r.m.position.y = 26; }
+          else if (r.kind === 1) { r.m.position.set(-4 + r.i * 2, 22 - k * 10, 0); r.m.scale.y = 0.35; r.m.material.opacity = 0.7 * (1 - k); }
+          else { r.m.rotation.z = 0.6; r.m.position.set(4 + k * 10, 18 + k * 10, 0); r.m.scale.y = 0.4; } });
+        els.forEach(e => { e.u = (e.u + run * 0.16) % 1; e.m.position.copy(ePath.getPointAt(e.u)); });
+        h2o.forEach(w => { w.u = (w.u + run * 0.25) % 1; w.m.position.set(-32 + w.u * 6, Y - 8 + w.u * 4, 2); w.m.visible = w.u < 0.8; });
+        o2.forEach(o => { o.u = (o.u + run * 0.2) % 1; o.m.position.set(-30 - o.u * 4, Y - 6 - o.u * 10, 4); });
+        prot.forEach(p => { p.u = (p.u + run * 0.25) % 1; p.m.position.set(p.x + Math.sin(p.u * 9) * 1.5, Y + 8 - p.u * 18, Math.cos(p.x + p.u * 5) * 6); });
+        back.forEach(b => { b.u = (b.u + run * 0.4) % 1; b.m.position.set(28 + Math.sin(b.u * 12) * 0.6, Y - 10 + b.u * 16, 1.2); });
+        atp.forEach(a => { a.u = (a.u + run * 0.3) % 1; a.m.position.set(28 + Math.cos(a.u * 6.28) * (4 + a.u * 6), Y + 3 + a.u * 6, Math.sin(a.u * 6.28) * (4 + a.u * 6)); });
+        nadph.forEach(n => { n.u = (n.u + run * 0.2) % 1; n.m.position.set(13 + n.u * 4, Y - 6 - n.u * 14, 2 - n.u * 2); });
+        photons.forEach(p => { p.u = (p.u + run * 0.5) % 1; const tp2 = p.t.position; p.m.position.set(tp2.x + (1 - p.u) * 6, Y + 20 - p.u * 16, (1 - p.u) * 4); p.m.visible = p.u < 0.95; });
+        ant.forEach((a, i) => { a.material.emissive.setHex(Math.sin(t * 6 + i) > 0.7 ? 0x88ff88 : 0x000000); });
+        rotor.rotation.y += run * 6;
+        ccMol.forEach((m, i) => { const a = t * 0.6 + i / ccMol.length * Math.PI * 2; m.position.set(CC.x + Math.cos(a) * 9, CC.y + Math.sin(a) * 9, CC.z); m.material.color.setHex(Math.sin(a) > 0.3 ? 0xffe066 : Math.cos(a) > 0 ? 0xf4a261 : 0xb5e48c); });
+        co2.forEach(c => { c.u = (c.u + run * 0.25) % 1; c.m.position.copy(CC).add(V(-6 + c.u * 6, 20 - c.u * 11, 2)); });
+        tp.forEach(p => { p.u = (p.u + run * 0.2) % 1; p.m.position.copy(CC).add(V(9 + p.u * 10, -2 - p.u * 8, 0)); });
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes.
+   Close-ups (2026-11-17): a stop may carry dive (or dives: [..]) = {n, bg, target, dist, yaw, pitch, side,
+   steps:[{n,s,h,cs,ch,at,dist}], build(api) -> {update(dt,api,step), onStep(i,step)}}. W.dives lists close-ups for the outside view.
+   A close-up is built once, in its own scene, the first time it is opened; its labels show only while it is open.
+   The page may open one itself with api.openDive(d); location.hash #zoom-<n> opens W.dives[n] at load. */
+(function(){
+'use strict';
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+// ---------- close-ups ----------
+const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
+const dSun=new THREE.DirectionalLight(0xffffff,0.6); dSun.position.set(30,60,50); diveScene.add(dSun);
+const dCam=new THREE.PerspectiveCamera(50,1,0.1,900); dCam.add(new THREE.PointLight(0xffffff,0.35,300)); diveScene.add(dCam);
+let dive=null, dStep=0, dYaw=0.5, dPitch=0.25, dDist=60, dDistGoal=60, sideBefore=null;
+const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
+function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
+function openDive(d){
+  if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
+  diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
+  dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
+  dYaw=d.yaw!=null?d.yaw:0.5; dPitch=d.pitch!=null?d.pitch:0.25;
+  renderer.setClearColor(new THREE.Color(d.bg||th.bg||'#0b1a2a')); sideBefore=$('side').hidden?null:$('side').innerHTML;
+  if(d.side) api.side(d.side); else $('side').hidden=true; showDive(); }
+function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
+function closeDive(){ leaveDive(); showStop(); }
+api.openDive=openDive;
+function showDive(){ const info=$('info'), st=dive.steps[dStep];
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
+  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
+  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+  $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
+  dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
+  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
+function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+function showStop(){ if(dive) return showDive(); const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
+  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
+  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); else if(e.code==='Escape'&&dive) closeDive(); });
+let drag=null;
+canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
+  if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
+  else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
+canvas.addEventListener('pointerup',()=>{ drag=null; });
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
+window.addEventListener('resize',resize);
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
+    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
+    dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
+      if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
+    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
+  renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
+setLevel(level); resize(); requestAnimationFrame(frame);
+{ const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
+window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
+})();
+
+</script>
+</body>
+</html>

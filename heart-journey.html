@@ -17,18 +17,13 @@
 <meta property="og:image" content="https://whatthecell.org/logo-512.png">
 <!-- /seo -->
 <title>Journey Through the Heart</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
-/* Layout: one full-screen 3D view with floating panels. Single deliberate dark theme, like looking inside the body. */
-:root{
-  --bg:#16070c; --ink:#fff2ef; --dim:#d8b4ad; --panel:rgba(30,10,16,.84); --line:rgba(255,190,180,.22);
-  --oxy:#ff3b3b; --deoxy:#6d5bd0; --gold:#ffd166; --teal:#3fd0c0;
-  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
-  color-scheme:dark;
-}
+/* Shared layout for What the Cell walk-throughs: one full-screen 3D view with floating panels (single dark theme). */
+:root{ --bg:#0b1a2a; --ink:#f2f7ff; --dim:#b9c8d8; --panel:rgba(10,24,38,.85); --line:rgba(190,215,240,.22); --accent:#ffd166;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif; color-scheme:dark }
 [hidden]{display:none!important}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);overflow:hidden}
 #app{position:fixed;inset:0}
@@ -38,242 +33,647 @@ canvas#c{display:block;width:100%;height:100%;outline:none;touch-action:none;cur
 .brand{display:flex;flex-direction:column;gap:2px}
 .brand h1{margin:0;font:800 26px/1 var(--display);text-wrap:balance}
 .brand p{margin:0;font-size:13px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}
 .switches{display:flex;gap:8px;flex-wrap:wrap}
 .seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--panel);padding:5px;border-radius:999px;border:1px solid var(--line);backdrop-filter:blur(6px)}
 button{font:700 14px var(--body);color:var(--ink);background:transparent;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
 button:hover{background:rgba(255,255,255,.08)}
-button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-button[aria-pressed="true"]{background:var(--gold);color:#2b1d00}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 #info{position:absolute;z-index:5;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);max-width:min(440px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;backdrop-filter:blur(6px)}
-#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+#info .eyebrow{font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 #info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
 #info p{margin:0;font-size:15px;line-height:1.45}
 #info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
 .nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .nav button{background:rgba(255,255,255,.1)}
-.nav button.go{background:var(--gold);color:#2b1d00}
-#cycle{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px)}
-#cycle .phase{font:800 16px var(--display)}
-#cycle .valves{font-size:13px;color:var(--dim);margin-top:2px}
-#cycle canvas{display:block;width:100%;height:90px;margin-top:8px}
-#cycle .key{display:flex;gap:10px;font-size:11px;color:var(--dim);margin-top:4px;flex-wrap:wrap}
-#cycle .key i{display:inline-block;width:10px;height:3px;margin-right:4px;vertical-align:middle}
+.nav button.go{background:var(--accent);color:#1d1400}
+.nav button.zoom{background:transparent;border:1.5px solid var(--accent);color:var(--accent);padding:7px 13px}
+.nav button.zoom:hover{background:rgba(255,209,102,.12)}
+#side{position:absolute;z-index:5;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);width:min(300px,calc(100% - 32px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 14px;backdrop-filter:blur(6px);font-size:13px;line-height:1.4}
+#side h3{margin:0 0 4px;font:800 16px var(--display)}
+#side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
+#side .dot{width:12px;height:12px;border-radius:50%;flex:none}
 #labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
-.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(30,10,16,.72);border:1px solid var(--line);white-space:nowrap}
-#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(40,10,18,.55),rgba(12,3,6,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+.lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
+#start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
 #start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
 #start h2{margin:0;font:800 30px/1.05 var(--display)}
 #start p{margin:0;font-size:15px;line-height:1.5;color:var(--dim)}
 #start table{border-collapse:collapse;font-size:14px}
 #start td{padding:4px 12px 4px 0;vertical-align:top}
 kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
-#start .go{align-self:flex-start;background:var(--gold);color:#2b1d00;font-size:16px;padding:10px 20px}
-.note{font-size:12px;color:var(--dim)}
-@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#cycle{display:none}#info p{font-size:14px}}
-.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+#start .go{align-self:flex-start;background:var(--accent);color:#1d1400;font-size:16px;padding:10px 20px}
+.note{font-size:12px;color:var(--dim)}.note a{color:var(--ink)}
+@media (max-width:700px){.brand p{display:none}.brand h1{font-size:20px}#side{display:none}#info p{font-size:14px}}
 </style>
-
 </head>
 <body>
 <div id="app">
-  <canvas id="c" tabindex="0" aria-label="3D model of the human heart. Use the arrow keys or the Next button to travel with a red blood cell."></canvas>
+  <canvas id="c" tabindex="0"></canvas>
   <div id="labels"></div>
   <div class="top">
-    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Journey Through the Heart</h1><p>DP Biology B3.2 &middot; simplified, not to scale</p></div>
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
     <div class="switches">
-      <div class="seg" role="group" aria-label="View">
-        <button type="button" id="v-ride" aria-pressed="true">Ride with a blood cell</button>
-        <button type="button" id="v-out" aria-pressed="false">Outside view</button>
-      </div>
-      <div class="seg" role="group" aria-label="Level">
-        <button type="button" id="l-sl" aria-pressed="true">SL</button>
-        <button type="button" id="l-hl" aria-pressed="false">HL</button>
-      </div>
-      <div class="seg"><button type="button" id="b-pause" aria-pressed="false">Pause heartbeat</button><button type="button" id="b-help">Controls</button></div>
+      <div class="seg" role="group" aria-label="View"><button type="button" id="v-ride" aria-pressed="true">Ride</button><button type="button" id="v-out" aria-pressed="false">Outside view</button></div>
+      <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+      <div class="seg" id="extra"><button type="button" id="b-pause" aria-pressed="false">Pause</button><button type="button" id="b-help">Controls</button></div>
     </div>
   </div>
   <section id="info" aria-live="polite"></section>
-  <div id="cycle" aria-live="off">
-    <div class="phase" id="ph">Diastole</div>
-    <div class="valves" id="pv"></div>
-    <canvas id="graph" width="560" height="180" aria-hidden="true"></canvas>
-    <div class="key"><span><i style="background:#ff7a59"></i>Aorta</span><span><i style="background:#ffd166"></i>Left ventricle</span><span><i style="background:#9ad7ff"></i>Left atrium</span><span>slowed 3 times</span></div>
-  </div>
+  <div id="side" hidden></div>
   <div id="start">
     <div class="card">
-      <h2>Ride through the heart</h2>
-      <p>Travel with one red blood cell on its double circuit: in from the body, through the right side of the heart to the lungs, back to the left side and out to the body. Watch the valves open and close as the heart beats.</p>
+      <h2 id="s-title"></h2>
+      <p id="s-intro"></p>
       <table>
         <tr><td><kbd>&#8594;</kbd> or <kbd>Space</kbd></td><td>Next stop</td></tr>
         <tr><td><kbd>&#8592;</kbd></td><td>Previous stop</td></tr>
-        <tr><td>Drag</td><td>Look around</td></tr>
-        <tr><td><kbd>P</kbd></td><td>Pause the heartbeat</td></tr>
+        <tr><td>Drag</td><td>Look around (outside view: turn the model)</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Pause the movement</td></tr>
       </table>
-      <p class="note">Outside view lets you turn the whole heart and see the coronary arteries. The heart is simplified: chambers are shown see-through, and the heartbeat is slowed down so you can follow each valve.</p>
+      <p class="note" id="s-note"></p>
       <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
-      <button type="button" class="go" id="b-start">Start the journey</button>
+      <button type="button" class="go" id="b-start">Start</button>
     </div>
   </div>
 </div>
-
 <script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
 <script>
+// Journey Through the Heart, rebuilt 2026-11-17 (teacher: the old heart did not look like a heart and the red blood
+// cells were unclear). Anatomical outer shape with grooves, fat, auricles, great vessels and coronary arteries;
+// biconcave red blood cells; six close-ups (chambers and valves, valves in action, cardiac muscle, vessels,
+// a red blood cell, a blocked coronary artery). Simplified and not to scale.
+window.JOURNEY = {
+  title: 'Journey Through the Heart',
+  sub: 'DP Biology B3.2 · simplified, not to scale',
+  startTitle: 'Ride through the heart',
+  intro: 'Travel with one red blood cell on its double circuit: in from the body, through the right side of the heart to the lungs, back to the left side and out to the body. At each stop, use Zoom in to open a close-up: the four chambers cut open, the valves working, cardiac muscle, blood vessels, a red blood cell and a blocked coronary artery.',
+  note: 'Outside view shows the whole heart from the front: turn it to see the coronary arteries. The heartbeat is slowed down so you can follow each valve. Blue is used for deoxygenated blood by convention; real deoxygenated blood is dark red.',
+  rideLabel: 'Ride with a blood cell',
+  theme: { bg: '#16070c', panel: 'rgba(30,10,16,.86)', accent: '#ffd166', dim: '#d8b4ad', line: 'rgba(255,190,180,.22)' },
+  fog: 0.005,
+  build(A) {
+    const { V, M, T, THREE, scene } = A;
+    const PERIOD = A.reduceMotion ? 6 : 3.2;
+    // ---------- shared pieces ----------
+    // Red blood cell: biconcave disc from the Evans-Fung shape equation, turned on a lathe
+    function rbcGeo(R, seg) { const pts = []; const n = 22;
+      const z = r => 0.5 * R * Math.sqrt(Math.max(0, 1 - (r / R) * (r / R))) * (0.207 + 2.003 * (r / R) ** 2 - 1.123 * (r / R) ** 4);
+      for (let i = 0; i <= n; i++) { const r = R * Math.sin(i / n * Math.PI / 2); pts.push(new THREE.Vector2(Math.max(0.001, r), z(r) * 1.5 + 0.02 * R)); }
+      for (let i = n; i >= 0; i--) { const r = R * Math.sin(i / n * Math.PI / 2); pts.push(new THREE.Vector2(Math.max(0.001, r), -z(r) * 1.5 - 0.02 * R)); }
+      return new THREE.LatheGeometry(pts, seg || 28); }
+    const OXY = 0xc8102e, DEOXY = 0x6b1f52;
+    const rbcMat = c => M(c, { roughness: 0.38, metalness: 0.0, emissive: c, emissiveIntensity: 0.12 });
+    function phaseAt(f) { if (f < 0.14) return 0; if (f < 0.20) return 1; if (f < 0.44) return 2; if (f < 0.50) return 3; return 4; }
+    const PHASES = [['Atrial systole', 'Atria contract. AV valves open, semilunar valves shut.'], ['Ventricles start to contract', 'All four valves shut: pressure in the ventricles builds.'], ['Ventricular systole', 'Semilunar valves open: blood is pumped into the arteries. AV valves shut.'], ['Ventricles relax', 'All four valves shut again as pressure falls.'], ['Diastole', 'Heart muscle relaxes and the chambers fill. AV valves open.']];
+    function pressures(f) { const la = f < 0.14 ? 1.2 + 0.8 * Math.sin(f / 0.14 * Math.PI) : 0.6 + 0.8 * Math.min(1, (f - 0.2) / 0.8);
+      const lv = f < 0.14 ? 1.0 + 0.6 * f / 0.14 : f < 0.20 ? 1.6 + 9 * (f - 0.14) / 0.06 : f < 0.44 ? 10.6 + 5.4 * Math.sin((f - 0.2) / 0.24 * Math.PI) - ((f - 0.2) / 0.24) * 1.5 : f < 0.5 ? 9 - 8 * (f - 0.44) / 0.06 : 0.6;
+      const ao = f < 0.20 ? 10.6 - 1.2 * (f / 0.2) : f < 0.44 ? Math.max(10.6, lv) : 10.6 + 3 - ((f - 0.44) / 0.56) * 3.6; return { la, lv, ao }; }
+    // Soft value noise for natural-looking surfaces
+    const nz = (x, y, z) => Math.sin(x * 1.7 + Math.sin(y * 2.3)) * Math.cos(y * 1.3 + Math.sin(z * 1.9)) * Math.sin(z * 2.1 + x * 0.7);
+    function colourise(g, fn) { const p = g.attributes.position, c = new Float32Array(p.count * 3), col = new THREE.Color(); for (let i = 0; i < p.count; i++) { fn(p.getX(i), p.getY(i), p.getZ(i), col, i); c[i * 3] = col.r; c[i * 3 + 1] = col.g; c[i * 3 + 2] = col.b; } g.setAttribute('color', new THREE.BufferAttribute(c, 3)); }
+    function bumpy(g, amt, f) { const p = g.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i); const k = 1 + amt * nz(x * f, y * f, z * f); p.setXYZ(i, x * k, y * k, z * k); } g.computeVertexNormals(); }
+
+    // ---------- the outer heart ----------
+    const outer = new THREE.Group(); scene.add(outer); const shellMats = [];
+    const muscleCol = new THREE.Color(0x8d2a28), fatCol = new THREE.Color(0xe2c17c), darkCol = new THREE.Color(0x6a1c1c);
+    const shellMat = o => { const m = new THREE.MeshStandardMaterial(Object.assign({ vertexColors: true, roughness: 0.42, metalness: 0.04 }, o || {})); shellMats.push(m); return m; };
+    // Ventricles: a blunt cone, flattened front to back, with grooves where the coronary arteries run in fat
+    const VR = 35, VH = 33; const vent = new THREE.Group(); vent.position.set(2, -11, 2); vent.rotation.z = 0.36; outer.add(vent);
+    const phi0 = s => 0.12 + 0.42 * (1 - s); // anterior interventricular groove: front, drifting left towards the apex
+    function ventShape(px, py, pz) { const y = py, s = (y + 1) / 2, phi = Math.atan2(px, pz);
+      let w = 0.12 + 0.88 * Math.pow(s, 0.68); if (s > 0.68) w *= 1 - 0.55 * ((s - 0.68) / 0.32) ** 2;
+      let dp = phi - phi0(s); dp = Math.atan2(Math.sin(dp), Math.cos(dp));
+      const g1 = s < 0.78 ? 0.06 * Math.exp(-dp * dp / 0.01) : 0, g2 = 0.05 * Math.exp(-((s - 0.74) ** 2) / 0.0012);
+      const k = (1 - g1 - g2) * (1 + 0.012 * nz(px * 6, py * 6, pz * 6));
+      return { x: px * w * VR * k, y: y * VH, z: pz * w * VR * 0.8 * k, fat: Math.min(1, (g1 + g2) * 14 + (s > 0.7 ? 0.25 : 0)), s }; }
+    { const g = new THREE.SphereGeometry(1, 120, 90); const p = g.attributes.position; const fat = [];
+      for (let i = 0; i < p.count; i++) { const r = ventShape(p.getX(i), p.getY(i), p.getZ(i)); p.setXYZ(i, r.x, r.y, r.z); fat.push(r.fat); }
+      g.computeVertexNormals(); colourise(g, (x, y, z, c, i) => { c.copy(muscleCol).lerp(darkCol, 0.3 + 0.3 * nz(x * 0.3, y * 0.3, z * 0.3)).lerp(fatCol, fat[i] * (0.75 + 0.25 * nz(x, y, z))); });
+      vent.add(new THREE.Mesh(g, shellMat())); }
+    function ventSurf(s, phi, lift) { const y = 2 * s - 1, ring = Math.sqrt(Math.max(0, 1 - y * y)); const r = ventShape(ring * Math.sin(phi), y, ring * Math.cos(phi));
+      const v = V(r.x, r.y, r.z); const n = v.clone().normalize(); return v.add(n.multiplyScalar(lift || 0.9)); }
+    // Atria and auricles (ear-like flaps)
+    function blob(c, sc, col, amt, rot) { const g = new THREE.SphereGeometry(1, 64, 48); bumpy(g, amt || 0.04, 3); colourise(g, (x, y, z, cc) => { cc.copy(col).lerp(darkCol, 0.25 + 0.25 * nz(x * 4, y * 4, z * 4)); });
+      const m = new THREE.Mesh(g, shellMat()); m.scale.copy(sc); m.position.copy(c); if (rot) m.rotation.set(rot.x, rot.y, rot.z); outer.add(m); return m; }
+    blob(V(-22, 13, 2), V(15, 14, 13), new THREE.Color(0x7d2630));
+    blob(V(-10, 22, 12), V(9, 5, 4.5), new THREE.Color(0x87303a), 0.12, V(0.2, 0.3, -0.5)); // right auricle
+    blob(V(18, 13, -6), V(14, 12, 12), new THREE.Color(0x7a2a30));
+    blob(V(17, 18, 10), V(7, 4, 4), new THREE.Color(0x87303a), 0.14, V(0, -0.3, 0.6)); // left auricle
+    // Great vessels
+    const vtube = (pts, r, col) => { const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 90, r, 24, false), shellMat({ vertexColors: false, color: col, roughness: 0.35 })); outer.add(m); return m; };
+    const aoPts = [V(6, 2, 0), V(5, 22, -2), V(6, 44, -4), V(18, 56, -8), V(28, 48, -16), V(22, 24, -24), V(20, -54, -24)];
+    vtube(aoPts, 4.6, 0xd2605d);
+    [[10, 51, -4.6], [17, 55.5, -6.6], [24, 54, -8]].forEach((b, i) => vtube([V(b[0], b[1] - 2, b[2]), V(b[0] - 1 + i, b[1] + 8, b[2]), V(b[0] - 3 + i * 2, b[1] + 18, b[2])], [2.2, 1.6, 1.8][i], 0xd2605d));
+    const paPts = [V(-6, 4, 6), V(-3, 22, 9), V(2, 36, 8), V(-14, 44, -2), V(-46, 46, -6)];
+    vtube(paPts, 4.2, 0x5f63b8); vtube([V(2, 36, 8), V(18, 46, 6), V(48, 48, 4)], 3.6, 0x5f63b8);
+    vtube([V(-20, 64, 0), V(-20, 40, 0), V(-19, 22, 0)], 5, 0x4a5aa8); // superior vena cava
+    vtube([V(-24, -54, -4), V(-24, -20, -4), V(-21, 4, -2)], 5, 0x4a5aa8); // inferior vena cava
+    vtube([V(54, 30, -6), V(36, 24, -6), V(26, 16, -4)], 3.2, 0xc0444a); vtube([V(54, 18, -8), V(36, 14, -8), V(26, 12, -6)], 3, 0xc0444a);
+    vtube([V(-50, 32, -8), V(-30, 40, -10), V(8, 34, -12), V(22, 20, -8)], 3, 0xc0444a);
+    // Coronary arteries in the grooves (children of the ventricles, so they follow its shape)
+    const corMat = M(0xa8141e, { roughness: 0.3, emissive: 0x220000 }), corVein = M(0x5a4a9a, { roughness: 0.35 });
+    const ctube = (pts, r, m) => vent.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 80, r, 10, false), m));
+    const lad = []; for (let s = 0.8; s >= 0.06; s -= 0.04) lad.push(ventSurf(s, phi0(s) - 0.02, 0.9)); ctube(lad, 0.8, corMat);
+    const cx = []; for (let a = 0.1; a <= 2.3; a += 0.12) cx.push(ventSurf(0.75, a, 0.9)); ctube(cx, 0.75, corMat);
+    const rca = []; for (let a = 0.1; a >= -2.4; a -= 0.12) rca.push(ventSurf(0.75, a, 0.9)); ctube(rca, 0.75, corMat);
+    for (const [s0, a0, da] of [[0.62, 0.42, 0.5], [0.45, 0.48, 0.55], [0.6, -0.7, -0.4], [0.55, 1.3, 0.25]]) { const b = []; for (let k = 0; k <= 6; k++) b.push(ventSurf(s0 - k * 0.07, a0 + da * k / 6, 0.8)); ctube(b, 0.42, corMat); }
+    const cv = []; for (let s = 0.75; s >= 0.15; s -= 0.05) cv.push(ventSurf(s, phi0(s) + 0.08, 0.7)); ctube(cv, 0.6, corVein);
+    // ---------- chambers for the ride (see-through) ----------
+    const inner = new THREE.Group(); scene.add(inner); const pumps = {};
+    function chamber(key, c, r, thick, col) { const g = new THREE.Group(); g.position.copy(c);
+      const a = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), T(col, 0.16)); a.scale.copy(r); g.add(a);
+      const b = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), T(0xa33a3a, 0.14)); b.scale.set(r.x + thick, r.y + thick, r.z + thick); g.add(b);
+      inner.add(g); pumps[key] = g; }
+    chamber('RA', V(-19, 14, 0), V(11, 10, 9), 1.5, 0x4a4fb0); chamber('RV', V(-11, -13, 2), V(13, 18, 10), 2, 0x4a4fb0);
+    chamber('LA', V(19, 14, -4), V(10, 9, 9), 1.5, 0xc21f35); chamber('LV', V(12, -15, -2), V(13, 20, 11), 5.5, 0xc21f35);
+    const septum = new THREE.Mesh(new THREE.BoxGeometry(3.5, 30, 16), T(0xa33a3a, 0.3)); septum.position.set(1, -10, 0); septum.rotation.z = -0.12; inner.add(septum);
+    [-58, 60].forEach(x => { const l = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24), T(0xf4a3b4, 0.22)); l.scale.set(16, 26, 14); l.position.set(x, 36, -2); scene.add(l); });
+    function valve(c, normal, n, r) { const g = new THREE.Group(); g.position.copy(c); g.quaternion.setFromUnitVectors(V(0, 0, 1), normal.clone().normalize()); inner.add(g);
+      g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.45, 10, 40), M(0xf3e2c4))); const flaps = [];
+      for (let i = 0; i < n; i++) { const p = new THREE.Group(); p.rotation.z = i * 2 * Math.PI / n; const hinge = new THREE.Group(); hinge.position.x = r * 0.98;
+        const f = new THREE.Mesh(new THREE.CircleGeometry(r * 0.98, 24, -Math.PI / n, 2 * Math.PI / n), M(0xf6ecd8, { side: THREE.DoubleSide, roughness: 0.4, transparent: true, opacity: 0.92 })); f.position.x = -r * 0.98; hinge.add(f); p.add(hinge); g.add(p); flaps.push(hinge); }
+      return { set(open) { flaps.forEach(h => { h.rotation.y += (open * 1.2 - h.rotation.y) * 0.25; }); } }; }
+    const tric = valve(V(-14, 0, 1), V(0.3, -1, 0.1), 3, 4.6), mitr = valve(V(14, 0, -3), V(-0.3, -1, 0.1), 2, 4.6);
+    const pulm = valve(V(-6, 5, 6), V(0.15, 1, 0.1), 3, 3.8), aort = valve(V(6, 3, 0), V(0, 1, 0), 3, 4.2);
+    const san = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 12), M(0xffe066, { emissive: 0x664400 })); san.position.set(-27, 20, 4); inner.add(san);
+    const avn = new THREE.Mesh(new THREE.SphereGeometry(1.1, 16, 12), M(0xffe066, { emissive: 0x664400 })); avn.position.set(-4, 0, 2); inner.add(avn);
+    // Labels (ride and outside)
+    const insideLabs = [];
+    [['Superior vena cava', V(-20, 58, 0)], ['Inferior vena cava', V(-24, -46, -4)], ['Right atrium', V(-24, 22, 10)], ['Right ventricle', V(-14, -26, 12)], ['Left atrium', V(22, 22, 4)], ['Left ventricle', V(18, -30, 12)],
+     ['Aorta', V(22, 60, -6)], ['Pulmonary artery', V(-30, 51, 6)], ['Pulmonary veins', V(44, 28, -6)], ['Tricuspid valve', V(-14, -3, 6)], ['Bicuspid (mitral) valve', V(18, -4, 4)], ['Semilunar valves', V(0, 9, 10)], ['Septum', V(1, -22, 9)],
+     ['Sinoatrial node (pacemaker)', V(-30, 24, 6)]].forEach(l => insideLabs.push(A.label(l[0], l[1], 70)));
+    const outLabs = [['Superior vena cava', V(-20, 58, 0)], ['Inferior vena cava', V(-24, -46, -4)], ['Right atrium', V(-30, 18, 8)], ['Right ventricle', V(-12, -22, 22)], ['Left ventricle', V(26, -30, 16)], ['Left atrium', V(28, 18, -6)], ['Aorta', V(22, 60, -6)], ['Pulmonary artery', V(-30, 51, 6)], ['Pulmonary veins', V(46, 28, -6)], ['Coronary artery', V(8, -14, 24)], ['Right auricle', V(-8, 27, 14)], ['Left auricle', V(17, 20, 12)], ['Apex', V(15, -44, 4)]].map(l => A.label(l[0], l[1], 70));
+    // ---------- blood cells on the route ----------
+    const route = [V(-20, 70, 0), V(-20, 40, 0), V(-19, 18, 0), V(-18, 8, 1), V(-14, 0, 1), V(-12, -12, 2), V(-10, -24, 3), V(-8, -10, 5), V(-6, 4, 6), V(-3, 22, 9), V(2, 36, 8), V(-14, 44, -2), V(-40, 46, -6),
+      V(-56, 38, -2), V(-52, 30, -8), V(-30, 40, -10), V(8, 34, -12), V(22, 20, -8), V(20, 12, -4), V(16, 4, -3), V(14, 0, -3), V(12, -12, -2), V(10, -28, -1), V(8, -12, 0), V(6, 2, 0), V(5, 22, -2), V(6, 44, -4), V(18, 56, -8), V(28, 48, -16), V(22, 24, -24), V(20, -40, -24)];
+    const curve = new THREE.CatmullRomCurve3(route, false, 'catmullrom', 0.3);
+    const nearU = p => { let b = 0, bd = 1e9; for (let i = 0; i <= 600; i++) { const d = curve.getPointAt(i / 600).distanceTo(p); if (d < bd) { bd = d; b = i / 600; } } return b; };
+    const lungU = nearU(V(-56, 38, -2));
+    const cOxy = new THREE.Color(OXY), cDe = new THREE.Color(DEOXY);
+    const cellCol = (u, c) => { if (u < lungU - 0.012) c.copy(cDe); else if (u > lungU + 0.012) c.copy(cOxy); else c.lerpColors(cDe, cOxy, (u - lungU + 0.012) / 0.024); };
+    const g1 = rbcGeo(1.3, 24); const cells = [];
+    for (let i = 0; i < 90; i++) { const m = new THREE.Mesh(g1, rbcMat(DEOXY)); scene.add(m); cells.push({ m, u: i / 90, o: V(A.rnd(-2.2, 2.2), A.rnd(-2.2, 2.2), A.rnd(-2.2, 2.2)), r: V(A.rnd(0, 6), A.rnd(0, 6), A.rnd(0, 6)) }); }
+    const hero = new THREE.Mesh(rbcGeo(1.7, 36), rbcMat(DEOXY)); scene.add(hero);
+    // ---------- side panel: the cardiac cycle ----------
+    const side = '<h3 id="hc-ph">Diastole</h3><div id="hc-pv" style="color:var(--dim)"></div><canvas id="hc-g" width="560" height="180" style="width:100%;height:90px;margin-top:6px"></canvas>' +
+      '<div style="display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--dim)"><span><i style="display:inline-block;width:10px;height:3px;background:#ff7a59;vertical-align:middle"></i> Aorta</span><span><i style="display:inline-block;width:10px;height:3px;background:#ffd166;vertical-align:middle"></i> Left ventricle</span><span><i style="display:inline-block;width:10px;height:3px;background:#9ad7ff;vertical-align:middle"></i> Left atrium</span><span>pressure, slowed down</span></div>';
+    let gc = null;
+    function drawGraph(f) { if (!gc) { const c = document.getElementById('hc-g'); if (!c) return; gc = c.getContext('2d'); } const W = 560, H = 180; gc.clearRect(0, 0, W, H);
+      gc.strokeStyle = 'rgba(255,220,210,.25)'; gc.lineWidth = 1; for (let y = 0; y <= 16; y += 4) { const yy = H - 10 - y / 18 * (H - 20); gc.beginPath(); gc.moveTo(0, yy); gc.lineTo(W, yy); gc.stroke(); }
+      [['ao', '#ff7a59'], ['lv', '#ffd166'], ['la', '#9ad7ff']].forEach(([k, col]) => { gc.strokeStyle = col; gc.lineWidth = 3; gc.beginPath(); for (let i = 0; i <= 100; i++) { const p = pressures(i / 100)[k]; const x = i / 100 * W, y = H - 10 - p / 18 * (H - 20); i ? gc.lineTo(x, y) : gc.moveTo(x, y); } gc.stroke(); });
+      gc.strokeStyle = '#fff'; gc.lineWidth = 2; gc.beginPath(); gc.moveTo(f * W, 0); gc.lineTo(f * W, H); gc.stroke(); }
+    let lastPh = -1;
+    function setRide(ride) { insideLabs.forEach(e => { e.dataset.off = ride ? '0' : '1'; }); outLabs.forEach(e => { e.dataset.off = ride ? '1' : '0'; }); shellMats.forEach(m => { m.transparent = ride; m.opacity = ride ? 0.1 : 1; m.depthWrite = !ride; m.needsUpdate = true; }); inner.visible = ride; }
+
+    // =====================================================================================
+    // Close-up 1: the four chambers and valves, cut open from the front
+    // =====================================================================================
+    const D_SECTION = { n: 'The four chambers and valves', bg: '#1a0a10', dist: 150, target: V(-16, -6, 0), yaw: 0, pitch: 0.12, still: true,
+      steps: [
+        { n: 'The heart cut open', s: 'This is the heart sliced from the front. It has four chambers: two atria at the top that receive blood, and two ventricles below that pump it out. The right side (on your left) carries deoxygenated blood; the left side carries oxygenated blood. A wall called the septum keeps them apart.', h: 'Keeping the two sides separate means oxygenated and deoxygenated blood never mix, so blood reaching the body carries as much oxygen as possible.', cs: 'B3.2.15' },
+        { n: 'Right atrium', s: 'Deoxygenated blood from the body enters the right atrium through the superior vena cava (from the head and arms) and the inferior vena cava (from the rest of the body). The atrium has a thin wall: it only has to push blood a short way, into the ventricle below.', h: 'The sinoatrial node in its wall starts each heartbeat.', cs: 'B3.2.15', ch: 'B3.2.16', at: V(-20, 16, 0), dist: 70 },
+        { n: 'Tricuspid valve', s: 'Between the right atrium and right ventricle is an atrioventricular (AV) valve with three flaps. It opens to let blood into the ventricle and shuts when the ventricle contracts, so blood cannot flow back into the atrium.', h: 'Tendons (chordae tendineae) tie the flaps to papillary muscles in the ventricle wall, so the flaps cannot be pushed up inside out.', cs: 'B3.2.15', at: V(-17, 0, 0), dist: 55 },
+        { n: 'Right ventricle', s: 'The right ventricle pumps deoxygenated blood to the lungs. Its wall is thicker than the atrium’s but much thinner than the left ventricle’s, because the lungs are close by.', h: 'A lower pressure in the lung circulation also stops fluid being forced out of the capillaries into the alveoli.', cs: 'B3.2.15', at: V(-15, -14, 0), dist: 70 },
+        { n: 'Pulmonary valve and pulmonary artery', s: 'When the right ventricle contracts, the pulmonary valve (a semilunar valve with pocket-shaped cusps) opens and blood leaves through the pulmonary artery to the lungs. The valve shuts as the ventricle relaxes.', h: 'The pulmonary artery is the only artery that carries deoxygenated blood.', cs: 'B3.2.15', ch: 'B3.2.16', at: V(-6, 22, 0), dist: 65 },
+        { n: 'Left atrium', s: 'Oxygenated blood comes back from the lungs in the pulmonary veins and enters the left atrium.', h: 'The pulmonary veins are the only veins that carry oxygenated blood.', cs: 'B3.2.15', at: V(20, 15, 0), dist: 65 },
+        { n: 'Bicuspid (mitral) valve', s: 'The AV valve on the left has two flaps. Like the tricuspid valve it lets blood into the ventricle and shuts when the ventricle contracts.', h: 'Because the left ventricle makes the highest pressure, its chordae tendineae and papillary muscles are the strongest.', cs: 'B3.2.15', at: V(15, 2, 0), dist: 55 },
+        { n: 'Left ventricle', s: 'The left ventricle has by far the thickest wall. It must pump blood all round the body, so it makes the highest pressure in the heart.', h: 'Its peak pressure is about 16 kPa, roughly five times that of the right ventricle.', cs: 'B3.2.15', at: V(13, -15, 0), dist: 70 },
+        { n: 'Aortic valve and aorta', s: 'When the left ventricle contracts, the aortic valve opens and blood is forced into the aorta, the largest artery, which carries it to the whole body.', h: 'The first branches off the aorta, just above the valve, are the coronary arteries that supply the heart muscle itself.', cs: 'B3.2.15', ch: 'B3.2.6', at: V(5, 22, 0), dist: 65 },
+        { n: 'One heartbeat', s: 'Watch a whole beat: the atria contract and top up the ventricles; the ventricles contract, the AV valves slam shut and the semilunar valves open; then the heart relaxes, the semilunar valves shut and the chambers fill again.', h: 'The closing AV valves make the first heart sound ("lub"); the closing semilunar valves make the second ("dub"). The impulse spreads from the SAN across the atria, is delayed at the AVN, then runs down the septum so the ventricles contract from the apex upwards.', cs: 'B3.2.16', dist: 150 }
+      ],
+      build(D) { const g = D.scene; const sp = (pts) => { const s = new THREE.Shape(); s.moveTo(pts[0][0], pts[0][1]); s.splineThru(pts.slice(1).map(p => new THREE.Vector2(p[0], p[1])).concat([new THREE.Vector2(pts[0][0], pts[0][1])])); return s; };
+        const outline = [[12, -44], [24, -34], [31, -18], [33, -2], [31, 10], [33, 20], [27, 28], [16, 30], [8, 28], [0, 30], [-10, 31], [-22, 31], [-31, 24], [-34, 12], [-33, 0], [-30, -12], [-22, -26], [-6, -38]];
+        const wall = new THREE.Mesh(new THREE.ExtrudeGeometry(sp(outline), { depth: 8, bevelEnabled: true, bevelThickness: 1.2, bevelSize: 1.2, bevelSegments: 4, curveSegments: 60 }),
+          [M(0xb54a45, { roughness: 0.6 }), M(0x80262a, { roughness: 0.5 })]); wall.position.z = -4; g.add(wall);
+        // muscle fibre texture on the cut face: faint streaks
+        const zF = 5.3; const cav = {}; const BLUE = 0x3b4fb0, RED = 0xc4232f;
+        function cavity(key, pts, col, z) { const s = sp(pts); const geo = new THREE.ShapeGeometry(s, 40); geo.computeBoundingBox(); const c = new THREE.Vector3(); geo.boundingBox.getCenter(c); geo.translate(-c.x, -c.y, 0);
+          const m = new THREE.Mesh(geo, M(col, { roughness: 0.35, emissive: col, emissiveIntensity: 0.15 })); m.position.set(c.x, c.y, z || zF); g.add(m); cav[key] = m; return m; }
+        cavity('RA', [[-28, 22], [-21, 27], [-14, 25], [-12, 16], [-13, 7], [-18, 5], [-25, 6], [-29, 13]], BLUE);
+        cavity('RV', [[-25, -2], [-19, 0], [-13, 0], [-8, -3], [-5, -10], [-6, -21], [-12, -29], [-19, -24], [-25, -12]], BLUE);
+        cavity('RAV', [[-21, -1], [-14, -1], [-14, 7], [-21, 7]], BLUE, zF - 0.02);
+        cavity('PA', [[-8, -6], [-2, -8], [-2, 30], [-8, 30]], BLUE, zF - 0.02);
+        cavity('LA', [[12, 8], [18, 6], [26, 8], [29, 15], [27, 23], [19, 25], [13, 20]], RED);
+        cavity('LV', [[5, -3], [12, -1], [20, -3], [23, -12], [19, -24], [13, -33], [8, -26], [5, -14]], RED);
+        cavity('LAV', [[12, -1], [19, -1], [19, 9], [12, 9]], RED, zF - 0.02);
+        cavity('AO', [[2, -4], [8, -2], [8, 28], [2, 28]], RED, zF - 0.02);
+        // vessels joining the section
+        const tb = (pts, r, col) => { const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, r, 18, false), M(col, { roughness: 0.4 })); g.add(m); return m; };
+        tb([V(-22, 56, 0), V(-22, 40, 0), V(-22, 27, 0)], 3.6, 0x4a5aa8); tb([V(-50, 4, 0), V(-38, 7, 0), V(-29, 9, 0)], 3.6, 0x4a5aa8);
+        tb([V(-5, 28, 0), V(-5, 40, 0), V(-14, 47, 0), V(-40, 47, 0)], 3, 0x5f63b8);
+        tb([V(5, 26, 0), V(5, 40, 0), V(13, 50, 0), V(25, 46, 0), V(30, 32, -6), V(33, -20, -12)], 3.3, 0xd2605d);
+        tb([V(52, 24, 0), V(40, 20, 0), V(28, 18, 0)], 2.4, 0xc0444a); tb([V(52, 11, 0), V(40, 12, 0), V(28, 13, 0)], 2.4, 0xc0444a);
+        // valves: flaps hinged at the walls of each opening
+        const flapMat = M(0xf4e8d0, { roughness: 0.35, side: THREE.DoubleSide, emissive: 0x000000 }); const valves = {};
+        function makeValve(key, x0, x1, y, kind) { const len = (x1 - x0) / 2 + 0.3; const hs = []; [x0, x1].forEach((x, i) => { const h = new THREE.Group(); h.position.set(x, y, zF + 0.4); const f = new THREE.Mesh(new THREE.BoxGeometry(len, 0.7, 1.2), flapMat.clone()); f.position.x = i ? -len / 2 : len / 2; h.add(f); h.userData = { side: i ? -1 : 1, f }; g.add(h); hs.push(h); });
+          valves[key] = { hs, kind, open: 0 }; }
+        makeValve('tric', -21, -14, 3, 'av'); makeValve('mitr', 12, 19, 3.5, 'av'); makeValve('pulm', -8, -2, 9, 'sl'); makeValve('aort', 2, 8, 6, 'sl');
+        // papillary muscles and chordae tendineae
+        const papM = M(0x9c3a3a, { roughness: 0.6 }); const paps = [[-20, -17], [-10, -20], [9, -22], [19, -19]].map(p => { const m = new THREE.Mesh(new THREE.ConeGeometry(1.6, 5, 12), papM); m.position.set(p[0], p[1], zF + 0.2); g.add(m); return m; });
+        const chordGeo = new THREE.BufferGeometry(); chordGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(8 * 3), 3)); const chords = new THREE.LineSegments(chordGeo, new THREE.LineBasicMaterial({ color: 0xfff6e6 })); g.add(chords);
+        // SAN, AVN and conducting fibres
+        const node = (x, y) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1.3, 16, 12), M(0xffe066, { emissive: 0x553300 })); m.position.set(x, y, zF + 0.6); g.add(m); return m; };
+        const sanN = node(-24, 25), avnN = node(-11, 4); const purk = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(-11, 4, zF + 0.5), V(0, -6, zF + 0.5), V(0, -30, zF + 0.5), V(10, -38, zF + 0.5), V(26, -20, zF + 0.5)]), 60, 0.35, 6, false), M(0xffe066, { emissive: 0x332200 })); g.add(purk);
+        // flowing blood cells
+        const rg = rbcGeo(1.1, 20); const paths = {
+          R: new THREE.CatmullRomCurve3([V(-22, 50, 1), V(-22, 30, 6.5), V(-21, 18, 6.5), V(-17, 6, 6.5), V(-17, -4, 6.5), V(-16, -18, 6.5), V(-10, -22, 6.5), V(-6, -10, 6.5), V(-5, 10, 6.5), V(-5, 28, 6.5), V(-5, 40, 1), V(-18, 47, 1), V(-40, 47, 1)]),
+          L: new THREE.CatmullRomCurve3([V(50, 22, 1), V(38, 19, 1), V(26, 16, 6.5), V(18, 14, 6.5), V(15, 5, 6.5), V(14, -6, 6.5), V(14, -24, 6.5), V(9, -20, 6.5), V(5, -6, 6.5), V(5, 10, 6.5), V(5, 26, 6.5), V(5, 40, 1), V(14, 50, 1), V(26, 46, 1)]) };
+        const marks = { R: [0.26, 0.6], L: [0.3, 0.62] }; // [AV valve position, semilunar valve position] along each path
+        const flow = []; ['R', 'L'].forEach(k => { for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(rg, rbcMat(k === 'R' ? DEOXY : OXY)); g.add(m); flow.push({ k, m, u: i / 26, r: A.rnd(0, 6) }); } });
+        // labels
+        const lab = []; const L = (t, p, keys) => { const el = D.label(t, p); lab.push({ el, keys }); };
+        L('Right atrium', V(-21, 16, 8), [1]); L('Right ventricle', V(-15, -14, 8), [3]); L('Left atrium', V(21, 16, 8), [5]); L('Left ventricle', V(14, -14, 8), [7]);
+        L('Tricuspid valve', V(-25, 1, 8), [2]); L('Bicuspid valve', V(23, 2, 8), [6]); L('Pulmonary valve', V(-13, 10, 8), [4]); L('Aortic valve', V(11, 7, 8), [8]);
+        L('Septum', V(0, -18, 8), [0]); L('Superior vena cava', V(-22, 52, 4), [1]); L('Inferior vena cava', V(-46, 9, 4), [1]); L('Pulmonary artery', V(-30, 51, 4), [4]); L('Aorta', V(16, 55, 4), [8]);
+        L('Pulmonary veins', V(46, 28, 4), [5]); L('Chordae tendineae', V(-27, -10, 8), [2, 6]); L('Papillary muscle', V(-20, -22, 8), [2, 6]); L('Thick muscular wall', V(28, -26, 8), [7]); L('Sinoatrial node', V(-24, 29, 8), [9, 1]); L('Atrioventricular node', V(-7, 9, 8), [9]);
+        const focus = { 1: ['RA'], 2: ['RAV'], 3: ['RV'], 4: ['PA'], 5: ['LA'], 6: ['LAV'], 7: ['LV'], 8: ['AO'] };
+        let tb2 = 0, step = 0;
+        return {
+          onStep(i) { step = i; lab.forEach(l => { l.el.dataset.off = (i === 0 || i === 9 || l.keys.includes(i)) ? '0' : '1'; }); },
+          update(dt) { if (!A.paused) tb2 += dt; const f = (tb2 % (PERIOD * 1.25)) / (PERIOD * 1.25), p = phaseAt(f);
+            const av = (p === 0 || p === 4) ? 1 : 0, sl = p === 2 ? 1 : 0;
+            Object.entries(valves).forEach(([k, v]) => { const want = v.kind === 'av' ? av : sl; v.open += (want - v.open) * Math.min(1, dt * 10);
+              v.hs.forEach(h => { const s = h.userData.side; h.rotation.z = v.kind === 'av' ? -s * v.open * 1.25 : s * v.open * 1.3; }); });
+            // chordae from AV flap tips to papillary muscles
+            const pos = chordGeo.attributes.position; let j = 0; const tip = new THREE.Vector3();
+            [['tric', 0, 1], ['mitr', 2, 3]].forEach(([k, a, b]) => { valves[k].hs.forEach((h, i) => { const f2 = h.userData.f; tip.set(f2.position.x * 1.9, 0, 0).applyMatrix4(h.matrix); const pp = paps[i ? b : a].position;
+              pos.setXYZ(j++, tip.x, tip.y, tip.z + 0.3); pos.setXYZ(j++, pp.x, pp.y + 2.4, pp.z + 0.3); }); }); pos.needsUpdate = true;
+            // chambers squeeze
+            const atr = f < 0.14 ? 1 - 0.07 * Math.sin(f / 0.14 * Math.PI) : 1, ven = (f >= 0.14 && f < 0.5) ? 1 - 0.09 * Math.sin((f - 0.14) / 0.36 * Math.PI) : 1;
+            cav.RA.scale.setScalar(atr); cav.LA.scale.setScalar(atr); cav.RV.scale.setScalar(ven); cav.LV.scale.setScalar(ven);
+            sanN.material.emissive.setHex(f < 0.06 ? 0xffcc00 : 0x553300); avnN.material.emissive.setHex(f > 0.1 && f < 0.16 ? 0xffcc00 : 0x553300); purk.material.emissive.setHex(f > 0.14 && f < 0.22 ? 0xffaa00 : 0x332200);
+            // highlight the part for this step
+            const fk = focus[step] || []; const pulse = 0.15 + 0.35 * (0.5 + 0.5 * Math.sin(A.t * 5));
+            Object.entries(cav).forEach(([k, m]) => { m.material.emissiveIntensity = fk.includes(k) ? pulse : 0.15; });
+            Object.entries(valves).forEach(([k, v]) => { const on = (step === 2 && k === 'tric') || (step === 6 && k === 'mitr') || (step === 4 && k === 'pulm') || (step === 8 && k === 'aort'); v.hs.forEach(h => h.userData.f.material.emissive.setHex(on ? 0x886600 : 0x000000)); });
+            // blood moves only where the valves let it
+            flow.forEach(c => { const [a, b] = marks[c.k]; let sp = 0.03; if (c.u > a - 0.04 && c.u < a + 0.02) sp = av ? 0.09 : 0; else if (c.u > b - 0.06 && c.u < b + 0.02) sp = sl ? 0.16 : 0; else if (c.u > a && c.u < b) sp = sl ? 0.12 : 0.012;
+              if (!A.paused) c.u = (c.u + dt * sp) % 1; c.m.position.copy(paths[c.k].getPointAt(c.u)); c.m.rotation.set(c.r + c.u * 20, c.u * 14, 0); });
+          } };
+      } };
+
+    // =====================================================================================
+    // Close-up 2: valves in action (AV valve with chordae, and a semilunar valve)
+    // =====================================================================================
+    const D_VALVES = { n: 'How the valves work', bg: '#1a0a10', dist: 70, target: V(0, 0, 0), pitch: 0.35,
+      steps: [
+        { n: 'Two kinds of valve', s: 'On the left is an atrioventricular valve (between an atrium and a ventricle). On the right is a semilunar valve at the base of an artery. Valves are not muscles: they are flaps pushed open or shut by differences in blood pressure.', cs: 'B3.2.15' },
+        { n: 'AV valve open', s: 'When pressure in the atrium is higher than in the ventricle, the flaps are pushed down and open. Blood flows down into the ventricle.', cs: 'B3.2.16', at: V(-18, 0, 0), dist: 50 },
+        { n: 'AV valve shut', s: 'When the ventricle contracts, its pressure rises above the atrium’s. Blood pushes the flaps up until their edges meet and seal: no blood can flow back into the atrium.', h: 'This closing makes the first heart sound ("lub").', cs: 'B3.2.16', at: V(-18, 0, 0), dist: 50 },
+        { n: 'Chordae tendineae', s: 'Strong cords join the flaps to papillary muscles in the ventricle wall. They pull tight as the valve shuts, so the flaps cannot be pushed up inside out into the atrium.', cs: 'B3.2.15', at: V(-18, -8, 0), dist: 45 },
+        { n: 'Semilunar valve open', s: 'When the ventricle’s pressure rises above the pressure in the artery, the three pocket-shaped cusps are pressed flat against the artery wall and blood rushes out.', cs: 'B3.2.16', at: V(18, 4, 0), dist: 50 },
+        { n: 'Semilunar valve shut', s: 'When the ventricle relaxes, blood starts to fall back. It fills the pockets, which balloon out and meet in the middle, sealing the artery.', h: 'This makes the second heart sound ("dub"). Leaky valves let blood flow backwards and can be heard as a heart murmur.', cs: 'B3.2.16', at: V(18, 4, 0), dist: 50 },
+        { n: 'Watch them together', s: 'In each beat the two kinds of valve take turns: AV valves open while the semilunar valves are shut, and the other way round. This keeps blood moving one way only.', cs: 'B3.2.16' }
+      ],
+      build(D) { const g = D.scene; let mode = 'cycle', tt = 0;
+        // AV valve: annulus, two leaflets, chordae to two papillary muscles, see-through atrium and ventricle walls
+        const av = new THREE.Group(); av.position.set(-18, 0, 0); g.add(av);
+        av.add(new THREE.Mesh(new THREE.TorusGeometry(8, 0.9, 12, 60), M(0xf0dcc0))).rotation.x = Math.PI / 2;
+        const atriumW = new THREE.Mesh(new THREE.CylinderGeometry(10, 9, 12, 40, 1, true), T(0x4a4fb0, 0.12)); atriumW.position.y = 6.5; av.add(atriumW);
+        const ventW = new THREE.Mesh(new THREE.CylinderGeometry(9, 4, 22, 40, 1, true), T(0xa33a3a, 0.14)); ventW.position.y = -11.5; av.add(ventW);
+        const leafMat = M(0xf6ecd8, { side: THREE.DoubleSide, roughness: 0.35 }); const leaves = [];
+        [1, -1].forEach(s => { const h = new THREE.Group(); h.position.x = 8 * s; const geo = new THREE.CircleGeometry(8, 40, s > 0 ? -Math.PI / 2 : Math.PI / 2, Math.PI); geo.rotateX(-Math.PI / 2); geo.translate(-8 * s, 0, 0);
+          const p = geo.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), z = p.getZ(i); p.setY(i, -0.6 * Math.cos(x / 8 * Math.PI / 2) * (1 - (z / 8) ** 2)); } geo.computeVertexNormals();
+          const m = new THREE.Mesh(geo, leafMat); h.add(m); av.add(h); leaves.push({ h, s }); });
+        const papG = new THREE.ConeGeometry(2.2, 6, 16); const paps = [1, -1].map(s => { const m = new THREE.Mesh(papG, M(0x9c3a3a)); m.position.set(4 * s, -19, 0); av.add(m); return m; });
+        const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(16 * 3), 3)); av.add(new THREE.LineSegments(cg, new THREE.LineBasicMaterial({ color: 0xfff6e6 })));
+        // Semilunar valve: see-through artery with three pocket cusps
+        const sl = new THREE.Group(); sl.position.set(18, -4, 0); g.add(sl);
+        sl.add(new THREE.Mesh(new THREE.CylinderGeometry(7, 7, 30, 40, 1, true), T(0xd2605d, 0.18))).position.y = 6;
+        const sinus = new THREE.Mesh(new THREE.SphereGeometry(8.2, 32, 20, 0, Math.PI * 2, Math.PI * 0.35, Math.PI * 0.4), T(0xd2605d, 0.14)); sinus.position.y = 4; sl.add(sinus);
+        const ventB = new THREE.Mesh(new THREE.CylinderGeometry(7, 9, 12, 40, 1, true), T(0xa33a3a, 0.14)); ventB.position.y = -12; sl.add(ventB);
+        const cuspGeo = new THREE.SphereGeometry(6.06, 28, 16, 0, Math.PI, Math.PI / 2, Math.PI / 2); const cusps = [];
+        for (let i = 0; i < 3; i++) { const piv = new THREE.Group(); piv.rotation.y = i * 2 * Math.PI / 3; const c = new THREE.Group(); c.position.z = 3.5; const m = new THREE.Mesh(cuspGeo, M(0xf6ecd8, { side: THREE.DoubleSide, roughness: 0.35 })); m.rotation.y = Math.PI; c.add(m); piv.add(c); sl.add(piv); cusps.push(c); }
+        // blood
+        const rg = rbcGeo(1, 18); const avB = [], slB = [];
+        for (let i = 0; i < 24; i++) { const m = new THREE.Mesh(rg, rbcMat(DEOXY)); av.add(m); avB.push({ m, y: A.rnd(-20, 12), a: A.rnd(0, 6.28), r: A.rnd(0, 5), sp: A.rnd(0, 6) }); }
+        for (let i = 0; i < 24; i++) { const m = new THREE.Mesh(rg, rbcMat(OXY)); sl.add(m); slB.push({ m, y: A.rnd(-16, 20), a: A.rnd(0, 6.28), r: A.rnd(0, 4.5), sp: A.rnd(0, 6) }); }
+        D.label('Atrium', V(-18, 13, 9)); D.label('Ventricle', V(-18, -14, 10)); D.label('AV valve flaps', V(-30, 1, 0)); D.label('Chordae tendineae', V(-30, -10, 0)); D.label('Papillary muscle', V(-28, -20, 0));
+        D.label('Artery', V(18, 20, 8)); D.label('Pocket-shaped cusps', V(31, 2, 0)); D.label('Ventricle', V(18, -16, 9));
+        let avOpen = 1, slOpen = 0;
+        return { onStep(i) { mode = ['cycle', 'avOpen', 'avShut', 'avShut', 'slOpen', 'slShut', 'cycle'][i]; },
+          update(dt) { if (!A.paused) tt += dt; let wa, ws;
+            if (mode === 'cycle') { const f = (tt % PERIOD) / PERIOD, p = phaseAt(f); wa = (p === 0 || p === 4) ? 1 : 0; ws = p === 2 ? 1 : 0; }
+            else { wa = mode === 'avOpen' ? 1 : 0; ws = mode === 'slOpen' ? 1 : 0; if (mode === 'avShut') ws = 0; }
+            avOpen += (wa - avOpen) * Math.min(1, dt * 6); slOpen += (ws - slOpen) * Math.min(1, dt * 6);
+            leaves.forEach(l => { l.h.rotation.z = l.s * (avOpen * 1.15 - (1 - avOpen) * 0.12); });
+            const pos = cg.attributes.position; let j = 0; const tp = new THREE.Vector3(), rz = new THREE.Matrix4();
+            leaves.forEach((l, li) => { for (let k = 0; k < 4; k++) { const z = -6 + k * 4; tp.set(-7 * l.s, 0, z * 0.8).applyMatrix4(rz.makeRotationZ(l.h.rotation.z)); tp.x += 8 * l.s;
+              pos.setXYZ(j++, tp.x, tp.y - 0.4, tp.z); const pp = paps[li].position; pos.setXYZ(j++, pp.x, pp.y + 3, pp.z + (k - 1.5) * 0.6); } }); pos.needsUpdate = true;
+            cusps.forEach(c => { c.position.z = 3.5 + 2.9 * slOpen; c.scale.set(1 - 0.5 * slOpen, 1, 0.58 - 0.5 * slOpen); });
+            avB.forEach(b => { if (!A.paused) { if (avOpen > 0.5) b.y -= dt * 9; else if (b.y < -1) b.y -= dt * 1.5; } if (b.y < -22) b.y = 12; const rr = b.y > 0 ? b.r * 1.4 : b.r * (b.y > -12 ? 1.3 : 0.7); b.m.position.set(Math.cos(b.a) * rr, b.y, Math.sin(b.a) * rr); b.m.rotation.set(b.sp + b.y * 0.2, b.y * 0.1, 0); });
+            slB.forEach(b => { if (!A.paused) { if (slOpen > 0.5) b.y += dt * 12; else if (b.y > 4) b.y -= dt * 0.8; } if (b.y > 21) b.y = -17; if (b.y < -17) b.y = -17; const rr = b.r; b.m.position.set(Math.cos(b.a) * rr, b.y, Math.sin(b.a) * rr); b.m.rotation.set(b.sp + b.y * 0.2, b.y * 0.1, 0); });
+          } };
+      } };
+
+    // =====================================================================================
+    // Close-up 3: cardiac muscle tissue
+    // =====================================================================================
+    const D_MUSCLE = { n: 'Cardiac muscle', bg: '#1b0d10', dist: 75, target: V(0, 0, 0), pitch: 0.4,
+      steps: [
+        { n: 'Cardiac muscle tissue', s: 'The walls of the heart are made of cardiac muscle, found nowhere else in the body. It contracts about 100 000 times a day and never tires.', cs: 'B3.2.15' },
+        { n: 'Striped fibres', s: 'Like skeletal muscle, cardiac muscle is striated: the bands are rows of actin and myosin filaments that slide past each other to shorten the cell.', h: 'Each cell has one or two central nuclei, unlike the many nuclei in a skeletal muscle fibre.', ch: 'B3.3.2', at: V(0, 0, 4), dist: 40 },
+        { n: 'Branching cells', s: 'Cardiac muscle cells branch and join their neighbours, forming a network. A contraction pulls in many directions at once, squeezing the chamber.', cs: 'B3.2.15', dist: 70 },
+        { n: 'Intercalated discs', s: 'Where two cells meet there is an intercalated disc (gold). It holds the cells tightly together and contains gap junctions that let ions pass straight from cell to cell.', h: 'So an electrical impulse spreads through the whole network very quickly and the chamber contracts as one unit.', cs: 'B3.2.15', ch: 'B2.3.9', at: V(6, 0, 4), dist: 38 },
+        { n: 'An impulse spreads', s: 'Watch the wave of excitation (glow) pass from cell to cell through the discs. This is why the atria contract together, and then the ventricles.', cs: 'B3.2.16', dist: 75 },
+        { n: 'Packed with mitochondria', s: 'Between the filaments are many mitochondria (orange). Aerobic respiration in them supplies the ATP that contraction needs, beat after beat.', cs: 'C1.2.4', at: V(-10, 2, 4), dist: 36 }
+      ],
+      build(D) { const g = D.scene; let step = 0, tt = 0;
+        const cv = document.createElement('canvas'); cv.width = 256; cv.height = 32; const cx2 = cv.getContext('2d'); cx2.fillStyle = '#c4545a'; cx2.fillRect(0, 0, 256, 32);
+        for (let x = 0; x < 256; x += 16) { cx2.fillStyle = '#8a2530'; cx2.fillRect(x, 0, 6, 32); cx2.fillStyle = '#e07a7e'; cx2.fillRect(x + 9, 0, 2, 32); }
+        const tex = new THREE.CanvasTexture(cv); tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+        const mitoG = new THREE.SphereGeometry(0.6, 12, 8); mitoG.scale(2.2, 1, 1); const cellsM = []; const discMat = M(0xffc64a, { emissive: 0x553300, roughness: 0.4 });
+        const fib = (a, b, r) => { const d = b.clone().sub(a), len = d.length(); const t2 = tex.clone(); t2.needsUpdate = true; t2.repeat.set(len / 3, 1);
+          const geo = new THREE.CylinderGeometry(r, r, len, 24, 1, false); geo.rotateZ(Math.PI / 2); geo.rotateY(0);
+          const mat = new THREE.MeshStandardMaterial({ map: t2, roughness: 0.55, emissive: 0xff5533, emissiveIntensity: 0 }); const m = new THREE.Mesh(geo, mat); m.position.copy(a).add(b).multiplyScalar(0.5);
+          m.quaternion.setFromUnitVectors(V(1, 0, 0), d.normalize()); g.add(m); cellsM.push({ m, c: m.position.clone() }); return m; };
+        const rows = [-12, 0, 12], segs = [-36, -18, 0, 18, 36];
+        rows.forEach((y, ri) => { for (let i = 0; i < segs.length - 1; i++) { const a = V(segs[i] + 1, y, ri * 2 - 2), b = V(segs[i + 1] - 1, y, ri * 2 - 2); fib(a, b, 3.6);
+            const nuc = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), M(0x5b3d8a)); nuc.scale.set(2.6, 1.2, 1.2); nuc.position.copy(a).add(b).multiplyScalar(0.5); g.add(nuc);
+            for (let k = 0; k < 4; k++) { const mi = new THREE.Mesh(mitoG, M(0xf08a3c, { emissive: 0x401800 })); mi.position.set(a.x + 3 + k * 3.5, y + (k % 2 ? 2.6 : -2.6), ri * 2 - 2 + 3.2); mi.rotation.z = Math.PI / 2; g.add(mi); } }
+          segs.slice(1, -1).forEach(x => { const d = new THREE.Mesh(new THREE.CylinderGeometry(3.9, 3.9, 0.9, 24), discMat); d.rotation.z = Math.PI / 2; d.position.set(x, y, ri * 2 - 2); g.add(d); }); });
+        // branches joining the rows
+        [[-27, -12, -18, 0], [9, 0, 18, 12], [-9, 12, 0, 0], [27, -12, 18, 0]].forEach(b => { fib(V(b[0], b[1], -1), V(b[2], b[3], 0), 2.6); });
+        D.label('Intercalated disc', V(0, 17, 4)); D.label('Nucleus', V(-27, 4.5, 4)); D.label('Mitochondria', V(-12, -6, 6)); D.label('Branch', V(-22, -5, 4)); D.label('Striations (actin and myosin)', V(9, -16, 4));
+        return { onStep(i) { step = i; }, update(dt) { if (!A.paused) tt += dt; const w = ((tt * 0.5) % 1.6) * 60 - 40;
+          cellsM.forEach(c => { const d = c.c.x - w; c.m.material.emissiveIntensity = step === 4 || step === 3 ? Math.max(0, 0.9 * Math.exp(-d * d / 60)) : 0; });
+          const s = 1 + (step === 4 ? 0.03 * Math.sin(tt * 6) : 0); g.scale.set(s, 1, 1); } };
+      } };
+
+    // =====================================================================================
+    // Close-up 4: arteries, capillaries and veins
+    // =====================================================================================
+    const D_VESSELS = { n: 'Arteries, veins and capillaries', bg: '#140a12', dist: 95, target: V(0, 0, 0), pitch: 0.3, yaw: 0.35,
+      steps: [
+        { n: 'Three kinds of blood vessel', s: 'Arteries (top) carry blood away from the heart at high pressure. Veins (bottom) bring it back at low pressure. Capillaries (middle, drawn much larger than life) link them and exchange materials with the tissues.', cs: 'B3.2.2' },
+        { n: 'An artery', s: 'An artery has a thick wall with layers of smooth muscle and elastic fibres, and a narrow lumen. The thick wall withstands the high pressure from each heartbeat.', h: 'Elastic fibres stretch as each surge of blood arrives and recoil between beats, evening out the flow. Collagen in the outer layer stops the wall bursting. The surge you can feel is your pulse.', cs: 'B3.2.2, B3.2.3', ch: 'B3.2.4', at: V(0, 22, 0), dist: 55 },
+        { n: 'A capillary', s: 'A capillary wall is a single layer of thin endothelial cells, so substances only have to diffuse a very short distance. The lumen is so narrow that red blood cells pass in single file.', h: 'Many capillaries have pores (fenestrations) between or through the cells, letting plasma leak out to form tissue fluid. A huge network gives a large surface area for exchange.', cs: 'B3.2.1', ch: 'B3.2.11', at: V(0, 0, 0), dist: 40 },
+        { n: 'A vein', s: 'A vein has a thin wall with little muscle and a wide lumen, because the blood in it is at low pressure. Pocket valves stop blood flowing backwards.', h: 'Veins between skeletal muscles are squeezed when the muscles contract, pushing blood towards the heart; the valves make sure it can only go one way.', cs: 'B3.2.2, B3.2.5', at: V(0, -24, 0), dist: 55 },
+        { n: 'Compare them', s: 'Thick wall and narrow lumen: artery. One cell thick: capillary. Thin wall, wide lumen and valves: vein. Watch how the artery pulses while the vein flows steadily.', cs: 'B3.2.2' }
+      ],
+      build(D) { const g = D.scene; let tt = 0;
+        function layers(y, specs, len, cut) { const grp = new THREE.Group(); grp.position.y = y; g.add(grp); const ms = [];
+          specs.forEach(([r0, r1, col]) => { const pts = [new THREE.Vector2(r0, -len / 2), new THREE.Vector2(r1, -len / 2), new THREE.Vector2(r1, len / 2), new THREE.Vector2(r0, len / 2), new THREE.Vector2(r0, -len / 2)];
+            const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 64, cut, Math.PI * 2 - cut * 2 + Math.PI / 2 * 0), M(col, { side: THREE.DoubleSide, roughness: 0.55 })); m.rotation.z = Math.PI / 2; grp.add(m); ms.push(m); }); return { grp, ms }; }
+        const art = layers(22, [[3.2, 3.6, 0xf2d6d0], [3.6, 7.4, 0xc0504f], [7.4, 9.2, 0xd9a090]], 44, 0.6);
+        // elastic fibres: wavy rings in the middle layer
+        for (let k = 0; k < 5; k++) { const ring = new THREE.Mesh(new THREE.TorusGeometry(4.3 + k * 0.7, 0.12, 6, 64, Math.PI * 1.7), M(0xffe9a8, { emissive: 0x332200 })); ring.rotation.y = Math.PI / 2; ring.rotation.x = 0.3; ring.position.set(-21.8, 0, 0); art.grp.add(ring); }
+        const vein = layers(-24, [[8.4, 8.8, 0xe2d4dc], [8.8, 9.9, 0x9a5a72], [9.9, 11, 0xb7a0c4]], 44, 0.6); vein.grp.scale.set(1, 0.82, 1);
+        const cap = layers(0, [[1.9, 2.4, 0xf0c8c0]], 44, 0.4);
+        // capillary: endothelial cell nuclei bulges and pores
+        for (let k = 0; k < 6; k++) { const n = new THREE.Mesh(new THREE.SphereGeometry(0.9, 12, 8), M(0x6a4a9a)); n.scale.set(1.8, 0.5, 1); const a = k * 1.9; n.position.set(-18 + k * 7, Math.cos(a) * 2.4, Math.sin(a) * 2.4); cap.grp.add(n); }
+        // pocket valve inside the vein
+        const vv = []; [1, -1].forEach(s => { const h = new THREE.Group(); h.position.set(4, 8.2 * s, 0); const fg = new THREE.PlaneGeometry(13, 8.4); fg.rotateY(Math.PI / 2); fg.translate(0, -4.2 * s, 0);
+          const f = new THREE.Mesh(fg, M(0xf0e2d8, { side: THREE.DoubleSide, transparent: true, opacity: 0.9 })); h.add(f); vein.grp.add(h); vv.push({ h, s }); });
+        // blood cells
+        const rg = rbcGeo(1.1, 18), rgS = rbcGeo(1.55, 18); const bl = [];
+        for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(rg, rbcMat(OXY)); art.grp.add(m); bl.push({ m, v: 'a', x: A.rnd(-22, 22), r: A.rnd(0, 2.2), a: A.rnd(0, 6.28) }); }
+        for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(rg, rbcMat(DEOXY)); vein.grp.add(m); bl.push({ m, v: 'v', x: A.rnd(-22, 22), r: A.rnd(0, 6.5), a: A.rnd(0, 6.28) }); }
+        for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(rgS, rbcMat(0x9c1a3c)); cap.grp.add(m); bl.push({ m, v: 'c', x: -22 + i * 5, r: 0, a: 0 }); }
+        D.label('Artery', V(-30, 34, 0)); D.label('Thick muscle and elastic layer', V(10, 33, 6)); D.label('Narrow lumen', V(26, 22, 0)); D.label('Capillary (enlarged)', V(-30, 6, 0)); D.label('Wall one cell thick', V(14, 5, 3));
+        D.label('Vein', V(-30, -36, 0)); D.label('Wide lumen', V(26, -24, 0)); D.label('Thin wall', V(10, -34, 6)); D.label('Pocket valve', V(4, -18, 8));
+        return { update(dt) { if (!A.paused) tt += dt; const f = (tt % 1.1) / 1.1, surge = f < 0.3 ? Math.sin(f / 0.3 * Math.PI) : 0;
+          art.grp.scale.set(1, 1 + 0.06 * surge, 1 + 0.06 * surge);
+          const flowV = 0.5 + 0.5 * Math.sin(tt * 1.4), open = flowV > 0.3 ? 1 : 0; vv.forEach(o => { o.h.rotation.z += ((open ? o.s * 1.2 : 0) - o.h.rotation.z) * Math.min(1, dt * 5); });
+          bl.forEach(b => { if (!A.paused) b.x += dt * (b.v === 'a' ? 6 + 30 * surge : b.v === 'v' ? (open ? 7 : -0.5) : 3); if (b.x > 22) b.x = -22; if (b.x < -22) b.x = 22;
+            if (b.v === 'c') { b.m.position.set(b.x, 0, 0); b.m.rotation.set(0, 0, Math.PI / 2 + Math.sin(b.x) * 0.2); }
+            else { b.m.position.set(b.x, Math.cos(b.a) * b.r, Math.sin(b.a) * b.r); b.m.rotation.set(b.a + b.x * 0.2, b.x * 0.1, 0); } }); } };
+      } };
+
+    // =====================================================================================
+    // Close-up 5: a red blood cell and haemoglobin
+    // =====================================================================================
+    const D_RBC = { n: 'A red blood cell', bg: '#160810', dist: 45, target: V(0, 0, 0), pitch: 0.45,
+      steps: [
+        { n: 'A red blood cell', s: 'Red blood cells (erythrocytes) are tiny discs, about 7–8 µm across, that are thinner in the middle than at the rim. This biconcave shape gives a large surface area for oxygen to diffuse in and out, and lets the cell bend through narrow capillaries.', cs: 'B3.2.1' },
+        { n: 'No nucleus', s: 'Mature red blood cells in mammals have no nucleus and no mitochondria. That leaves more room for haemoglobin, and the cell does not use up the oxygen it carries.', cs: 'A2.2.9' },
+        { n: 'Full of haemoglobin', s: 'Each cell holds about 270 million haemoglobin molecules (purple). Each haemoglobin has four polypeptide chains, and each chain holds a haem group with an iron ion that can bind one oxygen molecule.', h: 'So one haemoglobin molecule carries up to four oxygen molecules. Binding of the first makes the next ones bind more easily (cooperative binding), which gives the S-shaped dissociation curve.', cs: 'B1.2.12', ch: 'B3.1.13', at: V(0, 0, 0), dist: 26 },
+        { n: 'Loading oxygen in the lungs', s: 'In the lungs, where there is plenty of oxygen, oxygen (red pairs) diffuses into the cell and binds to haemoglobin to form oxyhaemoglobin. The cell turns bright red.', cs: 'B3.1.4', ch: 'B3.1.13', dist: 32 },
+        { n: 'Unloading in the tissues', s: 'In respiring tissues, oxygen is scarce, so oxyhaemoglobin releases its oxygen, which diffuses out to the cells. The blood becomes darker.', h: 'Carbon dioxide from respiration lowers the pH, which makes haemoglobin release even more oxygen: the Bohr shift.', cs: 'B3.1.4', ch: 'B3.1.12', dist: 32 },
+        { n: 'Squeezing through', s: 'Capillaries can be narrower than a red blood cell. The flexible cell folds as it passes, which also brings its surface right up against the capillary wall for fast diffusion.', cs: 'B3.2.1', at: V(0, -20, 0), dist: 40 }
+      ],
+      build(D) { const g = D.scene; let step = 0, load = 0, tt = 0;
+        const cellMat = new THREE.MeshPhysicalMaterial({ color: OXY, roughness: 0.35, transparent: true, opacity: 0.45, side: THREE.DoubleSide, depthWrite: false, clearcoat: 0.4 });
+        const big = new THREE.Mesh(rbcGeo(14, 64), cellMat); g.add(big);
+        const hbs = []; const hbG = new THREE.SphereGeometry(0.55, 10, 8); const hbM = [0x7b4fc9, 0x9a6ee0, 0x7b4fc9, 0x9a6ee0].map(c => M(c, { roughness: 0.5 }));
+        const o2G = new THREE.SphereGeometry(0.32, 8, 6), o2M = M(0xff3030, { emissive: 0x550000 });
+        for (let i = 0; i < 70; i++) { const r = Math.sqrt(Math.random()) * 11.5, a = Math.random() * 6.28; const zMax = 0.5 * 14 * Math.sqrt(Math.max(0, 1 - (r / 14) ** 2)) * (0.207 + 2.003 * (r / 14) ** 2 - 1.123 * (r / 14) ** 4) * 1.5;
+          const hb = new THREE.Group(); hb.position.set(r * Math.cos(a), A.rnd(-zMax * 0.7, zMax * 0.7), r * Math.sin(a)); hb.rotation.set(A.rnd(0, 6), A.rnd(0, 6), 0);
+          const ox = []; [[0.4, 0.4, 0], [-0.4, 0.4, 0], [0.4, -0.4, 0], [-0.4, -0.4, 0]].forEach((p, k) => { const s = new THREE.Mesh(hbG, hbM[k]); s.position.set(p[0], p[1], p[2]); hb.add(s);
+            const o = new THREE.Group(); const a1 = new THREE.Mesh(o2G, o2M), a2 = new THREE.Mesh(o2G, o2M); a1.position.x = -0.25; a2.position.x = 0.25; o.add(a1, a2); o.position.set(p[0] * 2.3, p[1] * 2.3, 0.4); hb.add(o); ox.push(o); });
+          g.add(hb); hbs.push({ hb, ox, d: Math.random() }); }
+        // free oxygen outside (loading/unloading)
+        const free = []; for (let i = 0; i < 40; i++) { const o = new THREE.Group(); const a1 = new THREE.Mesh(o2G, o2M), a2 = new THREE.Mesh(o2G, o2M); a1.position.x = -0.25; a2.position.x = 0.25; o.add(a1, a2); o.scale.setScalar(1.4); g.add(o); free.push({ o, p: A.onSphere(1).multiplyScalar(A.rnd(16, 26)), q: Math.random() }); }
+        // a capillary with a cell folding through it
+        const capT = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 60, 32, 1, true), T(0xf0c8c0, 0.22)); capT.rotation.z = Math.PI / 2; capT.position.y = -20; g.add(capT);
+        const squeeze = new THREE.Mesh(rbcGeo(5.5, 36), rbcMat(OXY)); squeeze.position.y = -20; g.add(squeeze);
+        const lbl = [D.label('Thin centre', V(0, 1.5, 0)), D.label('Thick rim', V(15, 0, 0)), D.label('Haemoglobin', V(-8, 4, -6)), D.label('Oxygen', V(18, 10, 0)), D.label('Capillary', V(-26, -14, 0))];
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) tt += dt; const want = step === 3 ? 1 : step === 4 ? 0 : 0.85; load += (want - load) * Math.min(1, dt * 0.8);
+            cellMat.color.lerpColors(new THREE.Color(0x5e1530), new THREE.Color(0xd0122c), load); cellMat.opacity = step <= 1 ? 0.85 : 0.35;
+            hbs.forEach(h => { h.hb.visible = step >= 2 && step <= 4; h.ox.forEach((o, k) => { o.visible = (h.d + k * 0.21) % 1 < load; }); h.hb.rotation.y += dt * 0.2; });
+            free.forEach(f => { f.o.visible = step === 3 || step === 4; if (!A.paused) f.q = (f.q + dt * 0.25) % 1; const k = step === 3 ? 1 - f.q : f.q; f.o.position.copy(f.p).multiplyScalar(0.45 + 0.55 * k); });
+            capT.visible = squeeze.visible = step === 5; const x = ((tt * 6) % 60) - 30; squeeze.position.x = x; const nar = Math.max(0, 1 - Math.abs(x) / 14); squeeze.rotation.set(0, 0, Math.PI / 2); squeeze.scale.set(1 + 0.5 * nar, 1 - 0.3 * nar, 1 - 0.3 * nar);
+            big.visible = step !== 5; lbl[0].dataset.off = lbl[1].dataset.off = step <= 1 ? '0' : '1'; lbl[2].dataset.off = step >= 2 && step <= 4 ? '0' : '1'; lbl[3].dataset.off = step === 3 || step === 4 ? '0' : '1'; lbl[4].dataset.off = step === 5 ? '0' : '1'; } };
+      } };
+
+    // =====================================================================================
+    // Close-up 6: a blocked coronary artery
+    // =====================================================================================
+    const D_CORONARY = { n: 'A blocked coronary artery', bg: '#180a0c', dist: 70, target: V(0, 0, 0), pitch: 0.35, yaw: 0.3,
+      steps: [
+        { n: 'A healthy coronary artery', s: 'Coronary arteries branch from the aorta and run over the surface of the heart, supplying its muscle with oxygen and glucose. Heart muscle never rests, so it needs a constant supply.', cs: 'B3.2.6' },
+        { n: 'A fatty plaque forms', s: 'Over years, fatty deposits (yellow) build up inside the artery wall, under its lining. This is atherosclerosis. The plaque bulges into the lumen.', cs: 'B3.2.6', at: V(0, 4, 0), dist: 45 },
+        { n: 'The lumen narrows', s: 'As the plaque grows, less blood can pass. During exercise the muscle beyond the narrowing may not get enough oxygen, causing chest pain (angina).', cs: 'B3.2.6', at: V(0, 4, 0), dist: 45 },
+        { n: 'A clot blocks the artery', s: 'If the surface of a plaque breaks, platelets stick there and a blood clot forms (coronary thrombosis). The clot can block the artery completely.', cs: 'B3.2.6', at: V(0, 4, 0), dist: 40 },
+        { n: 'A heart attack', s: 'Heart muscle beyond the blockage gets no oxygen. It cannot respire aerobically and starts to die (it turns pale here). This is a heart attack (myocardial infarction).', h: 'Quick treatment can save muscle: drugs that dissolve the clot, or a stent that holds the artery open. A bypass graft uses another vessel to carry blood round the blockage.', cs: 'B3.2.6', dist: 70 },
+        { n: 'Risk factors', s: 'The risk rises with smoking, high blood pressure, a high level of LDL cholesterol in the blood, obesity, diabetes, lack of exercise, age and family history. Many of these can be reduced by lifestyle.', cs: 'B3.2.6', dist: 75 }
+      ],
+      build(D) { const g = D.scene; let step = 0, grow = 0, tt = 0;
+        // patch of heart muscle with fibres
+        const patchG = new THREE.PlaneGeometry(120, 70, 60, 35); patchG.rotateX(-Math.PI / 2); const pp = patchG.attributes.position; for (let i = 0; i < pp.count; i++) pp.setY(i, -7 + 1.2 * nz(pp.getX(i) * 0.1, 0, pp.getZ(i) * 0.1)); patchG.computeVertexNormals();
+        const healthy = new THREE.Color(0x8d2a28), dead = new THREE.Color(0xb8968c);
+        colourise(patchG, (x, y, z, c) => { c.copy(healthy).lerp(darkCol, 0.4 + 0.3 * Math.sin(x * 0.9 + z * 0.3)); });
+        const baseCols = patchG.attributes.color.array.slice(); const patch = new THREE.Mesh(patchG, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.5 })); g.add(patch);
+        // artery: see-through wall, lumen, plaque
+        const wallM = new THREE.Mesh(new THREE.CylinderGeometry(4.5, 4.5, 110, 40, 1, true), T(0xd2605d, 0.25)); wallM.rotation.z = Math.PI / 2; g.add(wallM);
+        const plaque = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), M(0xf2d27a, { roughness: 0.7, side: THREE.DoubleSide })); plaque.position.set(0, 4.3, 0); g.add(plaque);
+        const clot = new THREE.Group(); for (let i = 0; i < 26; i++) { const s = new THREE.Mesh(new THREE.SphereGeometry(A.rnd(0.6, 1.3), 8, 6), M(0x6a0a14, { roughness: 0.8 })); s.position.set(A.rnd(-3, 3) + 4, A.rnd(-3, 2), A.rnd(-3, 3)); clot.add(s); }
+        const fibG = new THREE.BufferGeometry(); const fp = []; for (let i = 0; i < 40; i++) fp.push(A.rnd(-1, 9), A.rnd(-3.5, 3), A.rnd(-3.5, 3.5)); fibG.setAttribute('position', new THREE.Float32BufferAttribute(fp, 3)); clot.add(new THREE.LineSegments(fibG, new THREE.LineBasicMaterial({ color: 0xffe0d0 }))); g.add(clot);
+        const rg = rbcGeo(1, 16); const bl = []; for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(rg, rbcMat(OXY)); g.add(m); bl.push({ m, x: A.rnd(-55, 55), r: A.rnd(0, 3), a: A.rnd(0, 6.28) }); }
+        // small branches into the muscle
+        for (const x of [-40, -18, 18, 40]) { const b = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([V(x, -2, 3), V(x + 4, -5, 14), V(x + 2, -6.5, 26)]), 20, 0.9, 8, false), M(0xd2605d)); g.add(b); }
+        const lb = [D.label('Coronary artery', V(-46, 7, 0)), D.label('Heart muscle', V(-40, -6, 22)), D.label('Plaque (fatty deposit)', V(0, 9.5, 0)), D.label('Blood clot', V(6, -5, 6)), D.label('Muscle starved of oxygen', V(32, -6, 22))];
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) tt += dt; const want = [0, 0.55, 0.85, 0.85, 0.85, 0.85][step]; grow += (want - grow) * Math.min(1, dt * 1.5);
+            plaque.scale.set(2 + 9 * grow, 0.2 + 3.6 * grow, 1.5 + 3.2 * grow); plaque.visible = grow > 0.03;
+            const blocked = step >= 3; clot.visible = blocked; const gap = 4.5 - 3.8 * grow;
+            const cols = patchG.attributes.color; const dmg = step >= 4 ? 1 : 0; for (let i = 0; i < pp.count; i++) { const x = pp.getX(i); const k = dmg && x > 8 ? Math.min(1, (x - 8) / 10) * (0.9 + 0.1 * Math.sin(tt * 2)) : 0;
+              cols.setXYZ(i, baseCols[i * 3] + (dead.r - baseCols[i * 3]) * k, baseCols[i * 3 + 1] + (dead.g - baseCols[i * 3 + 1]) * k, baseCols[i * 3 + 2] + (dead.b - baseCols[i * 3 + 2]) * k); } cols.needsUpdate = true;
+            bl.forEach(b => { let sp = 14 * (1 - 0.7 * grow); if (blocked && b.x > -12 && b.x < 2) sp = 0; if (blocked && b.x >= 2) sp = 3; if (!A.paused) b.x += dt * sp; if (b.x > 55) b.x = blocked ? 10 + Math.random() * 40 : -55;
+              const near = Math.abs(b.x) < 10; const rr = near ? Math.min(b.r, Math.max(0, gap - 1.2)) : b.r; b.m.position.set(b.x, Math.cos(b.a) * rr - (near ? 1.5 * grow : 0), Math.sin(b.a) * rr); b.m.rotation.set(b.a + b.x * 0.2, b.x * 0.1, 0); });
+            lb[2].dataset.off = grow > 0.1 ? '0' : '1'; lb[3].dataset.off = blocked ? '0' : '1'; lb[4].dataset.off = step >= 4 ? '0' : '1'; } };
+      } };
+
+    let tBeat = 0;
+    return {
+      route, hero, camOffset: V(0, 2.5, 4), outside: { target: V(0, 8, 0), dist: 150 }, side,
+      dives: [D_SECTION, D_VALVES, D_MUSCLE, D_VESSELS, D_RBC, D_CORONARY],
+      outsideInfo: { n: 'The heart from the front', s: 'Drag to turn the heart. The right ventricle makes up most of the front; the left ventricle forms the pointed apex. Coronary arteries run in fatty grooves over the surface, supplying the heart muscle itself. Use Zoom in to look inside.', h: 'If a coronary artery is blocked by a fatty plaque or a clot, the muscle beyond it is starved of oxygen: a heart attack.', cs: 'B3.2.15', ch: 'B3.2.6' },
+      stops: [
+        { at: V(-20, 40, 0), n: 'Vena cava', s: 'Deoxygenated blood from the body comes back to the heart in the two venae cavae.', h: 'Blood returns at low pressure. Veins have wide lumens and valves to stop it flowing backwards.', cs: 'B3.2.5', ch: 'B3.2.15', dives: [D_VESSELS] },
+        { at: V(-19, 18, 0), n: 'Right atrium', s: 'The right atrium collects blood from the body and passes it to the right ventricle.', h: 'Its wall holds the sinoatrial node (the yellow dot), the pacemaker that starts every heartbeat. Cardiac muscle is myogenic: it contracts without a nerve impulse.', cs: 'B3.2.15', ch: 'B3.2.16', dives: [D_SECTION] },
+        { at: V(-14, 0, 1), n: 'Tricuspid valve', s: 'An atrioventricular valve with three flaps. It stops blood flowing back into the atrium when the ventricle contracts.', h: 'It is pushed shut when pressure in the ventricle rises above pressure in the atrium. Its closing makes the first heart sound.', cs: 'B3.2.15', ch: 'B3.2.16', dives: [D_VALVES] },
+        { at: V(-11, -14, 2), n: 'Right ventricle', s: 'The right ventricle pumps deoxygenated blood to the lungs.', h: 'Its wall is thinner than the left ventricle’s: the lungs are close by, and a lower pressure stops fluid being forced out into the alveoli.', cs: 'B3.2.15', dives: [D_SECTION, D_MUSCLE] },
+        { at: V(-3, 22, 9), n: 'Pulmonary artery', s: 'A semilunar valve opens and blood enters the pulmonary artery. It is the only artery that carries deoxygenated blood.', h: 'Semilunar valves open when ventricular pressure is higher than arterial pressure, and snap shut at the start of diastole, making the second heart sound.', cs: 'B3.2.15', ch: 'B3.2.16', dives: [D_VALVES] },
+        { at: V(-56, 38, -2), n: 'The lungs', s: 'In the lung capillaries the blood picks up oxygen and gives off carbon dioxide. Your cell turns bright red.', h: 'This is why mammals have a double circulation: blood loses pressure in the lung capillaries, so it returns to the heart to be pumped again before going to the body.', cs: 'B3.1.4', ch: 'B3.2.14', dives: [D_RBC] },
+        { at: V(22, 20, -8), n: 'Pulmonary vein to the left atrium', s: 'Oxygenated blood returns from the lungs in the pulmonary veins to the left atrium.', h: 'The pulmonary vein is the only vein that carries oxygenated blood.', cs: 'B3.2.15', dives: [D_SECTION] },
+        { at: V(14, 0, -3), n: 'Bicuspid (mitral) valve', s: 'An atrioventricular valve with two flaps. It stops blood flowing back into the left atrium.', h: 'Cords called chordae tendineae hold the flaps so they cannot turn inside out when the ventricle squeezes.', cs: 'B3.2.15', dives: [D_VALVES] },
+        { at: V(11, -16, -2), n: 'Left ventricle', s: 'The left ventricle has the thickest wall, because it pumps blood all round the body.', h: 'Its thick cardiac muscle makes the highest pressure in the heart, about 16 kPa. Branched fibres joined by intercalated discs let the whole ventricle contract together.', cs: 'B3.2.15', ch: 'B2.3.9', dives: [D_MUSCLE, D_SECTION] },
+        { at: V(5, 22, -2), n: 'Aortic valve and aorta', s: 'Blood leaves through the aortic valve into the aorta, the largest artery, and goes to the rest of the body.', h: 'Elastic fibres in the aorta stretch during systole and recoil during diastole, which keeps blood flowing between beats.', cs: 'B3.2.3', ch: 'B3.2.16', dives: [D_VESSELS, D_CORONARY] }
+      ],
+      onView(v) { setRide(v === 'ride'); },
+      update(dt, A) { if (!A.paused) tBeat += dt; const f = (tBeat % PERIOD) / PERIOD, p = phaseAt(f);
+        const atr = f < 0.14 ? 1 - 0.1 * Math.sin(f / 0.14 * Math.PI) : 1, ven = (f >= 0.14 && f < 0.5) ? 1 - 0.1 * Math.sin((f - 0.14) / 0.36 * Math.PI) : 1;
+        pumps.RA.scale.setScalar(atr); pumps.LA.scale.setScalar(atr); pumps.RV.scale.setScalar(ven); pumps.LV.scale.setScalar(ven); vent.scale.set(0.96 + 0.04 * ven, 0.97 + 0.03 * ven, 0.96 + 0.04 * ven);
+        const av = (p === 0 || p === 4) ? 1 : 0, sl = p === 2 ? 1 : 0; tric.set(av); mitr.set(av); pulm.set(sl); aort.set(sl);
+        san.material.emissive.setHex(f < 0.08 ? 0xffcc00 : 0x664400); avn.material.emissive.setHex(f > 0.08 && f < 0.16 ? 0xffcc00 : 0x664400);
+        if (p !== lastPh) { const a = document.getElementById('hc-ph'), b = document.getElementById('hc-pv'); if (a) { a.textContent = PHASES[p][0]; b.textContent = PHASES[p][1]; } lastPh = p; } drawGraph(f);
+        const u = A.u(), c = new THREE.Color(); cellCol(u, c); hero.material.color.copy(c); hero.material.emissive.copy(c); hero.rotation.x += dt * 0.8; hero.rotation.y += dt * 0.5;
+        cells.forEach(k => { if (!A.paused) k.u = (k.u + dt * 0.016) % 1; k.m.position.copy(curve.getPointAt(k.u)).add(k.o); cellCol(k.u, c); k.m.material.color.copy(c); k.m.material.emissive.copy(c); k.m.rotation.set(k.r.x + k.u * 25, k.r.y + k.u * 18, k.r.z); });
+      }
+    };
+  }
+};
+
+</script>
+<script>
+/* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
+   rideLabel, build(api)}; build returns {route:[Vector3...], stops:[{at,n,s,h,cs,ch}], outside:{target,dist},
+   hero (mesh, optional), camOffset (Vector3), update(dt, api), side (html, optional), fog}.
+   Stops: s = SL text, h = extra HL text, cs = SL codes, ch = extra HL codes.
+   Close-ups (2026-11-17): a stop may carry dive (or dives: [..]) = {n, bg, target, dist, yaw, pitch, side,
+   steps:[{n,s,h,cs,ch,at,dist}], build(api) -> {update(dt,api,step), onStep(i,step)}}. W.dives lists close-ups for the outside view.
+   A close-up is built once, in its own scene, the first time it is opened; its labels show only while it is open.
+   The page may open one itself with api.openDive(d); location.hash #zoom-<n> opens W.dives[n] at load. */
 (function(){
 'use strict';
-const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const J=window.JOURNEY; const reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.setProperty('--'+k,th[k]));
+$('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
+$('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
 let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
-// ---------- scene ----------
-const canvas=document.getElementById('c');
-const renderer=new THREE.WebGLRenderer({canvas, antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5)); renderer.setClearColor(0x16070c);
-const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(0x16070c,0.006);
-const camera=new THREE.PerspectiveCamera(65,1,0.1,800); camera.rotation.order='YXZ'; scene.add(camera);
-scene.add(new THREE.HemisphereLight(0xffe7e2,0x2a0a14,0.9)); const head=new THREE.PointLight(0xffffff,0.6,140); camera.add(head);
-const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,60,80); scene.add(sun);
-function M(c,o){ return new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})); }
-function T(c,op,side){ return M(c,{transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}); }
-function V(x,y,z){ return new THREE.Vector3(x,y,z); }
-function tube(pts,r,mat,seg){ return new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),seg||64,r,16,false),mat); }
-const labels=[];
-function label(text,pos){ const el=document.createElement('div'); el.className='lab'; el.textContent=text; document.getElementById('labels').appendChild(el); labels.push({el,pos}); }
-const OXY=0xd62828, DEOXY=0x5b4bb8, MUSCLE=0xb33a3a;
-// Chambers: see-through muscular walls. The left ventricle wall is drawn thicker.
-const heart=new THREE.Group(); scene.add(heart); const exteriors=[];
-function chamber(c,r,thick,col){ const g=new THREE.Group(); g.position.copy(c);
-  const inner=new THREE.Mesh(new THREE.SphereGeometry(1,40,28),T(col,0.18)); inner.scale.copy(r); g.add(inner);
-  const outer=new THREE.Mesh(new THREE.SphereGeometry(1,40,28),T(MUSCLE,0.16)); outer.scale.set(r.x+thick,r.y+thick,r.z+thick); g.add(outer);
-  const rim=new THREE.Mesh(new THREE.TorusGeometry(1,0.012,6,64),M(0xff9a8a,{emissive:0x401010})); rim.scale.set(r.x+thick*0.5,r.y+thick*0.5,1); g.add(rim);
-  const ext=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),M(0x9b2c2c,{roughness:0.62})); ext.scale.set(r.x+thick+0.6,r.y+thick+0.6,r.z+thick+0.6); ext.visible=false; g.add(ext); exteriors.push(ext);
-  heart.add(g); return g; }
-const RA=chamber(V(-19,14,0),V(11,10,9),1.5,DEOXY), RV=chamber(V(-11,-13,2),V(13,18,10),2,DEOXY);
-const LA=chamber(V(19,14,-4),V(10,9,9),1.5,OXY), LV=chamber(V(12,-15,-2),V(13,20,11),5.5,OXY);
-const septum=new THREE.Mesh(new THREE.BoxGeometry(3.5,30,16),T(MUSCLE,0.28)); septum.position.set(1,-10,0); septum.rotation.z=-0.12; heart.add(septum);
-// Vessels
-const vMat=T(DEOXY,0.45), aMat=T(OXY,0.45);
-heart.add(tube([V(-20,62,0),V(-20,40,0),V(-19,24,0)],5,vMat));            // superior vena cava
-heart.add(tube([V(-24,-52,-4),V(-24,-20,-4),V(-21,4,-2)],5,vMat));        // inferior vena cava
-const paPts=[V(-6,4,6),V(-3,22,9),V(2,36,8),V(-14,46,6),V(-46,48,4)]; heart.add(tube(paPts,4.2,vMat));
-heart.add(tube([V(2,36,8),V(18,46,6),V(48,48,4)],3.6,vMat));              // pulmonary artery to the other lung
-heart.add(tube([V(54,30,-6),V(36,24,-6),V(26,16,-4)],3.2,aMat));          // pulmonary veins
-heart.add(tube([V(-50,32,-8),V(-30,40,-10),V(8,34,-12),V(22,20,-8)],3,aMat));
-const aoPts=[V(6,2,0),V(5,22,-2),V(6,44,-4),V(20,56,-6),V(34,46,-10),V(36,20,-12),V(36,-50,-12)]; heart.add(tube(aoPts,4.6,aMat,120));
-// Coronary arteries over the surface of the ventricles
-const corMat=M(0xff2e2e,{emissive:0x400000});
-heart.add(tube([V(5,6,6),V(14,2,16),V(21,-14,17.5),V(16,-32,14)],1.0,corMat));
-heart.add(tube([V(14,2,16),V(5,-10,17),V(-2,-26,15)],0.8,corMat));
-heart.add(tube([V(3,6,6),V(-12,4,13),V(-22,-8,14.5),V(-20,-26,13)],0.9,corMat));
-// "Lungs" at each side: soft pink glow where the blood picks up oxygen
-[-58,60].forEach(x=>{ const l=new THREE.Mesh(new THREE.SphereGeometry(1,32,24),T(0xf4a3b4,0.22)); l.scale.set(16,26,14); l.position.set(x,36,-2); scene.add(l); });
-// Valves: flaps that swing open and shut
-function valve(c,normal,n,r,col){ const g=new THREE.Group(); g.position.copy(c); g.quaternion.setFromUnitVectors(V(0,0,1),normal.clone().normalize()); heart.add(g);
-  const ring=new THREE.Mesh(new THREE.TorusGeometry(r,0.5,10,40),M(0xf3d9b1)); g.add(ring); const flaps=[];
-  for(let i=0;i<n;i++){ const p=new THREE.Group(); p.rotation.z=i*2*Math.PI/n; const f=new THREE.Mesh(new THREE.CircleGeometry(r*0.98,24,-Math.PI/n,2*Math.PI/n),M(col,{side:THREE.DoubleSide,roughness:0.4})); f.position.x=0; const hinge=new THREE.Group(); hinge.position.x=r*0.98; f.position.x=-r*0.98; hinge.add(f); p.add(hinge); g.add(p); flaps.push(hinge); }
-  return {g,flaps,set(open){ flaps.forEach(h=>{ h.rotation.y=open*1.2; }); }}; }
-const tricuspid=valve(V(-14,0,1),V(0.3,-1,0.1),3,4.6,0xf6e7c8);
-const mitral=valve(V(14,0,-3),V(-0.3,-1,0.1),2,4.6,0xf6e7c8);
-const pulmonaryV=valve(V(-6,5,6),V(0.15,1,0.1),3,3.8,0xe8d5f5);
-const aorticV=valve(V(6,3,0),V(0,1,0),3,4.2,0xffd6c2);
-// Chordae tendineae under the mitral valve (seen at HL)
-const chordMat=M(0xf8f0e0); [[-2,0],[2,0],[0,2]].forEach(o=>{ heart.add(tube([V(14+o[0],-1,-3+o[1]),V(13+o[0]*0.5,-10,-2),V(12,-20,-1)],0.18,chordMat,20)); });
-// Pacemaker: SAN and AVN glow with each beat
-const san=new THREE.Mesh(new THREE.SphereGeometry(1.4,16,12),M(0xffe066,{emissive:0x664400})); san.position.set(-27,20,4); heart.add(san);
-const avn=new THREE.Mesh(new THREE.SphereGeometry(1.1,16,12),M(0xffe066,{emissive:0x664400})); avn.position.set(-4,0,2); heart.add(avn);
-label('Superior vena cava',V(-20,56,0)); label('Inferior vena cava',V(-24,-46,-4)); label('Right atrium',V(-19,22,8)); label('Right ventricle',V(-14,-26,10));
-label('Left atrium',V(21,21,4)); label('Left ventricle',V(14,-30,10)); label('Aorta',V(22,58,-6)); label('Pulmonary artery',V(-30,50,6)); label('Pulmonary vein',V(40,28,-6));
-label('Tricuspid valve',V(-14,-3,6)); label('Bicuspid (mitral) valve',V(18,-4,4)); label('Semilunar valves',V(0,9,10)); label('Septum',V(1,-22,9)); label('Coronary artery',V(23,-12,19));
-// ---------- the route of one red blood cell ----------
-const route=new THREE.CatmullRomCurve3([
-  V(-20,70,0),V(-20,40,0),V(-19,18,0),V(-18,8,1),V(-14,0,1),V(-12,-12,2),V(-10,-24,3),V(-8,-10,5),V(-6,4,6),V(-3,22,9),V(2,36,8),V(-14,46,6),V(-40,48,4),
-  V(-56,38,-2),V(-52,30,-8),V(-30,40,-10),V(8,34,-12),V(22,20,-8),V(20,12,-4),V(16,4,-3),V(14,0,-3),V(12,-12,-2),V(10,-28,-1),V(8,-12,0),V(6,2,0),V(5,22,-2),V(6,44,-4),V(20,56,-6),V(34,46,-10),V(36,20,-12),V(36,-40,-12)
-],false,'catmullrom',0.3);
-function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=600;i++){ const u=i/600, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=[
-  {at:V(-20,40,0), n:'Vena cava', s:'Deoxygenated blood from the body comes back to the heart in the two venae cavae.', h:'Blood returns at low pressure. Veins have wide lumens and valves to stop it flowing backwards.', cs:'B3.2.5', ch:'B3.2.15'},
-  {at:V(-19,18,0), n:'Right atrium', s:'The right atrium collects blood from the body and passes it to the right ventricle.', h:'Its wall holds the sinoatrial node (the yellow dot), the pacemaker that starts every heartbeat. Cardiac muscle is myogenic: it contracts without a nerve impulse.', cs:'B3.2.15', ch:'B3.2.15, B3.2.16'},
-  {at:V(-14,0,1), n:'Tricuspid valve', s:'An atrioventricular valve with three flaps. It stops blood flowing back into the atrium when the ventricle contracts.', h:'It is pushed shut when pressure in the ventricle rises above pressure in the atrium. Its closing makes the first heart sound.', cs:'B3.2.15', ch:'B3.2.16'},
-  {at:V(-11,-14,2), n:'Right ventricle', s:'The right ventricle pumps deoxygenated blood to the lungs.', h:'Its wall is thinner than the left ventricle’s: the lungs are close by, and a lower pressure stops fluid being forced out into the alveoli.', cs:'B3.2.15', ch:'B3.2.15'},
-  {at:V(-3,22,9), n:'Pulmonary artery', s:'A semilunar valve opens and blood enters the pulmonary artery. It is the only artery that carries deoxygenated blood.', h:'Semilunar valves open when ventricular pressure is higher than arterial pressure, and snap shut at the start of diastole, making the second heart sound.', cs:'B3.2.15', ch:'B3.2.16'},
-  {at:V(-56,38,-2), n:'The lungs', s:'In the lung capillaries the blood picks up oxygen and gives off carbon dioxide. Your cell is now bright red.', h:'This is why mammals have a double circulation: blood loses pressure in the lung capillaries, so it returns to the heart to be pumped again before going to the body.', cs:'B3.1.4', ch:'B3.2.14'},
-  {at:V(22,20,-8), n:'Pulmonary vein to the left atrium', s:'Oxygenated blood returns from the lungs in the pulmonary veins to the left atrium.', h:'The pulmonary vein is the only vein that carries oxygenated blood.', cs:'B3.2.15', ch:''},
-  {at:V(14,0,-3), n:'Bicuspid (mitral) valve', s:'An atrioventricular valve with two flaps. It stops blood flowing back into the left atrium.', h:'Cords called chordae tendineae (the white threads below it) hold the flaps so they cannot turn inside out when the ventricle squeezes.', cs:'B3.2.15', ch:'B3.2.15'},
-  {at:V(11,-16,-2), n:'Left ventricle', s:'The left ventricle has the thickest wall, because it pumps blood all round the body.', h:'Its thick cardiac muscle makes the highest pressure in the heart, about 16 kPa. Branched fibres joined by intercalated discs let the whole ventricle contract together.', cs:'B3.2.15', ch:'B3.2.15, B2.3.9'},
-  {at:V(5,22,-2), n:'Aortic valve and aorta', s:'Blood leaves through the aortic valve into the aorta, the largest artery, and goes to the rest of the body.', h:'Elastic fibres in the aorta stretch during systole and recoil during diastole, which keeps blood flowing between beats.', cs:'B3.2.3', ch:'B3.2.3, B3.2.16'}
-].map(s=>Object.assign(s,{u:nearestU(s.at)}));
-// Red blood cells flowing round the route (colour changes after the lungs)
-const lungU=nearestU(V(-56,38,-2)), backU=nearestU(V(-30,40,-10));
-const cellGeo=new THREE.TorusGeometry(1.0,0.55,10,20); const cells=[];
-for(let i=0;i<70;i++){ const m=new THREE.Mesh(cellGeo,M(DEOXY,{roughness:0.35})); scene.add(m); cells.push({m,u:i/70,o:V((Math.random()-0.5)*4,(Math.random()-0.5)*4,(Math.random()-0.5)*4),spin:Math.random()*6}); }
-const hero=new THREE.Mesh(new THREE.TorusGeometry(1.2,0.65,12,24),M(DEOXY,{emissive:0x220000})); scene.add(hero);
-const cOxy=new THREE.Color(OXY), cDe=new THREE.Color(DEOXY);
-function cellColor(u,c){ c.copy(u>lungU+0.01?cOxy:cDe); if(u>lungU-0.01&&u<lungU+0.01) c.lerpColors(cDe,cOxy,(u-lungU+0.01)/0.02); }
-// ---------- cardiac cycle ----------
-const PERIOD=reduceMotion?6:3.0; let tBeat=0, paused=false;
-const ph=document.getElementById('ph'), pv=document.getElementById('pv');
-function phaseAt(f){ if(f<0.14) return 0; if(f<0.20) return 1; if(f<0.44) return 2; if(f<0.50) return 3; return 4; }
-const PHASES=[['Atrial systole','Atria contract. AV valves open, semilunar valves shut.'],['Ventricles start to contract','All four valves shut: pressure in the ventricles builds.'],['Ventricular systole','Semilunar valves open: blood is pumped into the arteries. AV valves shut.'],['Ventricles relax','All four valves shut again as pressure falls.'],['Diastole','Heart muscle relaxes and the chambers fill. AV valves open.']];
-function pressures(f){ // simplified left-side pressures in kPa
-  const la = f<0.14? 1.2+0.8*Math.sin(f/0.14*Math.PI) : 0.6+0.8*Math.min(1,(f-0.2)/0.8);
-  let lv = f<0.14? 1.0+0.6*f/0.14 : f<0.20? 1.6+9*(f-0.14)/0.06 : f<0.44? 10.6+5.4*Math.sin((f-0.2)/0.24*Math.PI)-((f-0.2)/0.24)*1.5 : f<0.5? 9-8*(f-0.44)/0.06 : 0.6;
-  let ao = f<0.20? 10.6-1.2*(f/0.2) : f<0.44? Math.max(10.6,lv) : 10.6+3-((f-0.44)/0.56)*3.6;
-  return {la,lv,ao}; }
-const gc=document.getElementById('graph').getContext('2d');
-function drawGraph(f){ const W=560,H=180; gc.clearRect(0,0,W,H); gc.strokeStyle='rgba(255,220,210,.25)'; gc.lineWidth=1; for(let y=0;y<=16;y+=4){ const yy=H-10-y/18*(H-20); gc.beginPath(); gc.moveTo(0,yy); gc.lineTo(W,yy); gc.stroke(); }
-  [['ao','#ff7a59'],['lv','#ffd166'],['la','#9ad7ff']].forEach(([k,col])=>{ gc.strokeStyle=col; gc.lineWidth=3; gc.beginPath(); for(let i=0;i<=100;i++){ const p=pressures(i/100)[k]; const x=i/100*W, y=H-10-p/18*(H-20); i?gc.lineTo(x,y):gc.moveTo(x,y); } gc.stroke(); });
-  gc.strokeStyle='#fff'; gc.lineWidth=2; gc.beginPath(); gc.moveTo(f*W,0); gc.lineTo(f*W,H); gc.stroke(); }
-function updateBeat(dt){ if(!paused) tBeat+=dt; const f=(tBeat%PERIOD)/PERIOD, p=phaseAt(f);
-  const atr = f<0.14? 1-0.12*Math.sin(f/0.14*Math.PI) : 1, ven = (f>=0.14&&f<0.5)? 1-0.14*Math.sin((f-0.14)/0.36*Math.PI) : 1;
-  RA.scale.setScalar(atr); LA.scale.setScalar(atr); RV.scale.setScalar(ven); LV.scale.setScalar(ven);
-  const av = (p===0||p===4)?1:0, sl = p===2?1:0;
-  tricuspid.set(av); mitral.set(av); pulmonaryV.set(sl); aorticV.set(sl);
-  const glow = f<0.08?1:0, glow2 = (f>0.08&&f<0.16)?1:0; san.material.emissive.setHex(glow?0xffcc00:0x664400); avn.material.emissive.setHex(glow2?0xffcc00:0x664400);
-  ph.textContent=PHASES[p][0]; pv.textContent=PHASES[p][1]; drawGraph(f); return p; }
-// ---------- camera: ride along the route, or orbit outside ----------
-let cutOpen=false; let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0, orbit={yaw:0.4,pitch:0.15,dist:150};
-function setView(v){ view=v; exteriors.forEach(e=>{ e.visible = v==='out' && !cutOpen; }); scene.fog.density = v==='out' ? 0.0015 : 0.006; document.getElementById('v-ride').setAttribute('aria-pressed',v==='ride'); document.getElementById('v-out').setAttribute('aria-pressed',v==='out'); showStop(); }
-function showStop(){ const info=document.getElementById('info');
-  if(view==='out'){ info.innerHTML='<div class="eyebrow">Outside view</div><h2>Coronary arteries</h2><p></p><div class="codes"></div><div class="nav"><button type="button" class="go" id="n-ride">Ride with a blood cell</button></div>';
-    info.querySelector('p').textContent='Drag to turn the heart. The coronary arteries branch from the base of the aorta and wrap round the outside to supply the heart muscle itself with oxygen.'+(level==='hl'?' If one is blocked by a fatty plaque (atherosclerosis) or a clot, the muscle beyond it is starved of oxygen: a heart attack. Risk factors include smoking, high blood pressure and a high LDL cholesterol level.':'');
-    info.querySelector('.codes').textContent='Syllabus: B3.2.6'; document.getElementById('n-ride').onclick=()=>setView('ride');
-    const nav=info.querySelector('.nav'); const cb=document.createElement('button'); cb.type='button'; cb.textContent=cutOpen?'Close it up':'Cut it open'; cb.onclick=()=>{ cutOpen=!cutOpen; setView('out'); }; nav.prepend(cb); return; }
+const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
+const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
+const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
+const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
+const labels=[], anims=[];
+const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
+  V:(x,y,z)=>new THREE.Vector3(x,y,z),
+  M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
+  T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
+  tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
+  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
+  anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
+  onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
+  side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
+  refresh:()=>showStop() };
+const W=J.build(api);
+const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
+function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
+const camOff=W.camOffset||api.V(0,3,5);
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
+// ---------- close-ups ----------
+const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
+const dSun=new THREE.DirectionalLight(0xffffff,0.6); dSun.position.set(30,60,50); diveScene.add(dSun);
+const dCam=new THREE.PerspectiveCamera(50,1,0.1,900); dCam.add(new THREE.PointLight(0xffffff,0.35,300)); diveScene.add(dCam);
+let dive=null, dStep=0, dYaw=0.5, dPitch=0.25, dDist=60, dDistGoal=60, sideBefore=null;
+const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
+function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
+function openDive(d){
+  if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
+  diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
+  dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
+  dYaw=d.yaw!=null?d.yaw:0.5; dPitch=d.pitch!=null?d.pitch:0.25;
+  renderer.setClearColor(new THREE.Color(d.bg||th.bg||'#0b1a2a')); sideBefore=$('side').hidden?null:$('side').innerHTML;
+  if(d.side) api.side(d.side); else $('side').hidden=true; showDive(); }
+function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
+function closeDive(){ leaveDive(); showStop(); }
+api.openDive=openDive;
+function showDive(){ const info=$('info'), st=dive.steps[dStep];
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
+  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
+  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+  $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
+  dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
+  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
+function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+function showStop(){ if(dive) return showDive(); const info=$('info');
+  if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
+    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
   const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
   info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
   info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
-  const nx=document.getElementById('n-next'); nx.textContent=stop===STOPS.length-1?'Ride again':'Next stop';
-  document.getElementById('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); }
-function go(d){ if(view!=='ride') return; stop=stop+d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-window.addEventListener('keydown',e=>{ if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP'){ togglePause(); } });
+  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
+  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
+$('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
+$('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
+window.addEventListener('keydown',e=>{ if(!$('start').hidden) return; if(e.code==='ArrowRight'||e.code==='Space'){ e.preventDefault(); go(1); } else if(e.code==='ArrowLeft'){ e.preventDefault(); go(-1); } else if(e.code==='KeyP') togglePause(); else if(e.code==='Escape'&&dive) closeDive(); });
 let drag=null;
 canvas.addEventListener('pointerdown',e=>{ drag={x:e.clientX,y:e.clientY}; canvas.setPointerCapture(e.pointerId); });
 canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-drag.x, dy=e.clientY-drag.y; drag={x:e.clientX,y:e.clientY};
-  if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { orbit.yaw-=dx*0.006; orbit.pitch=Math.max(-1.2,Math.min(1.2,orbit.pitch+dy*0.006)); } });
+  if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
+  else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
-canvas.addEventListener('wheel',e=>{ if(view==='out'){ e.preventDefault(); orbit.dist=Math.max(70,Math.min(260,orbit.dist+e.deltaY*0.1)); } },{passive:false});
-function togglePause(){ paused=!paused; const b=document.getElementById('b-pause'); b.setAttribute('aria-pressed',paused); b.textContent=paused?'Restart heartbeat':'Pause heartbeat'; }
-document.getElementById('b-pause').onclick=togglePause;
-document.getElementById('v-ride').onclick=()=>setView('ride'); document.getElementById('v-out').onclick=()=>setView('out');
-function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.getElementById('l-sl').setAttribute('aria-pressed',l==='sl'); document.getElementById('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
-document.getElementById('l-sl').onclick=()=>setLevel('sl'); document.getElementById('l-hl').onclick=()=>setLevel('hl');
-document.getElementById('b-help').onclick=()=>{ document.getElementById('start').hidden=false; };
-document.getElementById('b-start').onclick=()=>{ document.getElementById('start').hidden=true; canvas.focus(); };
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
 window.addEventListener('resize',resize);
-const v=new THREE.Vector3(), tmp=new THREE.Color(); let last=performance.now();
-function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now;
-  updateBeat(dt);
-  // the hero cell glides to the next stop
-  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.6)); if(Math.abs(du)<0.0005) u=uTarget;
-  const p=route.getPointAt(Math.min(0.999,u)); hero.position.copy(p); cellColor(u,tmp); hero.material.color.copy(tmp); hero.rotation.y+=dt;
-  cells.forEach(c=>{ if(!paused) c.u=(c.u+dt*0.018)%1; c.m.position.copy(route.getPointAt(c.u)).add(c.o); cellColor(c.u,tmp); c.m.material.color.copy(tmp); c.m.rotation.set(c.spin+c.u*20,c.u*30,0); });
-  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.035));
-    camera.position.copy(behind).add(V(0,2.5,4)); const d=ahead.clone().sub(camera.position).normalize();
+const v=new THREE.Vector3(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+  const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
+  hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
+  if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
+    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
+    dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
+    const w=canvas.clientWidth,h=canvas.clientHeight;
+    labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
+      if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
+    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
+  if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
+  if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
+    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
-  else { if(!drag&&!reduceMotion) orbit.yaw+=dt*0.15; camera.position.set(Math.sin(orbit.yaw)*Math.cos(orbit.pitch)*orbit.dist, 4+Math.sin(orbit.pitch)*orbit.dist, Math.cos(orbit.yaw)*Math.cos(orbit.pitch)*orbit.dist); camera.lookAt(0,4,0); }
+  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;
-  labels.forEach(l=>{ v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&d<(view==='out'?400:70);
-    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/70); } else l.el.style.display='none'; });
+  labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
+    if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
   renderer.render(scene,camera); requestAnimationFrame(frame); }
+if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
+{ const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
+window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
 })();
-</script>
 
+</script>
 </body>
 </html>

@@ -55,6 +55,13 @@ button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 #side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
 #side .dot{width:12px;height:12px;border-radius:50%;flex:none}
 #labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab.def{pointer-events:auto;cursor:pointer;border-color:var(--accent)}
+.lab.def::after{content:"i";display:inline-block;margin-left:6px;width:15px;height:15px;border-radius:50%;background:var(--accent);color:#1d1400;text-align:center;line-height:15px;font:800 11px Georgia,serif;font-style:italic}
+.lab.def:hover,.lab.def:focus{background:rgba(10,24,38,.95);outline:2px solid var(--accent)}
+#defbox{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 70px);right:max(16px,env(safe-area-inset-right,0px));width:min(340px,calc(100% - 32px));background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#defbox h3{margin:0 0 4px;font:800 17px var(--display);color:var(--accent)}
+#defbox p{margin:0;font-size:14.5px;line-height:1.45}
+#defbox button{margin-top:8px;background:rgba(255,255,255,.1)}
 .lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
 #start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
 #start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
@@ -72,6 +79,7 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
 <div id="app">
   <canvas id="c" tabindex="0"></canvas>
   <div id="labels"></div>
+  <div id="defbox" hidden role="dialog" aria-live="polite"><h3 id="def-h"></h3><p id="def-p"></p><button type="button" id="def-x">Close</button></div>
   <div class="top">
     <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
     <div class="switches">
@@ -98,6 +106,12 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
     </div>
   </div>
 </div>
+<script>/* Show any loading error on screen so it can be reported (2026-11-17) */
+(function(){ var shown=false; function show(msg){ if(shown) return; shown=true; var d=document.createElement('div'); d.setAttribute('role','alert'); d.style.cssText='position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#3a1218;color:#ffe3e0;border:2px solid #ef476f;border-radius:10px;padding:12px 16px;font:15px/1.4 sans-serif';
+  d.textContent='The 3D picture could not load. '+(/webgl/i.test(msg)?'This browser could not start 3D graphics (WebGL): turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.':'Error: '+msg); (document.body||document.documentElement).appendChild(d); }
+  window.addEventListener('error',function(e){ show(String(e.message||e.error||'unknown error')); });
+  window.addEventListener('load',function(){ if(typeof THREE==='undefined') show('the 3D library did not load (it may be blocked on this network)'); });
+})();</script>
 <script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
 <script>
 window.JOURNEY = {
@@ -195,19 +209,25 @@ const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.
 $('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
 $('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
 let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
-const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const canvas=$('c'); let renderer; try{ renderer=new THREE.WebGLRenderer({canvas,antialias:true}); }catch(e){ $('start').hidden=false; $('s-note').textContent='This browser could not start 3D graphics (WebGL). Turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.'; $('s-note').style.color='#ffb4a2'; throw e; } renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
 const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
 const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
 const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
 scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
 const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
 const labels=[], anims=[];
+// Labels with a definition (own 4th argument, or J.glossary by label text) can be clicked or tapped to show it (2026-11-17).
+function showDef(t,d){ $('def-h').textContent=t; $('def-p').textContent=d; $('defbox').hidden=false; }
+$('def-x').onclick=()=>{ $('defbox').hidden=true; };
+function mkLabel(text,def){ const el=document.createElement('div'); el.className='lab'; el.textContent=text; const d=def||(J.glossary&&J.glossary[text]);
+  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
+  $('labels').appendChild(el); return el; }
 const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   V:(x,y,z)=>new THREE.Vector3(x,y,z),
   M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
   T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
   tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
-  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
+  label:(text,pos,far,def)=>{ const el=mkLabel(text,def); labels.push({el,pos,far:far||70,dv:null}); return el; },
   anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
   onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
   side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
@@ -218,7 +238,7 @@ function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800,
 const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
 const camOff=W.camOffset||api.V(0,3,5);
-let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=out.yaw!=null?out.yaw:0, op=out.pitch!=null?out.pitch:0.08, od=out.dist;
 api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
 // ---------- close-ups ----------
 const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
@@ -229,7 +249,7 @@ const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
 function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
 function openDive(d){
   if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
-    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far,def)=>{ const el=mkLabel(text,def); labels.push({el,pos,far:far||300,dv:d}); return el; }});
     d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
   diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
   dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
@@ -274,33 +294,34 @@ canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-
   else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
 canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
+let sizeW=0,sizeH=0;
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
 window.addEventListener('resize',resize);
 const v=new THREE.Vector3(); let last=performance.now();
-function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) resize(); const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
   const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
   hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
   if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
-    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
     dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
     const w=canvas.clientWidth,h=canvas.clientHeight;
     labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
       if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
-    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
+    renderer.render(diveScene,dCam); return; }
   if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
   if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
-    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
-    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.position.copy(behind); if(W.settle){ const nr=Math.max(0,1-Math.abs(uTarget-u)/0.05); camera.position.lerp(route.getPointAt(Math.min(0.999,Math.max(0,u))),nr); } camera.position.add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0.7,1-Math.abs(uTarget-u)/0.03); d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
-  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  else { camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;
   labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
-  renderer.render(scene,camera); requestAnimationFrame(frame); }
+  renderer.render(scene,camera); }
+function frame(now){ step(now); requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
 { const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
-window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
+window.journeyDebug={openDive, go, tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

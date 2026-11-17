@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!-- seo -->
-<meta name="description" content="Inside a Sarcomere: IB DP Biology resources from What the Cell.">
+<meta name="description" content="Inside a Muscle: IB DP Biology resources from What the Cell.">
 <link rel="canonical" href="https://whatthecell.org/sarcomere.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#2A1D5E">
 <meta property="og:site_name" content="What the Cell">
-<meta property="og:title" content="Inside a Sarcomere">
-<meta property="og:description" content="Inside a Sarcomere: IB DP Biology resources from What the Cell.">
+<meta property="og:title" content="Inside a Muscle">
+<meta property="og:description" content="Inside a Muscle: IB DP Biology resources from What the Cell.">
 <meta property="og:url" content="https://whatthecell.org/sarcomere.html">
 <meta property="og:image" content="https://whatthecell.org/logo-512.png">
 <!-- /seo -->
-<title>Inside a Sarcomere</title>
+<title>Inside a Muscle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
@@ -55,6 +55,13 @@ button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 #side .row{display:flex;gap:8px;align-items:center;margin:3px 0}
 #side .dot{width:12px;height:12px;border-radius:50%;flex:none}
 #labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+.lab.def{pointer-events:auto;cursor:pointer;border-color:var(--accent)}
+.lab.def::after{content:"i";display:inline-block;margin-left:6px;width:15px;height:15px;border-radius:50%;background:var(--accent);color:#1d1400;text-align:center;line-height:15px;font:800 11px Georgia,serif;font-style:italic}
+.lab.def:hover,.lab.def:focus{background:rgba(10,24,38,.95);outline:2px solid var(--accent)}
+#defbox{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 70px);right:max(16px,env(safe-area-inset-right,0px));width:min(340px,calc(100% - 32px));background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+#defbox h3{margin:0 0 4px;font:800 17px var(--display);color:var(--accent)}
+#defbox p{margin:0;font-size:14.5px;line-height:1.45}
+#defbox button{margin-top:8px;background:rgba(255,255,255,.1)}
 .lab{position:absolute;transform:translate(-50%,-50%);font:700 12.5px var(--body);padding:3px 9px;border-radius:999px;background:rgba(10,24,38,.72);border:1px solid var(--line);white-space:nowrap}
 #start{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,rgba(10,26,44,.55),rgba(4,10,18,.93));z-index:10;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
 #start .card{max-width:540px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 24px;display:flex;flex-direction:column;gap:12px}
@@ -72,6 +79,7 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
 <div id="app">
   <canvas id="c" tabindex="0"></canvas>
   <div id="labels"></div>
+  <div id="defbox" hidden role="dialog" aria-live="polite"><h3 id="def-h"></h3><p id="def-p"></p><button type="button" id="def-x">Close</button></div>
   <div class="top">
     <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1 id="t-title"></h1><p id="t-sub"></p></div>
     <div class="switches">
@@ -98,68 +106,373 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
     </div>
   </div>
 </div>
+<script>/* Show any loading error on screen so it can be reported (2026-11-17) */
+(function(){ var shown=false; function show(msg){ if(shown) return; shown=true; var d=document.createElement('div'); d.setAttribute('role','alert'); d.style.cssText='position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#3a1218;color:#ffe3e0;border:2px solid #ef476f;border-radius:10px;padding:12px 16px;font:15px/1.4 sans-serif';
+  d.textContent='The 3D picture could not load. '+(/webgl/i.test(msg)?'This browser could not start 3D graphics (WebGL): turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.':'Error: '+msg); (document.body||document.documentElement).appendChild(d); }
+  window.addEventListener('error',function(e){ show(String(e.message||e.error||'unknown error')); });
+  window.addEventListener('load',function(){ if(typeof THREE==='undefined') show('the 3D library did not load (it may be blocked on this network)'); });
+})();</script>
 <script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
 <script>
+// Inside a Muscle (rebuilt 2026-11-17 after the teacher's feedback: explain structure step by step from muscle to
+// sarcomere, clickable labels with definitions, and a clear, slow cross-bridge cycle). Old version: old\sarcomere.v1.js.
 window.JOURNEY = {
-  title: 'Inside a Sarcomere',
+  title: 'Inside a Muscle',
   sub: 'DP Biology B3.3 (HL) · simplified, not to scale',
-  startTitle: 'Watch a muscle contract',
-  intro: 'Zoom from a muscle fibre into one sarcomere and watch the filaments slide. Use the Contract button to send calcium in and start the cross-bridge cycle; let go and titin springs the sarcomere back.',
-  note: 'Red: thin actin filaments. Purple: thick myosin filaments with their heads. Blue: tropomyosin. Green dots: calcium ions. Grey springs: titin.',
+  startTitle: 'From a whole muscle to the cross-bridge',
+  intro: 'Zoom in one level at a time: a whole muscle, a bundle of fibres, one muscle fibre, a myofibril and finally one sarcomere. Watch the sarcomere contract, then open the close-ups to see each step of the cross-bridge cycle and how a nerve impulse starts it. Click any label marked with an i to read what it is.',
+  note: 'Red beads: actin. Purple: myosin and its heads (yellow when attached to actin). Blue: tropomyosin. Yellow blobs: troponin. Green: calcium ions. Grey springs: titin. Each level is magnified far more than the one before.',
   rideLabel: 'Zoom in',
-  theme: { bg: '#170d14', panel: 'rgba(30,14,24,.86)', accent: '#ff9fb2', dim: '#d6bcc9', line: 'rgba(255,200,220,.22)' },
-  fog: 0.004,
+  theme: { bg: '#170d14', panel: 'rgba(30,14,24,.88)', accent: '#ff9fb2', dim: '#d6bcc9', line: 'rgba(255,200,220,.22)' },
+  fog: 0.0022,
+  glossary: {
+    'Whole muscle': 'An organ made of many bundles of muscle fibres, wrapped in connective tissue, with blood vessels and nerves. It can only pull (contract), never push.',
+    'Tendon': 'Tough, non-stretchy connective tissue that joins a muscle to a bone, so the pull of the muscle moves the bone.',
+    'Fascicle (bundle of fibres)': 'A bundle of muscle fibres wrapped in connective tissue. A whole muscle is made of many fascicles.',
+    'Fascicle': 'A bundle of muscle fibres wrapped in its own layer of connective tissue.',
+    'Muscle fibre': 'One muscle cell: very long, with many nuclei, packed with myofibrils. It forms when many cells fuse during development.',
+    'Blood capillary': 'Tiny vessels between the fibres that bring oxygen and glucose for respiration and take away carbon dioxide.',
+    'Sarcolemma': 'The cell surface membrane of a muscle fibre. A nerve impulse spreads along it and down into the T-tubules.',
+    'Nucleus (one of many)': 'Muscle fibres have many nuclei, pushed to the edge of the cell, because each fibre forms from many fused cells.',
+    'Myofibril': 'A long rod of protein filaments running the length of the fibre. It is divided into repeating sarcomeres, which give the striped look.',
+    'Mitochondrion': 'Muscle fibres have many mitochondria between the myofibrils. Aerobic respiration in them makes the ATP that contraction uses.',
+    'Sarcoplasmic reticulum': 'A network of membrane sacs around each myofibril (a specialised ER). It stores calcium ions and releases them when a nerve impulse arrives.',
+    'T-tubule': 'An infolding of the sarcolemma that carries the impulse deep into the fibre, next to the sarcoplasmic reticulum.',
+    'Z line': 'The boundary at each end of a sarcomere. Thin actin filaments are anchored to it. Z lines move closer together when the muscle contracts.',
+    'I band (light)': 'The light band: the part with only thin actin filaments. It gets shorter when the muscle contracts.',
+    'A band (dark)': 'The dark band: the full length of the thick myosin filaments. It stays the same length during contraction.',
+    'H zone': 'The middle of the A band where there is myosin but no actin. It gets shorter, and can disappear, when the muscle contracts.',
+    'M line': 'The line in the centre of the sarcomere that holds the thick myosin filaments in place.',
+    'One sarcomere': 'The unit of contraction: the section of myofibril from one Z line to the next. Thousands shortening together make the whole muscle shorten.',
+    'Actin (thin filament)': 'A thin filament made of two twisted chains of actin proteins, anchored to the Z line. Each actin protein has a binding site for a myosin head.',
+    'Myosin (thick filament)': 'A thick filament made of many myosin proteins. Their heads stick out and can bind to actin, forming cross-bridges.',
+    'Myosin heads': 'The parts of myosin that bind to actin and swivel to pull it. Each head uses one ATP per cycle.',
+    'Myosin head': 'Binds to a site on actin, swivels to pull the actin (the power stroke), lets go when ATP binds, and is re-cocked when it splits ATP.',
+    'Titin': 'A huge, springy protein joining the thick filament to the Z line. It is stretched when the sarcomere is pulled longer and helps it spring back, and stops it being over-stretched.',
+    'Tropomyosin': 'A long protein that lies along the actin filament and covers the myosin binding sites when the muscle is relaxed.',
+    'Troponin': 'A protein attached to tropomyosin. When calcium ions bind to it, it changes shape and pulls tropomyosin off the binding sites.',
+    'Calcium ions': 'Released from the sarcoplasmic reticulum when a nerve impulse arrives. They bind to troponin, which uncovers the binding sites on actin.',
+    'Binding site': 'The place on an actin protein where a myosin head can attach. It is covered by tropomyosin until calcium ions arrive.',
+    'Ca²⁺': 'Calcium ions. They bind to troponin, which moves tropomyosin and uncovers the binding sites on actin.',
+    'ATP': 'Binds to the myosin head and makes it let go of actin. The head then splits ATP into ADP and phosphate, which re-cocks it.',
+    'ADP + Pi': 'What is left after the myosin head splits ATP. The head holds them while cocked; releasing them goes with the power stroke.',
+    'Motor neuron': 'A nerve cell that carries impulses from the spinal cord or brain to muscle fibres.',
+    'Motor unit': 'One motor neuron and all the muscle fibres it controls. They all contract together. More units switched on gives a stronger pull.',
+    'Motor end plate': 'Where the motor neuron meets the muscle fibre: a synapse between nerve and muscle.',
+    'Acetylcholine': 'The neurotransmitter released by the motor neuron. It binds to receptors on the sarcolemma and starts an impulse in the muscle fibre.',
+    'Receptors': 'Proteins in the sarcolemma that acetylcholine binds to, opening channels so the fibre membrane is depolarised.',
+    'Synaptic vesicles': 'Small sacs in the motor neuron ending, full of acetylcholine, released by exocytosis when an impulse arrives.'
+  },
   build(A) {
     const { V, M, T, tube, scene, THREE } = A;
-    // Muscle fibre (outer) with striations and several nuclei, myofibrils inside, sarcoplasmic reticulum wrapping them
-    const fibre = new THREE.Mesh(new THREE.CylinderGeometry(26, 26, 200, 48, 1, true), T(0xc0485e, 0.18)); fibre.rotation.z = Math.PI / 2; fibre.position.x = -40; scene.add(fibre);
-    for (let i = 0; i < 4; i++) { const n = new THREE.Mesh(new THREE.SphereGeometry(3, 16, 12), M(0x5b2a86)); n.scale.set(2, 1, 1); n.position.set(-120 + i * 50, 24 * Math.cos(i), 24 * Math.sin(i)); scene.add(n); }
-    const myo = [[0, 0], [12, 6], [-12, 6], [0, -12], [12, -8], [-12, -8], [6, 16], [-6, 16]];
-    myo.forEach(([y, z]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(4.8, 4.8, 200, 20, 1, true), T(0xe07a8f, 0.13)); m.rotation.z = Math.PI / 2; m.position.set(-40, y, z); scene.add(m);
-      for (let x = -140; x < 60; x += 22) { const b = new THREE.Mesh(new THREE.CylinderGeometry(4.9, 4.9, 6, 20, 1, true), T(0x7a1f35, 0.25)); b.rotation.z = Math.PI / 2; b.position.set(x, y, z); scene.add(b); } });
-    const sr = M(0x6fd3c7, { transparent: true, opacity: 0.45 }); for (let i = 0; i < 6; i++) { const pts = []; for (let k = 0; k <= 30; k++) { const a = k / 30 * Math.PI * 2; pts.push(V(-30 + i * 6 + Math.sin(a * 3) * 1.5, 6 * Math.cos(a), 6 * Math.sin(a))); } scene.add(tube(pts, 0.35, sr, 60, true)); }
-    // The sarcomere itself, magnified at the origin. Z discs move in as it contracts.
-    const sarc = new THREE.Group(); scene.add(sarc);
+    const L = (t, p, far) => A.label(t, p, far);
+    const along = (m, x) => { m.rotation.z = Math.PI / 2; if (x != null) m.position.x = x; return m; };
+    const detail = [];  // labels hidden in the outside view
+    const D = (t, p, far) => { const el = L(t, p, far); detail.push(el); return el; };
+
+    // ===== 1. Whole muscle, cut across to show fascicles (centre of cut face at x = -300) =====
+    const MU = V(-300, 0, 0);
+    const prof = []; for (let i = 0; i <= 30; i++) { const t = i / 30; prof.push(new THREE.Vector2(4 + 34 * Math.pow(Math.sin(Math.PI / 2 * t), 0.75), -100 + t * 100)); }
+    const muscle = new THREE.Mesh(new THREE.LatheGeometry(prof, 64), M(0xa8323f, { roughness: 0.6 })); muscle.rotation.z = -Math.PI / 2; muscle.position.copy(MU); scene.add(muscle);
+    const tendon = along(new THREE.Mesh(new THREE.CylinderGeometry(4, 4.6, 40, 24), M(0xf1ece2, { roughness: 0.35 })), MU.x - 118); scene.add(tendon);
+    const face = new THREE.Mesh(new THREE.CircleGeometry(38, 64), M(0xf0d2c8, { side: THREE.DoubleSide })); face.rotation.y = Math.PI / 2; face.position.set(MU.x + 0.05, 0, 0); scene.add(face);
+    const fasPos = [[0, 0, 7]]; for (let i = 0; i < 6; i++) fasPos.push([Math.cos(i / 6 * 6.283) * 14.5, Math.sin(i / 6 * 6.283) * 14.5, 6.6]); for (let i = 0; i < 11; i++) fasPos.push([Math.cos((i + 0.5) / 11 * 6.283) * 28.5, Math.sin((i + 0.5) / 11 * 6.283) * 28.5, 6.2]);
+    const fasM = M(0xc8404f, { roughness: 0.55 });
+    fasPos.forEach(([y, z, r]) => { const c = along(new THREE.Mesh(new THREE.CylinderGeometry(r, r, 2, 28), fasM), MU.x); c.position.set(MU.x + 0.6, y, z); scene.add(c); });
+    L('Whole muscle', V(MU.x - 60, 42, 0), 600); D('Tendon', V(MU.x - 128, 9, 0), 600); D('Fascicle (bundle of fibres)', V(MU.x + 2, 14.5, 4), 600);
+
+    // ===== 2. One fascicle (bundle of fibres), x -235 to -165 =====
+    const FA = V(-200, 0, 0);
+    scene.add(along(new THREE.Mesh(new THREE.CylinderGeometry(14, 14, 70, 40, 1, true), T(0xf3d5cd, 0.22)), FA.x));
+    const fibM = M(0xc23b4c, { roughness: 0.5 }), fibEnd = M(0xe58a96);
+    [[0, 0]].concat([0, 1, 2, 3, 4, 5].map(i => [Math.cos(i * 1.047) * 8.6, Math.sin(i * 1.047) * 8.6])).forEach(([y, z]) => {
+      const f = along(new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 76, 24), fibM)); f.position.set(FA.x + 3, y, z); scene.add(f);
+      const e = new THREE.Mesh(new THREE.CircleGeometry(3.9, 24), fibEnd); e.rotation.y = Math.PI / 2; e.position.set(FA.x + 41.05, y, z); scene.add(e); });
+    scene.add(tube([V(-240, 13, 8), V(-215, 15.5, 4), V(-190, 14, 9), V(-165, 15.8, 3)], 0.7, M(0xd62828, { emissive: 0x330000 }), 40));
+    L('Fascicle', V(FA.x - 20, 18, 0), 400); D('Muscle fibre', V(FA.x + 41, 0, 8.6 * 0.87 + 4), 400); D('Blood capillary', V(-205, 17, 6), 400);
+
+    // ===== 3. One muscle fibre (cell), x -145 to -75, cut open at x = -75 =====
+    const FI = V(-110, 0, 0);
+    scene.add(along(new THREE.Mesh(new THREE.CylinderGeometry(10, 10, 70, 48, 1, true), T(0xd94f63, 0.2)), FI.x));
+    const nucM = M(0x5b2a86, { roughness: 0.4 });
+    [[-135, 0.5], [-118, 2.4], [-100, 4.2], [-88, 1.2]].forEach(([x, a]) => { const n = new THREE.Mesh(new THREE.SphereGeometry(1.6, 18, 12), nucM); n.scale.set(2.6, 0.7, 1.2); n.position.set(x, Math.cos(a) * 9.4, Math.sin(a) * 9.4); n.lookAt(x, 0, 0); n.rotateY(Math.PI / 2); scene.add(n); });
+    const mfPos = [[0, 0]]; for (let i = 0; i < 6; i++) mfPos.push([Math.cos(i * 1.047) * 4.3, Math.sin(i * 1.047) * 4.3]); for (let i = 0; i < 9; i++) mfPos.push([Math.cos(i * 0.698 + 0.3) * 7.6, Math.sin(i * 0.698 + 0.3) * 7.6]);
+    const mfM = M(0xf0a3b2, { roughness: 0.5 }); const bandG = new THREE.CylinderGeometry(1.86, 1.86, 2.6, 18, 1, true); const bands = new THREE.InstancedMesh(bandG, M(0x7a1f35), mfPos.length * 14); const dm = new THREE.Object3D(); let bi = 0;
+    mfPos.forEach(([y, z]) => { const m = along(new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 70, 18), mfM), FI.x); m.position.y = y; m.position.z = z; scene.add(m);
+      for (let x = -143; x < -76; x += 5) { dm.position.set(x, y, z); dm.rotation.set(0, 0, Math.PI / 2); dm.updateMatrix(); bands.setMatrixAt(bi++, dm.matrix); } });
+    bands.count = bi; scene.add(bands);
+    const mitM = M(0xe76f51, { roughness: 0.5 }); [[-130, 2.1, 2.6], [-120, -2.2, 6], [-108, 6, -2.4], [-96, -6, 2.2], [-86, 2.4, -6.1], [-126, -6.2, -3]].forEach(([x, y, z]) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.9, 12, 8), mitM); m.scale.set(2.4, 1, 1); m.position.set(x, y, z); scene.add(m); });
+    const srM = M(0x48cae4, { transparent: true, opacity: 0.75 }); const s0 = mfPos[3]; // sleeve of SR round one front myofibril
+    for (let x = -140; x < -78; x += 5) { const r = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.28, 8, 24), srM); r.rotation.y = Math.PI / 2; r.position.set(x, s0[0], s0[1]); scene.add(r); }
+    for (let k = 0; k < 5; k++) { const a = k / 5 * 6.283; scene.add(tube([V(-140, s0[0] + Math.cos(a) * 2.2, s0[1] + Math.sin(a) * 2.2), V(-78, s0[0] + Math.cos(a) * 2.2, s0[1] + Math.sin(a) * 2.2)], 0.14, srM, 8)); }
+    const ttM = M(0x2b1d2e); [-122.5, -107.5, -92.5].forEach(x => scene.add(tube([V(x, 0, 10), V(x, s0[0] * 0.5, 6.5), V(x, s0[0], s0[1] + 2.3)], 0.32, ttM, 12)));
+    L('Muscle fibre', V(FI.x - 26, 13, 0), 300); D('Sarcolemma', V(-140, -10.5, 4), 300); D('Nucleus (one of many)', V(-118, Math.cos(2.4) * 9.4 - 2.5, Math.sin(2.4) * 9.4 + 1.5), 300);
+    D('Myofibril', V(-75, mfPos[1][0], mfPos[1][1] + 2), 300); D('Mitochondrion', V(-96, -6, 4), 300); D('Sarcoplasmic reticulum', V(-112, s0[0] + 3, s0[1] + 2), 300); D('T-tubule', V(-92.5, 1, 10.5), 300);
+
+    // ===== 4. A myofibril: banded, x -54 to -6 (sarcomeres 12 long) =====
+    const MF = V(-30, 0, 0); const mfg = new THREE.Group(); scene.add(mfg);
+    const seg = (x0, x1, r, col) => { const m = along(new THREE.Mesh(new THREE.CylinderGeometry(r, r, x1 - x0, 32), M(col, { roughness: 0.5 })), (x0 + x1) / 2); mfg.add(m); };
+    [-48, -36, -24, -12].forEach(c => { seg(c - 6, c - 3.6, 3, 0xf6c3cf); seg(c + 3.6, c + 6, 3, 0xf6c3cf); seg(c - 3.6, c - 0.9, 3.02, 0x8e2a48); seg(c + 0.9, c + 3.6, 3.02, 0x8e2a48); seg(c - 0.9, c + 0.9, 3.01, 0xb4506e); seg(c - 0.12, c + 0.12, 3.06, 0x4a0f2a); });
+    [-54, -42, -30, -18, -6].forEach(x => seg(x - 0.18, x + 0.18, 3.25, 0x22141d));
+    const brM = new THREE.LineBasicMaterial({ color: 0xffffff }); const br = new THREE.BufferGeometry().setFromPoints([V(-30, 4.4, 0), V(-30, 5.2, 0), V(-18, 5.2, 0), V(-18, 4.4, 0)]); scene.add(new THREE.Line(br, brM));
+    L('Myofibril', V(-50, 6.5, 0), 140); D('One sarcomere', V(-24, 6.4, 0), 140); D('Z line', V(-30, -4.2, 0), 140); D('I band (light)', V(-19.2, -4.4, 1), 140); D('A band (dark)', V(-26.4, 4, 1.5), 140); D('H zone', V(-24, -4.4, 1), 140); D('M line', V(-36, 4.2, 1), 140);
+
+    // ===== 5. One sarcomere, drawn flat like a textbook diagram but in 3D, centred at x = 40 =====
+    const S0 = V(40, 0, 0); const sarc = new THREE.Group(); sarc.position.copy(S0); scene.add(sarc);
+    const HALF0 = 11, HALF1 = 9.2, THIN = 9, THICK = 7.5;
     const zL = new THREE.Group(), zR = new THREE.Group(); sarc.add(zL, zR);
-    const zMat = M(0x2b1d2e);
-    [zL, zR].forEach(z => { const disc = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 0.4, 6), zMat); disc.rotation.z = Math.PI / 2; z.add(disc); });
-    const actM = M(0xe63946), tropM = M(0x4ea8de), headM = M(0xb084f5), thickM = M(0x7b2cbf), titM = M(0xbdbdbd);
-    const grid = []; for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) grid.push([i * 2.4 + (j % 2) * 1.2, j * 2.1]);
-    const thinPos = []; for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++) { const p = [i * 1.2 + 0.6, j * 1.05 + 0.5]; if (Math.abs(p[0]) < 3.6 && Math.abs(p[1]) < 3.4) thinPos.push(p); }
-    const thins = [];
-    [zL, zR].forEach((z, side) => thinPos.forEach(([y, zz]) => { const g = new THREE.Group(); const f = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 11, 6), actM); f.rotation.z = Math.PI / 2; f.position.x = side ? -5.5 : 5.5; g.add(f);
-      const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 11, 4), tropM); tr.rotation.z = Math.PI / 2; tr.position.set(side ? -5.5 : 5.5, 0.17, 0); g.add(tr); thins.push(tr); g.position.set(0, y, zz); z.add(g); }));
+    const zM = M(0x2b1d2e); [zL, zR].forEach(z => { const d = new THREE.Mesh(new THREE.BoxGeometry(0.4, 11.6, 2.6), zM); z.add(d); });
+    const thickY = [-3, 0, 3], thinY = [-4.5, -1.5, 1.5, 4.5];
+    const thickM = M(0x7b2cbf, { roughness: 0.45 });
+    thickY.forEach(y => { const f = along(new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, THICK * 2, 12), thickM)); f.position.y = y; sarc.add(f); });
+    sarc.add(new THREE.Mesh(new THREE.BoxGeometry(0.25, 8, 1.6), M(0x5a189a)));
+    // actin: two strands of beads per filament, built in each Z group's own frame (side +1 = left, filaments point to +x)
+    const beadG = new THREE.SphereGeometry(0.17, 10, 8), actM = M(0xe63946, { roughness: 0.45 });
+    const tropM = M(0x4ea8de), tnM = M(0xffd166, { roughness: 0.4 }), tnCa = M(0x80ed99, { emissive: 0x114411 });
+    const trops = [], tns = [];
+    [[zL, 1], [zR, -1]].forEach(([zg, s]) => {
+      const inst = new THREE.InstancedMesh(beadG, actM, thinY.length * 2 * 30); let n = 0;
+      thinY.forEach(y => { for (let st = 0; st < 2; st++) for (let i = 0; i < 30; i++) { const a = i * 0.52 + st * Math.PI; dm.position.set(s * (0.2 + i * 0.29), y + 0.13 * Math.cos(a), 0.13 * Math.sin(a)); dm.rotation.set(0, 0, 0); dm.updateMatrix(); inst.setMatrixAt(n++, dm.matrix); }
+        const tg = new THREE.Group(); tg.position.set(0, y, 0); zg.add(tg);
+        const tp = along(new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, THIN - 0.2, 6), tropM)); tp.position.x = s * THIN / 2; tg.add(tp);
+        for (let k = 0; k < 4; k++) { const tn = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 6), tnM); tn.position.x = s * (1.1 + k * 2.2); tg.add(tn); tns.push(tn); }
+        trops.push({ tg, side: y > 0 ? 1 : -1 }); });
+      zg.add(inst); });
+    // myosin heads: neck + head on a pivot; yellow when attached
+    const headG = new THREE.SphereGeometry(0.21, 10, 8), neckG = new THREE.CylinderGeometry(0.05, 0.05, 0.62, 5);
+    const hOff = M(0xb084f5, { roughness: 0.4 }), hOn = M(0xffd166, { emissive: 0x553300, roughness: 0.35 });
     const heads = [];
-    grid.forEach(([y, z]) => { const f = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 15, 8), thickM); f.rotation.z = Math.PI / 2; f.position.set(0, y, z); sarc.add(f);
-      for (let x = -7; x <= 7; x += 1.1) { if (Math.abs(x) < 1.4) continue; for (let k = 0; k < 2; k++) { const a = k * Math.PI + x; const h = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), headM); h.scale.set(1.8, 0.8, 0.8); const piv = new THREE.Group(); piv.position.set(x, y + Math.cos(a) * 0.5, z + Math.sin(a) * 0.5); h.position.set(0, Math.cos(a) * 0.35, Math.sin(a) * 0.35); piv.add(h); sarc.add(piv); heads.push({ piv, dir: Math.sign(x) }); } } });
-    const titins = []; grid.forEach(([y, z]) => [-1, 1].forEach(s => { const pts = []; for (let k = 0; k <= 24; k++) pts.push(V(k / 24, Math.sin(k * 1.2) * 0.25, Math.cos(k * 1.2) * 0.25)); const t = tube(pts, 0.06, titM, 48); t.position.set(s * 7.5, y, z); sarc.add(t); titins.push({ t, s }); }));
-    const cal = []; for (let i = 0; i < 70; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.18, 6, 4), M(0x6bd66b, { emissive: 0x114411 })); m.visible = false; scene.add(m); cal.push({ m, p: V(A.rnd(-12, 12), A.rnd(-4, 4), A.rnd(-4, 4)) }); }
-    let contracting = false, k = 0, auto = true; const btn = A.button('b-contract', 'Contract', b => { auto = false; contracting = !contracting; b.textContent = contracting ? 'Relax' : 'Contract'; b.setAttribute('aria-pressed', contracting); });
-    A.label('Muscle fibre (one cell, many nuclei)', V(-120, 30, 0), 400); A.label('Myofibril', V(-70, 6, 6), 300); A.label('Sarcoplasmic reticulum', V(-28, 8, 0)); A.label('Z line', V(-13, 5, 0)); A.label('Actin (thin)', V(-8, -4.5, 2)); A.label('Myosin (thick)', V(0, 4.6, 0)); A.label('Titin', V(9, -3.5, 2)); A.label('Light band (I band)', V(-11, 7, 0)); A.label('Dark band (A band)', V(3, -6, 0));
+    thickY.forEach(y => { for (let x = 1.3; x <= 7.2; x += 0.74) [-1, 1].forEach(dir => [-1, 1].forEach(ud => {
+      const piv = new THREE.Group(); piv.position.set(dir * x, y + ud * 0.38, 0); sarc.add(piv);
+      const neck = new THREE.Mesh(neckG, thickM); neck.position.y = ud * 0.31; piv.add(neck);
+      const h = new THREE.Mesh(headG, hOff); h.scale.set(1.5, 1, 1); h.position.y = ud * 0.72; piv.add(h);
+      heads.push({ piv, h, dir, ud, x, ph: Math.random() }); })); });
+    // titin springs from the end of each thick filament to the Z line
+    const titM = M(0x9a9a9a, { roughness: 0.5 }); const tpts = []; for (let k = 0; k <= 40; k++) tpts.push(V(k / 40, Math.sin(k * 1.3) * 0.18, Math.cos(k * 1.3) * 0.18));
+    const titins = []; thickY.forEach(y => [-1, 1].forEach(s => { const t = tube(tpts, 0.03, titM, 80); t.position.set(s * THICK, y, 0); sarc.add(t); titins.push({ t, s }); }));
+    // calcium ions
+    const caM = M(0x80ed99, { emissive: 0x1a5a2a }); const cas = []; for (let i = 0; i < 60; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 6), caM); m.visible = false; sarc.add(m); cas.push({ m, p: V(A.rnd(-9, 9), A.rnd(-5.4, 5.4), A.rnd(-1, 1)), w: A.rnd(0, 6) }); }
+    // band bars under the sarcomere
+    const bar = (col, y) => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 0.42, 0.2), M(col, { roughness: 0.6 })); m.position.y = y; sarc.add(m); return m; };
+    const bS = bar(0xffffff, -8.8), bA = bar(0x8e2a48, -7.4), bIL = bar(0xf6c3cf, -7.4), bIR = bar(0xf6c3cf, -7.4), bH = bar(0xffd166, -6.6);
+    const pZ = V(0, 0, 0), pI = V(0, 0, 0), pH = V(0, 0, 0), pS = V(0, 0, 0);
+    const SL = (t, p, f) => D(t, p, f || 60);
+    L('One sarcomere', V(S0.x, 7.4, 0), 600);
+    SL('Z line', pZ); SL('M line', V(S0.x, 4.6, 0.8)); SL('Actin (thin filament)', V(S0.x - 6.5, 4.5, 0.6)); SL('Myosin (thick filament)', V(S0.x + 4.7, 0, 0.9)); SL('Myosin heads', V(S0.x - 4.4, 2.3, 0.8));
+    SL('Titin', V(S0.x + 8.6, -2.6, 0.6)); SL('Tropomyosin', V(S0.x - 8, -1.25, 0.7)); SL('Troponin', V(S0.x + 4.4, -4.25, 0.7));
+    const lCa = SL('Calcium ions', V(S0.x - 2.5, 5.6, 1)); SL('A band (dark)', V(S0.x, -7.4, 0.4)); SL('I band (light)', pI); SL('H zone', pH); SL('Sarcomere length', pS);
+
     const hero = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
-    return {
-      route: [V(-180, 40, 60), V(-120, 20, 40), V(-60, 8, 16), V(-30, 6, 30), V(-8, 4, 40), V(0, 3, 30), V(0, 2, 24)], hero, camOffset: V(0, 0, 0), outside: { target: V(-40, 0, 0), dist: 200 },
-      outsideInfo: { n: 'A skeletal muscle fibre', s: 'A muscle fibre is one long cell with many nuclei, packed with myofibrils. The repeating light and dark bands are the sarcomeres.', h: 'Because one fibre is so large and has many nuclei, it is debated whether it should be called a cell: it forms by many cells fusing together.', cs: 'B3.3.2', ch: 'B2.3.9' },
-      stops: [
-        { at: V(-120, 20, 40), n: 'A muscle fibre', s: 'Skeletal muscle is made of long fibres. Each fibre contains many nuclei and is packed with myofibrils.', h: 'The membrane around the fibre is the sarcolemma; its cytoplasm is the sarcoplasm, full of mitochondria to supply ATP.', cs: 'B3.3.2', ch: 'B2.3.9' },
-        { at: V(-60, 8, 16), n: 'Myofibrils and sarcoplasmic reticulum', s: 'Each myofibril is divided into repeating units called sarcomeres, which give the striped (striated) look.', h: 'The sarcoplasmic reticulum (green-blue tubes) stores calcium ions. A nerve impulse makes it release them into the myofibrils.', cs: 'B3.3.2', ch: 'B3.3.2' },
-        { at: V(-8, 4, 40), n: 'One sarcomere', s: 'A sarcomere runs from one Z line to the next. Thin actin filaments are attached to the Z lines; thick myosin filaments sit in the middle and overlap them.', h: 'The light I band contains only actin; the dark A band is the length of the myosin filaments.', cs: 'B3.3.2', ch: 'B3.3.2' },
-        { at: V(0, 3, 30), n: 'Calcium and binding sites', s: 'Press Contract. Calcium ions (green) flood in and bind to the actin filaments, so the binding sites for myosin are uncovered.', h: 'At rest, tropomyosin (blue) covers the binding sites. Calcium binds to troponin, which moves tropomyosin out of the way.', cs: 'B3.3.2', ch: 'B3.3.2' },
-        { at: V(0, 2, 24), n: 'The cross-bridge cycle', s: 'Myosin heads bind to actin, swivel and pull the actin towards the centre (the power stroke). The sarcomere shortens and the muscle contracts.', h: 'ATP binds and breaks the cross-bridge; hydrolysis of ATP re-cocks the head so it can bind again further along. Without ATP the heads stay locked on, which causes rigor mortis. Notice that the A band stays the same length while the I bands shrink.', cs: 'B3.3.2', ch: 'B3.3.2, B3.3.3' }
+    let contracting = false, k = 0, caLevel = 0;
+    const btn = A.button('b-contract', 'Contract', b => setC(!contracting));
+    function setC(on) { contracting = on; btn.textContent = on ? 'Relax' : 'Contract'; btn.setAttribute('aria-pressed', on); }
+
+    // ===== Close-up 1: the cross-bridge cycle, one myosin head and one actin filament, very large =====
+    const S = 2.4; // distance actin moves in one power stroke (one binding site)
+    const D_XB = {
+      n: 'The cross-bridge cycle', bg: '#1a0f18', target: V(0, 0.6, 0), dist: 23, yaw: 0, pitch: 0.12, still: true,
+      side: '<h3>Cross-bridge cycle</h3><ol id="xb-list" style="margin:4px 0 6px;padding-left:20px;font-size:13.5px;line-height:1.5"><li>Head binds to actin</li><li>Power stroke (Pi, then ADP released)</li><li>ATP binds: head lets go</li><li>ATP split: head re-cocked</li></ol><p id="xb-head" style="margin:0;font-size:13px"></p><p id="xb-ca" style="margin:2px 0 0;font-size:13px"></p><p id="xb-n" style="margin:2px 0 0;font-size:13px"></p>',
+      steps: [
+        { n: 'At rest: binding sites covered', s: 'The myosin head is already "cocked", holding ADP and phosphate (Pi) from the last ATP it split. But tropomyosin (blue) lies over the binding sites on actin, so the head cannot attach. The muscle is relaxed.', cs: 'B3.3.2' },
+        { n: 'Calcium uncovers the binding sites', s: 'A nerve impulse makes the sarcoplasmic reticulum release calcium ions (green). They bind to troponin (yellow), which changes shape and pulls tropomyosin away. The binding sites on actin (dark green spots) are now exposed.', cs: 'B3.3.2' },
+        { n: 'A cross-bridge forms', s: 'The cocked myosin head attaches to an exposed binding site on actin. This link between myosin and actin is called a cross-bridge (the head turns yellow).', cs: 'B3.3.2' },
+        { n: 'The power stroke', s: 'The head releases phosphate and swivels, pulling the actin filament towards the centre of the sarcomere (the M line, to the left here). ADP is then released. This pull is the power stroke.', h: 'The energy for the stroke was stored in the head when it split ATP in the previous cycle.', cs: 'B3.3.2' },
+        { n: 'ATP breaks the cross-bridge', s: 'A new ATP molecule binds to the myosin head. This makes the head let go of actin, so the cross-bridge is broken.', cs: 'B3.3.2' },
+        { n: 'The head is re-cocked', s: 'The head splits (hydrolyses) the ATP into ADP and phosphate. The energy released swings the head back to its cocked position, ready to bind again one site further along.', h: 'The myosin head is an enzyme (an ATPase): it catalyses the hydrolysis of ATP.', cs: 'B3.3.2' },
+        { n: 'The cycle repeats', s: 'As long as calcium ions and ATP are present, the cycle repeats many times a second. Each stroke moves actin a little further, like pulling a rope hand over hand, so the sarcomere shortens. Watch the counter.', cs: 'B3.3.2' },
+        { n: 'Without ATP: rigor', s: 'If there is no ATP, heads that have done their power stroke cannot let go of actin. The muscle stays locked. This is why muscles become stiff after death (rigor mortis).', cs: 'B3.3.2' },
+        { n: 'Relaxing again', s: 'When the nerve impulses stop, calcium ions are pumped back into the sarcoplasmic reticulum. Tropomyosin covers the binding sites again, the heads cannot attach, and the muscle relaxes.', h: 'Pumping calcium back is active transport, so relaxing also uses ATP. Titin and the opposing muscle then pull the sarcomere back to its resting length.', cs: 'B3.3.2, B3.3.3' }
       ],
-      side: '<h3>Sarcomere</h3><p id="sarc-state" style="margin:0">Relaxed</p><p style="margin:6px 0 0" id="sarc-len">Length: 100%</p>',
-      onStop(i) { if (auto && i >= 3) { contracting = true; btn.textContent = 'Relax'; btn.setAttribute('aria-pressed', 'true'); } },
+      build(D) {
+        const g = D.scene;
+        // actin: two bead strands, binding sites, tropomyosin and troponin, all in one group that slides
+        const act = new THREE.Group(); act.position.y = 3.7; g.add(act);
+        const aG = new THREE.SphereGeometry(0.62, 18, 14), aM = M(0xe63946, { roughness: 0.45 }), aM2 = M(0xc1121f, { roughness: 0.45 });
+        for (let st = 0; st < 2; st++) for (let i = -26; i <= 26; i++) { const x = i * 1.2 + st * 0.6; const b = new THREE.Mesh(aG, st ? aM2 : aM); b.position.set(x, st ? 0.55 : -0.5, st ? -0.3 : 0.3); act.add(b); }
+        const siteM = M(0x2d6a4f, { emissive: 0x0b2a1c }); const sites = []; for (let i = -12; i <= 12; i++) { const s = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8), siteM); s.position.set(i * S + 1.27, -1.08, 0.35); act.add(s); sites.push(s); }
+        const trop = new THREE.Group(); act.add(trop);
+        trop.add(along(new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 62, 10), M(0x4ea8de, { roughness: 0.35 }))));
+        const tnG = new THREE.SphereGeometry(0.62, 14, 10), tnY = M(0xffd166, { roughness: 0.4 }), tnB = M(0x9ef01a, { roughness: 0.4 }); const tnMs = [];
+        for (let i = -3; i <= 3; i++) { const t = new THREE.Mesh(tnG, tnY); t.scale.set(1.2, 0.9, 0.9); t.position.set(i * 9.6 + 1.2, 0.1, 0.45); trop.add(t); tnMs.push(t); }
+        // thick filament and one big head (plus faded neighbours)
+        const rod = along(new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 64, 18), M(0x7b2cbf, { roughness: 0.45 }))); rod.position.y = -2.9; g.add(rod);
+        const ghostM = M(0xb084f5, { transparent: true, opacity: 0.3 });
+        [-9.6, -4.8, 4.8, 9.6].forEach(x => { const pv = new THREE.Group(); pv.position.set(x, -2.3, -1.2); pv.rotation.z = -0.45; g.add(pv); const n = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 3, 8), ghostM); n.position.y = 1.5; pv.add(n); const h = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), ghostM); h.scale.set(1.5, 1, 1); h.position.y = 3.3; pv.add(h); });
+        const piv = new THREE.Group(); piv.position.set(0, -1.8, 0.35); g.add(piv);
+        const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 3, 10), M(0x7b2cbf)); neck.position.y = 1.5; piv.add(neck);
+        const headOff = M(0xb084f5, { roughness: 0.35 }), headOn = M(0xffd166, { emissive: 0x553300, roughness: 0.3 });
+        const head = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 18), headOff); head.scale.set(1.5, 1, 1.1); head.position.y = 3.3; piv.add(head);
+        // molecules: ATP (adenosine + 3 phosphates), ADP (+2), Pi
+        const adM = M(0xc77dff, { roughness: 0.4 }), phM = M(0xff9f1c, { roughness: 0.35 });
+        function mol(np) { const m = new THREE.Group(); const a = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 10), adM); m.add(a); for (let i = 0; i < np; i++) { const p = new THREE.Mesh(new THREE.SphereGeometry(0.26, 10, 8), phM); p.position.x = 0.62 + i * 0.46; m.add(p); } g.add(m); return m; }
+        const atp = mol(3), adp = mol(2), pi = mol(0); pi.children[0].material = phM; pi.children[0].scale.setScalar(0.62);
+        const cas = []; for (let i = 0; i < 7; i++) { const c = new THREE.Mesh(new THREE.SphereGeometry(0.34, 12, 10), M(0x80ed99, { emissive: 0x1a5a2a })); g.add(c); cas.push({ c, i: i - 3, from: V(A.rnd(-12, 12), A.rnd(-8, -5), A.rnd(1, 4)) }); }
+        // labels (positions are updated every frame for the moving parts)
+        const pAtp = V(), pAdp = V(), pPi = V(), pHead = V(), pSite = V(0, 2.6, 0.6), pTn = V(), pCa = V();
+        D.label('Actin (thin filament)', V(-9, 5.4, 0.5)); D.label('Myosin (thick filament)', V(-10, -2.9, 1)); D.label('Myosin head', pHead);
+        D.label('Tropomyosin', V(7, 2.1, 1.2)); D.label('Troponin', pTn); const lSite = D.label('Binding site', pSite);
+        const lAtp = D.label('ATP', pAtp), lAdp = D.label('ADP + Pi', pAdp), lCa = D.label('Ca²⁺', pCa);
+        const RC = -0.3, RE = 0.27; // cocked and end-of-stroke angles (tip moves to -x, towards the M line)
+        let tS = 0, step = 0, strokes = 0, prevP = 0, base = 0;
+        const sm = t => t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t), seg = (p, a, b) => sm((p - a) / (b - a));
+        const tip = new THREE.Vector3();
+        function pose(p, rigor) {
+          // returns stroke progress 0..1 and sets the head, molecules and labels
+          let rz = RC, reach = 0.9, on = false, stroke = 0;
+          if (p < 0.2) { reach = 0.9; }
+          else if (p < 0.3) { reach = 0.9 + 0.16 * seg(p, 0.2, 0.3); on = p > 0.27; }
+          else if (p < 0.68) { on = true; reach = 1.06; stroke = seg(p, 0.38, 0.62); rz = RC + (RE - RC) * stroke; }
+          else if (p < 0.78) { rz = RE; stroke = 1; on = p < 0.74; reach = on ? 1.06 : 1.06 - 0.16 * seg(p, 0.74, 0.78); }
+          else { stroke = 1; const r = seg(p, 0.8, 0.98); rz = RE + (RC - RE) * r; reach = 0.9; }
+          if (rigor) { rz = RE; on = true; reach = 1.06; stroke = 1; }
+          piv.rotation.z = rz; piv.scale.y = reach; head.material = on ? headOn : headOff;
+          piv.updateMatrixWorld(true); tip.set(0.9, 3.3, 1.2); piv.localToWorld(tip); pHead.set(tip.x + 1.6, tip.y - 1.6, tip.z);
+          const hp = tip.clone();
+          // ADP + Pi sit on the head while cocked; Pi leaves 0.3-0.38, ADP leaves 0.62-0.68; ATP arrives 0.68-0.74 and becomes ADP + Pi at 0.84
+          const away = (t, dir) => hp.clone().add(V(dir * 4 * t, -5 * t, 2 * t));
+          const hasAdp = !rigor && (p < 0.68 || p >= 0.84), hasPi = !rigor && (p < 0.38 || p >= 0.84), hasAtp = !rigor && p >= 0.66 && p < 0.84;
+          adp.visible = hasAdp || (!rigor && p >= 0.62 && p < 0.7); pi.visible = hasPi || (!rigor && p >= 0.3 && p < 0.4); atp.visible = hasAtp;
+          if (p >= 0.62 && p < 0.7 && !rigor) adp.position.copy(away(seg(p, 0.62, 0.7), 1)); else adp.position.copy(hp).add(V(-0.3, 0.1, 0.4));
+          if (p >= 0.3 && p < 0.4 && !rigor) pi.position.copy(away(seg(p, 0.3, 0.4), -1)); else pi.position.copy(hp).add(V(1.2, -0.5, 0.5));
+          if (p >= 0.66 && p < 0.74) atp.position.copy(away(1 - seg(p, 0.66, 0.74), 1)); else atp.position.copy(hp).add(V(-0.3, 0.1, 0.4));
+          pAtp.copy(atp.position).add(V(0.6, -1, 0)); pAdp.copy(adp.position).add(V(0.4, -1.1, 0));
+          lAtp.dataset.off = atp.visible ? '' : '1'; lAdp.dataset.off = adp.visible ? '' : '1';
+          return stroke;
+        }
+        function caState(t) { // t: 0 = no calcium, 1 = bound to troponin and tropomyosin moved
+          cas.forEach(o => { o.c.visible = t > 0.01; const tn = tnMs[o.i + 3]; const to = tn.getWorldPosition(new THREE.Vector3()).add(V(0, 0.75, 0.4)); o.c.position.copy(o.from).lerp(to, sm(t)); });
+          trop.position.set(0, -1.15 + 1.4 * sm(t), 0.95 - 1.9 * sm(t)); tnMs.forEach(m => { m.material = t > 0.9 ? tnB : tnY; });
+          pTn.copy(tnMs[4].getWorldPosition(new THREE.Vector3())).add(V(0, -1.3, 0.8)); pCa.copy(cas[3].c.position).add(V(1.2, 0.4, 0)); lCa.dataset.off = t > 0.05 ? '' : '1';
+          lSite.dataset.off = t > 0.6 ? '' : '1';
+        }
+        const loops = { 2: [0.1, 0.29], 3: [0.3, 0.7], 4: [0.64, 0.8], 5: [0.78, 1] };
+        function setText(p, ca) {
+          const li = document.querySelectorAll('#xb-list li'); const cur = p < 0.3 ? 0 : p < 0.68 ? 1 : p < 0.78 ? 2 : 3;
+          li.forEach((e, i) => { e.style.color = i === cur && (step >= 2 && step <= 6) ? 'var(--accent)' : ''; e.style.fontWeight = i === cur && (step >= 2 && step <= 6) ? '800' : ''; });
+          const hx = document.getElementById('xb-head'), cx = document.getElementById('xb-ca'), nx = document.getElementById('xb-n');
+          if (hx) hx.textContent = 'Head: ' + (step === 7 ? 'stuck to actin (no ATP)' : step === 8 || step < 2 ? 'cocked, holding ADP + Pi, not attached' : p < 0.27 ? 'cocked, holding ADP + Pi' : p < 0.38 ? 'attached (cross-bridge)' : p < 0.62 ? 'power stroke' : p < 0.74 ? 'ATP binding, letting go' : 'splitting ATP, re-cocking');
+          if (cx) cx.textContent = 'Calcium: ' + (ca > 0.9 ? 'bound to troponin, sites open' : ca > 0.05 ? 'arriving' : 'none, sites covered');
+          if (nx) nx.textContent = step === 6 ? 'Power strokes: ' + strokes : '';
+        }
+        return {
+          onStep(i) { step = i; tS = 0; strokes = 0; base = 0; prevP = 0; act.position.x = 0; },
+          update(dt) { const run = A.paused ? 0 : dt; tS += run; let p = 0.1, ca = 1, shift = 0, rigor = false;
+            if (step === 0) { ca = 0; p = 0.1; }
+            else if (step === 1) { ca = Math.min(1, (tS % 4.5) / 3); p = 0.1; }
+            else if (loops[step]) { const [a, b] = loops[step], dur = (b - a) * 9, cyc = dur + 1.2; p = a + (b - a) * Math.min(1, (tS % cyc) / dur); if (step === 3) shift = -S * seg(p, 0.38, 0.62); if (step >= 4) shift = -S; }
+            else if (step === 6) { const T = 3.2, q = tS / T; p = q % 1; const n = Math.floor(q); strokes = n + (p > 0.5 ? 1 : 0); shift = -((n + seg(p, 0.38, 0.62)) * S) % 9.6; }
+            else if (step === 7) { rigor = true; p = 0.7; }
+            else if (step === 8) { ca = Math.max(0, 1 - (tS % 4.5) / 3); p = ca > 0.6 ? 0.9 : 0.1; }
+            act.position.x = shift; act.updateMatrixWorld(true);
+            caState(ca); pose(p, rigor); setText(p, ca);
+            pSite.set(1.27 + S + (shift % S), 2.3, 0.8); }
+        };
+      }
+    };
+
+    // ===== Close-up 2: from nerve impulse to calcium release, plus motor units =====
+    const D_NMJ = {
+      n: 'Nerve to muscle', bg: '#140c18', target: V(0, -4, 0), dist: 44, yaw: 0.35, pitch: 0.28, still: true,
+      steps: [
+        { n: 'Motor units', s: 'Each motor neuron branches to control several muscle fibres. One motor neuron and all its fibres make a motor unit, and they always contract together. Switching on more motor units gives a stronger pull.', h: 'Small motor units (few fibres each) allow fine control, as in the eye and fingers; large units give power, as in the thigh.', cs: 'B3.3.4', at: V(46, 2, 0), dist: 46 },
+        { n: 'An impulse reaches the motor end plate', s: 'A nerve impulse travels down the motor neuron to the motor end plate, where the neuron meets the muscle fibre.', cs: 'B3.3.4', at: V(-6, 6, 0), dist: 30 },
+        { n: 'Acetylcholine crosses the gap', s: 'The impulse makes synaptic vesicles release acetylcholine. It diffuses across the narrow gap and binds to receptors on the sarcolemma.', cs: 'B3.3.4', at: V(-6, 2, 0), dist: 18 },
+        { n: 'The impulse spreads into the fibre', s: 'The sarcolemma is depolarised and an impulse spreads along it in all directions and down the T-tubules, deep into the fibre.', cs: 'B3.3.2', at: V(0, -5, 0), dist: 36 },
+        { n: 'Calcium ions are released', s: 'Next to each T-tubule, the sarcoplasmic reticulum releases calcium ions into the myofibrils.', cs: 'B3.3.2', at: V(0, -12, 0), dist: 36 },
+        { n: 'The myofibril contracts', s: 'Calcium ions bind to troponin, the binding sites on actin are uncovered, cross-bridges form and the sarcomeres shorten. Open the cross-bridge close-up to see this step by step.', cs: 'B3.3.2', at: V(0, -15, 0), dist: 30 },
+        { n: 'Relaxation', s: 'When impulses stop, acetylcholine is broken down by an enzyme and calcium ions are pumped back into the sarcoplasmic reticulum using ATP. The cross-bridges stop forming and the muscle relaxes.', cs: 'B3.3.2, B3.3.3', at: V(0, -10, 0), dist: 36 }
+      ],
+      build(D) {
+        const g = D.scene;
+        // sarcolemma (top surface), T-tubule, SR sacs, one myofibril below
+        const mem = new THREE.Mesh(new THREE.BoxGeometry(44, 0.5, 26), M(0xd94f63, { transparent: true, opacity: 0.55 })); g.add(mem);
+        const tt = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 12, 16, 1, true), M(0x2b1d2e, { side: THREE.DoubleSide })); tt.position.set(0, -6, 0); g.add(tt);
+        const srM = M(0x48cae4, { transparent: true, opacity: 0.8 }); [-2.6, 2.6].forEach(x => { const s = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 22, 18), srM); s.rotation.x = Math.PI / 2; s.position.set(x, -9.5, 0); g.add(s); });
+        [-9, 9].forEach(x => g.add(tube([V(x * 0.4, -9.5, -6), V(x, -9, -3), V(x * 1.3, -9.5, 0), V(x, -10, 4), V(x * 0.4, -9.5, 7)], 0.5, srM, 30)));
+        const myo = new THREE.Group(); myo.position.y = -16; g.add(myo);
+        for (let i = -4; i < 4; i++) { const c = i * 5 + 2.5; [[c - 2.5, c - 1.6, 0xf6c3cf], [c + 1.6, c + 2.5, 0xf6c3cf], [c - 1.6, c + 1.6, 0x8e2a48]].forEach(([a, b, col]) => { const m = along(new THREE.Mesh(new THREE.CylinderGeometry(3, 3, b - a, 28), M(col)), (a + b) / 2); myo.add(m); }); const z = along(new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3.2, 0.25, 28), M(0x22141d)), c - 2.5); myo.add(z); }
+        // motor neuron ending on the fibre
+        const nM = M(0xf4d35e, { roughness: 0.45 }); g.add(tube([V(-30, 22, -4), V(-20, 14, -2), V(-10, 5, 0), V(-6, 2.2, 0)], 0.9, nM, 40));
+        const plate = new THREE.Mesh(new THREE.SphereGeometry(3.2, 24, 16), nM); plate.scale.set(1.6, 0.5, 1.2); plate.position.set(-6, 1.7, 0); g.add(plate);
+        const ves = []; for (let i = 0; i < 9; i++) { const v = new THREE.Mesh(new THREE.SphereGeometry(0.35, 10, 8), M(0xffffff, { transparent: true, opacity: 0.8 })); v.position.set(-6 + A.rnd(-3, 3), 2, A.rnd(-2, 2)); g.add(v); ves.push(v); }
+        const ach = []; for (let i = 0; i < 30; i++) { const a = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), M(0xf72585, { emissive: 0x330011 })); a.visible = false; g.add(a); ach.push({ a, x: -6 + A.rnd(-3.5, 3.5), z: A.rnd(-2.5, 2.5), d: A.rnd(0, 1) }); }
+        const recM = M(0x3a86ff); for (let i = 0; i < 10; i++) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.6, 8), recM); r.position.set(-6 + (i % 5 - 2) * 1.4, 0.45, (i < 5 ? -1 : 1) * 1.2); g.add(r); }
+        const pulse = new THREE.Mesh(new THREE.SphereGeometry(1.1, 14, 10), M(0xffffff, { emissive: 0xffee88 })); g.add(pulse);
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.18, 8, 48), M(0xfff3b0, { emissive: 0x887722 })); ring.rotation.x = Math.PI / 2; ring.position.set(-6, 0.3, 0); g.add(ring);
+        const tglow = new THREE.Mesh(new THREE.SphereGeometry(0.7, 12, 10), M(0xffffff, { emissive: 0xffee88 })); g.add(tglow);
+        const ca = []; for (let i = 0; i < 40; i++) { const c = new THREE.Mesh(new THREE.SphereGeometry(0.42, 10, 8), M(0x80ed99, { emissive: 0x2a8a3a })); g.add(c); const an = A.rnd(-1.4, 1.4); ca.push({ c, from: V((i % 2 ? 2.6 : -2.6), -9.5, A.rnd(-9, 9)), to: V(A.rnd(-16, 16), -16 + 3.6 * Math.cos(an), 3.6 * Math.sin(an)) }); }
+        // motor units, to the right: two neurons, each with its own fibres
+        const mu = new THREE.Group(); mu.position.set(46, 0, 0); g.add(mu);
+        const fibCol = [0xc23b4c, 0x9d4edd]; const neuCol = [0xf4d35e, 0x4cc9f0];
+        for (let f = 0; f < 6; f++) { const u = f % 2; const fb = along(new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 26, 16), M(fibCol[u]))); fb.position.set(0, -6 + f * 0.1, -7.5 + f * 3); mu.add(fb); }
+        [0, 1].forEach(u => { const cb = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 12), M(neuCol[u])); cb.position.set(-10 + u * 20, 14, 0); mu.add(cb); const hub = V(-4 + u * 8, 5, 0); mu.add(tube([cb.position.clone(), hub], 0.35, M(neuCol[u]), 12));
+          for (let f = u; f < 6; f += 2) mu.add(tube([hub, V(-2 + u * 4, -3.5, -7.5 + f * 3), V(-2 + u * 4, -4.7, -7.5 + f * 3)], 0.22, M(neuCol[u]), 12)); });
+        D.label('Motor neuron', V(-24, 18, -3)); D.label('Motor end plate', V(-11, 3.6, 2)); const lV = D.label('Synaptic vesicles', V(-3, 3.6, 2)); const lA = D.label('Acetylcholine', V(-1, 0.9, 3)); const lR = D.label('Receptors', V(-9.5, -0.5, 2.6));
+        D.label('Sarcolemma', V(16, 1.2, 10)); D.label('T-tubule', V(1.8, -4.5, 1)); D.label('Sarcoplasmic reticulum', V(7.5, -9, 6)); D.label('Myofibril', V(16, -16, 3.5)); const lC = D.label('Calcium ions', V(-8, -13, 3));
+        const lU1 = D.label('Motor unit', V(36, 14, 0)); const lU2 = D.label('Motor unit', V(56, 14, 0));
+        let step = 0, tS = 0;
+        return {
+          onStep(i) { step = i; tS = 0; },
+          update(dt) { const run = A.paused ? 0 : dt; tS += run; const cyc = tS % 5;
+            // impulse down the axon (steps 1-3), ACh (2-3), ring and T-tubule (3-5), calcium (4-5 out, 6 back)
+            const tAx = Math.min(1, cyc / 1.4); const ax = new THREE.CatmullRomCurve3([V(-30, 22, -4), V(-20, 14, -2), V(-10, 5, 0), V(-6, 2.2, 0)]);
+            pulse.visible = step >= 1 && step <= 3 && cyc < 1.4; if (pulse.visible) pulse.position.copy(ax.getPointAt(tAx));
+            const tA = step === 2 || step === 3 ? Math.max(0, (cyc - 1.3) / 1.4) : 0;
+            ach.forEach(o => { o.a.visible = (step === 2 || step === 3) && tA > o.d * 0.4; const t = Math.min(1, Math.max(0, tA - o.d * 0.4) * 1.6); o.a.position.set(o.x, 1.4 - t * 0.85, o.z); });
+            lA.dataset.off = step === 2 || step === 3 ? '' : '1'; lV.dataset.off = step >= 1 && step <= 3 ? '' : '1'; lR.dataset.off = step >= 2 && step <= 3 ? '' : '1';
+            const tR = step >= 3 && step <= 5 ? Math.max(0, (cyc - (step === 3 ? 2.6 : 0)) / 1.6) : 0; ring.visible = tR > 0 && tR < 1; ring.scale.setScalar(1 + tR * 18);
+            tglow.visible = tR > 0.25 && tR < 1.25; tglow.position.set(0, -tR * 9 + 1.5, 0);
+            const showCa = step >= 4 && step <= 6; const tC = step === 6 ? 1 - Math.min(1, cyc / 3) : step === 4 ? Math.min(1, Math.max(0, (cyc - 1.4) / 2)) : 1;
+            ca.forEach(o => { o.c.visible = showCa; o.c.position.copy(o.from).lerp(o.to, sm(tC)); }); lC.dataset.off = showCa ? '' : '1';
+            const sq = step === 5 ? 1 - 0.12 * (0.5 - 0.5 * Math.cos(cyc / 5 * 6.283)) : 1; myo.scale.x = sq;
+            lU1.dataset.off = lU2.dataset.off = step === 0 ? '' : '1';
+            ves.forEach((v, i) => { v.visible = step < 2 || step > 3 || i > 3; }); }
+        };
+        function sm(t) { return t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); }
+      }
+    };
+
+    const cams = [V(-232, 34, 128), V(-160, 20, 64), V(-68, 18, 50), V(-26, 7, 27), V(40, -1, 27), V(40.4, -1.2, 26.6), V(40.8, -1, 27.2), V(40.4, -0.6, 27.8)];
+    return {
+      route: cams, hero, camOffset: V(0, 0, 0), settle: true, outside: { target: V(-130, 0, 0), dist: 330, pitch: 0.06 },
+      outsideInfo: { n: 'From muscle to sarcomere', s: 'Left to right: a whole muscle, one bundle of fibres, one muscle fibre, one myofibril and one sarcomere, each magnified far more than the one before. Drag to turn and scroll to zoom.', cs: 'B3.3.2' },
+      dives: [D_XB, D_NMJ],
+      stops: [
+        { at: cams[0], look: V(-312, 0, 0), n: 'A whole muscle', s: 'A skeletal muscle is joined to bones by tendons. It can only pull. Cut across it and you see bundles of muscle fibres, called fascicles, each wrapped in connective tissue.', cs: 'B3.3.2', ch: 'B3.3.5' },
+        { at: cams[1], look: V(-192, 0, 0), n: 'A bundle of fibres', s: 'Each fascicle holds many muscle fibres lying side by side. Blood capillaries run between them, bringing oxygen and glucose for respiration.', cs: 'B3.3.2' },
+        { at: cams[2], look: V(-98, 0, 0), n: 'One muscle fibre', s: 'A muscle fibre is one long cell with many nuclei near its edge. It is packed with myofibrils, with many mitochondria between them to supply ATP.', h: 'A fibre forms when many cells fuse, which is why it has many nuclei. Each myofibril is wrapped in sarcoplasmic reticulum, which stores calcium ions; T-tubules carry impulses inwards.', cs: 'B3.3.2', ch: 'B2.3.9' },
+        { at: cams[3], look: V(-30, 0, 0), n: 'A myofibril and its bands', s: 'A myofibril is striped. Dark A bands and light I bands repeat along it. The section from one Z line to the next is a sarcomere, the unit that contracts. Click the labels to see what each band is.', cs: 'B3.3.2' },
+        { at: cams[4], look: V(40, -2.2, 0), n: 'Inside one sarcomere', s: 'Thin actin filaments (red) are anchored to the Z lines at each end. Thick myosin filaments (purple) sit in the middle, held by the M line, with heads that reach out towards the actin. Titin (grey springs) joins myosin to the Z lines.', cs: 'B3.3.2', ch: 'B3.3.3' },
+        { at: cams[5], look: V(40, -2.2, 0), n: 'The sarcomere contracts', s: 'Calcium ions arrive, the myosin heads bind to actin and pull it towards the centre. The Z lines move closer together. Watch the bars underneath: the I band and H zone get shorter but the A band stays the same, because the filaments slide past each other rather than getting shorter.', cs: 'B3.3.2', dive: D_XB },
+        { at: cams[6], look: V(40, -2.2, 0), n: 'Relaxing again', s: 'When calcium is pumped away, the heads let go. The muscle cannot push itself longer: titin springs back, and the opposing (antagonistic) muscle pulls the sarcomeres back to their resting length.', cs: 'B3.3.3', dive: D_XB },
+        { at: cams[7], look: V(40, -2.2, 0), n: 'What starts a contraction?', s: 'A nerve impulse from a motor neuron. Open the close-up to follow it from the motor end plate to the release of calcium ions, and to see what a motor unit is. Use the Contract button any time to compare relaxed and contracted.', cs: 'B3.3.2, B3.3.4', dive: D_NMJ }
+      ],
+      side: '<h3>Sarcomere</h3><p id="sarc-state" style="margin:0">Relaxed</p><div style="font-size:13px;margin-top:6px;line-height:1.55"><div><span style="display:inline-block;width:12px;height:8px;background:#fff;margin-right:6px"></span>Sarcomere: <b id="sb-s">100%</b></div><div><span style="display:inline-block;width:12px;height:8px;background:#8e2a48;margin-right:6px"></span>A band: <b id="sb-a">100%</b> (never changes)</div><div><span style="display:inline-block;width:12px;height:8px;background:#f6c3cf;margin-right:6px"></span>I band: <b id="sb-i">100%</b></div><div><span style="display:inline-block;width:12px;height:8px;background:#ffd166;margin-right:6px"></span>H zone: <b id="sb-h">100%</b></div></div>',
+      onStop(i) { setC(i === 5); },
+      onView(v) { detail.forEach(el => { el.dataset.off = v === 'out' ? '1' : ''; }); },
       update(dt, A) {
         const run = A.paused ? 0 : dt;
-        k += (contracting ? 1 : -1) * run * 0.6; k = Math.max(0, Math.min(1, k));
-        const half = 11 - 3.2 * k; zL.position.x = -half; zR.position.x = half;
-        thins.forEach(tr => { tr.position.z = contracting ? 0.12 : 0; });
-        const beat = Math.sin(A.t * 9);
-        heads.forEach(h => { h.piv.rotation.z = contracting && k < 1 ? h.dir * (0.3 + 0.35 * beat) : h.dir * 0.6; });
-        titins.forEach(o => { const len = half - 7.5; o.t.scale.x = Math.max(0.2, len) * o.s; });
-        cal.forEach(c => { c.m.visible = k > 0.02; c.m.position.copy(c.p).multiplyScalar(contracting ? 0.6 : 1.4); });
-        const st = document.getElementById('sarc-state'); if (st) st.textContent = contracting ? (k < 1 ? 'Contracting: cross-bridges pulling actin inwards' : 'Fully contracted') : (k > 0 ? 'Relaxing: titin springs the sarcomere back' : 'Relaxed');
-        const sl = document.getElementById('sarc-len'); if (sl) sl.textContent = 'Length: ' + Math.round(half / 11 * 100) + '% · A band unchanged, I bands ' + (k > 0.05 ? 'shorter' : 'full width');
+        k += (contracting ? 1 : -1) * run * 0.28; k = Math.max(0, Math.min(1, k));
+        caLevel += ((contracting ? 1 : 0) - caLevel) * Math.min(1, run * 2.5);
+        const half = HALF0 - (HALF0 - HALF1) * (k * k * (3 - 2 * k)); zL.position.x = -half; zR.position.x = half;
+        const thinEnd = half - THIN;
+        trops.forEach(o => { o.tg.position.z = 0.2 - 0.32 * caLevel; o.tg.position.y = (o.tg.userData.y0 != null ? o.tg.userData.y0 : (o.tg.userData.y0 = o.tg.position.y)) + o.side * 0.12 * caLevel; });
+        tns.forEach(t => { t.material = caLevel > 0.5 ? tnCa : tnM; });
+        const tt = A.t * 0.75;
+        heads.forEach(h => { const can = caLevel > 0.5 && h.x >= thinEnd + 0.15; let rz = -h.dir * h.ud * 0.45, on = false;
+          if (can) { const p = (tt + h.ph) % 1; if (p < 0.2) { } else if (p < 0.6) { on = true; rz = -h.dir * h.ud * 0.45 + h.dir * h.ud * 0.95 * ((p - 0.2) / 0.4); } else if (p < 0.7) { rz = h.dir * h.ud * 0.5; } else { rz = h.dir * h.ud * (0.5 - 0.95 * ((p - 0.7) / 0.3)); } }
+          h.piv.rotation.z = rz; h.h.material = on ? hOn : hOff; });
+        titins.forEach(o => { o.t.scale.x = o.s * Math.max(0.2, half - THICK); });
+        cas.forEach(c => { c.m.visible = caLevel > 0.05; c.w += run; c.m.position.set(c.p.x + Math.sin(c.w * 2) * 0.2, c.p.y + Math.cos(c.w * 1.7) * 0.2, c.p.z); c.m.scale.setScalar(Math.max(0.01, caLevel)); });
+        lCa.dataset.off = caLevel > 0.3 && A.view() === 'ride' ? '' : '1';
+        // bars
+        const setBar = (m, x0, x1) => { const w = Math.max(0.001, x1 - x0); m.scale.x = w; m.position.x = (x0 + x1) / 2; m.visible = x1 - x0 > 0.02; };
+        setBar(bS, -half, half); setBar(bA, -THICK, THICK); setBar(bIL, -half, -THICK); setBar(bIR, THICK, half); setBar(bH, -Math.max(0, thinEnd), Math.max(0, thinEnd));
+        pZ.set(S0.x + half, -6.3, 0.6); pI.set(S0.x + (THICK + half) / 2, -8.1, 0.4); pH.set(S0.x, -5.85, 0.4); pS.set(S0.x - half + 2.6, -9.6, 0.4);
+        const pc = v => Math.round(v * 100) + '%';
+        const set = (id, t) => { const e = document.getElementById(id); if (e) e.textContent = t; };
+        set('sb-s', pc(half / HALF0)); set('sb-a', '100%'); set('sb-i', pc((half - THICK) / (HALF0 - THICK))); set('sb-h', pc(Math.max(0, thinEnd) / (HALF0 - THIN)));
+        set('sarc-state', contracting ? (k < 1 ? 'Contracting: heads pulling actin towards the centre' : 'Contracted: Z lines closer together') : (k > 0 ? 'Relaxing: titin and the opposing muscle pull it back' : 'Relaxed'));
       }
     };
   }
@@ -183,19 +496,25 @@ const th=J.theme||{}; Object.keys(th).forEach(k=>document.documentElement.style.
 $('t-title').textContent=J.title; $('t-sub').textContent=J.sub||''; $('s-title').textContent=J.startTitle||J.title; $('s-intro').textContent=J.intro||''; $('s-note').textContent=J.note||'';
 $('v-ride').textContent=J.rideLabel||'Ride'; $('c').setAttribute('aria-label',J.title+': 3D model. Use the arrow keys or the Next button to move between stops.');
 let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
-const canvas=$('c'); const renderer=new THREE.WebGLRenderer({canvas,antialias:true}); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+const canvas=$('c'); let renderer; try{ renderer=new THREE.WebGLRenderer({canvas,antialias:true}); }catch(e){ $('start').hidden=false; $('s-note').textContent='This browser could not start 3D graphics (WebGL). Turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.'; $('s-note').style.color='#ffb4a2'; throw e; } renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
 const bg=new THREE.Color(th.bg||'#0b1a2a'); renderer.setClearColor(bg);
 const scene=new THREE.Scene(); scene.fog=new THREE.FogExp2(bg,J.fog||0.006);
 const camera=new THREE.PerspectiveCamera(65,1,0.1,900); camera.rotation.order='YXZ'; scene.add(camera);
 scene.add(new THREE.HemisphereLight(0xf2f6ff,0x20202a,0.9)); camera.add(new THREE.PointLight(0xffffff,0.55,160));
 const sun=new THREE.DirectionalLight(0xffffff,0.5); sun.position.set(40,70,80); scene.add(sun);
 const labels=[], anims=[];
+// Labels with a definition (own 4th argument, or J.glossary by label text) can be clicked or tapped to show it (2026-11-17).
+function showDef(t,d){ $('def-h').textContent=t; $('def-p').textContent=d; $('defbox').hidden=false; }
+$('def-x').onclick=()=>{ $('defbox').hidden=true; };
+function mkLabel(text,def){ const el=document.createElement('div'); el.className='lab'; el.textContent=text; const d=def||(J.glossary&&J.glossary[text]);
+  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
+  $('labels').appendChild(el); return el; }
 const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   V:(x,y,z)=>new THREE.Vector3(x,y,z),
   M:(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.55,metalness:0.05},o||{})),
   T:(c,op,side)=>new THREE.MeshStandardMaterial({color:c,roughness:0.55,metalness:0.05,transparent:true,opacity:op,side:side||THREE.DoubleSide,depthWrite:false}),
   tube:(pts,r,mat,seg,closed)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,!!closed),seg||64,r,14,!!closed),mat),
-  label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||70,dv:null}); return el; },
+  label:(text,pos,far,def)=>{ const el=mkLabel(text,def); labels.push({el,pos,far:far||70,dv:null}); return el; },
   anim:fn=>anims.push(fn), level:()=>level, rnd:(a,b)=>a+Math.random()*(b-a),
   onSphere:r=>{ const u=Math.random()*2-1, a=Math.random()*Math.PI*2, s=Math.sqrt(1-u*u); return new THREE.Vector3(r*s*Math.cos(a),r*u,r*s*Math.sin(a)); },
   side:html=>{ $('side').innerHTML=html; $('side').hidden=!html; }, button:(id,label,fn)=>{ const b=document.createElement('button'); b.type='button'; b.id=id; b.textContent=label; b.setAttribute('aria-pressed','false'); b.onclick=()=>fn(b); $('extra').prepend(b); return b; },
@@ -206,7 +525,7 @@ function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800,
 const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
 const camOff=W.camOffset||api.V(0,3,5);
-let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=0.5, op=0.2, od=out.dist;
+let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=out.yaw!=null?out.yaw:0, op=out.pitch!=null?out.pitch:0.08, od=out.dist;
 api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
 // ---------- close-ups ----------
 const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
@@ -217,7 +536,7 @@ const dTarget=new THREE.Vector3(), dTargetGoal=new THREE.Vector3();
 function dives(s){ return s?[].concat(s.dives||[],s.dive?[s.dive]:[]):[]; }
 function openDive(d){
   if(!d.built){ const g=new THREE.Group(); diveScene.add(g); d.group=g;
-    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far)=>{ const el=document.createElement('div'); el.className='lab'; el.textContent=text; $('labels').appendChild(el); labels.push({el,pos,far:far||300,dv:d}); return el; }});
+    const dapi=Object.assign({},api,{scene:g,label:(text,pos,far,def)=>{ const el=mkLabel(text,def); labels.push({el,pos,far:far||300,dv:d}); return el; }});
     d.api=dapi; d.ctl=d.build(dapi)||{}; d.built=true; }
   diveScene.children.forEach(c=>{ if(c.isGroup) c.visible=(c===d.group); });
   dive=d; dStep=0; dDist=dDistGoal=d.dist||60; dTarget.copy(d.target||api.V(0,0,0)); dTargetGoal.copy(dTarget);
@@ -262,33 +581,34 @@ canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-
   else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
 canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
+let sizeW=0,sizeH=0;
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
 window.addEventListener('resize',resize);
 const v=new THREE.Vector3(); let last=performance.now();
-function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
+function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) resize(); const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
   const du=uTarget-u; u+=du*Math.min(1,dt*(reduceMotion?20:1.5)); if(Math.abs(du)<0.0004) u=uTarget;
   hero.position.copy(route.getPointAt(Math.min(0.999,Math.max(0,u))));
   if(dive){ if(dive.ctl.update) dive.ctl.update(dt,dive.api,dStep); dTarget.lerp(dTargetGoal,Math.min(1,dt*3)); dDist+=(dDistGoal-dDist)*Math.min(1,dt*3);
-    if(!drag&&!reduceMotion&&!dive.still) dYaw+=dt*0.05;
     dCam.position.set(dTarget.x+Math.sin(dYaw)*Math.cos(dPitch)*dDist, dTarget.y+Math.sin(dPitch)*dDist, dTarget.z+Math.cos(dYaw)*Math.cos(dPitch)*dDist); dCam.lookAt(dTarget);
     const w=canvas.clientWidth,h=canvas.clientHeight;
     labels.forEach(l=>{ if(l.dv!==dive){ l.el.style.display='none'; return; } v.copy(l.pos).applyMatrix4(dive.group.matrixWorld).project(dCam); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&l.el.dataset.off!=='1';
       if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=0.95; } else l.el.style.display='none'; });
-    renderer.render(diveScene,dCam); requestAnimationFrame(frame); return; }
+    renderer.render(diveScene,dCam); return; }
   if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
   if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
-    camera.position.copy(behind).add(camOff); let d=ahead.clone().sub(camera.position).normalize();
-    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0,1-Math.abs(uTarget-u)/0.03); if(near>0) d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    camera.position.copy(behind); if(W.settle){ const nr=Math.max(0,1-Math.abs(uTarget-u)/0.05); camera.position.lerp(route.getPointAt(Math.min(0.999,Math.max(0,u))),nr); } camera.position.add(camOff); let d=ahead.clone().sub(camera.position).normalize();
+    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0.7,1-Math.abs(uTarget-u)/0.03); d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
-  else { if(!drag&&!reduceMotion) oy+=dt*0.12; camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
+  else { camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;
   labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
-  renderer.render(scene,camera); requestAnimationFrame(frame); }
+  renderer.render(scene,camera); }
+function frame(now){ step(now); requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
 { const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
-window.journeyDebug={openDive, go, dives:()=>W.dives, stops:STOPS};
+window.journeyDebug={openDive, go, tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

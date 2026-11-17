@@ -129,6 +129,12 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
   </div>
 </div>
 
+<script>/* Show any loading error on screen so it can be reported (2026-11-17) */
+(function(){ var shown=false; function show(msg){ if(shown) return; shown=true; var d=document.createElement('div'); d.setAttribute('role','alert'); d.style.cssText='position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#3a1218;color:#ffe3e0;border:2px solid #ef476f;border-radius:10px;padding:12px 16px;font:15px/1.4 sans-serif';
+  d.textContent='The 3D picture could not load. '+(/webgl/i.test(msg)?'This browser could not start 3D graphics (WebGL): turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.':'Error: '+msg); (document.body||document.documentElement).appendChild(d); }
+  window.addEventListener('error',function(e){ show(String(e.message||e.error||'unknown error')); });
+  window.addEventListener('load',function(){ if(typeof THREE==='undefined') show('the 3D library did not load (it may be blocked on this network)'); });
+})();</script>
 <script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
 <script>
 (function(){
@@ -166,7 +172,7 @@ function textOf(k){ const i=INFO[k]; return i.s+(level==='hl'&&i.h?' '+i.h:''); 
 function codesOf(k){ const i=INFO[k]; return i.cs+(level==='hl'&&i.ch?', '+i.ch:''); }
 // ---------- three.js setup ----------
 const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+let renderer; try{ renderer = new THREE.WebGLRenderer({canvas, antialias:true}); }catch(e){ const p=document.createElement('p'); p.style.cssText='position:fixed;top:40%;left:0;right:0;text-align:center;color:#ffb4a2;font:600 18px sans-serif;padding:0 20px;z-index:99'; p.textContent='This browser could not start 3D graphics (WebGL). Turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.'; document.body.appendChild(p); throw e; }
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 const scene = new THREE.Scene(); scene.fog=new THREE.FogExp2(0x0b2238, 0.011);
 const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 600);
@@ -439,11 +445,13 @@ document.getElementById('m-bacteria').onclick=()=>setCell('bacteria');
 document.getElementById('m-animal').onclick=()=>setCell('animal');
 document.getElementById('m-plant').onclick=()=>setCell('plant');
 // ---------- loop ----------
-function resize(){ const w=canvas.clientWidth, h=canvas.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+let sizeW=0, sizeH=0;
+function resize(){ const w=canvas.clientWidth, h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
 window.addEventListener('resize', resize);
 renderer.setClearColor(0x0b2238);
 const v=new THREE.Vector3(); let last=performance.now(), clock=0;
 function frame(now){
+  if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) resize();
   const dt=Math.min(0.05,(now-last)/1000); last=now; clock+=dt;
   const fast=keys.ShiftLeft||keys.ShiftRight; const sp=(fast?36:16)*dt;
   const turn=(keys.ArrowLeft||keys['pad-tl']?1:0)-(keys.ArrowRight||keys['pad-tr']?1:0); if(turn){ yaw+=turn*1.6*dt; fly=null; }

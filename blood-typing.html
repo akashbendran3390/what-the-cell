@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Blood Typing Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/blood-typing.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Blood Typing Lab">
+<meta property="og:description" content="Blood Typing Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/blood-typing.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Blood Typing Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Blood Typing Lab (2026-11-17, teacher's request): agglutination test with anti-A, anti-B and anti-D,
+   transfusion matching, and ABO inheritance puzzles. Patients and families are invented. */
+:root{
+  --bg:#170c10; --ink:#fbf1f2; --dim:#d9bfc4; --panel:#231318; --panel2:#2f1a20; --line:rgba(255,200,210,.2);
+  --accent:#ff6b81; --ok:#80ed99; --bad:#ffb4a2;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1220px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel)}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:7px 13px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2a0710}
+.grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,1fr);gap:14px;margin-top:12px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn,.opt{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2a0710;border-color:transparent}
+.opt[aria-pressed="true"]{outline:2px solid var(--accent);background:#4a2029}
+h2{font:800 18px var(--display);margin:0 0 6px}
+h3{font:800 15px var(--display);margin:10px 0 4px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12.5px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.intro{max-width:780px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#f5efe6}
+.fb{font-size:14px;margin:6px 0;line-height:1.5}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+table.t td,table.t th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:center}
+table.t td:first-child,table.t th:first-child{text-align:left}
+select{font:700 14px var(--body);background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+sup{font-size:.68em}
+.chk{display:flex;flex-wrap:wrap;gap:6px}
+.chk label{display:flex;align-items:center;gap:5px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font:700 14px var(--display);cursor:pointer}
+.chk label.ok{border-color:var(--ok)} .chk label.bad{border-color:var(--bad)}
+.tasks li{margin:4px 0;line-height:1.45}
+.idea{background:var(--panel2);border-left:4px solid var(--accent);border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.5}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top"><div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Blood Typing Lab</h1><div class="sub">DP Biology D3.2 and C3.2 &middot; invented patients for practice</div></div></div>
+  <div class="card intro" id="intro">
+    <h2>Find a patient&rsquo;s blood group and choose safe blood for a transfusion</h2>
+    <p>Add drops of a patient&rsquo;s blood to three test sera and watch whether the red cells clump together (agglutination). Use the results to identify the blood group, then decide which donors could safely give blood. A third section links blood groups to inheritance: work out which children two parents could have.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Open the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist"><button type="button" id="t-test" aria-pressed="true">1. Test a blood sample</button><button type="button" id="t-tx" aria-pressed="false">2. Transfusion</button><button type="button" id="t-fam" aria-pressed="false">3. Blood groups in families</button></div>
+
+    <section id="p-test">
+      <div class="grid">
+        <div class="card">
+          <div class="row"><span class="note">Patient:</span><span id="pt-pick"></span><button type="button" class="btn" id="pt-new">New mystery patient</button></div>
+          <canvas id="c-tile" width="900" height="420" aria-label="A test tile with three wells: anti-A, anti-B and anti-D serum"></canvas>
+          <div class="row"><button type="button" class="go" id="w0">Add blood to anti-A</button><button type="button" class="go" id="w1">Add blood to anti-B</button><button type="button" class="go" id="w2">Add blood to anti-D</button><button type="button" class="btn" id="w-all">Test all three</button><button type="button" class="btn" id="w-clear">Clean the tile</button></div>
+          <p class="note">Clumped cells mean the serum&rsquo;s antibodies have found their antigen on the red cells. Smooth, evenly spread cells mean no reaction.</p>
+        </div>
+        <div>
+          <div class="card">
+            <h2>What is the patient&rsquo;s blood group?</h2>
+            <div class="row" id="g-pick"></div>
+            <p class="fb" id="g-fb"></p>
+          </div>
+          <div class="card"><h2>How the test works</h2><div class="idea">Red blood cells carry antigens on their surface: antigen A, antigen B, both or neither, and the Rh antigen D (Rh positive) or not (Rh negative). Each test serum contains antibodies against one antigen. Antibodies have two binding sites, so each one can stick to two cells at once and link many cells into clumps.</div><p class="note">Syllabus: D3.2.9, C3.2.7</p></div>
+          <div class="card"><h2>Results so far</h2><table class="t" id="res"><tr><th>Patient</th><th>Anti-A</th><th>Anti-B</th><th>Anti-D</th><th>Group</th></tr></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="p-tx" hidden>
+      <div class="grid">
+        <div class="card">
+          <div class="row"><label>Recipient <select id="x-rec"></select></label><label>Donor <select id="x-don"></select></label><button type="button" class="go" id="x-mix">Mix the blood</button></div>
+          <canvas id="c-tx" width="900" height="380" aria-label="Donor red cells mixed with the recipient's plasma"></canvas>
+          <p class="fb" id="x-fb"></p>
+        </div>
+        <div>
+          <div class="card">
+            <h2>Challenge: who can give blood to this recipient?</h2>
+            <p>Recipient: <b id="ch-rec"></b>. Tick every donor group that is safe.</p>
+            <div class="chk" id="ch-box"></div>
+            <div class="row"><button type="button" class="go" id="ch-check">Check</button><button type="button" class="btn" id="ch-next">Next recipient</button></div>
+            <p class="fb" id="ch-fb"></p>
+          </div>
+          <div class="card"><h2>The rule</h2><div class="idea">The recipient&rsquo;s plasma contains antibodies against any A or B antigen their own cells lack. If the donor&rsquo;s red cells carry one of those antigens, the antibodies clump them, which can block small blood vessels. So a donor&rsquo;s cells must not carry an antigen the recipient lacks. Rh-negative people make anti-D once they have been exposed to Rh-positive blood, so they should receive Rh-negative blood. Group O negative cells carry none of these antigens, so they can be given to anyone in an emergency.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="p-fam" hidden>
+      <div class="grid">
+        <div class="card">
+          <h2>Which children could these parents have?</h2>
+          <div class="row"><label>Mother <select id="f-m"></select></label><label>Father <select id="f-f"></select></label></div>
+          <p class="note">Choose each parent&rsquo;s genotype. Alleles: I<sup>A</sup> and I<sup>B</sup> are codominant, i is recessive.</p>
+          <p>Tick every blood group their children could have:</p>
+          <div class="chk" id="f-box"></div>
+          <div class="row"><button type="button" class="go" id="f-check">Check</button><button type="button" class="btn" id="f-show">Show the Punnett grid</button></div>
+          <p class="fb" id="f-fb"></p><div id="f-grid"></div>
+        </div>
+        <div>
+          <div class="card">
+            <h2>Puzzle: a mix-up on the maternity ward</h2>
+            <p id="pz-text"></p>
+            <div class="row" id="pz-opts"></div>
+            <p class="fb" id="pz-fb"></p>
+            <button type="button" class="btn" id="pz-next">Next puzzle</button>
+          </div>
+          <div class="card"><h2>Key idea</h2><div class="idea">The ABO gene has three alleles. A person with group A could be I<sup>A</sup>I<sup>A</sup> or I<sup>A</sup>i, and group B could be I<sup>B</sup>I<sup>B</sup> or I<sup>B</sup>i, so two parents with groups A and B can have a child of any group. Group O (ii) needs an i allele from each parent. Group AB (I<sup>A</sup>I<sup>B</sup>) cannot have a group O child. The Genetics Lab has a full Punnett grid tool.</div><p class="note">Syllabus: D3.2.8, D3.2.9, D3.2.10</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id), R=()=>Math.random();
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; };
+const TABS=['test','tx','fam']; TABS.forEach(k=>{ $('t-'+k).onclick=()=>TABS.forEach(j=>{ $('p-'+j).hidden=j!==k; $('t-'+j).setAttribute('aria-pressed',j===k); }); });
+const GROUPS=['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+const ant=g=>({A:g.startsWith('A'),B:g.includes('B'),D:g.endsWith('+')});
+const nice=g=>g.replace('+',' positive').replace('-',' negative').replace(/^(AB|A|B|O)/,'Group $1');
+// ---------------- cell drawing (shared) ----------------
+function rbc(x,c,y,r){ const g=x.createRadialGradient(c,y,r*0.15,c,y,r); g.addColorStop(0,'#e8737f'); g.addColorStop(0.45,'#c1272d'); g.addColorStop(1,'#8d1b22'); x.fillStyle=g; x.beginPath(); x.arc(c,y,r,0,7); x.fill(); }
+function makeCells(n,cx,cy,rad){ const a=[]; for(let i=0;i<n;i++){ const t=R()*6.283, d=Math.sqrt(R())*rad; a.push({x:cx+Math.cos(t)*d,y:cy+Math.sin(t)*d,hx:0,hy:0,j:R()*6}); } return a; }
+function clusterTargets(cells,cx,cy,rad,k){ const centres=[]; for(let i=0;i<k;i++){ const t=R()*6.283, d=Math.sqrt(R())*rad*0.75; centres.push([cx+Math.cos(t)*d,cy+Math.sin(t)*d]); }
+  cells.forEach(c=>{ let best=0, bd=1e9; centres.forEach((q,i)=>{ const d=Math.hypot(q[0]-c.x,q[1]-c.y); if(d<bd){ bd=d; best=i; } }); const q=centres[best], a=R()*6.283, r=Math.sqrt(R())*14; c.hx=q[0]+Math.cos(a)*r; c.hy=q[1]+Math.sin(a)*r; }); }
+
+// ---------------- 1. test tile ----------------
+const PTS=[['Patient 1','A+'],['Patient 2','O-'],['Patient 3','AB+'],['Patient 4','B-']];
+let pt=0, mystery=null, wells=[], answered={};
+const tile=$('c-tile'), tx=tile.getContext('2d');
+const WELL=[{name:'Anti-A',col:'#4ea8de',ag:'A'},{name:'Anti-B',col:'#f4d35e',ag:'B'},{name:'Anti-D',col:'#e9ecef',ag:'D'}];
+function curGroup(){ return mystery||PTS[pt][1]; }
+function curName(){ return mystery?'Mystery patient':PTS[pt][0]; }
+function resetTile(){ wells=WELL.map(()=>({cells:null,t:0,clump:false})); $('g-fb').textContent=''; $('g-pick').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed','false')); }
+(function(){ const box=$('pt-pick'); PTS.forEach((p,i)=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=p[0]; b.onclick=()=>{ pt=i; mystery=null; markPt(); resetTile(); }; box.appendChild(b); }); })();
+function markPt(){ $('pt-pick').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',!mystery&&i===pt)); }
+$('pt-new').onclick=()=>{ mystery=GROUPS[Math.floor(R()*GROUPS.length)]; markPt(); resetTile(); };
+function addBlood(i){ const W=wells[i]; if(W.cells) return; const cx=150+i*300, cy=200; W.cells=makeCells(150,cx,cy,105); W.t=0; W.clump=ant(curGroup())[WELL[i].ag]; if(W.clump) clusterTargets(W.cells,cx,cy,105,9); }
+[0,1,2].forEach(i=>{ $('w'+i).onclick=()=>addBlood(i); }); $('w-all').onclick=()=>[0,1,2].forEach((i)=>setTimeout(()=>addBlood(i),i*350)); $('w-clear').onclick=resetTile;
+(function(){ const box=$('g-pick'); GROUPS.forEach(g=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=g.replace('+','⁺').replace('-','⁻'); b.onclick=()=>{ box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); judge(g); }; box.appendChild(b); }); })();
+function judge(g){ const f=$('g-fb'); const done=wells.filter(w=>w.cells).length; const real=curGroup(); const a=ant(real);
+  if(done<3){ f.className='fb bad'; f.textContent='Test the blood with all three sera before deciding.'; return; }
+  const why='Clumping with anti-A '+(a.A?'shows antigen A is present':'did not happen, so there is no antigen A')+'; with anti-B '+(a.B?'shows antigen B':'did not happen, so no antigen B')+'; with anti-D '+(a.D?'shows the Rh antigen (Rh positive).':'did not happen, so the blood is Rh negative.');
+  if(g===real){ f.className='fb ok'; f.textContent='Correct: '+nice(real)+'. '+why; answered[curName()+(mystery?Date.now():'')]=[curName(),a,real]; drawRes(); }
+  else { f.className='fb bad'; f.textContent='Not quite. Look at each well: which antigens must be on the red cells to cause the clumping you see?'; } }
+function drawRes(){ let h='<tr><th>Patient</th><th>Anti-A</th><th>Anti-B</th><th>Anti-D</th><th>Group</th></tr>'; Object.values(answered).forEach(([n,a,g])=>{ const c=v=>v?'clumped':'no change'; h+='<tr><td>'+n+'</td><td>'+c(a.A)+'</td><td>'+c(a.B)+'</td><td>'+c(a.D)+'</td><td><b>'+g+'</b></td></tr>'; }); $('res').innerHTML=h; }
+function drawTile(dt){ const W=tile.width, H=tile.height; tx.fillStyle='#f5efe6'; tx.fillRect(0,0,W,H);
+  tx.fillStyle='#2b1d22'; tx.font='700 22px Atkinson Hyperlegible, sans-serif'; tx.textAlign='center'; tx.fillText(curName(),W/2,32); tx.font='15px Atkinson Hyperlegible, sans-serif'; tx.fillStyle='#6b5359'; tx.fillText('white test tile',W/2,52);
+  WELL.forEach((w,i)=>{ const cx=150+i*300, cy=200; tx.fillStyle='#e6ddd2'; tx.beginPath(); tx.arc(cx,cy,128,0,7); tx.fill(); tx.fillStyle=w.col+'55'; tx.beginPath(); tx.arc(cx,cy,118,0,7); tx.fill();
+    tx.fillStyle='#2b1d22'; tx.font='700 20px Atkinson Hyperlegible, sans-serif'; tx.fillText(w.name+' serum',cx,370);
+    const S=wells[i]; if(!S||!S.cells){ tx.fillStyle='#8c7a80'; tx.font='15px Atkinson Hyperlegible, sans-serif'; tx.fillText('no blood yet',cx,cy+5); return; }
+    S.t+=dt; const k=S.clump?Math.min(1,S.t/2.4):0; const k2=k*k*(3-2*k);
+    S.cells.forEach(c=>{ if(!c.ox){ c.ox=c.x; c.oy=c.y; } c.j+=dt*2; const jx=Math.sin(c.j)*(1-k2)*1.4, jy=Math.cos(c.j*1.3)*(1-k2)*1.4; const px=S.clump?c.ox+(c.hx-c.ox)*k2:c.ox, py=S.clump?c.oy+(c.hy-c.oy)*k2:c.oy; rbc(tx,px+jx,py+jy,6.2); });
+    if(S.t>2.6){ tx.fillStyle=S.clump?'#9d0208':'#2d6a4f'; tx.font='700 18px Atkinson Hyperlegible, sans-serif'; tx.fillText(S.clump?'clumped (agglutination)':'no clumping',cx,cy+150); } }); }
+// ---------------- 2. transfusion ----------------
+const xc=$('c-tx'), xx=xc.getContext('2d'); let mix=null;
+[$('x-rec'),$('x-don')].forEach((s,k)=>{ GROUPS.forEach(g=>{ const o=document.createElement('option'); o.value=g; o.textContent=g; s.appendChild(o); }); s.value=k?'A+':'O+'; s.onchange=()=>{ mix=null; $('x-fb').textContent=''; }; });
+const andJ=a=>a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+const safe=(don,rec)=>{ const d=ant(don), r=ant(rec); return !(d.A&&!r.A)&&!(d.B&&!r.B)&&!(d.D&&!r.D); };
+$('x-mix').onclick=()=>{ const rec=$('x-rec').value, don=$('x-don').value; const d=ant(don), r=ant(rec); const bad=[]; if(d.A&&!r.A) bad.push('anti-A'); if(d.B&&!r.B) bad.push('anti-B'); if(d.D&&!r.D) bad.push('anti-D');
+  const cells=makeCells(120,450,200,150); const ra=[!r.A&&'anti-A',!r.B&&'anti-B'].filter(Boolean); const abs=[]; for(let i=0;i<60;i++){ const pool=bad.length?bad:ra; abs.push({x:60+R()*780,y:50+R()*300,a:R()*6,k:pool.length?pool[i%pool.length]:''}); }
+  if(bad.length) clusterTargets(cells,450,200,150,8); mix={cells,abs,t:0,clump:bad.length>0};
+  const f=$('x-fb'); if(bad.length){ f.className='fb bad'; f.textContent='Not safe. The recipient ('+rec+') has '+andJ(bad)+' antibodies'+(bad.includes('anti-D')?' (anti-D appears after a first exposure)':'')+', which bind to the donor’s '+bad.map(b=>b.replace('anti-','')).join(' and ')+' antigens and clump the donor cells.'; }
+  else { f.className='fb ok'; f.textContent='Safe. The donor’s cells ('+don+') carry no antigen that the recipient’s antibodies attack, so they stay separate.'; } };
+function drawTx(dt){ const W=xc.width,H=xc.height; xx.fillStyle='#fbe3c7'; xx.fillRect(0,0,W,H); xx.fillStyle='#6b4a2b'; xx.font='700 18px Atkinson Hyperlegible, sans-serif'; xx.textAlign='left'; xx.fillText('Recipient’s plasma',16,28);
+  if(!mix){ xx.textAlign='center'; xx.fillStyle='#8c6b4a'; xx.font='17px Atkinson Hyperlegible, sans-serif'; xx.fillText('Choose a recipient and a donor, then press Mix the blood.',W/2,H/2); return; }
+  mix.t+=dt; const k=mix.clump?Math.min(1,mix.t/2.5):0, k2=k*k*(3-2*k);
+  mix.abs.forEach(a=>{ if(!a.k) return; a.a+=dt*0.6; const x=a.x+Math.sin(a.a)*6, y=a.y+Math.cos(a.a)*6; xx.strokeStyle=a.k==='anti-A'?'#1d6fb8':a.k==='anti-B'?'#b58900':'#555'; xx.lineWidth=3; xx.beginPath(); xx.moveTo(x,y+8); xx.lineTo(x,y); xx.lineTo(x-6,y-7); xx.moveTo(x,y); xx.lineTo(x+6,y-7); xx.stroke(); });
+  mix.cells.forEach(c=>{ if(!c.ox){ c.ox=c.x; c.oy=c.y; } c.j+=dt*2; const px=mix.clump?c.ox+(c.hx-c.ox)*k2:c.ox+Math.sin(c.j)*2, py=mix.clump?c.oy+(c.hy-c.oy)*k2:c.oy+Math.cos(c.j)*2; rbc(xx,px,py,9); });
+  xx.textAlign='right'; xx.fillStyle='#6b4a2b'; xx.font='14px Atkinson Hyperlegible, sans-serif'; xx.fillText('Y shapes: the recipient’s antibodies   red discs: donor red cells',W-14,H-14); }
+let chRec='A-';
+function newCh(){ chRec=GROUPS[Math.floor(R()*GROUPS.length)]; $('ch-rec').textContent=chRec+' ('+nice(chRec)+')'; $('ch-box').innerHTML=GROUPS.map(g=>'<label><input type="checkbox" value="'+g+'"> '+g+'</label>').join(''); $('ch-fb').textContent=''; }
+$('ch-next').onclick=newCh;
+$('ch-check').onclick=()=>{ let wrong=0; $('ch-box').querySelectorAll('label').forEach(l=>{ const cb=l.querySelector('input'); const good=cb.checked===safe(cb.value,chRec); l.className=good?'ok':'bad'; if(!good) wrong++; });
+  const f=$('ch-fb'); const list=GROUPS.filter(g=>safe(g,chRec)).join(', '); if(wrong){ f.className='fb bad'; f.textContent=wrong+' wrong. For each donor, ask: does the donor’s blood carry any antigen (A, B or D) that '+chRec+' blood does not?'; } else { f.className='fb ok'; f.textContent='Correct. Safe donors for '+chRec+': '+list+'.'; } };
+newCh();
+// ---------------- 3. families ----------------
+const GT=[['AA','I<sup>A</sup>I<sup>A</sup>','A'],['Ai','I<sup>A</sup>i','A'],['BB','I<sup>B</sup>I<sup>B</sup>','B'],['Bi','I<sup>B</sup>i','B'],['AB','I<sup>A</sup>I<sup>B</sup>','AB'],['ii','ii','O']];
+const grpOf=g=>(g.includes('A')&&g.includes('B'))?'AB':g.includes('A')?'A':g.includes('B')?'B':'O';
+const AH={A:'I<sup>A</sup>',B:'I<sup>B</sup>',i:'i'};
+[$('f-m'),$('f-f')].forEach((s,k)=>{ GT.forEach(([v,h,g])=>{ const o=document.createElement('option'); o.value=v; o.innerHTML=h.replace(/<sup>(.)<\/sup>/g,'$1')+'  (group '+g+')'; s.appendChild(o); }); s.value=k?'Bi':'Ai'; s.onchange=fReset; });
+function kids(m,f){ const s=new Set(); m.split('').forEach(a=>f.split('').forEach(b=>s.add(grpOf(a+b)))); return s; }
+function fReset(){ $('f-box').innerHTML=['A','B','AB','O'].map(g=>'<label><input type="checkbox" value="'+g+'"> Group '+g+'</label>').join(''); $('f-fb').textContent=''; $('f-grid').innerHTML=''; }
+$('f-check').onclick=()=>{ const want=kids($('f-m').value,$('f-f').value); let wrong=0; $('f-box').querySelectorAll('label').forEach(l=>{ const cb=l.querySelector('input'); const good=cb.checked===want.has(cb.value); l.className=good?'ok':'bad'; if(!good) wrong++; });
+  const f=$('f-fb'); if(wrong){ f.className='fb bad'; f.textContent='Not quite. Write down the gametes each parent can make, then combine them.'; } else { f.className='fb ok'; f.textContent='Correct: possible groups are '+[...want].join(', ')+'.'; } };
+$('f-show').onclick=()=>{ const m=$('f-m').value, f=$('f-f').value; let h='<table class="t" style="max-width:340px;margin:8px auto"><tr><th></th>'+f.split('').map(b=>'<th>'+AH[b]+'</th>').join('')+'</tr>';
+  m.split('').forEach(a=>{ h+='<tr><th>'+AH[a]+'</th>'+f.split('').map(b=>{ const g=[a,b].sort((x,y)=>'ABi'.indexOf(x)-'ABi'.indexOf(y)); return '<td>'+g.map(z=>AH[z]).join('')+'<br><span class="note">group '+grpOf(g.join(''))+'</span></td>'; }).join('')+'</tr>'; }); $('f-grid').innerHTML=h+'</table>'; };
+fReset();
+const PUZ=[
+ {t:'A baby has blood group O. The mother is group A. Which of these men could be the father?',o:[['Group AB',0],['Group B',1],['Group A',1],['Group O',1]],why:'A group O baby is ii, so it got an i allele from each parent. The mother must be I<sup>A</sup>i. Any father who can carry i (group A, B or O) is possible; a group AB father (I<sup>A</sup>I<sup>B</sup>) has no i allele, so he cannot be the father.'},
+ {t:'A baby has blood group AB. The mother is group A. Which of these men could be the father?',o:[['Group O',0],['Group B',1],['Group AB',1],['Group A',0]],why:'The baby is I<sup>A</sup>I<sup>B</sup>. If the mother gave I<sup>A</sup>, the father must have given I<sup>B</sup>, so he must be group B or AB.'},
+ {t:'Two babies were mixed up. Couple 1 are both group O. Couple 2 are group A and group B. Baby X is group A and baby Y is group O. Which baby belongs to couple 1?',o:[['Baby X',0],['Baby Y',1]],why:'Two group O parents (ii and ii) can only have group O children, so baby Y belongs to couple 1. Couple 2 could be I<sup>A</sup>i and I<sup>B</sup>i and have a group A child.'},
+ {t:'Both parents are group AB. What fraction of their children are expected to be group AB?',o:[['None',0],['1 in 4',0],['1 in 2',1],['All of them',0]],why:'I<sup>A</sup>I<sup>B</sup> × I<sup>A</sup>I<sup>B</sup> gives 1 I<sup>A</sup>I<sup>A</sup> : 2 I<sup>A</sup>I<sup>B</sup> : 1 I<sup>B</sup>I<sup>B</sup>, so half the children are expected to be group AB, a quarter A and a quarter B.'}
+];
+let pz=0;
+function showPz(){ const P=PUZ[pz]; $('pz-text').textContent=P.t; $('pz-fb').textContent=''; const box=$('pz-opts'); box.innerHTML='';
+  P.o.forEach(([t,ok])=>{ const l=document.createElement('label'); l.className='opt'; l.style.display='inline-flex'; l.style.gap='6px'; l.innerHTML='<input type="checkbox"> '+t; box.appendChild(l); });
+  const b=document.createElement('button'); b.type='button'; b.className='go'; b.textContent='Check'; b.onclick=()=>{ let wrong=0; box.querySelectorAll('label').forEach((l,i)=>{ const good=l.querySelector('input').checked===!!P.o[i][1]; l.style.outline='2px solid '+(good?'#80ed99':'#ffb4a2'); if(!good) wrong++; }); const f=$('pz-fb'); f.className='fb '+(wrong?'bad':'ok'); f.innerHTML=(wrong?'Not quite. ':'Correct. ')+P.why; }; box.appendChild(b); }
+$('pz-next').onclick=()=>{ pz=(pz+1)%PUZ.length; showPz(); }; showPz();
+// ---------------- loop ----------------
+resetTile(); markPt(); let last=performance.now();
+function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!$('p-test').hidden) drawTile(dt); if(!$('p-tx').hidden) drawTx(dt); requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+window.bloodDebug={step:n=>{ for(let i=0;i<n;i++){ drawTile(0.033); drawTx(0.033); } }};
+})();
+</script>
+
+</body>
+</html>

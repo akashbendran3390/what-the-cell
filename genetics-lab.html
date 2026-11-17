@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Genetics Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/genetics-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Genetics Lab">
+<meta property="og:description" content="Genetics Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/genetics-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Genetics Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Genetics Lab (2026-11-17, teacher's request): interactive Punnett grids for every kind of inheritance in D3.2,
+   dihybrid crosses with linkage and chi-squared (HL), and pedigree puzzles. All examples and wording are our own. */
+:root{
+  --bg:#120f1c; --ink:#f3f0fa; --dim:#c4bcd8; --panel:#1c1830; --panel2:#262040; --line:rgba(210,195,255,.2);
+  --accent:#c9a7ff; --ok:#80ed99; --bad:#ff8fa3;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1240px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel)}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:7px 13px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#1d0f33}
+.grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:14px;margin-top:12px}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn,.opt{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#1d0f33;border-color:transparent}
+.opt[aria-pressed="true"]{outline:2px solid var(--accent);background:#3a2e60}
+h2{font:800 18px var(--display);margin:0 0 6px}
+h3{font:800 15px var(--display);margin:10px 0 4px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12.5px;color:var(--dim)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}
+.intro{max-width:780px}
+select{font:700 14px var(--body);background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;max-width:100%}
+sup{font-size:.68em}
+.par{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.par{grid-template-columns:1fr}}
+.par .who{font:700 13px var(--body);color:var(--dim);margin-bottom:4px}
+.par .ph{font-size:13px;margin-top:4px;color:var(--dim)}
+/* Punnett grid */
+.pg{border-collapse:separate;border-spacing:6px;margin:6px auto}
+.pg td,.pg th{width:84px;height:66px;text-align:center;border-radius:12px;font:800 20px var(--display)}
+.pg th{background:transparent}
+.pg td.cell{background:var(--panel2);border:2px dashed var(--line);cursor:pointer;transition:transform .2s,background .3s}
+.pg td.cell:hover{border-color:var(--accent)}
+.pg td.cell.sel{border:2px solid var(--accent);box-shadow:0 0 0 3px rgba(201,167,255,.25)}
+.pg td.cell.ok{border:2px solid var(--ok)}
+.pg td.cell.bad{border:2px solid var(--bad)}
+.pg td.cell .phs{display:block;font:400 11px var(--body);color:var(--dim);margin-top:2px}
+.pg td.cell.pop{animation:pop .45s ease}
+@keyframes pop{0%{transform:scale(.6)}70%{transform:scale(1.12)}100%{transform:scale(1)}}
+.gam{display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:46px;padding:0 6px;border-radius:50%;background:#2f2650;border:2px solid #8e7cc3;font:800 17px var(--display)}
+.gam.hl{background:#5b45a0;border-color:#fff}
+.corner{font:700 11px var(--body)!important;color:var(--dim)}
+.picker{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:6px 0;min-height:40px}
+.fb{font-size:14px;margin:6px 0}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+.ratio{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;font-size:14px}
+.ratio input{width:64px;font:700 15px var(--body);background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 7px;text-align:center}
+.ratio input.ok{border-color:var(--ok)} .ratio input.bad{border-color:var(--bad)}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.bars{display:grid;gap:8px;margin-top:6px}
+.bar{position:relative;height:26px;background:var(--panel2);border-radius:8px;overflow:hidden}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:8px;transition:width .6s}
+.bar b{position:absolute;left:8px;top:4px;font-size:13px;text-shadow:0 1px 2px #000}
+.bar s{position:absolute;top:-2px;bottom:-2px;width:3px;background:#fff;text-decoration:none}
+.idea{background:var(--panel2);border-left:4px solid var(--accent);border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.5}
+table.chi{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+table.chi td,table.chi th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+table.chi td:first-child,table.chi th:first-child{text-align:left}
+.dg{border-collapse:separate;border-spacing:4px;margin:6px auto}
+.dg td,.dg th{width:64px;height:50px;text-align:center;border-radius:9px;font:800 14px var(--display)}
+.dg td.cell{color:#120f1c}
+.gpick{display:flex;flex-wrap:wrap;gap:6px}
+.gpick label{display:flex;align-items:center;gap:5px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font:700 14px var(--display);cursor:pointer}
+.gpick label.ok{border-color:var(--ok)} .gpick label.bad{border-color:var(--bad)}
+svg text{font-family:var(--body)}
+.ped{width:100%;height:auto;background:#17132a;border-radius:12px}
+.ped .person{cursor:pointer}
+.ped .person:hover .shape{stroke:var(--accent);stroke-width:3}
+.tasks li{margin:4px 0;line-height:1.45}
+.hl-only{display:none}
+body.hl .hl-only{display:revert}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Genetics Lab</h1><div class="sub">DP Biology D3.2 &middot; Punnett grids, ratios, pedigrees and chi-squared</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="l-sl" aria-pressed="true">SL</button><button type="button" id="l-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Predict and test the results of genetic crosses</h2>
+    <p>Choose a trait and the parents&rsquo; genotypes, fill in the Punnett grid yourself, then work out the genotype and phenotype ratios and check them. Breed hundreds of offspring to see how real results scatter around the prediction. The lab covers dominant and recessive alleles, phenylketonuria, incomplete dominance, codominance, sickle cell, ABO blood groups and haemophilia. At HL there are also dihybrid crosses, linked genes and the chi-squared test. A third tab has pedigree puzzles.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Open the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Lab sections"><button type="button" id="t-mono" aria-pressed="true">1. Monohybrid crosses</button><button type="button" id="t-di" aria-pressed="false">2. Dihybrid crosses (HL)</button><button type="button" id="t-ped" aria-pressed="false">3. Pedigree detective</button></div>
+
+    <!-- ===== 1. Monohybrid ===== -->
+    <section id="p-mono">
+      <div class="grid">
+        <div>
+          <div class="card">
+            <h2>1. Choose a trait and the parents</h2>
+            <div class="row"><select id="m-trait" aria-label="Trait"></select></div>
+            <p class="note" id="m-legend"></p>
+            <div class="par">
+              <div><div class="who" id="m-w1">Parent 1</div><div class="row" id="m-p1"></div><div class="ph" id="m-ph1"></div></div>
+              <div><div class="who" id="m-w2">Parent 2</div><div class="row" id="m-p2"></div><div class="ph" id="m-ph2"></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2>2. Fill in the Punnett grid</h2>
+            <p class="note">The gametes of each parent are on the edges: each gamete carries one allele. Click a box, then choose the offspring genotype below the grid.</p>
+            <table class="pg" id="m-grid" aria-label="Punnett grid"></table>
+            <div class="picker" id="m-pick"></div>
+            <div class="row" style="justify-content:center"><button type="button" class="go" id="m-check">Check my grid</button><button type="button" class="btn" id="m-fill">Fill it for me</button><button type="button" class="btn" id="m-clear">Clear</button></div>
+            <p class="fb" id="m-fb" style="text-align:center"></p>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <h2>3. Work out the ratios</h2>
+            <p class="note">Each box is one of four equally likely outcomes. How many boxes out of 4 have each genotype and each phenotype?</p>
+            <h3>Genotypes</h3><div class="ratio" id="m-gr"></div>
+            <h3>Phenotypes</h3><div class="ratio" id="m-pr"></div>
+            <div id="m-probq"></div>
+            <div class="row"><button type="button" class="go" id="m-rcheck">Check ratios</button><button type="button" class="btn" id="m-rshow">Show answers</button></div>
+            <p class="fb" id="m-rfb"></p>
+          </div>
+          <div class="card">
+            <h2>4. Breed some offspring</h2>
+            <p class="note">Each offspring gets one random gamete from each parent. The white line on each bar is the prediction from the Punnett grid.</p>
+            <div class="row"><button type="button" class="btn" id="m-b4">4 offspring</button><button type="button" class="btn" id="m-b40">40</button><button type="button" class="btn" id="m-b400">400</button><button type="button" class="btn" id="m-b4000">4000</button></div>
+            <div class="bars" id="m-bars"></div>
+            <p class="note" id="m-bnote"></p>
+          </div>
+          <div class="card"><h2>Key idea</h2><div class="idea" id="m-idea"></div><p class="note" id="m-codes"></p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 2. Dihybrid ===== -->
+    <section id="p-di" hidden>
+      <div class="grid">
+        <div>
+          <div class="card">
+            <h2>1. Two genes at once</h2>
+            <div class="row"><select id="d-trait" aria-label="Pair of traits"></select></div>
+            <p class="note" id="d-legend"></p>
+            <div class="par">
+              <div><div class="who">Parent 1</div><div id="d-p1"></div><div class="ph" id="d-ph1"></div></div>
+              <div><div class="who">Parent 2</div><div id="d-p2"></div><div class="ph" id="d-ph2"></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <h2>2. Which gametes can each parent make?</h2>
+            <p class="note">Each gamete gets one allele of each gene. If the genes are on different chromosomes, the alleles assort independently, so every combination is possible. Tick every gamete the parent can make.</p>
+            <div class="par"><div><div class="who">Parent 1</div><div class="gpick" id="d-g1"></div></div><div><div class="who">Parent 2</div><div class="gpick" id="d-g2"></div></div></div>
+            <div class="row"><button type="button" class="go" id="d-gcheck">Check gametes</button><button type="button" class="btn" id="d-gshow">Show me</button></div>
+            <p class="fb" id="d-gfb"></p>
+          </div>
+          <div class="card" id="d-gridcard" hidden>
+            <h2>3. The Punnett grid</h2>
+            <p class="note">Colours show the phenotypes. Count the boxes of each phenotype.</p>
+            <table class="dg" id="d-grid" aria-label="Dihybrid Punnett grid"></table>
+          </div>
+        </div>
+        <div>
+          <div class="card" id="d-ratiocard" hidden>
+            <h2>4. Phenotype ratio</h2>
+            <div class="ratio" id="d-pr"></div>
+            <div class="row"><button type="button" class="go" id="d-rcheck">Check</button><button type="button" class="btn" id="d-rshow">Show answers</button></div>
+            <p class="fb" id="d-rfb"></p>
+          </div>
+          <div class="card">
+            <h2>5. Grow the offspring and test the results</h2>
+            <div class="row"><label style="display:flex;gap:6px;align-items:center;font-weight:700"><input type="checkbox" id="d-link"> The two genes are linked</label></div>
+            <div class="row" id="d-rfrow" hidden><label for="d-rf" style="font-size:14px">Recombinant gametes:</label><input type="range" id="d-rf" min="0" max="50" value="10"><b id="d-rfv">10%</b></div>
+            <p class="note">With linked genes, the dominant alleles of both genes are on the same chromosome in a parent that is heterozygous for both (they stay together unless crossing over separates them).</p>
+            <div class="row"><button type="button" class="go" id="d-grow">Grow 160 offspring</button></div>
+            <div id="d-chi"></div>
+          </div>
+          <div class="card"><h2>Key idea</h2><div class="idea">With two unlinked genes, a parent that is heterozygous for both makes four kinds of gamete in equal numbers, because the chromosomes line up independently in meiosis. Crossing two such parents gives a 9 : 3 : 3 : 1 phenotype ratio. If the genes are linked, the parental combinations of alleles stay together, so the results move away from this ratio. The chi-squared test tells you whether a difference from the expected ratio is too big to be due to chance.</div><p class="note">Syllabus: D3.2.16, D3.2.17, D3.2.19, D3.2.20, D3.2.21</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. Pedigrees ===== -->
+    <section id="p-ped" hidden>
+      <div class="grid">
+        <div>
+          <div class="card">
+            <div class="row" id="pd-pick"></div>
+            <svg class="ped" id="pd-svg" viewBox="0 0 640 400" role="img" aria-label="Pedigree chart"></svg>
+            <p class="note">Squares are males, circles are females. Shaded symbols are affected. Click a person to choose their genotype.</p>
+            <div class="picker" id="pd-gpick"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <h2 id="pd-title"></h2><p id="pd-story"></p>
+            <h3>1. How is this disorder inherited?</h3>
+            <div class="row" id="pd-modes"></div>
+            <p class="fb" id="pd-mfb"></p>
+            <h3>2. Work out the genotypes</h3>
+            <p class="note" id="pd-alleles"></p>
+            <div class="row"><button type="button" class="go" id="pd-check">Check genotypes</button><button type="button" class="btn" id="pd-show">Show answers</button></div>
+            <p class="fb" id="pd-gfb"></p>
+          </div>
+          <div class="card"><h2>Clues to look for</h2><ol class="tasks">
+            <li>Two unaffected parents with an affected child: the allele must be <b>recessive</b> (both parents are carriers).</li>
+            <li>An affected child always has at least one affected parent, and two affected parents can have an unaffected child: <b>dominant</b>.</li>
+            <li>Mostly males affected, passed from unaffected mothers to sons, never from father to son: <b>sex-linked recessive</b>.</li>
+          </ol><p class="note">Syllabus: D3.2.13, D3.2.12, D3.2.7</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const R=()=>Math.random();
+let level='sl'; try{ if(localStorage.getItem('wtc-cell-level')==='hl') level='hl'; }catch(e){}
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); document.body.classList.toggle('hl',l==='hl'); }
+$('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl'); setLevel(level);
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; };
+const TABS={mono:'p-mono',di:'p-di',ped:'p-ped'};
+Object.keys(TABS).forEach(k=>{ $('t-'+k).onclick=()=>{ Object.keys(TABS).forEach(j=>{ $(TABS[j]).hidden=j!==k; $('t-'+j).setAttribute('aria-pressed',j===k); }); if(k==='di') setLevel('hl'); }; });
+
+// ================= 1. MONOHYBRID =================
+const al=(k,h)=>({k,h:h||k});
+const TRAITS=[
+ {id:'pea',grp:'Dominant and recessive alleles',name:'Pea plant height',al:[al('T'),al('t')],legend:'T = tall (dominant), t = short (recessive)',
+  ph:g=>g.includes('T')?'Tall':'Short',col:{Tall:'#80ed99',Short:'#ffd166'},p:['Tt','Tt'],cs:'D3.2.1, D3.2.2, D3.2.3, D3.2.4, D3.2.5',
+  idea:'Tall is dominant, so one T allele is enough for a tall plant. Only plants with two t alleles are short. Crossing two heterozygous plants gives 3 tall : 1 short, and a ratio of 1 TT : 2 Tt : 1 tt. Mendel carried out crosses like this by transferring pollen by hand and covering the flowers.'},
+ {id:'pku',grp:'Dominant and recessive alleles',name:'Phenylketonuria (PKU)',al:[al('P'),al('p')],legend:'P = allele for the working enzyme (dominant), p = PKU allele (recessive)',
+  ph:g=>g==='pp'?'Has PKU':'No PKU',col:{'No PKU':'#8ecae6','Has PKU':'#ff8fa3'},aff:'Has PKU',p:['Pp','Pp'],cs:'D3.2.7, D3.2.5',
+  carrier:g=>g==='Pp',
+  idea:'PKU is caused by a recessive allele: people with two p alleles cannot make a working enzyme to break down the amino acid phenylalanine, which builds up and harms brain development unless their diet is controlled. People with Pp are carriers: they have no symptoms but can pass the allele on. Two carriers have a 1 in 4 chance of a child with PKU each time.'},
+ {id:'hd',grp:'Dominant and recessive alleles',name:'Huntington’s disease (dominant allele)',al:[al('H'),al('h')],legend:'H = Huntington’s allele (dominant), h = normal allele (recessive)',
+  ph:g=>g.includes('H')?'Has Huntington’s':'Unaffected',col:{'Has Huntington’s':'#ff8fa3','Unaffected':'#8ecae6'},aff:'Has Huntington’s',p:['Hh','hh'],cs:'D3.2.5',
+  idea:'Here the disease allele is dominant, so one copy causes the disease and there are no carriers. A parent with Hh and a parent with hh have a 1 in 2 chance of an affected child each time. Compare this with PKU, where the disease allele is recessive.'},
+ {id:'snap',grp:'Incomplete dominance',name:'Snapdragon flower colour',al:[al('R','C<sup>R</sup>'),al('W','C<sup>W</sup>')],legend:'C<sup>R</sup> = red, C<sup>W</sup> = white; neither is dominant',
+  ph:g=>g==='RR'?'Red':g==='WW'?'White':'Pink',col:{Red:'#e63946',Pink:'#ff9ecb',White:'#f1f1f1'},p:['RW','RW'],cs:'D3.2.10',
+  idea:'In incomplete dominance the heterozygote has an intermediate phenotype: one C<sup>R</sup> allele only makes enough red pigment for a pink flower. Crossing two pink plants gives 1 red : 2 pink : 1 white, so the phenotype ratio is the same as the genotype ratio.'},
+ {id:'roan',grp:'Codominance',name:'Cattle coat colour',al:[al('R','C<sup>R</sup>'),al('W','C<sup>W</sup>')],legend:'C<sup>R</sup> = red hairs, C<sup>W</sup> = white hairs; both are expressed',
+  ph:g=>g==='RR'?'Red coat':g==='WW'?'White coat':'Roan coat',col:{'Red coat':'#b5482f','Roan coat':'#d9a59a','White coat':'#f1f1f1'},p:['RW','RW'],cs:'D3.2.10',
+  idea:'In codominance both alleles are fully expressed in the heterozygote. A roan calf has a mixture of separate red hairs and white hairs, not pink hairs. Compare this with incomplete dominance, where the heterozygote is a blend.'},
+ {id:'sickle',grp:'Codominance',name:'Sickle cell (haemoglobin)',al:[al('A','Hb<sup>A</sup>'),al('S','Hb<sup>S</sup>')],legend:'Hb<sup>A</sup> = normal haemoglobin, Hb<sup>S</sup> = sickle haemoglobin; both are made in heterozygotes',
+  ph:g=>g==='AA'?'Normal haemoglobin':g==='SS'?'Sickle cell anaemia':'Sickle cell trait',col:{'Normal haemoglobin':'#e63946','Sickle cell trait':'#f4a261','Sickle cell anaemia':'#7b2cbf'},aff:'Sickle cell anaemia',p:['AS','AS'],cs:'D1.3.2, D3.2.10',
+  idea:'Sickle haemoglobin comes from a single base substitution in the gene for one haemoglobin chain (GAG to GTG), so one amino acid changes from glutamic acid to valine. People with Hb<sup>A</sup>Hb<sup>S</sup> make both kinds of haemoglobin (codominance): they have sickle cell trait, usually mild, and some protection against malaria. People with Hb<sup>S</sup>Hb<sup>S</sup> have sickle cell anaemia.'},
+ {id:'abo',grp:'Multiple alleles',name:'ABO blood groups',al:[al('A','I<sup>A</sup>'),al('B','I<sup>B</sup>'),al('i','i')],legend:'I<sup>A</sup> and I<sup>B</sup> are codominant; both are dominant to i',
+  ph:g=>g.includes('A')&&g.includes('B')?'Group AB':g.includes('A')?'Group A':g.includes('B')?'Group B':'Group O',col:{'Group A':'#e63946','Group B':'#4ea8de','Group AB':'#c77dff','Group O':'#f4f4f4'},p:['Ai','Bi'],cs:'D3.2.8, D3.2.9, D3.2.10',
+  idea:'The ABO gene has three alleles in the human gene pool, though each person has only two. I<sup>A</sup> and I<sup>B</sup> are codominant (I<sup>A</sup>I<sup>B</sup> is group AB) and both are dominant to i, so group O is ii. A group A parent with I<sup>A</sup>i and a group B parent with I<sup>B</sup>i can have children of all four groups.'},
+ {id:'haem',grp:'Sex-linked',name:'Haemophilia',sex:true,al:[al('XH','X<sup>H</sup>'),al('Xh','X<sup>h</sup>'),al('Y','Y')],legend:'X<sup>H</sup> = normal clotting, X<sup>h</sup> = haemophilia (recessive); the gene is on the X chromosome only',
+  ph:g=>{ const boy=g.includes('Y'); const a=boy?g.includes('Xh'):g==='XhXh'; return (boy?'Boy':'Girl')+(a?' with haemophilia':', no haemophilia'); },
+  col:{'Girl, no haemophilia':'#ffafcc','Girl with haemophilia':'#c9184a','Boy, no haemophilia':'#a2d2ff','Boy with haemophilia':'#3a0ca3'},aff:'Boy with haemophilia',p:['XHXh','XHY'],cs:'D3.2.11, D3.2.12',
+  carrier:g=>g==='XHXh',
+  idea:'The gene for a clotting factor is on the X chromosome. Males have only one X, so a single X<sup>h</sup> allele gives them haemophilia; females need two. A carrier mother (X<sup>H</sup>X<sup>h</sup>) passes X<sup>h</sup> to half her sons. Fathers pass their X to all daughters and their Y to all sons, so a father never passes haemophilia to his son.'},
+ {id:'cb',grp:'Sex-linked',name:'Red-green colour blindness',sex:true,al:[al('XB','X<sup>B</sup>'),al('Xb','X<sup>b</sup>'),al('Y','Y')],legend:'X<sup>B</sup> = normal colour vision, X<sup>b</sup> = red-green colour blindness (recessive)',
+  ph:g=>{ const boy=g.includes('Y'); const a=boy?g.includes('Xb'):g==='XbXb'; return (boy?'Boy':'Girl')+(a?', colour blind':', normal vision'); },
+  col:{'Girl, normal vision':'#ffafcc','Girl, colour blind':'#c9184a','Boy, normal vision':'#a2d2ff','Boy, colour blind':'#3a0ca3'},aff:'Boy, colour blind',p:['XBXb','XbY'],cs:'D3.2.11',
+  carrier:g=>g==='XBXb',
+  idea:'Like haemophilia, this is caused by a recessive allele on the X chromosome, so it is far more common in males. A carrier mother and a colour-blind father can have colour-blind daughters, because each daughter gets an X from both parents.'}
+];
+let T=TRAITS[0], P1='', P2='', cells=[], selCell=-1;
+const order=k=>T.al.findIndex(a=>a.k===k);
+const norm=arr=>arr.slice().sort((a,b)=>order(a)-order(b)).join('');
+const split=g=>{ const out=[]; let s=g; while(s.length){ const a=T.al.slice().sort((x,y)=>y.k.length-x.k.length).find(x=>s.startsWith(x.k)); out.push(a.k); s=s.slice(a.k.length); } return out; };
+const H=k=>T.al.find(a=>a.k===k).h;
+const GH=g=>split(g).map(H).join('');
+function genotypes(){ // [mother options, father options, offspring options]
+  if(T.sex){ const xs=T.al.filter(a=>a.k!=='Y').map(a=>a.k); const m=[], f=[]; xs.forEach((a,i)=>xs.forEach((b,j)=>{ if(j>=i) m.push(norm([a,b])); })); xs.forEach(a=>f.push(norm([a,'Y']))); return [m,f,m.concat(f)]; }
+  const ks=T.al.map(a=>a.k), all=[]; ks.forEach((a,i)=>ks.forEach((b,j)=>{ if(j>=i) all.push(norm([a,b])); })); return [all,all,all]; }
+function phenos(){ return [...new Set(genotypes()[2].map(T.ph))]; }
+const trSel=$('m-trait'); let lastGrp=''; let og=null;
+TRAITS.forEach((t,i)=>{ if(t.grp!==lastGrp){ og=document.createElement('optgroup'); og.label=t.grp; trSel.appendChild(og); lastGrp=t.grp; } const o=document.createElement('option'); o.value=i; o.textContent=t.name; og.appendChild(o); });
+trSel.onchange=()=>{ T=TRAITS[+trSel.value]; P1=T.p[0]; P2=T.p[1]; renderMono(); };
+function parentButtons(box,opts,cur,set){ box.innerHTML=''; opts.forEach(g=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.innerHTML=GH(g); b.setAttribute('aria-pressed',g===cur); b.onclick=()=>{ set(g); renderMono(); }; box.appendChild(b); }); }
+function phText(g){ return T.ph(g)+(T.carrier&&T.carrier(g)?' (carrier)':''); }
+function renderMono(){
+  const [mo,fo]=genotypes(); $('m-legend').innerHTML=T.legend;
+  $('m-w1').textContent=T.sex?'Mother':'Parent 1'; $('m-w2').textContent=T.sex?'Father':'Parent 2';
+  parentButtons($('m-p1'),mo,P1,g=>{P1=g;}); parentButtons($('m-p2'),fo,P2,g=>{P2=g;});
+  $('m-ph1').textContent='Phenotype: '+phText(P1); $('m-ph2').textContent='Phenotype: '+phText(P2);
+  $('m-idea').innerHTML=T.idea; $('m-codes').textContent='Syllabus: '+T.cs;
+  // grid
+  const g1=split(P1), g2=split(P2); cells=[]; selCell=-1;
+  let h='<tr><th class="corner">gametes</th>'+g2.map((a,j)=>'<th><span class="gam" id="gmc'+j+'">'+H(a)+'</span></th>').join('')+'</tr>';
+  g1.forEach((a,i)=>{ h+='<tr><th><span class="gam" id="gmr'+i+'">'+H(a)+'</span></th>'; g2.forEach((b,j)=>{ const n=cells.length; cells.push({ans:norm([a,b]),val:'',i,j}); h+='<td class="cell" id="mc'+n+'" tabindex="0" aria-label="Box '+(n+1)+'">?</td>'; }); h+='</tr>'; });
+  $('m-grid').innerHTML=h; $('m-pick').innerHTML=''; $('m-fb').textContent=''; $('m-fb').className='fb';
+  cells.forEach((c,n)=>{ const td=$('mc'+n); td.onclick=()=>pickCell(n); td.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pickCell(n); } }; });
+  // ratio inputs
+  const all=genotypes()[2]; $('m-gr').innerHTML=all.map((g,k)=>'<span>'+GH(g)+'</span><input type="number" min="0" max="4" id="gr'+k+'" aria-label="Number of boxes">').join('');
+  $('m-pr').innerHTML=phenos().map((p,k)=>'<span><i class="swatch" style="background:'+(T.col[p]||'#999')+'"></i>'+p+'</span><input type="number" min="0" max="4" id="pr'+k+'" aria-label="Number of boxes">').join('');
+  $('m-probq').innerHTML=T.aff?'<h3>Chance</h3><div class="ratio"><span>Chance that a child of these parents is &ldquo;'+T.aff.toLowerCase()+'&rdquo; (%)</span><input type="number" min="0" max="100" id="pq" aria-label="Percent"></div>':'';
+  $('m-rfb').textContent=''; $('m-bars').innerHTML=''; $('m-bnote').textContent='';
+  drawBars(null);
+}
+function pickCell(n){ selCell=n; cells.forEach((c,k)=>$('mc'+k).classList.toggle('sel',k===n)); const c=cells[n];
+  [$('gmr'+c.i),$('gmc'+c.j)].forEach(e=>{ if(e){ e.classList.add('hl'); setTimeout(()=>e.classList.remove('hl'),900); } });
+  const box=$('m-pick'); box.innerHTML='<span class="note" style="width:100%;text-align:center">Box '+(n+1)+': which genotype?</span>';
+  genotypes()[2].forEach(g=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.innerHTML=GH(g); b.onclick=()=>{ setCell(n,g); const nx=cells.findIndex(c=>!c.val); if(nx>=0) pickCell(nx); else { box.innerHTML=''; cells.forEach((c,k)=>$('mc'+k).classList.remove('sel')); } }; box.appendChild(b); }); }
+function setCell(n,g){ const c=cells[n]; c.val=g; const td=$('mc'+n); td.classList.remove('ok','bad','pop'); void td.offsetWidth; td.classList.add('pop');
+  td.innerHTML=GH(g)+'<span class="phs">'+T.ph(g)+'</span>'; td.style.background=(T.col[T.ph(g)]||'#555')+'33'; }
+$('m-check').onclick=()=>{ let ok=0, empty=0; cells.forEach((c,n)=>{ const td=$('mc'+n); td.classList.remove('ok','bad'); if(!c.val){ empty++; return; } const good=c.val===c.ans; td.classList.add(good?'ok':'bad'); if(good) ok++; });
+  const fb=$('m-fb'); if(empty){ fb.className='fb'; fb.textContent='Fill every box first ('+empty+' left).'; return; }
+  if(ok===cells.length){ fb.className='fb ok'; fb.textContent='All four boxes are correct. Now work out the ratios.'; }
+  else { fb.className='fb bad'; fb.textContent=ok+' of 4 correct. Each box combines the gamete at the start of its row with the gamete at the top of its column.'; } };
+$('m-fill').onclick=()=>{ cells.forEach((c,n)=>setTimeout(()=>{ pickCell(n); setCell(n,c.ans); if(n===cells.length-1){ $('m-pick').innerHTML=''; cells.forEach((c,k)=>$('mc'+k).classList.remove('sel')); } },n*450)); };
+$('m-clear').onclick=()=>renderMono();
+function expected(){ const cnt={}; cells.forEach(c=>{ cnt[c.ans]=(cnt[c.ans]||0)+1; }); const pc={}; cells.forEach(c=>{ const p=T.ph(c.ans); pc[p]=(pc[p]||0)+1; }); return [cnt,pc]; }
+$('m-rcheck').onclick=()=>{ const [cnt,pc]=expected(); let wrong=0; const all=genotypes()[2];
+  all.forEach((g,k)=>{ const e=$('gr'+k); const v=e.value===''?0:+e.value; const good=v===(cnt[g]||0); e.className=good?'ok':'bad'; if(!good) wrong++; });
+  phenos().forEach((p,k)=>{ const e=$('pr'+k); const v=e.value===''?0:+e.value; const good=v===(pc[p]||0); e.className=good?'ok':'bad'; if(!good) wrong++; });
+  if(T.aff){ const e=$('pq'); const want=(pc[T.aff]||0)/4*100; const good=Math.abs(+e.value-want)<0.6&&e.value!==''; e.className=good?'ok':'bad'; if(!good) wrong++; }
+  const fb=$('m-rfb'); if(!wrong){ fb.className='fb ok'; fb.innerHTML='All correct. Genotype ratio '+ratioText(cnt,true)+'; phenotype ratio '+ratioText(pc)+'.'; }
+  else { fb.className='fb bad'; fb.textContent=wrong+' answer'+(wrong>1?'s are':' is')+' not right yet. Count the boxes in the grid: each box is 1 out of 4.'; } };
+function ratioText(o,geno){ return Object.entries(o).map(([k,v])=>v+' '+(geno?GH(k):k)).join(' : '); }
+$('m-rshow').onclick=()=>{ const [cnt,pc]=expected(); genotypes()[2].forEach((g,k)=>{ $('gr'+k).value=cnt[g]||0; }); phenos().forEach((p,k)=>{ $('pr'+k).value=pc[p]||0; }); if(T.aff) $('pq').value=(pc[T.aff]||0)/4*100; $('m-rcheck').onclick(); };
+let tally=null;
+function breed(n){ const g1=split(P1), g2=split(P2); tally=tally||{}; for(let i=0;i<n;i++){ const g=norm([g1[R()<0.5?0:1],g2[R()<0.5?0:1]]); const p=T.ph(g); tally[p]=(tally[p]||0)+1; } drawBars(tally); }
+function drawBars(t){ const [,pc]=expected(); const tot=t?Object.values(t).reduce((a,b)=>a+b,0):0;
+  $('m-bars').innerHTML=phenos().map(p=>{ const ex=(pc[p]||0)/4, ob=tot?(t[p]||0)/tot:0; return '<div><div class="note">'+p+(tot?' &middot; '+(t[p]||0)+' of '+tot+' ('+Math.round(ob*100)+'%)':'')+'</div><div class="bar"><i style="width:'+(ob*100)+'%;background:'+(T.col[p]||'#999')+'"></i><s style="left:calc('+(ex*100)+'% - 1px)"></s></div></div>'; }).join('');
+  $('m-bnote').textContent=tot?(tot<20?'With few offspring, chance can give results far from the prediction.':'With more offspring, the results get closer to the predicted ratio.'):'Press a button to breed offspring.'; }
+[4,40,400,4000].forEach(n=>{ $('m-b'+n).onclick=()=>{ tally=null; breed(n); }; });
+trSel.value=0; T=TRAITS[0]; P1=T.p[0]; P2=T.p[1]; renderMono();
+
+// ================= 2. DIHYBRID (HL) =================
+const DI=[
+ {name:'Pea seeds: shape and colour',g:[{a:'R',b:'r',d:'round',r:'wrinkled'},{a:'Y',b:'y',d:'yellow',r:'green'}],legend:'R = round, r = wrinkled; Y = yellow, y = green. The two genes are on different chromosomes.',p:[['Rr','Yy'],['Rr','Yy']]},
+ {name:'Fruit flies: body colour and wing shape',g:[{a:'G',b:'g',d:'grey body',r:'ebony body'},{a:'L',b:'l',d:'long wings',r:'vestigial wings'}],legend:'G = grey, g = ebony body; L = long, l = vestigial wings.',p:[['Gg','Ll'],['gg','ll']]},
+ {name:'Tomato plants: stem colour and leaf shape',g:[{a:'P',b:'p',d:'purple stem',r:'green stem'},{a:'C',b:'c',d:'cut leaves',r:'potato leaves'}],legend:'P = purple, p = green stem; C = cut, c = potato-shaped leaves.',p:[['Pp','Cc'],['Pp','cc']]}
+];
+let DT=DI[0], dp=[['Rr','Yy'],['Rr','Yy']];
+const PCOL=['#80ed99','#ffd166','#8ecae6','#ff8fa3'];
+const dsel=$('d-trait'); DI.forEach((t,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=t.name; dsel.appendChild(o); });
+dsel.onchange=()=>{ DT=DI[+dsel.value]; dp=DT.p.map(x=>x.slice()); renderDi(); };
+const gopts=k=>{ const G=DT.g[k]; return [G.a+G.a,G.a+G.b,G.b+G.b]; };
+const dph=(g1,g2)=>{ const a=g1.includes(DT.g[0].a)?DT.g[0].d:DT.g[0].r, b=g2.includes(DT.g[1].a)?DT.g[1].d:DT.g[1].r; return a[0].toUpperCase()+a.slice(1)+', '+b; };
+const phList=()=>[[1,1],[1,0],[0,1],[0,0]].map(([x,y])=>(x?DT.g[0].d:DT.g[0].r).replace(/^./,c=>c.toUpperCase())+', '+(y?DT.g[1].d:DT.g[1].r));
+const allGam=()=>{ const out=[]; [DT.g[0].a,DT.g[0].b].forEach(x=>[DT.g[1].a,DT.g[1].b].forEach(y=>out.push(x+y))); return out; };
+const gamsOf=p=>{ const s=new Set(); p[0].split('').forEach(x=>p[1].split('').forEach(y=>s.add(x+y))); return allGam().filter(g=>s.has(g)); };
+const sortA=(s,k)=>s.split('').sort((a,b)=>(a===DT.g[k].a?0:1)-(b===DT.g[k].a?0:1)).join('');
+let gamOK=false;
+function renderDi(){
+  $('d-legend').textContent=DT.legend;
+  [0,1].forEach(pi=>{ const box=$('d-p'+(pi+1)); box.innerHTML=''; [0,1].forEach(k=>{ const r=document.createElement('div'); r.className='row'; gopts(k).forEach(g=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=g; b.setAttribute('aria-pressed',dp[pi][k]===g); b.onclick=()=>{ dp[pi][k]=g; renderDi(); }; r.appendChild(b); }); box.appendChild(r); });
+    $('d-ph'+(pi+1)).textContent='Genotype '+dp[pi][0]+dp[pi][1]+': '+dph(dp[pi][0],dp[pi][1]); });
+  [1,2].forEach(n=>{ const box=$('d-g'+n); box.innerHTML=allGam().map(g=>'<label><input type="checkbox" value="'+g+'"> '+g+'</label>').join(''); });
+  $('d-gfb').textContent=''; gamOK=false; $('d-gridcard').hidden=true; $('d-ratiocard').hidden=true; $('d-chi').innerHTML='';
+}
+function checkGam(show){ let wrong=0; [1,2].forEach(n=>{ const want=new Set(gamsOf(dp[n-1])); $('d-g'+n).querySelectorAll('label').forEach(l=>{ const cb=l.querySelector('input'); if(show) cb.checked=want.has(cb.value); const good=cb.checked===want.has(cb.value); l.className=good?'ok':'bad'; if(!good) wrong++; }); });
+  const fb=$('d-gfb'); if(wrong){ fb.className='fb bad'; fb.textContent='Not quite. Take one allele of the first gene and one of the second: a parent with Rr Yy can make RY, Ry, rY and ry. A parent with RR yy can only make Ry.'; return; }
+  fb.className='fb ok'; fb.textContent='Correct. Now look at the grid.'; gamOK=true; buildDiGrid(); }
+$('d-gcheck').onclick=()=>checkGam(false); $('d-gshow').onclick=()=>checkGam(true);
+let dCells=[];
+function buildDiGrid(){ const a=gamsOf(dp[0]), b=gamsOf(dp[1]); const pl=phList(); dCells=[];
+  let h='<tr><th class="corner">gametes</th>'+b.map(g=>'<th><span class="gam">'+g+'</span></th>').join('')+'</tr>';
+  a.forEach(x=>{ h+='<tr><th><span class="gam">'+x+'</span></th>'; b.forEach(y=>{ const g1=sortA(x[0]+y[0],0), g2=sortA(x[1]+y[1],1); const p=dph(g1,g2); dCells.push(p); h+='<td class="cell" style="background:'+PCOL[pl.indexOf(p)]+';opacity:0" title="'+p+'">'+g1+g2+'</td>'; }); h+='</tr>'; });
+  $('d-grid').innerHTML=h; $('d-gridcard').hidden=false; const tds=$('d-grid').querySelectorAll('td.cell'); tds.forEach((td,i)=>setTimeout(()=>{ td.style.transition='opacity .3s'; td.style.opacity=1; },i*70));
+  $('d-pr').innerHTML=pl.map((p,k)=>'<span><i class="swatch" style="background:'+PCOL[k]+'"></i>'+p+'</span><input type="number" min="0" id="dr'+k+'">').join('')+'<span class="note">Total boxes</span><b>'+dCells.length+'</b>';
+  $('d-ratiocard').hidden=false; $('d-rfb').textContent=''; }
+$('d-rcheck').onclick=()=>{ const pl=phList(); let wrong=0; pl.forEach((p,k)=>{ const e=$('dr'+k); const want=dCells.filter(x=>x===p).length; const good=(e.value===''?0:+e.value)===want; e.className=good?'ok':'bad'; if(!good) wrong++; });
+  const fb=$('d-rfb'); if(wrong){ fb.className='fb bad'; fb.textContent='Count the boxes of each colour again.'; } else { fb.className='fb ok'; fb.textContent='Correct: '+pl.map(p=>dCells.filter(x=>x===p).length).filter(n=>n).join(' : ')+(dCells.length===16&&dCells.filter(x=>x===pl[0]).length===9?'. This is the classic 9 : 3 : 3 : 1 ratio.':'.'); } };
+$('d-rshow').onclick=()=>{ phList().forEach((p,k)=>{ $('dr'+k).value=dCells.filter(x=>x===p).length; }); $('d-rcheck').onclick(); };
+$('d-link').onchange=()=>{ $('d-rfrow').hidden=!$('d-link').checked; };
+$('d-rf').oninput=()=>{ $('d-rfv').textContent=$('d-rf').value+'%'; };
+function gamete(p){ const het=p[0][0]!==p[0][1]&&p[1][0]!==p[1][1]; const A0=DT.g[0], A1=DT.g[1];
+  if(het&&$('d-link').checked){ const rf=+$('d-rf').value/100, r=R(); if(r<rf){ return R()<0.5?A0.a+A1.b:A0.b+A1.a; } return R()<0.5?A0.a+A1.a:A0.b+A1.b; }
+  return p[0][R()<0.5?0:1]+p[1][R()<0.5?0:1]; }
+function expRatio(){ const a=gamsOf(dp[0]), b=gamsOf(dp[1]); const c={}; a.forEach(x=>b.forEach(y=>{ const p=dph(sortA(x[0]+y[0],0),sortA(x[1]+y[1],1)); c[p]=(c[p]||0)+1; })); const n=a.length*b.length; return [c,n]; }
+const CRIT={1:3.84,2:5.99,3:7.81};
+$('d-grow').onclick=()=>{ const N=160, obs={}; for(let i=0;i<N;i++){ const x=gamete(dp[0]), y=gamete(dp[1]); const p=dph(sortA(x[0]+y[0],0),sortA(x[1]+y[1],1)); obs[p]=(obs[p]||0)+1; }
+  const [c,n]=expRatio(); const cats=phList().filter(p=>c[p]); let chi=0; let rows='';
+  cats.forEach(p=>{ const O=obs[p]||0, E=c[p]/n*N, t=(O-E)*(O-E)/E; chi+=t; rows+='<tr><td>'+p+'</td><td>'+O+'</td><td>'+E.toFixed(1)+'</td><td>'+t.toFixed(2)+'</td></tr>'; });
+  const df=cats.length-1;
+  if(df<1){ $('d-chi').innerHTML='<p>Every offspring has the same phenotype, so there is nothing to test. Choose parents that give more than one phenotype.</p>'; return; }
+  const crit=CRIT[df]; const sig=chi>crit; const exp=cats.map(p=>c[p]).join(' : ');
+  $('d-chi').innerHTML='<table class="chi"><tr><th>Phenotype</th><th>Observed (O)</th><th>Expected (E)</th><th>(O &minus; E)&sup2; / E</th></tr>'+rows+'<tr><th>Total</th><th>'+N+'</th><th>'+N+'</th><th>&chi;&sup2; = '+chi.toFixed(2)+'</th></tr></table>'+
+   '<p class="note">Expected values use the ratio '+exp+' from the Punnett grid (unlinked genes). Degrees of freedom = '+cats.length+' classes &minus; 1 = '+df+'. Critical value at p = 0.05: '+crit+'.</p>'+
+   '<p><b>Is the difference significant?</b></p><div class="row"><button type="button" class="btn" id="cs-y">Yes: reject the expected ratio</button><button type="button" class="btn" id="cs-n">No: the difference could be due to chance</button></div><p class="fb" id="cs-fb"></p>';
+  const ans=(y)=>{ const f=$('cs-fb'); const right=y===sig; f.className='fb '+(right?'ok':'bad'); f.textContent=(right?'Correct. ':'Not quite. ')+'&chi;&sup2; = '.replace('&chi;&sup2;','χ²')+chi.toFixed(2)+(sig?' is bigger than ':' is smaller than ')+crit+(sig?', so the difference is significant: the genes may well be linked (or the parents are not what we thought).':', so the difference is not significant: the results fit the expected ratio, as expected for unlinked genes.'); };
+  $('cs-y').onclick=()=>ans(true); $('cs-n').onclick=()=>ans(false); };
+renderDi();
+
+// ================= 3. PEDIGREES =================
+const PZ=[
+ {title:'Puzzle 1: a family with PKU',story:'Phenylketonuria (PKU) runs in this family. Use the chart to work out how it is inherited, then give everyone a genotype.',mode:'ar',al:'P = normal allele, p = PKU allele',
+  opts:['PP','Pp','pp'],
+  people:[{id:1,s:'m',a:0,x:200,y:60,ok:['Pp']},{id:2,s:'f',a:0,x:300,y:60,ok:['Pp']},{id:3,s:'m',a:1,x:120,y:190,ok:['pp']},{id:4,s:'f',a:0,x:250,y:190,ok:['PP','Pp']},{id:5,s:'m',a:0,x:360,y:190,ok:['Pp']},{id:6,s:'f',a:0,x:460,y:190,ok:['Pp']},{id:7,s:'f',a:1,x:360,y:320,ok:['pp']},{id:8,s:'m',a:0,x:460,y:320,ok:['PP','Pp']}],
+  couples:[[1,2,[3,4,5]],[5,6,[7,8]]],
+  why:'Individuals 1 and 2 are unaffected but have an affected son (3), so the allele must be recessive and both parents must be carriers. It is not sex-linked: an unaffected father (5) has an affected daughter (7), which is impossible for a sex-linked recessive.'},
+ {title:'Puzzle 2: an inherited nerve disease',story:'This disease usually starts in adulthood. Work out how it is inherited.',mode:'ad',al:'D = disease allele, d = normal allele',
+  opts:['DD','Dd','dd'],
+  people:[{id:1,s:'m',a:1,x:200,y:60,ok:['Dd']},{id:2,s:'f',a:0,x:300,y:60,ok:['dd']},{id:3,s:'f',a:1,x:130,y:190,ok:['Dd']},{id:4,s:'m',a:0,x:230,y:190,ok:['dd']},{id:5,s:'m',a:1,x:360,y:190,ok:['Dd']},{id:6,s:'f',a:0,x:460,y:190,ok:['dd']},{id:7,s:'f',a:1,x:360,y:320,ok:['Dd']},{id:8,s:'m',a:0,x:460,y:320,ok:['dd']},{id:9,s:'f',a:0,x:560,y:320,ok:['dd']}],
+  couples:[[1,2,[3,4,5]],[5,6,[7,8,9]]],
+  why:'Every affected person has an affected parent, and the disease appears in every generation. Affected parent 5 with an unaffected partner has both affected and unaffected children, as expected if he is Dd. A father (5) passes it to a daughter and father 1 passes it to a son, so it is not on the X or Y chromosome: it is autosomal dominant. Unaffected people must be dd.'},
+ {title:'Puzzle 3: haemophilia',story:'Haemophilia appears in this family. Work out how it is inherited.',mode:'xr',al:'X<sup>H</sup> = normal clotting, X<sup>h</sup> = haemophilia',
+  opts:['XHXH','XHXh','XhXh','XHY','XhY'],
+  people:[{id:1,s:'m',a:0,x:200,y:60,ok:['XHY']},{id:2,s:'f',a:0,x:300,y:60,ok:['XHXh']},{id:3,s:'m',a:1,x:100,y:190,ok:['XhY']},{id:5,s:'m',a:0,x:200,y:190,ok:['XHY']},{id:4,s:'f',a:0,x:320,y:190,ok:['XHXh']},{id:6,s:'m',a:0,x:440,y:190,ok:['XHY']},{id:7,s:'m',a:1,x:330,y:320,ok:['XhY']},{id:8,s:'f',a:0,x:440,y:320,ok:['XHXH','XHXh']}],
+  couples:[[1,2,[3,5,4]],[4,6,[7,8]]],
+  why:'Only males are affected. Affected sons (3 and 7) have unaffected mothers, who must be carriers (X<sup>H</sup>X<sup>h</sup>). An unaffected father (1) cannot pass X<sup>h</sup> to anyone, so the allele came from the mother: this fits a sex-linked recessive allele.'}
+];
+const MODES=[['ar','Autosomal recessive'],['ad','Autosomal dominant'],['xr','Sex-linked recessive']];
+let PZi=0, pzGen={}, pzSel=null;
+const xh=g=>g.replace(/X([Hh])/g,'X<sup>$1</sup>');
+(function(){ const box=$('pd-pick'); PZ.forEach((p,i)=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent='Puzzle '+(i+1); b.onclick=()=>{ PZi=i; renderPed(); }; box.appendChild(b); }); })();
+function renderPed(){ const P=PZ[PZi]; pzGen={}; pzSel=null; $('pd-pick').querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-pressed',i===PZi));
+  $('pd-title').textContent=P.title; $('pd-story').textContent=P.story; $('pd-alleles').innerHTML='Alleles: '+P.al; $('pd-mfb').textContent=''; $('pd-gfb').textContent=''; $('pd-gpick').innerHTML='';
+  const m=$('pd-modes'); m.innerHTML=''; MODES.forEach(([k,t])=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.textContent=t; b.onclick=()=>{ m.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); const f=$('pd-mfb'); if(k===P.mode){ f.className='fb ok'; f.innerHTML='Correct. '+P.why; } else { f.className='fb bad'; f.textContent='Look again at the clues on the right. Check whether two unaffected parents ever have an affected child, and whether males and females are affected equally.'; } }; m.appendChild(b); });
+  drawPed(); }
+function drawPed(){ const P=PZ[PZi], s=$('pd-svg'); const byId={}; P.people.forEach(p=>byId[p.id]=p); let h='';
+  P.couples.forEach(([a,b,kids])=>{ const A=byId[a], B=byId[b]; const my=A.y; h+='<line x1="'+A.x+'" y1="'+my+'" x2="'+B.x+'" y2="'+my+'" stroke="#c4bcd8" stroke-width="2"/>'; const mx=(A.x+B.x)/2, ky=byId[kids[0]].y-45;
+    h+='<line x1="'+mx+'" y1="'+my+'" x2="'+mx+'" y2="'+ky+'" stroke="#c4bcd8" stroke-width="2"/>'; const xs=kids.map(k=>byId[k].x); h+='<line x1="'+Math.min(mx,...xs)+'" y1="'+ky+'" x2="'+Math.max(mx,...xs)+'" y2="'+ky+'" stroke="#c4bcd8" stroke-width="2"/>';
+    kids.forEach(k=>{ h+='<line x1="'+byId[k].x+'" y1="'+ky+'" x2="'+byId[k].x+'" y2="'+(byId[k].y-22)+'" stroke="#c4bcd8" stroke-width="2"/>'; }); });
+  P.people.forEach(p=>{ const fill=p.a?'#c9a7ff':'#17132a'; const sel=pzSel===p.id;
+    const shape=p.s==='m'?'<rect class="shape" x="'+(p.x-22)+'" y="'+(p.y-22)+'" width="44" height="44" rx="3" fill="'+fill+'" stroke="'+(sel?'#ffd166':'#e8e2f7')+'" stroke-width="'+(sel?4:2)+'"/>':'<circle class="shape" cx="'+p.x+'" cy="'+p.y+'" r="23" fill="'+fill+'" stroke="'+(sel?'#ffd166':'#e8e2f7')+'" stroke-width="'+(sel?4:2)+'"/>';
+    const g=pzGen[p.id]; const col=g?(p.chk==null?'#f3f0fa':p.chk?'#80ed99':'#ff8fa3'):'#8f86a8';
+    h+='<g class="person" data-id="'+p.id+'" tabindex="0" role="button" aria-label="Person '+p.id+'">'+shape+'<text x="'+p.x+'" y="'+(p.y+5)+'" text-anchor="middle" font-size="14" font-weight="700" fill="'+(p.a?'#1d0f33':'#e8e2f7')+'">'+p.id+'</text><text x="'+p.x+'" y="'+(p.y+44)+'" text-anchor="middle" font-size="15" font-weight="700" fill="'+col+'">'+(g?xhT(g):'?')+'</text></g>'; });
+  s.innerHTML=h; s.querySelectorAll('.person').forEach(el=>{ const f=()=>selPerson(+el.dataset.id); el.onclick=f; el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); f(); } }; }); }
+const xhT=g=>g.replace(/X([Hh])/g,'X$1').replace(/XH/g,'Xᴴ').replace(/Xh/g,'Xʰ');
+function selPerson(id){ pzSel=id; const P=PZ[PZi]; drawPed(); const box=$('pd-gpick'); box.innerHTML='<span class="note" style="width:100%;text-align:center">Genotype of person '+id+':</span>';
+  const person=P.people.find(p=>p.id===id); P.opts.filter(o=>P.mode!=='xr'||(person.s==='m'?o.includes('Y'):!o.includes('Y'))).forEach(o=>{ const b=document.createElement('button'); b.type='button'; b.className='opt'; b.innerHTML=xh(o); b.onclick=()=>{ pzGen[id]=o; person.chk=null; drawPed(); }; box.appendChild(b); }); }
+$('pd-check').onclick=()=>{ const P=PZ[PZi]; let ok=0, miss=0; P.people.forEach(p=>{ const g=pzGen[p.id]; if(!g){ miss++; p.chk=null; return; } p.chk=p.ok.includes(g); if(p.chk) ok++; }); drawPed();
+  const f=$('pd-gfb'); if(miss){ f.className='fb'; f.textContent='Give every person a genotype first ('+miss+' left).'; } else if(ok===P.people.length){ f.className='fb ok'; f.textContent='All correct. Where an unaffected person could have either genotype, both answers are accepted.'; } else { f.className='fb bad'; f.textContent=ok+' of '+P.people.length+' correct. Start with affected people and the parents of affected children.'; } };
+$('pd-show').onclick=()=>{ const P=PZ[PZi]; P.people.forEach(p=>{ pzGen[p.id]=p.ok[p.ok.length-1]; p.chk=true; }); drawPed(); $('pd-gfb').className='fb ok'; $('pd-gfb').textContent='Answers shown. Where two genotypes are possible, one is shown and both would be accepted.'; };
+renderPed();
+// deep links: #mono-<trait id>, #di, #ped
+{ const h=location.hash.slice(1); if(h){ $('intro').hidden=true; $('lab').hidden=false; if(h==='di') $('t-di').onclick(); else if(h==='ped') $('t-ped').onclick(); else if(h.startsWith('mono-')){ const i=TRAITS.findIndex(t=>t.id===h.slice(5)); if(i>=0){ trSel.value=i; trSel.onchange(); } } } }
+window.genDebug={TRAITS, set:(i)=>{ trSel.value=i; trSel.onchange(); }, cells:()=>cells};
+})();
+</script>
+
+</body>
+</html>

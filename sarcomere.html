@@ -266,12 +266,27 @@ window.JOURNEY = {
     let contracting = false, k = 0, caLevel = 0;
     const btn = A.button('b-contract', 'Contract', b => setC(!contracting));
     function setC(on) { contracting = on; btn.textContent = on ? 'Relax' : 'Contract'; btn.setAttribute('aria-pressed', on); }
+    // ATP switch: without ATP the heads lock on (rigor), so the sarcomere can neither shorten further nor relax
+    let atpOn = true;
+    A.button('b-atp', 'ATP: on', b => { atpOn = !atpOn; b.textContent = atpOn ? 'ATP: on' : 'ATP: off'; b.setAttribute('aria-pressed', !atpOn); });
+    // Quiz: answer by clicking labels on the sarcomere
+    const QZ = [['Click the filament that is anchored to the Z line and slides towards the centre.', 'Actin (thin filament)'], ['Click the band that stays the same length when the muscle contracts.', 'A band (dark)'],
+      ['Click the protein that covers the binding sites when the muscle is relaxed.', 'Tropomyosin'], ['Click the protein that calcium ions bind to.', 'Troponin'], ['Click the parts that use ATP to pull the actin.', 'Myosin heads'],
+      ['Click the zone that gets shorter and can disappear during contraction.', 'H zone'], ['Click the springy protein that helps the sarcomere return to its resting length.', 'Titin'], ['Click the band that contains only thin filaments.', 'I band (light)']];
+    let qi = -1, qScore = 0, qTries = 0, firstTry = true;
+    function showQ(fb) { const box = document.getElementById('sq'); if (!box) return; box.hidden = qi < 0; if (qi < 0) return;
+      if (qi >= QZ.length) { box.innerHTML = '<b>Quiz finished</b><p style="margin:4px 0 0">You got ' + qScore + ' of ' + QZ.length + ' right first time.</p><button type="button" id="sq-x" style="margin-top:6px">Close quiz</button>'; document.getElementById('sq-x').onclick = () => { qi = -1; showQ(''); }; return; }
+      box.innerHTML = '<b>Quiz: question ' + (qi + 1) + ' of ' + QZ.length + '</b><p style="margin:4px 0 0"></p><p id="sq-fb" style="margin:4px 0 0;font-size:13px"></p>'; box.children[1].textContent = QZ[qi][0]; if (fb) { const f = document.getElementById('sq-fb'); f.style.color = '#b7efc5'; f.textContent = fb; } }
+    A.button('b-quiz', 'Quiz', () => { A.goStop(4); qi = 0; qScore = 0; qTries = 0; firstTry = true; showQ(''); });
+    window.addEventListener('wtc-label', e => { if (qi < 0 || qi >= QZ.length) return; qTries++;
+      if (e.detail === QZ[qi][1]) { if (firstTry) qScore++; firstTry = true; qi++; showQ(qi < QZ.length ? 'Correct! Next question:' : ''); }
+      else { firstTry = false; const f = document.getElementById('sq-fb'); if (f) { f.style.color = '#ffb4a2'; f.textContent = 'Not quite: that is ' + e.detail + '. Read its definition and try again.'; } } });
 
     // ===== Close-up 1: the cross-bridge cycle, one myosin head and one actin filament, very large =====
     const S = 2.4; // distance actin moves in one power stroke (one binding site)
     const D_XB = {
       n: 'The cross-bridge cycle', bg: '#1a0f18', target: V(0, 0.6, 0), dist: 23, yaw: 0, pitch: 0.12, still: true,
-      side: '<h3>Cross-bridge cycle</h3><ol id="xb-list" style="margin:4px 0 6px;padding-left:20px;font-size:13.5px;line-height:1.5"><li>Head binds to actin</li><li>Power stroke (Pi, then ADP released)</li><li>ATP binds: head lets go</li><li>ATP split: head re-cocked</li></ol><p id="xb-head" style="margin:0;font-size:13px"></p><p id="xb-ca" style="margin:2px 0 0;font-size:13px"></p><p id="xb-n" style="margin:2px 0 0;font-size:13px"></p>',
+      side: '<h3>Cross-bridge cycle</h3><ol id="xb-list" style="margin:4px 0 6px;padding-left:20px;font-size:13.5px;line-height:1.5"><li>Head binds to actin</li><li>Power stroke (Pi, then ADP released)</li><li>ATP binds: head lets go</li><li>ATP split: head re-cocked</li></ol><p id="xb-head" style="margin:0;font-size:13px"></p><p id="xb-ca" style="margin:2px 0 0;font-size:13px"></p><p id="xb-n" style="margin:2px 0 0;font-size:13px"></p><div id="xb-play" style="display:none;margin-top:8px"><div id="xb-btns" style="display:flex;flex-wrap:wrap;gap:6px"></div><p id="xb-msg" style="margin:6px 0 0;font-size:13px">Start by choosing what happens first.</p><p id="xb-score" style="margin:2px 0 0;font-size:12px;color:var(--dim)"></p></div>',
       steps: [
         { n: 'At rest: binding sites covered', s: 'The myosin head is already "cocked", holding ADP and phosphate (Pi) from the last ATP it split. But tropomyosin (blue) lies over the binding sites on actin, so the head cannot attach. The muscle is relaxed.', cs: 'B3.3.2' },
         { n: 'Calcium uncovers the binding sites', s: 'A nerve impulse makes the sarcoplasmic reticulum release calcium ions (green). They bind to troponin (yellow), which changes shape and pulls tropomyosin away. The binding sites on actin (dark green spots) are now exposed.', cs: 'B3.3.2' },
@@ -281,7 +296,8 @@ window.JOURNEY = {
         { n: 'The head is re-cocked', s: 'The head splits (hydrolyses) the ATP into ADP and phosphate. The energy released swings the head back to its cocked position, ready to bind again one site further along.', h: 'The myosin head is an enzyme (an ATPase): it catalyses the hydrolysis of ATP.', cs: 'B3.3.2' },
         { n: 'The cycle repeats', s: 'As long as calcium ions and ATP are present, the cycle repeats many times a second. Each stroke moves actin a little further, like pulling a rope hand over hand, so the sarcomere shortens. Watch the counter.', cs: 'B3.3.2' },
         { n: 'Without ATP: rigor', s: 'If there is no ATP, heads that have done their power stroke cannot let go of actin. The muscle stays locked. This is why muscles become stiff after death (rigor mortis).', cs: 'B3.3.2' },
-        { n: 'Relaxing again', s: 'When the nerve impulses stop, calcium ions are pumped back into the sarcoplasmic reticulum. Tropomyosin covers the binding sites again, the heads cannot attach, and the muscle relaxes.', h: 'Pumping calcium back is active transport, so relaxing also uses ATP. Titin and the opposing muscle then pull the sarcomere back to its resting length.', cs: 'B3.3.2, B3.3.3' }
+        { n: 'Relaxing again', s: 'When the nerve impulses stop, calcium ions are pumped back into the sarcoplasmic reticulum. Tropomyosin covers the binding sites again, the heads cannot attach, and the muscle relaxes.', h: 'Pumping calcium back is active transport, so relaxing also uses ATP. Titin and the opposing muscle then pull the sarcomere back to its resting length.', cs: 'B3.3.2, B3.3.3' },
+        { n: 'Your turn: run the cycle', s: 'Run the cycle yourself with the buttons in the panel on the right. Choose the steps in the right order. If you pick a step that cannot happen yet, you get a hint. Try to complete three power strokes, then stop the nerve impulses to relax the muscle.', cs: 'B3.3.2, B3.3.3' }
       ],
       build(D) {
         const g = D.scene;
@@ -322,7 +338,7 @@ window.JOURNEY = {
           if (p < 0.2) { reach = 0.9; }
           else if (p < 0.3) { reach = 0.9 + 0.16 * seg(p, 0.2, 0.3); on = p > 0.27; }
           else if (p < 0.68) { on = true; reach = 1.06; stroke = seg(p, 0.38, 0.62); rz = RC + (RE - RC) * stroke; }
-          else if (p < 0.78) { rz = RE; stroke = 1; on = p < 0.74; reach = on ? 1.06 : 1.06 - 0.16 * seg(p, 0.74, 0.78); }
+          else if (p < 0.78) { rz = RE; stroke = 1; on = p < 0.755; reach = on ? 1.06 : 1.06 - 0.16 * seg(p, 0.755, 0.78); }
           else { stroke = 1; const r = seg(p, 0.8, 0.98); rz = RE + (RC - RE) * r; reach = 0.9; }
           if (rigor) { rz = RE; on = true; reach = 1.06; stroke = 1; }
           piv.rotation.z = rz; piv.scale.y = reach; head.material = on ? headOn : headOff;
@@ -330,11 +346,11 @@ window.JOURNEY = {
           const hp = tip.clone();
           // ADP + Pi sit on the head while cocked; Pi leaves 0.3-0.38, ADP leaves 0.62-0.68; ATP arrives 0.68-0.74 and becomes ADP + Pi at 0.84
           const away = (t, dir) => hp.clone().add(V(dir * 4 * t, -5 * t, 2 * t));
-          const hasAdp = !rigor && (p < 0.68 || p >= 0.84), hasPi = !rigor && (p < 0.38 || p >= 0.84), hasAtp = !rigor && p >= 0.66 && p < 0.84;
+          const hasAdp = !rigor && (p < 0.68 || p >= 0.84), hasPi = !rigor && (p < 0.38 || p >= 0.84), hasAtp = !rigor && p >= 0.7 && p < 0.84;
           adp.visible = hasAdp || (!rigor && p >= 0.62 && p < 0.7); pi.visible = hasPi || (!rigor && p >= 0.3 && p < 0.4); atp.visible = hasAtp;
           if (p >= 0.62 && p < 0.7 && !rigor) adp.position.copy(away(seg(p, 0.62, 0.7), 1)); else adp.position.copy(hp).add(V(-0.3, 0.1, 0.4));
           if (p >= 0.3 && p < 0.4 && !rigor) pi.position.copy(away(seg(p, 0.3, 0.4), -1)); else pi.position.copy(hp).add(V(1.2, -0.5, 0.5));
-          if (p >= 0.66 && p < 0.74) atp.position.copy(away(1 - seg(p, 0.66, 0.74), 1)); else atp.position.copy(hp).add(V(-0.3, 0.1, 0.4));
+          if (p >= 0.7 && p < 0.755) atp.position.copy(away(1 - seg(p, 0.7, 0.755), 1)); else atp.position.copy(hp).add(V(-0.3, 0.1, 0.4));
           pAtp.copy(atp.position).add(V(0.6, -1, 0)); pAdp.copy(adp.position).add(V(0.4, -1.1, 0));
           lAtp.dataset.off = atp.visible ? '' : '1'; lAdp.dataset.off = adp.visible ? '' : '1';
           return stroke;
@@ -345,17 +361,36 @@ window.JOURNEY = {
           pTn.copy(tnMs[4].getWorldPosition(new THREE.Vector3())).add(V(0, -1.3, 0.8)); pCa.copy(cas[3].c.position).add(V(1.2, 0.4, 0)); lCa.dataset.off = t > 0.05 ? '' : '1';
           lSite.dataset.off = t > 0.6 ? '' : '1';
         }
+        // ----- "Your turn": the student drives the cycle with buttons (2026-11-17) -----
+        let ps = 0, pFrom = 0.1, pTo = 0.1, pT = 1, caF = 0, good = 0, tries = 0, base9 = 0;
+        const ACT = [['ca', 'Release Ca²⁺'], ['bind', 'Attach head'], ['stroke', 'Power stroke'], ['atp', 'ATP binds'], ['split', 'Split ATP'], ['stop', 'Stop impulses']];
+        const NEXT = { 0: { ca: 1 }, 1: { bind: 2, stop: 0 }, 2: { stroke: 3 }, 3: { atp: 4 }, 4: { split: 5 }, 5: { bind: 2, stop: 0 } };
+        const PV = { 0: 0.1, 1: 0.1, 2: 0.3, 3: 0.69, 4: 0.79, 5: 1.0 };
+        const HINT = { 0: 'Tropomyosin still covers the binding sites. Something must arrive first to uncover them.', 1: 'The sites are open and the head is cocked. What can the head do now?', 2: 'The head is attached and still holds phosphate. What does it do next?', 3: 'The head has pulled and is now stuck to actin. Which molecule makes it let go?', 4: 'The head has let go but is not cocked yet. What must happen to the ATP?', 5: 'The head is cocked again and calcium is still there. What happens next?' };
+        const OK = { ca: 'Calcium binds to troponin and tropomyosin moves: the binding sites are open.', bind: 'The head attaches to actin: a cross-bridge has formed.', stroke: 'Phosphate is released, the head swivels and pulls actin towards the M line, then ADP is released.', atp: 'ATP binds to the head and the cross-bridge breaks.', split: 'The head splits ATP into ADP and Pi and is re-cocked, one binding site further along.', stop: 'Calcium is pumped back into the sarcoplasmic reticulum, tropomyosin covers the sites and the muscle relaxes.' };
+        function pCur() { return pFrom + (pTo - pFrom) * sm(Math.min(1, pT)); }
+        function act9(a) { if (pT < 1) return; tries++; const msg = document.getElementById('xb-msg'); const nx = NEXT[ps][a];
+          if (nx == null) { if (msg) { msg.style.color = '#ffb4a2'; msg.textContent = 'Not yet. ' + HINT[ps]; } }
+          else { good++; if (msg) { msg.style.color = '#b7efc5'; msg.textContent = OK[a] + (a === 'stroke' && base9 === 2 ? ' That is three power strokes: now try stopping the impulses.' : ''); }
+            if (ps === 5) { base9++; pFrom = 0.1; } else pFrom = pCur(); ps = nx; pTo = PV[nx]; pT = 0; }
+          const sc = document.getElementById('xb-score'); if (sc) sc.textContent = 'Correct choices: ' + good + ' of ' + tries + ' · power strokes: ' + (base9 + (ps >= 3 ? 1 : 0)); }
+        function bind9() { const box = document.getElementById('xb-btns'); if (!box || box.dataset.ok) return; box.dataset.ok = '1';
+          ACT.forEach(([k, t]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.style.cssText = 'font-size:12.5px;padding:6px 10px'; b.onclick = () => act9(k); box.appendChild(b); }); }
+
         const loops = { 2: [0.1, 0.29], 3: [0.3, 0.7], 4: [0.64, 0.8], 5: [0.78, 1] };
         function setText(p, ca) {
           const li = document.querySelectorAll('#xb-list li'); const cur = p < 0.3 ? 0 : p < 0.68 ? 1 : p < 0.78 ? 2 : 3;
-          li.forEach((e, i) => { e.style.color = i === cur && (step >= 2 && step <= 6) ? 'var(--accent)' : ''; e.style.fontWeight = i === cur && (step >= 2 && step <= 6) ? '800' : ''; });
+          const hl = (step >= 2 && step <= 6) || step === 9;
+          li.forEach((e, i) => { e.style.color = i === cur && hl ? 'var(--accent)' : ''; e.style.fontWeight = i === cur && hl ? '800' : ''; });
+          const pl = document.getElementById('xb-play'); if (pl) pl.style.display = step === 9 ? '' : 'none';
           const hx = document.getElementById('xb-head'), cx = document.getElementById('xb-ca'), nx = document.getElementById('xb-n');
-          if (hx) hx.textContent = 'Head: ' + (step === 7 ? 'stuck to actin (no ATP)' : step === 8 || step < 2 ? 'cocked, holding ADP + Pi, not attached' : p < 0.27 ? 'cocked, holding ADP + Pi' : p < 0.38 ? 'attached (cross-bridge)' : p < 0.62 ? 'power stroke' : p < 0.74 ? 'ATP binding, letting go' : 'splitting ATP, re-cocking');
+          if (hx) hx.textContent = 'Head: ' + (step === 7 ? 'stuck to actin (no ATP)' : step === 8 || step < 2 ? 'cocked, holding ADP + Pi, not attached' : p < 0.27 ? 'cocked, holding ADP + Pi' : p < 0.38 ? 'attached (cross-bridge)' : p < 0.62 ? 'power stroke' : p < 0.7 ? 'stroke finished, still attached' : p < 0.78 ? 'ATP binding, letting go' : 'splitting ATP, re-cocking');
           if (cx) cx.textContent = 'Calcium: ' + (ca > 0.9 ? 'bound to troponin, sites open' : ca > 0.05 ? 'arriving' : 'none, sites covered');
           if (nx) nx.textContent = step === 6 ? 'Power strokes: ' + strokes : '';
         }
         return {
-          onStep(i) { step = i; tS = 0; strokes = 0; base = 0; prevP = 0; act.position.x = 0; },
+          onStep(i) { step = i; tS = 0; strokes = 0; base = 0; prevP = 0; act.position.x = 0;
+            if (i === 9) { ps = 0; pFrom = pTo = 0.1; pT = 1; caF = 0; good = 0; tries = 0; base9 = 0; const m = document.getElementById('xb-msg'); if (m) { m.style.color = ''; m.textContent = 'Start by choosing what happens first.'; } const sc = document.getElementById('xb-score'); if (sc) sc.textContent = ''; } },
           update(dt) { const run = A.paused ? 0 : dt; tS += run; let p = 0.1, ca = 1, shift = 0, rigor = false;
             if (step === 0) { ca = 0; p = 0.1; }
             else if (step === 1) { ca = Math.min(1, (tS % 4.5) / 3); p = 0.1; }
@@ -363,6 +398,7 @@ window.JOURNEY = {
             else if (step === 6) { const T = 3.2, q = tS / T; p = q % 1; const n = Math.floor(q); strokes = n + (p > 0.5 ? 1 : 0); shift = -((n + seg(p, 0.38, 0.62)) * S) % 9.6; }
             else if (step === 7) { rigor = true; p = 0.7; }
             else if (step === 8) { ca = Math.max(0, 1 - (tS % 4.5) / 3); p = ca > 0.6 ? 0.9 : 0.1; }
+            else if (step === 9) { bind9(); pT += run / 1.6; p = pCur(); caF += ((ps === 0 ? 0 : 1) - caF) * Math.min(1, run * 2); ca = caF; shift = -((base9 + (p >= 0.38 ? seg(p, 0.38, 0.62) : 0)) * S) % 9.6; }
             act.position.x = shift; act.updateMatrixWorld(true);
             caState(ca); pose(p, rigor); setText(p, ca);
             pSite.set(1.27 + S + (shift % S), 2.3, 0.8); }
@@ -447,20 +483,22 @@ window.JOURNEY = {
         { at: cams[6], look: V(40, -2.2, 0), n: 'Relaxing again', s: 'When calcium is pumped away, the heads let go. The muscle cannot push itself longer: titin springs back, and the opposing (antagonistic) muscle pulls the sarcomeres back to their resting length.', cs: 'B3.3.3', dive: D_XB },
         { at: cams[7], look: V(40, -2.2, 0), n: 'What starts a contraction?', s: 'A nerve impulse from a motor neuron. Open the close-up to follow it from the motor end plate to the release of calcium ions, and to see what a motor unit is. Use the Contract button any time to compare relaxed and contracted.', cs: 'B3.3.2, B3.3.4', dive: D_NMJ }
       ],
-      side: '<h3>Sarcomere</h3><p id="sarc-state" style="margin:0">Relaxed</p><div style="font-size:13px;margin-top:6px;line-height:1.55"><div><span style="display:inline-block;width:12px;height:8px;background:#fff;margin-right:6px"></span>Sarcomere: <b id="sb-s">100%</b></div><div><span style="display:inline-block;width:12px;height:8px;background:#8e2a48;margin-right:6px"></span>A band: <b id="sb-a">100%</b> (never changes)</div><div><span style="display:inline-block;width:12px;height:8px;background:#f6c3cf;margin-right:6px"></span>I band: <b id="sb-i">100%</b></div><div><span style="display:inline-block;width:12px;height:8px;background:#ffd166;margin-right:6px"></span>H zone: <b id="sb-h">100%</b></div></div>',
+      side: '<h3>Sarcomere</h3><p id="sarc-state" style="margin:0">Relaxed</p><div style="font-size:13px;margin-top:6px;line-height:1.55"><div><span style="display:inline-block;width:12px;height:8px;background:#fff;margin-right:6px"></span>Sarcomere: <b id="sb-s">100%</b></div><div><span style="display:inline-block;width:12px;height:8px;background:#8e2a48;margin-right:6px"></span>A band: <b id="sb-a">100%</b> (never changes)</div><div><span style="display:inline-block;width:12px;height:8px;background:#f6c3cf;margin-right:6px"></span>I band: <b id="sb-i">100%</b></div><div><span style="display:inline-block;width:12px;height:8px;background:#ffd166;margin-right:6px"></span>H zone: <b id="sb-h">100%</b></div></div><p style="margin:8px 0 0;font-size:12.5px;color:var(--dim)">Try it: press Contract, then switch ATP off. Press Quiz to test yourself by clicking labels.</p><div id="sq" hidden style="margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:13.5px"></div>',
       onStop(i) { setC(i === 5); },
       onView(v) { detail.forEach(el => { el.dataset.off = v === 'out' ? '1' : ''; }); },
       update(dt, A) {
         const run = A.paused ? 0 : dt;
-        k += (contracting ? 1 : -1) * run * 0.28; k = Math.max(0, Math.min(1, k));
-        caLevel += ((contracting ? 1 : 0) - caLevel) * Math.min(1, run * 2.5);
+        if (atpOn) { k += (contracting ? 1 : -1) * run * 0.28; k = Math.max(0, Math.min(1, k)); }
+        if (atpOn || contracting) caLevel += ((contracting ? 1 : 0) - caLevel) * Math.min(1, run * 2.5);
+        const rigor = !atpOn && (k > 0.02 || caLevel > 0.5);
         const half = HALF0 - (HALF0 - HALF1) * (k * k * (3 - 2 * k)); zL.position.x = -half; zR.position.x = half;
         const thinEnd = half - THIN;
         trops.forEach(o => { o.tg.position.z = 0.2 - 0.32 * caLevel; o.tg.position.y = (o.tg.userData.y0 != null ? o.tg.userData.y0 : (o.tg.userData.y0 = o.tg.position.y)) + o.side * 0.12 * caLevel; });
         tns.forEach(t => { t.material = caLevel > 0.5 ? tnCa : tnM; });
         const tt = A.t * 0.75;
         heads.forEach(h => { const can = caLevel > 0.5 && h.x >= thinEnd + 0.15; let rz = -h.dir * h.ud * 0.45, on = false;
-          if (can) { const p = (tt + h.ph) % 1; if (p < 0.2) { } else if (p < 0.6) { on = true; rz = -h.dir * h.ud * 0.45 + h.dir * h.ud * 0.95 * ((p - 0.2) / 0.4); } else if (p < 0.7) { rz = h.dir * h.ud * 0.5; } else { rz = h.dir * h.ud * (0.5 - 0.95 * ((p - 0.7) / 0.3)); } }
+          if (rigor && h.x >= thinEnd + 0.15) { on = true; rz = h.dir * h.ud * 0.5; }
+          else if (can) { const p = (tt + h.ph) % 1; if (p < 0.2) { } else if (p < 0.6) { on = true; rz = -h.dir * h.ud * 0.45 + h.dir * h.ud * 0.95 * ((p - 0.2) / 0.4); } else if (p < 0.7) { rz = h.dir * h.ud * 0.5; } else { rz = h.dir * h.ud * (0.5 - 0.95 * ((p - 0.7) / 0.3)); } }
           h.piv.rotation.z = rz; h.h.material = on ? hOn : hOff; });
         titins.forEach(o => { o.t.scale.x = o.s * Math.max(0.2, half - THICK); });
         cas.forEach(c => { c.m.visible = caLevel > 0.05; c.w += run; c.m.position.set(c.p.x + Math.sin(c.w * 2) * 0.2, c.p.y + Math.cos(c.w * 1.7) * 0.2, c.p.z); c.m.scale.setScalar(Math.max(0.01, caLevel)); });
@@ -472,7 +510,8 @@ window.JOURNEY = {
         const pc = v => Math.round(v * 100) + '%';
         const set = (id, t) => { const e = document.getElementById(id); if (e) e.textContent = t; };
         set('sb-s', pc(half / HALF0)); set('sb-a', '100%'); set('sb-i', pc((half - THICK) / (HALF0 - THICK))); set('sb-h', pc(Math.max(0, thinEnd) / (HALF0 - THIN)));
-        set('sarc-state', contracting ? (k < 1 ? 'Contracting: heads pulling actin towards the centre' : 'Contracted: Z lines closer together') : (k > 0 ? 'Relaxing: titin and the opposing muscle pull it back' : 'Relaxed'));
+        if (!atpOn) set('sarc-state', rigor ? 'No ATP: the heads are locked onto actin (rigor). The sarcomere can neither shorten further nor relax. Switch ATP back on.' : 'No ATP, but the binding sites are covered, so nothing happens yet. Press Contract.');
+        else set('sarc-state', contracting ? (k < 1 ? 'Contracting: heads pulling actin towards the centre' : 'Contracted: Z lines closer together') : (k > 0 ? 'Relaxing: titin and the opposing muscle pull it back' : 'Relaxed'));
       }
     };
   }
@@ -507,7 +546,7 @@ const labels=[], anims=[];
 function showDef(t,d){ $('def-h').textContent=t; $('def-p').textContent=d; $('defbox').hidden=false; }
 $('def-x').onclick=()=>{ $('defbox').hidden=true; };
 function mkLabel(text,def){ const el=document.createElement('div'); el.className='lab'; el.textContent=text; const d=def||(J.glossary&&J.glossary[text]);
-  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
+  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); window.dispatchEvent(new CustomEvent('wtc-label',{detail:text})); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
   $('labels').appendChild(el); return el; }
 const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   V:(x,y,z)=>new THREE.Vector3(x,y,z),
@@ -568,6 +607,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+api.goStop=i=>{ setView('ride'); stop=Math.max(0,Math.min(STOPS.length-1,i)); uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
@@ -604,11 +644,13 @@ function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) 
   labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
   renderer.render(scene,camera); }
-function frame(now){ step(now); requestAnimationFrame(frame); }
+// Adaptive quality (2026-11-17): if frames are slow on a weak graphics chip, draw fewer pixels so the animation stays smooth.
+let qN=0, qT=0, qLast=0, qLevel=0; const qRatios=[Math.min(window.devicePixelRatio||1,1.5),1,0.75,0.6];
+function frame(now){ step(now); if(qLast&&!document.hidden){ const d=now-qLast; if(d<250){ qT+=d; qN++; } if(qN>=60){ const avg=qT/qN; qN=0; qT=0; if(avg>40&&qLevel<qRatios.length-1){ qLevel++; renderer.setPixelRatio(qRatios[qLevel]); sizeW=0; } } } qLast=now; requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
 { const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
-window.journeyDebug={openDive, go, tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
+window.journeyDebug={openDive, go, quality:()=>({level:qLevel, ratio:qRatios[qLevel], calls:renderer.info.render.calls, triangles:renderer.info.render.triangles}), tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

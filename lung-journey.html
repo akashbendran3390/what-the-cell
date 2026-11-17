@@ -326,7 +326,7 @@ const labels=[], anims=[];
 function showDef(t,d){ $('def-h').textContent=t; $('def-p').textContent=d; $('defbox').hidden=false; }
 $('def-x').onclick=()=>{ $('defbox').hidden=true; };
 function mkLabel(text,def){ const el=document.createElement('div'); el.className='lab'; el.textContent=text; const d=def||(J.glossary&&J.glossary[text]);
-  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
+  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); window.dispatchEvent(new CustomEvent('wtc-label',{detail:text})); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
   $('labels').appendChild(el); return el; }
 const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   V:(x,y,z)=>new THREE.Vector3(x,y,z),
@@ -387,6 +387,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+api.goStop=i=>{ setView('ride'); stop=Math.max(0,Math.min(STOPS.length-1,i)); uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
@@ -423,11 +424,13 @@ function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) 
   labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
   renderer.render(scene,camera); }
-function frame(now){ step(now); requestAnimationFrame(frame); }
+// Adaptive quality (2026-11-17): if frames are slow on a weak graphics chip, draw fewer pixels so the animation stays smooth.
+let qN=0, qT=0, qLast=0, qLevel=0; const qRatios=[Math.min(window.devicePixelRatio||1,1.5),1,0.75,0.6];
+function frame(now){ step(now); if(qLast&&!document.hidden){ const d=now-qLast; if(d<250){ qT+=d; qN++; } if(qN>=60){ const avg=qT/qN; qN=0; qT=0; if(avg>40&&qLevel<qRatios.length-1){ qLevel++; renderer.setPixelRatio(qRatios[qLevel]); sizeW=0; } } } qLast=now; requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
 { const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
-window.journeyDebug={openDive, go, tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
+window.journeyDebug={openDive, go, quality:()=>({level:qLevel, ratio:qRatios[qLevel], calls:renderer.info.render.calls, triangles:renderer.info.render.triangles}), tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

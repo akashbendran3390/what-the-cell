@@ -244,7 +244,7 @@ window.JOURNEY = {
       g.add(new THREE.Mesh(new THREE.TorusGeometry(r, 0.45, 10, 40), M(0xf3e2c4))); const flaps = [];
       for (let i = 0; i < n; i++) { const p = new THREE.Group(); p.rotation.z = i * 2 * Math.PI / n; const hinge = new THREE.Group(); hinge.position.x = r * 0.98;
         const f = new THREE.Mesh(new THREE.CircleGeometry(r * 0.98, 24, -Math.PI / n, 2 * Math.PI / n), M(0xf6ecd8, { side: THREE.DoubleSide, roughness: 0.4, transparent: true, opacity: 0.92 })); f.position.x = -r * 0.98; hinge.add(f); p.add(hinge); g.add(p); flaps.push(hinge); }
-      return { set(open) { flaps.forEach(h => { h.rotation.y += (open * 1.2 - h.rotation.y) * 0.25; }); } }; }
+      return { set(open) { flaps.forEach(h => { h.rotation.y += (open * 1.45 - h.rotation.y) * 0.25; }); } }; }
     const tric = valve(V(-14, 0, 1), V(0.3, -1, 0.1), 3, 4.6), mitr = valve(V(14, 0, -3), V(-0.3, -1, 0.1), 2, 4.6);
     const pulm = valve(V(-6, 5, 6), V(0.15, 1, 0.1), 3, 3.8), aort = valve(V(6, 3, 0), V(0, 1, 0), 3, 4.2);
     const san = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 12), M(0xffe066, { emissive: 0x664400 })); san.position.set(-27, 20, 4); inner.add(san);
@@ -263,8 +263,9 @@ window.JOURNEY = {
     const lungU = nearU(V(-56, 38, -2));
     const cOxy = new THREE.Color(OXY), cDe = new THREE.Color(DEOXY);
     const cellCol = (u, c) => { if (u < lungU - 0.012) c.copy(cDe); else if (u > lungU + 0.012) c.copy(cOxy); else c.lerpColors(cDe, cOxy, (u - lungU + 0.012) / 0.024); };
+    const gates = [[nearU(V(-14, 0, 1)), 'av'], [nearU(V(-6, 5, 6)), 'sl'], [nearU(V(14, 0, -3)), 'av'], [nearU(V(6, 3, 0)), 'sl']];
     const g1 = rbcGeo(1.3, 24); const cells = [];
-    for (let i = 0; i < 90; i++) { const m = new THREE.Mesh(g1, rbcMat(DEOXY)); scene.add(m); cells.push({ m, u: i / 90, o: V(A.rnd(-2.2, 2.2), A.rnd(-2.2, 2.2), A.rnd(-2.2, 2.2)), r: V(A.rnd(0, 6), A.rnd(0, 6), A.rnd(0, 6)) }); }
+    for (let i = 0; i < 90; i++) { const m = new THREE.Mesh(g1, rbcMat(DEOXY)); scene.add(m); cells.push({ m, q: A.rnd(0.002, 0.016), u: i / 90, o: V(A.rnd(-2.2, 2.2), A.rnd(-2.2, 2.2), A.rnd(-2.2, 2.2)), r: V(A.rnd(0, 6), A.rnd(0, 6), A.rnd(0, 6)) }); }
     const hero = new THREE.Mesh(rbcGeo(1.7, 36), rbcMat(DEOXY)); scene.add(hero);
     // ---------- side panel: the cardiac cycle ----------
     const side = '<h3 id="hc-ph">Diastole</h3><div id="hc-pv" style="color:var(--dim)"></div><canvas id="hc-g" width="560" height="180" style="width:100%;height:90px;margin-top:6px"></canvas>' +
@@ -331,7 +332,9 @@ window.JOURNEY = {
           R: new THREE.CatmullRomCurve3([V(-22, 50, 1), V(-22, 30, 6.5), V(-21, 18, 6.5), V(-17, 6, 6.5), V(-17, -4, 6.5), V(-16, -18, 6.5), V(-10, -22, 6.5), V(-6, -10, 6.5), V(-5, 10, 6.5), V(-5, 28, 6.5), V(-5, 40, 1), V(-18, 47, 1), V(-40, 47, 1)]),
           L: new THREE.CatmullRomCurve3([V(50, 22, 1), V(38, 19, 1), V(26, 16, 6.5), V(18, 14, 6.5), V(15, 5, 6.5), V(14, -6, 6.5), V(14, -24, 6.5), V(9, -20, 6.5), V(5, -6, 6.5), V(5, 10, 6.5), V(5, 26, 6.5), V(5, 40, 1), V(14, 50, 1), V(26, 46, 1)]) };
         const marks = { R: [0.26, 0.6], L: [0.3, 0.62] }; // [AV valve position, semilunar valve position] along each path
-        const flow = []; ['R', 'L'].forEach(k => { for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(rg, rbcMat(k === 'R' ? DEOXY : OXY)); g.add(m); flow.push({ k, m, u: i / 26, r: A.rnd(0, 6) }); } });
+        const nU = (c, p) => { let b = 0, bd = 1e9; for (let i = 0; i <= 400; i++) { const d = c.getPointAt(i / 400).distanceTo(p); if (d < bd) { bd = d; b = i / 400; } } return b; };
+        const sgates = { R: [[nU(paths.R, V(-17.5, 3, 6.5)), 'av'], [nU(paths.R, V(-5, 9, 6.5)), 'sl']], L: [[nU(paths.L, V(15.5, 3.5, 6.5)), 'av'], [nU(paths.L, V(5, 6, 6.5)), 'sl']] };
+        const flow = []; ['R', 'L'].forEach(k => { for (let i = 0; i < 26; i++) { const m = new THREE.Mesh(rg, rbcMat(k === 'R' ? DEOXY : OXY)); g.add(m); flow.push({ k, m, u: i / 26, r: A.rnd(0, 6), q: A.rnd(0.004, 0.11) }); } });
         // labels
         const lab = []; const L = (t, p, keys) => { const el = D.label(t, p); lab.push({ el, keys }); };
         L('Right atrium', V(-21, 16, 8), [1]); L('Right ventricle', V(-15, -14, 8), [3]); L('Left atrium', V(21, 16, 8), [5]); L('Left ventricle', V(14, -14, 8), [7]);
@@ -359,8 +362,8 @@ window.JOURNEY = {
             Object.entries(cav).forEach(([k, m]) => { m.material.emissiveIntensity = fk.includes(k) ? pulse : 0.15; });
             Object.entries(valves).forEach(([k, v]) => { const on = (step === 2 && k === 'tric') || (step === 6 && k === 'mitr') || (step === 4 && k === 'pulm') || (step === 8 && k === 'aort'); v.hs.forEach(h => h.userData.f.material.emissive.setHex(on ? 0x886600 : 0x000000)); });
             // blood moves only where the valves let it
-            flow.forEach(c => { const [a, b] = marks[c.k]; let sp = 0.03; if (c.u > a - 0.04 && c.u < a + 0.02) sp = av ? 0.09 : 0; else if (c.u > b - 0.06 && c.u < b + 0.02) sp = sl ? 0.16 : 0; else if (c.u > a && c.u < b) sp = sl ? 0.12 : 0.012;
-              if (!A.paused) c.u = (c.u + dt * sp) % 1; c.m.position.copy(paths[c.k].getPointAt(c.u)); c.m.rotation.set(c.r + c.u * 20, c.u * 14, 0); });
+            flow.forEach(c => { let sp = 0.03; sgates[c.k].forEach(([gu, kind]) => { const open = kind === 'av' ? av : sl; if (open && c.u > gu - 0.05 && c.u < gu + 0.03) sp = 0.08; });
+              if (!A.paused) { let nu = c.u + dt * sp; sgates[c.k].forEach(([gu, kind]) => { const open = kind === 'av' ? av : sl, stop = gu - 0.035; if (!open && c.u > stop - 0.18 && c.u <= stop && nu > stop - c.q) nu = Math.max(c.u, stop - c.q); }); c.u = nu % 1; } c.m.position.copy(paths[c.k].getPointAt(c.u)); c.m.rotation.set(c.r + c.u * 20, c.u * 14, 0); });
           } };
       } };
 
@@ -592,7 +595,8 @@ window.JOURNEY = {
         san.material.emissive.setHex(f < 0.08 ? 0xffcc00 : 0x664400); avn.material.emissive.setHex(f > 0.08 && f < 0.16 ? 0xffcc00 : 0x664400);
         if (p !== lastPh) { const a = document.getElementById('hc-ph'), b = document.getElementById('hc-pv'); if (a) { a.textContent = PHASES[p][0]; b.textContent = PHASES[p][1]; } lastPh = p; } drawGraph(f);
         const u = A.u(), c = new THREE.Color(); cellCol(u, c); hero.material.color.copy(c); hero.material.emissive.copy(c); hero.rotation.x += dt * 0.8; hero.rotation.y += dt * 0.5;
-        cells.forEach(k => { if (!A.paused) k.u = (k.u + dt * 0.016) % 1; k.m.position.copy(curve.getPointAt(k.u)).add(k.o); cellCol(k.u, c); k.m.material.color.copy(c); k.m.material.emissive.copy(c); k.m.rotation.set(k.r.x + k.u * 25, k.r.y + k.u * 18, k.r.z); });
+        cells.forEach(k => { if (!A.paused) { let sp = 0.016, nu; for (const [gu, kind] of gates) { const open = kind === 'av' ? av : sl; if (open && k.u > gu - 0.03 && k.u < gu + 0.015) sp = 0.04; } nu = k.u + dt * sp;
+          for (const [gu, kind] of gates) { const open = kind === 'av' ? av : sl, stop = gu - 0.01; if (!open && k.u > stop - 0.06 && k.u <= stop && nu > stop - k.q) nu = Math.max(k.u, stop - k.q); } k.u = nu % 1; } k.m.position.copy(curve.getPointAt(k.u)).add(k.o); cellCol(k.u, c); k.m.material.color.copy(c); k.m.material.emissive.copy(c); k.m.rotation.set(k.r.x + k.u * 25, k.r.y + k.u * 18, k.r.z); });
       }
     };
   }
@@ -627,7 +631,7 @@ const labels=[], anims=[];
 function showDef(t,d){ $('def-h').textContent=t; $('def-p').textContent=d; $('defbox').hidden=false; }
 $('def-x').onclick=()=>{ $('defbox').hidden=true; };
 function mkLabel(text,def){ const el=document.createElement('div'); el.className='lab'; el.textContent=text; const d=def||(J.glossary&&J.glossary[text]);
-  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
+  if(d){ el.classList.add('def'); el.tabIndex=0; el.setAttribute('role','button'); el.title='What is this?'; const f=e=>{ e.stopPropagation(); showDef(text,d); window.dispatchEvent(new CustomEvent('wtc-label',{detail:text})); }; el.addEventListener('click',f); el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' ') f(e); }); }
   $('labels').appendChild(el); return el; }
 const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
   V:(x,y,z)=>new THREE.Vector3(x,y,z),
@@ -688,6 +692,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+api.goStop=i=>{ setView('ride'); stop=Math.max(0,Math.min(STOPS.length-1,i)); uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
@@ -724,11 +729,13 @@ function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) 
   labels.forEach(l=>{ if(l.dv||l.el.dataset.off==='1'){ l.el.style.display='none'; return; } v.copy(l.pos).project(camera); const d=camera.position.distanceTo(l.pos); const vis=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05&&(view==='out'||d<l.far);
     if(vis){ l.el.style.display=''; l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=view==='out'?0.95:Math.max(0.3,1.2-d/l.far); } else l.el.style.display='none'; });
   renderer.render(scene,camera); }
-function frame(now){ step(now); requestAnimationFrame(frame); }
+// Adaptive quality (2026-11-17): if frames are slow on a weak graphics chip, draw fewer pixels so the animation stays smooth.
+let qN=0, qT=0, qLast=0, qLevel=0; const qRatios=[Math.min(window.devicePixelRatio||1,1.5),1,0.75,0.6];
+function frame(now){ step(now); if(qLast&&!document.hidden){ const d=now-qLast; if(d<250){ qT+=d; qN++; } if(qN>=60){ const avg=qT/qN; qN=0; qT=0; if(avg>40&&qLevel<qRatios.length-1){ qLevel++; renderer.setPixelRatio(qRatios[qLevel]); sizeW=0; } } } qLast=now; requestAnimationFrame(frame); }
 if(W.side) api.side(W.side);
 setLevel(level); resize(); requestAnimationFrame(frame);
 { const m=/^#zoom-(\d+)$/.exec(location.hash); if(m&&W.dives&&W.dives[+m[1]]){ $('start').hidden=true; openDive(W.dives[+m[1]]); } }
-window.journeyDebug={openDive, go, tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
+window.journeyDebug={openDive, go, quality:()=>({level:qLevel, ratio:qRatios[qLevel], calls:renderer.info.render.calls, triangles:renderer.info.render.triangles}), tick:n=>{ for(let i=0;i<n;i++){ last-=33; step(last+33); } }, dives:()=>W.dives, stops:STOPS};
 })();
 
 </script>

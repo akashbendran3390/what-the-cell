@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Homeostasis Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/homeostasis-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Homeostasis Lab">
+<meta property="og:description" content="Homeostasis Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/homeostasis-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Homeostasis Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0d1215; --ink:#f1f5f4; --dim:#b5c5c2; --panel:#141e22; --panel2:#1c2a2f; --line:rgba(200,230,225,.18);
+  --accent:#f2a541; --glu:#ffd166; --ins:#4cc9a0; --gcg:#ef6f6c; --cool:#5bc0eb;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2a1800}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0a0f11}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2a1800;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.hl-only{display:none} body.hl .hl-only{display:block} body.hl span.hl-only{display:inline}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:72px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider input{flex:1;min-width:140px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;margin:3px 0}
+.lab-l{font-size:13px;color:var(--dim);min-width:92px}
+details.how{margin:10px 0;background:var(--panel2);border-radius:10px;padding:8px 12px}details.how summary{cursor:pointer;font-weight:700}
+.badge{display:inline-block;font:700 11px var(--body);padding:2px 7px;border-radius:999px;background:#3a2a10;color:var(--accent);margin-left:6px;vertical-align:middle}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Homeostasis Lab</h1><div class="sub">DP Biology D3.3 and C2.1 &middot; a simplified model of a healthy adult; numbers are realistic but not exact</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Keeping the inside steady</h2>
+    <p>Your body keeps blood glucose, core temperature and blood water content close to a set point. In this lab you push each one away from normal &ndash; with a meal, a cold day, a run or a salty snack &ndash; and watch the <b>receptors</b>, <b>control centre</b> and <b>effectors</b> bring it back by <b>negative feedback</b>. Then you break the system (diabetes, switched-off responses) to see why each part matters.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-glu" aria-pressed="true">1. Blood glucose</button><button type="button" id="t-tmp" aria-pressed="false">2. Body temperature</button><button type="button" id="t-wat" aria-pressed="false">3. Water balance <span class="badge">HL</span></button></div>
+
+    <!-- GLUCOSE -->
+    <div class="grid" id="p-glu">
+      <div>
+        <div class="card">
+          <canvas id="c-glu" width="900" height="560" aria-label="Organs that control blood glucose above a graph of blood glucose, insulin and glucagon over time"></canvas>
+          <div class="row"><span class="lab-l">Person</span><div class="seg" id="g-type"><button type="button" data-t="ok" aria-pressed="true">Healthy</button><button type="button" data-t="t1" aria-pressed="false">Type 1 diabetes</button><button type="button" data-t="t2" aria-pressed="false">Type 2 diabetes</button></div></div>
+          <div class="row"><span class="lab-l">Do something</span><button type="button" class="btn" id="g-meal">Eat a meal (bread, rice)</button><button type="button" class="btn" id="g-drink">Sugary drink</button><button type="button" class="btn" id="g-run">Go for a 30 min run</button><button type="button" class="btn" id="g-ins" hidden>Inject insulin</button></div>
+          <div class="row"><span class="lab-l">Clock</span><button type="button" class="btn" id="g-pause">Pause</button><button type="button" class="btn" id="g-night">Skip 8 h (overnight fast)</button><button type="button" class="btn" id="g-reset">Start again</button><span class="note">1 second = 10 minutes</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="card"><h2>What is happening?</h2><div class="explain"><p id="g-say"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Time</span><b id="g-time">-</b><span>Blood glucose</span><b id="g-g">-</b><span>Insulin (from &beta; cells)</span><b id="g-i">-</b><span>Glucagon (from &alpha; cells)</span><b id="g-c">-</b><span>Liver glycogen store</span><b id="g-gly">-</b><span>Glucose in urine?</span><b id="g-ur">-</b></div>
+          <p class="hl-only note" id="g-hl"></p>
+          <p class="note">Syllabus: D3.3.1, D3.3.2, D3.3.3, D3.3.4<span class="hl-only">, C2.1.14</span></p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Healthy: eat a meal. How long until glucose is back in the normal band? Which hormone peaked, and when?</li>
+          <li>Go for a run. Which hormone rises now? Where does the extra glucose come from?</li>
+          <li>Skip an overnight fast. What happens to the glycogen store, and why does glucose stay normal?</li>
+          <li>Type 1: eat a meal and watch. Then inject insulin. Why can't this person make their own?</li>
+          <li>Type 2: compare the insulin level with the healthy person after the same meal. Why is glucose still high?</li>
+          <li>Find the moment glucose appears in the urine. What is the threshold?</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <!-- TEMPERATURE -->
+    <div class="grid" id="p-tmp" hidden>
+      <div>
+        <div class="card">
+          <canvas id="c-tmp" width="900" height="560" aria-label="A section through skin showing blood vessels, sweat glands and hairs, above a graph of core body temperature"></canvas>
+          <div class="slider"><label for="t-env">Air temperature</label><input type="range" id="t-env" min="-5" max="45" value="22"><b id="t-envv">22 &deg;C</b></div>
+          <div class="row"><span class="lab-l">Activity</span><div class="seg" id="t-act"><button type="button" data-a="0" aria-pressed="true">Resting</button><button type="button" data-a="1" aria-pressed="false">Walking</button><button type="button" data-a="2" aria-pressed="false">Running</button></div></div>
+          <div class="row"><span class="lab-l">Responses on</span>
+            <label class="chk"><input type="checkbox" id="r-vaso" checked> Skin blood flow</label>
+            <label class="chk"><input type="checkbox" id="r-sweat" checked> Sweating</label>
+            <label class="chk"><input type="checkbox" id="r-shiv" checked> Shivering</label>
+            <label class="chk"><input type="checkbox" id="r-hair" checked> Hair erection</label>
+            <label class="chk"><input type="checkbox" id="r-bat"> Brown fat (baby)</label></div>
+          <div class="row"><span class="lab-l">Presets</span><button type="button" class="btn" data-p="snow">Snowy day</button><button type="button" class="btn" data-p="desert">Desert heat</button><button type="button" class="btn" data-p="marathon">Marathon</button><button type="button" class="btn" data-p="nosweat">Hot day, can't sweat</button><button type="button" class="btn" id="t-reset">Start again</button></div>
+        </div>
+      </div>
+      <div>
+        <div class="card"><h2>What is happening?</h2><div class="explain"><p id="t-say"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Core temperature</span><b id="t-core">-</b><span>Heat made (relative)</span><b id="t-prod">-</b><span>Heat lost (relative)</span><b id="t-loss">-</b><span>Skin arterioles</span><b id="t-art">-</b><span>Sweat rate</span><b id="t-sw">-</b></div>
+          <p class="note">The hypothalamus compares blood temperature with the set point (about 37 &deg;C) and sends nerve signals to the effectors.</p>
+          <p class="hl-only note">Thyroxine raises the metabolic rate in long cold spells; brown adipose tissue in babies releases heat because its mitochondria let protons leak back without making ATP.</p>
+          <p class="note">Syllabus: D3.3.5, D3.3.6</p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Snowy day: list the responses that switch on, in the order they appear.</li>
+          <li>Switch off shivering on the snowy day. What happens to core temperature?</li>
+          <li>Hot day, can't sweat: why does core temperature keep rising even with wide arterioles?</li>
+          <li>Marathon: why do sweating and wide arterioles appear even though the air is cool?</li>
+          <li>Explain why this is <i>negative</i> feedback, using the words receptor, hypothalamus and effector.</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <!-- WATER -->
+    <div class="grid" id="p-wat" hidden>
+      <div>
+        <div class="card">
+          <canvas id="c-wat" width="900" height="560" aria-label="Hypothalamus and pituitary releasing ADH, a collecting duct with aquaporins and a urine sample, above a graph of blood solute concentration"></canvas>
+          <div class="row"><span class="lab-l">Do something</span><button type="button" class="btn" id="w-drink">Drink 1 litre of water</button><button type="button" class="btn" id="w-salt">Salty snack</button><button type="button" class="btn" id="w-sweat">Run 1 h on a hot day</button><button type="button" class="btn" id="w-reset">Start again</button></div>
+          <label class="chk"><input type="checkbox" id="w-noadh"> No ADH made (diabetes insipidus)</label>
+        </div>
+      </div>
+      <div>
+        <div class="card"><h2>What is happening?</h2><div class="explain"><p id="w-say"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Time</span><b id="w-time">-</b><span>Blood solute concentration</span><b id="w-s">-</b><span>ADH released</span><b id="w-adh">-</b><span>Aquaporins in duct membranes</span><b id="w-aq">-</b><span>Urine made</span><b id="w-flow">-</b><span>Urine concentration</span><b id="w-uc">-</b></div>
+          <p class="note">Osmoreceptors in the hypothalamus sense the solute concentration of the blood. ADH from the posterior pituitary makes collecting duct cells put more aquaporins in their membranes, so more water is reabsorbed into the salty medulla.</p>
+          <p class="note">Syllabus: D3.3.7, D3.3.10 (HL)</p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Drink a litre. How do ADH, urine volume and urine colour change, and how long does it take?</li>
+          <li>Run on a hot day. Why does urine become dark and small in volume?</li>
+          <li>Turn on "No ADH made" and drink. Why is this person always thirsty?</li>
+        </ol></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+let tab='glu', paused=false;
+function fmtT(m){ const h=Math.floor(m/60)%24, mm=Math.floor(m%60); return String(h).padStart(2,'0')+':'+String(mm).padStart(2,'0'); }
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function arrow(ctx,x1,y1,x2,y2,w,col){ if(w<0.4) return; const a=Math.atan2(y2-y1,x2-x1); ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=w; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2-Math.cos(a)*(6+w),y2-Math.sin(a)*(6+w)); ctx.stroke(); const s=7+w*1.4; ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(x2-s*Math.cos(a-0.45),y2-s*Math.sin(a-0.45)); ctx.lineTo(x2-s*Math.cos(a+0.45),y2-s*Math.sin(a+0.45)); ctx.closePath(); ctx.fill(); }
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#f1f5f4'; ctx.font=font||'700 15px Atkinson Hyperlegible, sans-serif'; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+// generic strip chart
+function chart(ctx,X,Y,W,H,series,opt){
+  ctx.fillStyle='#0f171a'; rr(ctx,X,Y,W,H,10); ctx.fill();
+  const px=X+52, pw=W-150, py=Y+16, ph=H-46;
+  const y=v=>py+ph-(v-opt.min)/(opt.max-opt.min)*ph;
+  if(opt.band){ ctx.fillStyle='rgba(120,220,160,.12)'; ctx.fillRect(px,y(opt.band[1]),pw,y(opt.band[0])-y(opt.band[1])); txt(ctx,opt.bandLabel,px+pw-6,y(opt.band[1])+14,'rgba(150,230,180,.85)','700 12px Atkinson Hyperlegible, sans-serif','right'); }
+  ctx.strokeStyle='rgba(200,230,225,.15)'; ctx.lineWidth=1;
+  for(const t of opt.ticks){ ctx.beginPath(); ctx.moveTo(px,y(t)); ctx.lineTo(px+pw,y(t)); ctx.stroke(); txt(ctx,String(t),px-8,y(t)+4,'#b5c5c2','12px Atkinson Hyperlegible, sans-serif','right'); }
+  ctx.save(); ctx.translate(X+14,py+ph/2); ctx.rotate(-Math.PI/2); txt(ctx,opt.yLabel,0,0,'#b5c5c2','700 12px Atkinson Hyperlegible, sans-serif'); ctx.restore();
+  const n=opt.span; const t1=opt.now, t0=t1-n;
+  // time ticks every 60 min
+  for(let t=Math.ceil(t0/60)*60;t<=t1;t+=60){ const xx=px+(t-t0)/n*pw; ctx.strokeStyle='rgba(200,230,225,.08)'; ctx.beginPath(); ctx.moveTo(xx,py); ctx.lineTo(xx,py+ph); ctx.stroke(); txt(ctx,fmtT(t),xx,py+ph+16,'#b5c5c2','12px Atkinson Hyperlegible, sans-serif'); }
+  for(const s of series){
+    ctx.strokeStyle=s.col; ctx.lineWidth=s.w||2.5; ctx.setLineDash(s.dash||[]); ctx.beginPath(); let first=true;
+    for(const p of s.pts){ if(p[0]<t0) continue; const xx=px+(p[0]-t0)/n*pw; const yy=clamp(s.scale?py+ph-(p[1]/s.scale)*ph:y(p[1]),py,py+ph); if(first){ctx.moveTo(xx,yy);first=false;} else ctx.lineTo(xx,yy); }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  let ly=py+6; for(const s of series){ ctx.fillStyle=s.col; ctx.fillRect(px+pw+10,ly,14,4); txt(ctx,s.name,px+pw+28,ly+6,'#dfe8e6','12px Atkinson Hyperlegible, sans-serif','left'); ly+=18; }
+}
+
+/* ---------------- GLUCOSE ---------------- */
+const G={};
+const GT={ ok:{beta:1,sens:1,gfloor:2,name:'healthy'}, t1:{beta:0.0,sens:1,gfloor:2,name:'type 1'}, t2:{beta:0.24,sens:0.38,gfloor:8,name:'type 2'} };
+function gReset(){ Object.assign(G,{t:7*60,g:5.0,i:8,c:10,gly:70,fast:0,slow:0,run:0,inj:0,urine:0,hist:[],evt:'start',evtT:7*60}); const ty=GT[G.type||'ok']; if(G.type==='t1'){G.g=9.5;G.i=1;} if(G.type==='t2'){G.g=7.4;G.i=30;G.c=8;} G.hist.push([G.t,G.g,G.i,G.c]); }
+G.type='ok';
+function gStep(){
+  const ty=GT[G.type];
+  const absF=G.fast*0.05, absS=G.slow*0.018; G.fast-=absF; G.slow-=absS;
+  const absorb=(absF+absS)*0.2;
+  const run=G.run>0?1:0; if(G.run>0) G.run--;
+  const injRel=G.inj*0.02; G.inj-=injRel;
+  const iT=(G.type==='t1'?0.6:8*Math.max(ty.beta,0.5)) + ty.beta*18*Math.max(0,G.g-5) - run*4;
+  G.i+=(Math.max(0.3,iT) - G.i)*0.035; G.i+=injRel;
+  const cT=clamp(10+15*(5-G.g)+run*22, ty.gfloor, 80);
+  G.c+=(cT-G.c)*0.12;
+  const se=ty.sens;
+  const insUp=0.005*G.i*se*(G.g/5);
+  const use=0.03+insUp+run*0.07;
+  let liver=0.046+0.004*G.c-0.002*G.i*se; liver=Math.max(0,liver);
+  if(G.gly<=0){ liver=Math.min(liver,0.035); }
+  G.gly=clamp(G.gly-liver*0.9+insUp*0.6*1.2,0,100);
+  G.urine=G.g>10?(G.g-10)*0.012:0;
+  G.g=Math.max(1.5,G.g+absorb+liver-use-G.urine);
+  G.t+=1; G.flux={absorb,liver,insUp,run,use};
+  G.hist.push([G.t,G.g,G.i,G.c]); if(G.hist.length>1500) G.hist.shift();
+}
+function gSay(){
+  const g=G.g, f=G.flux||{}; let s='';
+  const hi=g>7.2, lo=g<4.0;
+  if(G.type==='t1' && G.i<4 && g>8) s='The &beta; cells in this pancreas have been destroyed by the immune system, so almost no insulin is made. Body cells take up little glucose and the liver keeps releasing it, so blood glucose stays high and rises after every meal. Only injected insulin brings it down.';
+  else if(G.type==='t2' && g>7.2) s='Insulin <b>is</b> being made &ndash; often more than in a healthy person &ndash; but the target cells respond weakly (insulin resistance) and the tired &beta; cells cannot keep up. Glucose is taken up slowly, so it stays above the normal band.';
+  else if(f.run) s='Muscles are using glucose fast. Falling glucose is detected by the pancreas: &alpha; cells release <b>glucagon</b> (and adrenaline rises), so the liver breaks down glycogen to glucose and releases it. Insulin falls.';
+  else if(f.absorb>0.02 && g>5.6) s='Glucose from digested food is entering the blood. The &beta; cells of the islets detect the rise and release <b>insulin</b>. Insulin makes muscle, fat and liver cells take up glucose, and the liver stores it as <b>glycogen</b>. Glucose falls back towards normal: <b>negative feedback</b>.';
+  else if(hi) s='Glucose is above the normal band. Insulin is high, so cells are still taking up glucose and the liver is storing it as glycogen.';
+  else if(lo) s='Glucose is below normal. &alpha; cells release <b>glucagon</b>, which makes the liver break glycogen down to glucose (glycogenolysis) and release it into the blood.';
+  else if(G.c>14 && G.i<9) s='Between meals glucagon is a little raised and insulin is low. The liver slowly releases glucose from its glycogen store, so the brain and muscles keep getting glucose even though no food is being absorbed.';
+  else s='Blood glucose is in the normal band (about 4 to 7 mmol/L). Small changes are corrected all the time by insulin and glucagon from the islets of Langerhans in the pancreas.';
+  $('g-say').innerHTML=s;
+  $('g-time').textContent=fmtT(G.t); $('g-g').textContent=G.g.toFixed(1)+' mmol/L'; $('g-i').textContent=G.i<1.5?'almost none':(G.i<12?'low':G.i<35?'medium':'high')+' ('+G.i.toFixed(0)+')';
+  $('g-c').textContent=(G.c<6?'low':G.c<20?'medium':'high')+' ('+G.c.toFixed(0)+')'; $('g-gly').textContent=G.gly.toFixed(0)+'%'; $('g-ur').textContent=G.urine>0?'yes (glucose above about 10 mmol/L)':'no';
+  $('g-hl').innerHTML='HL: insulin binds a tyrosine kinase receptor on target cells; the signal makes vesicles add GLUT4 transporters to the membrane. Glucagon binds a G-protein-linked receptor on liver cells, starting a cascade that switches on glycogen breakdown. The rising or falling glucose itself turns each hormone back down &ndash; negative feedback.';
+}
+function drawCellBlob(ctx,x,y,r,col,glow){ ctx.save(); if(glow>0){ctx.shadowColor=col;ctx.shadowBlur=6+glow*18;} ctx.fillStyle=col; ctx.globalAlpha=0.35+0.65*Math.min(1,glow+0.15); ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.restore(); }
+function gDraw(){
+  const c=$('c-glu'), ctx=c.getContext('2d'); ctx.clearRect(0,0,900,560); const f=G.flux||{absorb:0,liver:0,insUp:0,run:0};
+  ctx.fillStyle='#0a0f11'; ctx.fillRect(0,0,900,560);
+  // blood vessel band
+  const vy=118; const grd=ctx.createLinearGradient(0,vy-34,0,vy+34); grd.addColorStop(0,'#5a1414'); grd.addColorStop(.5,'#8e2424'); grd.addColorStop(1,'#5a1414');
+  ctx.fillStyle=grd; rr(ctx,150,vy-34,600,68,30); ctx.fill(); ctx.strokeStyle='#c24848'; ctx.lineWidth=2; ctx.stroke();
+  txt(ctx,'Blood',450,vy-42,'#f3b0a8','700 14px Atkinson Hyperlegible, sans-serif');
+  const n=Math.round(clamp(G.g,0,22)*5); for(let k=0;k<n;k++){ const xx=170+((k*97.3+G.t*1.7)%560), yy=vy-24+((k*37.1)%48); ctx.fillStyle='#ffd166'; ctx.beginPath(); for(let h=0;h<6;h++){ const a=h*Math.PI/3; ctx[h?'lineTo':'moveTo'](xx+4*Math.cos(a),yy+4*Math.sin(a)); } ctx.closePath(); ctx.fill(); }
+  // gut
+  ctx.fillStyle='#4a3524'; rr(ctx,14,70,120,96,18); ctx.fill(); txt(ctx,'Small intestine',74,92,'#f2d3b0','700 13px Atkinson Hyperlegible, sans-serif');
+  const food=G.fast+G.slow; txt(ctx,food>1?'absorbing glucose':'nothing to absorb',74,140,'#e9c7a3','12px Atkinson Hyperlegible, sans-serif');
+  ctx.strokeStyle='#c99a6b'; ctx.lineWidth=3; ctx.beginPath(); for(let k=0;k<5;k++){ ctx.arc(34+k*20,116,8,Math.PI,0,k%2===1);} ctx.stroke();
+  arrow(ctx,136,118,166,118,f.absorb*120,'#ffd166');
+  // pancreas islet
+  ctx.fillStyle='#3a2a3a'; rr(ctx,330,190,240,120,20); ctx.fill(); txt(ctx,'Pancreas: islet of Langerhans',450,210,'#ead3ea','700 13px Atkinson Hyperlegible, sans-serif');
+  for(let k=0;k<14;k++){ const a=k/14*6.283, r=k%3===0?20:38; const isA=k%3===0; drawCellBlob(ctx,450+Math.cos(a)*r*1.5,262+Math.sin(a)*r*0.8,9,isA?'#ef6f6c':'#4cc9a0',isA?clamp((G.c-6)/40,0,1):clamp((G.i-4)/50,0,1)); }
+  txt(ctx,'β cells: insulin',388,300,'#4cc9a0','12px Atkinson Hyperlegible, sans-serif'); txt(ctx,'α cells: glucagon',512,300,'#ef6f6c','12px Atkinson Hyperlegible, sans-serif');
+  arrow(ctx,420,190,420,156,1+G.i/12,'#4cc9a0'); arrow(ctx,480,190,480,156,1+G.c/10,'#ef6f6c');
+  txt(ctx,'senses glucose',450,178,'#b5c5c2','11px Atkinson Hyperlegible, sans-serif');
+  // liver
+  ctx.fillStyle='#5a2a1a'; ctx.beginPath(); ctx.moveTo(176,10); ctx.quadraticCurveTo(330,0,330,30); ctx.quadraticCurveTo(320,62,240,70); ctx.quadraticCurveTo(170,72,170,40); ctx.closePath(); ctx.fill();
+  txt(ctx,'Liver',214,32,'#f0c3a8','700 14px Atkinson Hyperlegible, sans-serif'); ctx.fillStyle='#2a1a12'; rr(ctx,246,22,70,14,6); ctx.fill(); ctx.fillStyle='#e6c56e'; rr(ctx,246,22,70*G.gly/100,14,6); ctx.fill(); txt(ctx,'glycogen',281,54,'#e9cfa0','11px Atkinson Hyperlegible, sans-serif');
+  arrow(ctx,232,72,232,86,0.2+f.liver*60,'#ffd166'); arrow(ctx,290,86,290,72,f.insUp*0.4*60,'#9fd7c2');
+  // muscle
+  ctx.fillStyle='#5b2232'; rr(ctx,600,0,200,64,14); ctx.fill(); ctx.strokeStyle='#9e4a5e'; ctx.lineWidth=2; for(let k=0;k<6;k++){ ctx.beginPath(); ctx.moveTo(612,10+k*9); ctx.lineTo(788,10+k*9); ctx.stroke(); }
+  txt(ctx,f.run?'Muscle (working hard)':'Muscle and fat cells',700,40,'#ffd8e0','700 13px Atkinson Hyperlegible, sans-serif');
+  arrow(ctx,700,86,700,68,0.3+(f.insUp+f.run*0.07)*60,'#ffd166');
+  // brain
+  ctx.fillStyle='#4a3f5c'; ctx.beginPath(); ctx.ellipse(830,170,52,34,0,0,7); ctx.fill(); txt(ctx,'Brain uses',830,166,'#e6dcf7','700 12px Atkinson Hyperlegible, sans-serif'); txt(ctx,'glucose all the time',830,182,'#e6dcf7','11px Atkinson Hyperlegible, sans-serif');
+  arrow(ctx,752,132,790,150,1.6,'#ffd166');
+  // kidney
+  if(G.urine>0){ txt(ctx,'Kidneys: glucose lost in urine',660,190,'#ffd166','700 12px Atkinson Hyperlegible, sans-serif'); arrow(ctx,660,154,660,176,1+G.urine*80,'#ffd166'); }
+  // graph
+  const H=G.hist; chart(ctx,10,322,880,230,[
+    {name:'glucose',col:'#ffd166',w:3,pts:H.map(p=>[p[0],p[1]])},
+    {name:'insulin',col:'#4cc9a0',pts:H.map(p=>[p[0],p[2]]),scale:120},
+    {name:'glucagon',col:'#ef6f6c',pts:H.map(p=>[p[0],p[3]]),scale:120,dash:[6,4]}],
+    {min:0,max:16,ticks:[0,4,8,12,16],band:[4,7],bandLabel:'normal 4-7',yLabel:'glucose mmol/L',span:600,now:Math.max(G.t,G.hist[0][0]+600)});
+  gSay();
+}
+function setType(t){ G.type=t; for(const b of $('g-type').children) b.setAttribute('aria-pressed',b.dataset.t===t); $('g-ins').hidden=t!=='t1'; gReset(); gDraw(); }
+for(const b of $('g-type').children) b.onclick=()=>setType(b.dataset.t);
+$('g-meal').onclick=()=>{ G.slow+=70; };
+$('g-drink').onclick=()=>{ G.fast+=45; };
+$('g-run').onclick=()=>{ G.run=30; };
+$('g-ins').onclick=()=>{ G.inj+=40; };
+$('g-night').onclick=()=>{ for(let k=0;k<480;k++) gStep(); gDraw(); };
+$('g-reset').onclick=()=>{ gReset(); gDraw(); };
+$('g-pause').onclick=()=>{ paused=!paused; $('g-pause').textContent=paused?'Play':'Pause'; };
+gReset();
+
+/* ---------------- TEMPERATURE ---------------- */
+const T={};
+function tReset(){ Object.assign(T,{t:0,core:37.0,hist:[],vaso:0.75,sweat:0,shiv:0,hair:0,bat:0}); T.hist.push([0,37]); }
+let tEnv=22, tAct=0;
+function on(id){ return $(id).checked; }
+function tStep(){
+  const err=T.core-37.0;
+  const vT=on('r-vaso')?clamp(0.62+err*1.6,0.25,1.3):0.75;
+  const sT=on('r-sweat')?clamp((err-0.12)*3.2,0,2.6):0;
+  const shT=on('r-shiv')?clamp((-err-0.25)*3,0,2):0;
+  const hT=on('r-hair')?(err<-0.1?1:0):0;
+  const bT=on('r-bat')?clamp(-err*2.5,0,1):0;
+  T.vaso+=(vT-T.vaso)*0.1; T.sweat+=(sT-T.sweat)*0.08; T.shiv+=(shT-T.shiv)*0.1; T.hair+=(hT-T.hair)*0.1; T.bat+=(bT-T.bat)*0.05;
+  const prod=1+[0,1.2,3.2][tAct]+T.shiv*1.6+T.bat*0.8;
+  const dry=(0.45+0.55*T.vaso)*(1-0.15*T.hair)*(T.core-tEnv)*0.0775;
+  const evap=T.sweat*(tEnv>35?1.25:1.0);
+  const loss=dry+evap;
+  T.core+=(prod-loss)*0.012; T.core=clamp(T.core,30,43.5);
+  T.prod=prod; T.loss=loss; T.t+=1; T.hist.push([T.t,T.core]); if(T.hist.length>1500) T.hist.shift();
+}
+function tDraw(){
+  const c=$('c-tmp'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f11'; ctx.fillRect(0,0,900,560);
+  // sky / air
+  const warm=clamp((tEnv+5)/50,0,1); ctx.fillStyle=`rgb(${Math.round(40+150*warm)},${Math.round(70+40*(1-Math.abs(warm-.5)*2))},${Math.round(160-120*warm)})`; ctx.globalAlpha=0.35; ctx.fillRect(0,0,900,70); ctx.globalAlpha=1;
+  txt(ctx,'Air '+tEnv+' °C',70,40,'#fff','800 18px Bricolage Grotesque, sans-serif');
+  if(tEnv<4){ for(let k=0;k<40;k++){ ctx.fillStyle='rgba(255,255,255,.8)'; ctx.beginPath(); ctx.arc((k*71+T.t*3)%900,(k*29+T.t*2)%66,2,0,7); ctx.fill(); } }
+  // skin layers
+  ctx.fillStyle='#e9b99a'; ctx.fillRect(0,70,900,26); ctx.fillStyle='#d9987a'; ctx.fillRect(0,96,900,120); ctx.fillStyle='#f3e2b8'; ctx.fillRect(0,216,900,64);
+  txt(ctx,'epidermis',860,88,'#5b3020','11px Atkinson Hyperlegible, sans-serif','right'); txt(ctx,'dermis',860,206,'#5b3020','11px Atkinson Hyperlegible, sans-serif','right'); txt(ctx,'fat',860,272,'#6b5420','11px Atkinson Hyperlegible, sans-serif','right');
+  // hairs with erector muscles
+  for(let k=0;k<4;k++){ const x=90+k*210; const ang=-1.2*T.hair; ctx.strokeStyle='#3b2416'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(x,170); ctx.lineTo(x,82); ctx.stroke(); ctx.save(); ctx.translate(x,82); ctx.rotate(0.55-0.5*T.hair); ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-55); ctx.stroke(); ctx.restore(); ctx.fillStyle='#7a3a2a'; ctx.beginPath(); ctx.ellipse(x,175,9,13,0,0,7); ctx.fill();
+    ctx.strokeStyle='#b4505a'; ctx.lineWidth=3+2*T.hair; ctx.beginPath(); ctx.moveTo(x+6,150); ctx.lineTo(x+34,108-6*T.hair); ctx.stroke(); }
+  txt(ctx,T.hair>0.5?'erector muscles pull hairs up':'hairs lie flat',90,62,'#fff','12px Atkinson Hyperlegible, sans-serif','left');
+  // sweat glands
+  for(let k=0;k<3;k++){ const x=190+k*240; ctx.strokeStyle='#6a8fb0'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x,74); ctx.bezierCurveTo(x-10,120,x+10,160,x,196); ctx.stroke(); ctx.beginPath(); for(let a=0;a<12;a++) ctx.lineTo(x+Math.cos(a)*10*(a/12+0.4),206+Math.sin(a)*8); ctx.stroke();
+    const d=T.sweat; if(d>0.08){ ctx.fillStyle='rgba(120,190,255,.85)'; for(let j=0;j<Math.ceil(d*3);j++){ const yy=70-((T.t*2+j*17)%24); ctx.beginPath(); ctx.arc(x+(j-1)*8,yy,3+d,0,7); ctx.fill(); } } }
+  // arteriole
+  const w=8+T.vaso*14; ctx.strokeStyle='#b52d2d'; ctx.lineWidth=w; ctx.beginPath(); ctx.moveTo(0,250); ctx.bezierCurveTo(250,250,300,120,450,118); ctx.bezierCurveTo(600,116,650,250,900,250); ctx.stroke();
+  ctx.strokeStyle='rgba(255,170,150,.6)'; ctx.lineWidth=2; ctx.setLineDash([6,10]); ctx.lineDashOffset=-T.t*(0.5+T.vaso*2); ctx.beginPath(); ctx.moveTo(0,250); ctx.bezierCurveTo(250,250,300,120,450,118); ctx.bezierCurveTo(600,116,650,250,900,250); ctx.stroke(); ctx.setLineDash([]);
+  txt(ctx,T.vaso>0.9?'arterioles widen (vasodilation): more warm blood near the surface':T.vaso<0.5?'arterioles narrow (vasoconstriction): less blood near the surface':'skin arterioles: normal width',450,140+w,'#fff','700 13px Atkinson Hyperlegible, sans-serif');
+  // heat arrows out
+  const L=T.loss||1; for(let k=0;k<6;k++) arrow(ctx,75+k*150,76,75+k*150,40,0.5+L*1.3,'rgba(255,150,80,.75)');
+  // shivering muscle
+  ctx.fillStyle='#7a2a3a'; const jit=T.shiv>0.1?Math.sin(T.t*2.7)*T.shiv*2.5:0; rr(ctx,40+jit,286,240,26,10); ctx.fill(); txt(ctx,T.shiv>0.2?'skeletal muscle: shivering':'skeletal muscle',160+jit,304,'#ffd8e0','12px Atkinson Hyperlegible, sans-serif');
+  if(on('r-bat')){ ctx.fillStyle=`rgba(160,90,40,${0.5+T.bat*0.5})`; rr(ctx,320,286,200,26,10); ctx.fill(); txt(ctx,T.bat>0.2?'brown fat: releasing heat':'brown fat',420,304,'#ffe3c4','12px Atkinson Hyperlegible, sans-serif'); }
+  // thermometer
+  const tc=T.core; ctx.fillStyle='#1c2a2f'; rr(ctx,820,286,64,30,8); ctx.fill(); txt(ctx,tc.toFixed(1)+'°',852,307,tc>38.2||tc<35.8?'#ef6f6c':'#9be8c0','800 17px Bricolage Grotesque, sans-serif');
+  txt(ctx,'core',790,307,'#b5c5c2','12px Atkinson Hyperlegible, sans-serif');
+  chart(ctx,10,326,880,226,[{name:'core temp',col:'#f2a541',w:3,pts:T.hist}],{min:34,max:41,ticks:[34,35,36,37,38,39,40,41],band:[36.5,37.5],bandLabel:'normal',yLabel:'core °C',span:300,now:Math.max(T.t,300)});
+  // say
+  const err=tc-37; let s;
+  if(tc>=40) s='Danger: <b>heat stroke</b>. Heat is being made or gained faster than it can be lost, so core temperature keeps rising. Enzymes and nerves stop working properly.';
+  else if(tc<=35) s='Danger: <b>hypothermia</b>. Heat is being lost faster than the body can make it.';
+  else if(T.sweat>0.3 && T.vaso>0.9) s='The hypothalamus detects that the blood is too warm. It sends signals to the skin: arterioles <b>dilate</b> so more blood flows near the surface and loses heat by radiation, and sweat glands release <b>sweat</b>, which takes heat away as it evaporates.';
+  else if(T.shiv>0.2) s='The blood is too cool. Skin arterioles <b>constrict</b> to keep warm blood deeper, hairs are raised to trap a layer of air, and skeletal muscles <b>shiver</b>: rapid contractions whose respiration releases heat.';
+  else if(T.vaso<0.55) s='The blood is slightly cool. Skin arterioles <b>constrict</b> and hairs stand up, which reduces heat loss. If that is not enough, shivering will start.';
+  else if(T.vaso>0.95) s='The blood is slightly warm, so skin arterioles widen to lose more heat. If it gets warmer, sweating starts.';
+  else s='Core temperature is near the set point of about 37 &deg;C. Heat made by respiration in the organs and muscles balances heat lost through the skin.';
+  $('t-say').innerHTML=s; $('t-core').textContent=tc.toFixed(2)+' °C'; $('t-prod').textContent=(T.prod||1).toFixed(1); $('t-loss').textContent=(T.loss||1).toFixed(1);
+  $('t-art').textContent=T.vaso>0.9?'dilated':T.vaso<0.5?'constricted':'normal'; $('t-sw').textContent=T.sweat<0.08?'none':T.sweat<0.8?'light':'heavy';
+}
+$('t-env').oninput=e=>{ tEnv=+e.target.value; $('t-envv').innerHTML=tEnv+' &deg;C'; };
+for(const b of $('t-act').children) b.onclick=()=>{ tAct=+b.dataset.a; for(const x of $('t-act').children) x.setAttribute('aria-pressed',x===b); };
+function setAct(a){ tAct=a; for(const x of $('t-act').children) x.setAttribute('aria-pressed',+x.dataset.a===a); }
+function setEnv(v){ tEnv=v; $('t-env').value=v; $('t-envv').innerHTML=v+' &deg;C'; }
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ const p=b.dataset.p; for(const id of ['r-vaso','r-sweat','r-shiv','r-hair']) $(id).checked=true; $('r-bat').checked=false;
+  if(p==='snow'){ setEnv(-3); setAct(0); } if(p==='desert'){ setEnv(42); setAct(0); } if(p==='marathon'){ setEnv(16); setAct(2); } if(p==='nosweat'){ setEnv(38); setAct(1); $('r-sweat').checked=false; } });
+$('t-reset').onclick=()=>{ tReset(); };
+tReset();
+
+/* ---------------- WATER ---------------- */
+const W={};
+function wReset(){ Object.assign(W,{t:9*60,water:42,sol:42*287,gut:0,sweat:0,adh:72,aq:0.72,flow:1.6,hist:[]}); W.hist.push([W.t,287]); }
+function wStep(){
+  const S=W.sol/W.water;
+  const absorb=Math.min(W.gut,W.gut*0.03+0.001); W.gut-=absorb; W.water+=absorb;
+  const adhT=$('w-noadh').checked?0:clamp((S-278)*8,0,100);
+  W.adh+=(adhT-W.adh)*0.08; W.aq+=(W.adh/100-W.aq)*0.05;
+  const flow=clamp(0.5+14*Math.pow(1-W.aq,2),0.5,16); // ml per min
+  W.flow+=(flow-W.flow)*0.1;
+  W.water-=W.flow/1000+0.0006; W.water+=0.0022; // urine + insensible
+  if(W.sweat>0){ W.water-=0.022; W.sol-=0.022*80; W.sweat--; }
+  W.sol-=W.flow/1000*0 + 0.0007*287; W.sol+=0.0007*287; // solute in = solute out over time
+  W.t+=1; W.hist.push([W.t,W.sol/W.water]); if(W.hist.length>1500) W.hist.shift();
+}
+function wDraw(){
+  const c=$('c-wat'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f11'; ctx.fillRect(0,0,900,560);
+  const S=W.sol/W.water;
+  // brain
+  ctx.fillStyle='#4a3f5c'; ctx.beginPath(); ctx.ellipse(150,110,130,90,0,0,7); ctx.fill();
+  ctx.fillStyle='#7d5ea8'; ctx.beginPath(); ctx.ellipse(160,150,40,26,0,0,7); ctx.fill(); txt(ctx,'hypothalamus',160,154,'#fff','700 12px Atkinson Hyperlegible, sans-serif');
+  txt(ctx,'osmoreceptors',160,124,'#e6dcf7','11px Atkinson Hyperlegible, sans-serif');
+  ctx.fillStyle='#a77ed6'; ctx.beginPath(); ctx.ellipse(170,206,22,16,0,0,7); ctx.fill(); ctx.strokeStyle='#a77ed6'; ctx.lineWidth=6; ctx.beginPath(); ctx.moveTo(165,174); ctx.lineTo(168,192); ctx.stroke();
+  txt(ctx,'posterior pituitary',260,212,'#e6dcf7','12px Atkinson Hyperlegible, sans-serif','left');
+  // ADH dots flowing
+  const nA=Math.round(W.adh/6); for(let k=0;k<nA;k++){ const u=((k*0.137+W.t*0.004)%1); const x=190+u*420, y=232+Math.sin(u*6+k)*10; ctx.fillStyle='#c78bff'; ctx.beginPath(); ctx.arc(x,y,4,0,7); ctx.fill(); }
+  txt(ctx,'ADH in the blood',400,262,'#c78bff','700 12px Atkinson Hyperlegible, sans-serif');
+  // collecting duct
+  ctx.fillStyle='#3a2a20'; rr(ctx,560,10,240,290,14); ctx.fill(); txt(ctx,'salty medulla',680,30,'#f0d0b0','12px Atkinson Hyperlegible, sans-serif');
+  ctx.fillStyle='#d0a080'; ctx.fillRect(630,40,30,250); ctx.fillRect(700,40,30,250); ctx.fillStyle='#e8d878'; ctx.globalAlpha=0.25+0.6*clamp(1-W.flow/10,0,1); ctx.fillRect(660,40,40,250); ctx.globalAlpha=1;
+  txt(ctx,'collecting duct',680,306,'#f0d0b0','700 12px Atkinson Hyperlegible, sans-serif');
+  const nq=Math.round(W.aq*10); for(let k=0;k<10;k++){ const on=k<nq; for(const x of [658,700]){ ctx.fillStyle=on?'#5bc0eb':'rgba(91,192,235,.15)'; rr(ctx,x-4,52+k*24,8,14,3); ctx.fill(); } if(on){ const p=((W.t*0.05+k*0.3)%1); arrow(ctx,665-0,59+k*24,665-30-p*0,59+k*24,0,'#5bc0eb'); ctx.fillStyle='#8fd8ff'; ctx.beginPath(); ctx.arc(656-p*26,60+k*24,2.5,0,7); ctx.arc(704+p*26,60+k*24,2.5,0,7); ctx.fill(); } }
+  txt(ctx,'aquaporins',612,52,'#5bc0eb','11px Atkinson Hyperlegible, sans-serif','right');
+  // urine cup
+  const conc=clamp((1-W.flow/10),0,1); const col=`rgb(${Math.round(240-20*conc)},${Math.round(240-80*conc)},${Math.round(200-170*conc)})`;
+  ctx.strokeStyle='#cfdcd9'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(820,150); ctx.lineTo(828,290); ctx.lineTo(882,290); ctx.lineTo(890,150); ctx.stroke();
+  const lvl=clamp(W.flow/10,0.05,1); ctx.fillStyle=col; ctx.fillRect(829,290-130*lvl,52,130*lvl);
+  txt(ctx,'urine',855,140,'#dfe8e6','700 12px Atkinson Hyperlegible, sans-serif');
+  // gut / drink
+  if(W.gut>0.01){ txt(ctx,'water being absorbed from the gut: '+(W.gut*1000).toFixed(0)+' ml left',300,300,'#5bc0eb','12px Atkinson Hyperlegible, sans-serif'); }
+  if(W.sweat>0){ txt(ctx,'losing water in sweat',300,282,'#ffb37a','12px Atkinson Hyperlegible, sans-serif'); }
+  chart(ctx,10,326,880,226,[{name:'blood solutes',col:'#c78bff',w:3,pts:W.hist}],{min:270,max:305,ticks:[270,280,290,300],band:[282,292],bandLabel:'normal',yLabel:'mOsm/kg',span:360,now:Math.max(W.t,W.hist[0][0]+360)});
+  let s;
+  if($('w-noadh').checked) s='No ADH is released, so collecting duct cells have few aquaporins. Little water is reabsorbed and large volumes of dilute urine are made all the time. The person loses water and feels very thirsty.';
+  else if(S>291) s='The blood is too concentrated. Osmoreceptors in the hypothalamus detect this and the posterior pituitary releases more <b>ADH</b>. Collecting duct cells insert more <b>aquaporins</b>, so more water moves out of the duct into the salty medulla by osmosis and back to the blood. A small volume of concentrated urine is made.';
+  else if(S<283) s='The blood is too dilute. Less ADH is released, aquaporins are taken out of the duct membranes, and less water is reabsorbed. A large volume of dilute urine is made until the blood is back to normal.';
+  else s='Blood solute concentration is normal. A moderate amount of ADH keeps some aquaporins in the collecting duct membranes.';
+  $('w-say').innerHTML=s; $('w-time').textContent=fmtT(W.t); $('w-s').textContent=S.toFixed(0)+' mOsm/kg'; $('w-adh').textContent=W.adh<10?'very little':W.adh<45?'some':'a lot';
+  $('w-aq').textContent=Math.round(W.aq*100)+'%'; $('w-flow').textContent=(W.flow*60/1000).toFixed(2)+' L per hour'; $('w-uc').textContent=conc>0.85?'very concentrated (dark)':conc>0.6?'concentrated':conc>0.3?'medium':'dilute (pale)';
+}
+$('w-drink').onclick=()=>{ W.gut+=1.0; };
+$('w-salt').onclick=()=>{ W.sol+=42*8; };
+$('w-sweat').onclick=()=>{ W.sweat=60; };
+$('w-reset').onclick=()=>{ wReset(); };
+wReset();
+
+/* ---------------- shell ---------------- */
+function showTab(t){ tab=t; for(const k of ['glu','tmp','wat']){ $('p-'+k).hidden=k!==t; $('t-'+k).setAttribute('aria-pressed',k===t); } draw(); }
+for(const k of ['glu','tmp','wat']) $('t-'+k).onclick=()=>showTab(k);
+function stepN(n){ for(let k=0;k<n;k++){ if(tab==='glu') gStep(); else if(tab==='tmp') tStep(); else wStep(); } }
+function draw(){ if(tab==='glu') gDraw(); else if(tab==='tmp') tDraw(); else wDraw(); }
+let last=0, acc=0;
+function frame(now){ const dt=Math.min(0.1,(now-(last||now))/1000); last=now; if(!paused && !$('lab').hidden){ acc+=dt*10; const n=Math.floor(acc); acc-=n; stepN(n); draw(); } requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl'); setLevel(level);
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; draw(); };
+function fromHash(){ const h=location.hash.slice(1); if(["glu","tmp","wat"].includes(h)){ $("intro").hidden=true; $("lab").hidden=false; showTab(h); } }
+fromHash(); window.addEventListener("hashchange",fromHash);
+window.homeoDebug={ step:n=>{stepN(n);draw();}, G, T, W, showTab, setType, start:()=>$('b-start').click() };
+})();
+</script>
+
+</body>
+</html>

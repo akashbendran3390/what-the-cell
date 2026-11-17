@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Body Control Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/control-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Body Control Lab">
+<meta property="og:description" content="Body Control Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/control-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Body Control Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0c1016; --ink:#f0f4fa; --dim:#b4c0d0; --panel:#131a24; --panel2:#1b2533; --line:rgba(200,215,240,.18);
+  --accent:#7cc6fe;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#04203a}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0a0d12}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#04203a;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.hl-only{display:none} body.hl .hl-only{display:block} body.hl span.hl-only{display:inline}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:72px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider input{flex:1;min-width:140px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;margin:3px 0}
+.lab-l{font-size:13px;color:var(--dim);min-width:92px}
+.steps{list-style:none;padding:0;margin:8px 0;counter-reset:s}.steps li{counter-increment:s;padding:5px 8px 5px 34px;position:relative;border-radius:8px;margin:3px 0;color:var(--dim);line-height:1.4}
+.steps li::before{content:counter(s);position:absolute;left:8px;top:5px;width:20px;height:20px;border-radius:50%;background:var(--panel2);text-align:center;font:700 12px/20px var(--body)}
+.steps li.on{background:var(--panel2);color:var(--ink)}.steps li.on::before{background:var(--accent);color:#04203a}
+.steps li.done{color:var(--ink)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Body Control Lab</h1><div class="sub">DP Biology C3.1 &middot; nerves and hormones working together</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Messages that keep the body working as one</h2>
+    <p>Follow a pain signal through a <b>reflex arc</b> and find out why your hand moves before you feel the burn. Then exercise, hold your breath and get a fright, and watch the brainstem adjust <b>heart rate</b> and <b>breathing</b> by feedback. Finally, fly across the world and see how <b>melatonin</b> resets your body clock.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-ref" aria-pressed="true">1. Pain reflex arc</button><button type="button" id="t-hr" aria-pressed="false">2. Heart rate and breathing</button><button type="button" id="t-mel" aria-pressed="false">3. Body clock and melatonin</button></div>
+
+    <div class="grid" id="p-ref">
+      <div><div class="card">
+        <canvas id="c-ref" width="900" height="560" aria-label="A hand on a hot plate connected by sensory, relay and motor neurons to a section of the spinal cord and to the biceps muscle"></canvas>
+        <div class="row"><button type="button" class="go" id="r-touch">Touch the hot plate</button><button type="button" class="btn" id="r-reset">Reset</button>
+          <span class="lab-l" style="min-width:auto">Speed</span><div class="seg" id="r-speed"><button type="button" data-s="0.25" aria-pressed="true">Slow motion</button><button type="button" data-s="1" aria-pressed="false">Faster</button></div></div>
+        <div class="row"><span class="lab-l">Experiment</span>
+          <label class="chk"><input type="checkbox" id="r-cutS"> Cut the sensory nerve</label>
+          <label class="chk"><input type="checkbox" id="r-cutM"> Cut the motor nerve</label>
+          <label class="chk"><input type="checkbox" id="r-cutUp"> Spinal cord injury above this level</label></div>
+      </div></div>
+      <div>
+        <div class="card"><h2>Step by step</h2>
+          <ol class="steps" id="r-steps">
+            <li>Pain receptors (free nerve endings) in the skin are stimulated by heat.</li>
+            <li>An impulse travels along the <b>sensory neuron</b> through the dorsal root to the spinal cord.</li>
+            <li>In the grey matter, the sensory neuron passes the signal across a synapse to a <b>relay neuron</b>.</li>
+            <li>The relay neuron passes it to a <b>motor neuron</b>, which leaves through the ventral root.</li>
+            <li>The <b>effector</b>, a skeletal muscle (biceps), contracts and pulls the hand away.</li>
+            <li>Meanwhile another relay neuron carries the signal up the spinal cord to the brain, where the pain is <b>felt</b> &ndash; after the hand has already moved.</li>
+          </ol>
+          <div class="explain"><p id="r-say">Press "Touch the hot plate".</p></div>
+          <div class="stat" style="margin-top:8px"><span>Time since touch</span><b id="r-time">-</b><span>Hand pulled away at</span><b id="r-move">-</b><span>Pain felt at</span><b id="r-feel">-</b></div>
+          <p class="note">Syllabus: C3.1.5, C3.1.6, C3.1.7, C3.1.8, C3.1.9</p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Why is a reflex faster than a decision made in the brain? Count the synapses in each path.</li>
+          <li>Cut the motor nerve and touch the plate. What does the person feel, and what can't they do?</li>
+          <li>Cut the sensory nerve instead. Why is this dangerous?</li>
+          <li>Spinal cord injury above this level: why does the reflex still work?</li>
+          <li>A nerve contains both sensory and motor fibres. Where in this picture do they run together?</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <div class="grid" id="p-hr" hidden>
+      <div><div class="card">
+        <canvas id="c-hr" width="900" height="560" aria-label="Brainstem, chemoreceptors and baroreceptors, heart and lungs above a graph of heart rate, breathing and blood carbon dioxide"></canvas>
+        <div class="row"><span class="lab-l">Activity</span><div class="seg" id="h-ex"><button type="button" data-e="0" aria-pressed="true">Resting</button><button type="button" data-e="1" aria-pressed="false">Walking</button><button type="button" data-e="2" aria-pressed="false">Jogging</button><button type="button" data-e="3" aria-pressed="false">Sprinting</button></div></div>
+        <div class="row"><span class="lab-l">Events</span><button type="button" class="btn" id="h-hold">Hold your breath (30 s)</button><button type="button" class="btn" id="h-fright">Sudden fright (adrenaline)</button><button type="button" class="btn" id="h-stand">Stand up quickly</button><button type="button" class="btn" id="h-reset">Start again</button></div>
+      </div></div>
+      <div>
+        <div class="card"><h2>What is happening?</h2><div class="explain"><p id="h-say"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Heart rate</span><b id="h-hrv">-</b><span>Breathing rate</span><b id="h-br">-</b><span>Breath depth (tidal volume)</span><b id="h-tv">-</b><span>Ventilation</span><b id="h-ve">-</b><span>Blood CO<sub>2</sub> / pH</span><b id="h-co2">-</b><span>Blood pressure</span><b id="h-bp">-</b></div>
+          <p class="note">Chemoreceptors in the aorta, carotid arteries and medulla detect CO<sub>2</sub> and pH. Baroreceptors in the aorta and carotid arteries detect blood pressure. The medulla sends signals along sympathetic nerves (speed up) or the vagus nerve (slow down) to the heart's pacemaker, and along nerves to the diaphragm and intercostal muscles.</p>
+          <p class="note">Syllabus: C3.1.12, C3.1.14, C3.1.15</p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Go from resting to sprinting. Which rises first, heart rate or blood CO<sub>2</sub>? Why do both rise?</li>
+          <li>Hold your breath. What triggers the strong urge to breathe again?</li>
+          <li>Stand up quickly. Which receptors detect the change, and how does the heart respond?</li>
+          <li>Give a sudden fright. Which gland releases adrenaline, and what does it prepare the body for?</li>
+          <li>Explain why these are negative feedback loops.</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <div class="grid" id="p-mel" hidden>
+      <div><div class="card">
+        <canvas id="c-mel" width="900" height="560" aria-label="Eye, suprachiasmatic nucleus and pineal gland above a three-day graph of light and melatonin"></canvas>
+        <div class="row"><span class="lab-l">Evenings</span><div class="seg" id="m-eve"><button type="button" data-v="dark" aria-pressed="true">Lights off at 22:30</button><button type="button" data-v="screen" aria-pressed="false">Bright screen until 01:00</button></div></div>
+        <div class="row"><span class="lab-l">Travel</span><button type="button" class="btn" id="m-east">Fly 7 time zones east</button><button type="button" class="btn" id="m-day">Next day</button><button type="button" class="btn" id="m-reset">Start again</button></div>
+      </div></div>
+      <div>
+        <div class="card"><h2>What is happening?</h2><div class="explain"><p id="m-say"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Day</span><b id="m-d">-</b><span>Where you are</span><b id="m-where">-</b><span>Body clock out of step by</span><b id="m-off">-</b><span>Melatonin starts at (local time)</span><b id="m-on">-</b></div>
+          <p class="note">Light reaching special cells in the retina signals to the suprachiasmatic nucleus (SCN) in the hypothalamus. In darkness the SCN lets the pineal gland secrete melatonin, which makes you sleepy. Light, especially blue light, stops melatonin secretion.</p>
+          <p class="note">Syllabus: C3.1.11</p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Switch to "Bright screen until 01:00". What happens to the melatonin peak and to falling asleep?</li>
+          <li>Fly 7 time zones east, then press Next day several times. How many days until melatonin starts at the right local time?</li>
+          <li>Why does getting outside into daylight help jet lag?</li>
+        </ol></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+let tab='ref';
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#f0f4fa'; ctx.font=font||'700 14px Atkinson Hyperlegible, sans-serif'; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+const F='Atkinson Hyperlegible, sans-serif';
+
+/* ---------- REFLEX ---------- */
+// paths as polylines
+const P={
+  sens:[[160,342],[215,385],[270,428],[322,462],[400,440],[455,400],[478,318],[492,230],[500,190],[560,180],[600,186]],
+  relay:[[600,186],[630,205],[640,230]],
+  motor:[[640,230],[620,262],[560,285],[515,300],[488,330],[440,425],[452,480]],
+  up:[[612,180],[640,150],[650,40]],
+};
+function plen(p){ let L=0; for(let i=1;i<p.length;i++) L+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]); return L; }
+function pAt(p,u){ let L=plen(p)*clamp(u,0,1); for(let i=1;i<p.length;i++){ const d=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]); if(L<=d){ const f=L/d; return [p[i-1][0]+(p[i][0]-p[i-1][0])*f,p[i-1][1]+(p[i][1]-p[i-1][1])*f]; } L-=d; } return p[p.length-1]; }
+// timeline in ms (real): receptor 0-5, sensory 5-25, synapse 25-27, relay 27-30, synapse 30-32, motor 32-52, nmj 52-54, muscle contract 54-90; up path 32-120, brain feel at 140
+const TL={sens:[5,25],relay:[27,30],motor:[32,52],up:[32,120],move:58,feel:150};
+const R={t:-1,speed:0.25,running:false};
+function rState(){ const cs=$('r-cutS').checked, cm=$('r-cutM').checked, cu=$('r-cutUp').checked; return {cs,cm,cu}; }
+function rDraw(){
+  const c=$('c-ref'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0d12'; ctx.fillRect(0,0,900,560);
+  const t=R.t, st=rState();
+  // spinal cord section
+  ctx.fillStyle='#e8e2d6'; ctx.beginPath(); ctx.ellipse(620,215,110,80,0,0,7); ctx.fill();
+  ctx.fillStyle='#b9a3a8'; ctx.beginPath(); // butterfly grey matter
+  ctx.moveTo(620,215); ctx.bezierCurveTo(600,150,560,150,575,180); ctx.bezierCurveTo(585,205,570,235,560,265); ctx.bezierCurveTo(590,280,610,250,620,215);
+  ctx.bezierCurveTo(630,250,650,280,680,265); ctx.bezierCurveTo(670,235,655,205,665,180); ctx.bezierCurveTo(680,150,640,150,620,215); ctx.fill();
+  ctx.fillStyle='#222'; ctx.beginPath(); ctx.arc(620,215,4,0,7); ctx.fill();
+  txt(ctx,'spinal cord (section)',620,318,'#dfe6f0','700 13px '+F); txt(ctx,'grey matter',700,300,'#c9b6bb','12px '+F,'left'); txt(ctx,'white matter',738,186,'#e8e2d6','12px '+F,'left');
+  // dorsal root ganglion
+  ctx.fillStyle='#d9c27a'; ctx.beginPath(); ctx.ellipse(500,190,16,11,-0.25,0,7); ctx.fill(); txt(ctx,'dorsal root ganglion',470,168,'#e9d79e','12px '+F);
+  txt(ctx,'ventral root',520,320,'#9fd0ff','12px '+F);
+  // brain
+  ctx.fillStyle='#4b3f63'; ctx.beginPath(); ctx.ellipse(700,40,120,46,0,0,7); ctx.fill(); txt(ctx,'to the brain: sensory cortex',700,30,'#e4dcf5','700 13px '+F); txt(ctx,'(where pain is felt)',700,48,'#e4dcf5','12px '+F);
+  // hot plate
+  ctx.fillStyle='#333'; rr(ctx,50,356,190,22,6); ctx.fill(); ctx.fillStyle=`rgba(255,${80+40*Math.sin(Date.now()/200)},40,.85)`; rr(ctx,54,352,182,8,4); ctx.fill(); txt(ctx,'hot plate',145,400,'#ffb08a','700 12px '+F);
+  for(let k=0;k<4;k++){ ctx.strokeStyle='rgba(255,140,80,.45)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(70+k*48,346); ctx.bezierCurveTo(60+k*48,330,80+k*48,320,70+k*48,304); ctx.stroke(); }
+  // arm: shoulder (600,560) -> elbow (330,470) -> wrist (185,362) -> hand
+  const lift=t>=TL.move&&!st.cm&&!st.cs?clamp((t-TL.move)/50,0,1):0;
+  ctx.fillStyle='#d9a38a'; ctx.strokeStyle='#d9a38a'; ctx.lineCap='round';
+  ctx.lineWidth=58; ctx.beginPath(); ctx.moveTo(640,575); ctx.lineTo(330,470); ctx.stroke();
+  ctx.save(); ctx.translate(330,470); ctx.rotate(-0.55*lift);
+  ctx.lineWidth=44; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-145,-108); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(-178,-128,40,20,0.62,0,7); ctx.fill();
+  for(let k=0;k<4;k++){ ctx.lineWidth=11; ctx.beginPath(); ctx.moveTo(-200,-140+k*6); ctx.lineTo(-232+k*4,-150+k*9); ctx.stroke(); }
+  ctx.restore();
+  txt(ctx,'pain receptors in skin',150,292,'#ffd28a','12px '+F);
+  // biceps on the upper arm
+  const con=lift; ctx.save(); ctx.translate(470,505); ctx.rotate(0.33); ctx.fillStyle='#b4404f'; ctx.beginPath(); ctx.ellipse(0,-8-6*con,74-14*con,20+9*con,0,0,7); ctx.fill(); ctx.restore();
+  txt(ctx,con>0.3?'biceps contracts':'biceps (effector)',470,550,'#ffc6cf','700 12px '+F);
+  // nerve: sensory and motor fibres share one bundle
+  ctx.strokeStyle='rgba(255,255,255,.10)'; ctx.lineWidth=30; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(470,318); ctx.lineTo(425,425); ctx.stroke(); txt(ctx,'nerve: sensory +',395,330,'#c6d0dd','12px '+F,'right'); txt(ctx,'motor fibres together',395,346,'#c6d0dd','12px '+F,'right');
+  const SP=P.sens.map((q,i)=>{ if(i>3) return q; const a=-0.55*lift, dx=q[0]-330, dy=q[1]-470; return [330+dx*Math.cos(a)-dy*Math.sin(a), 470+dx*Math.sin(a)+dy*Math.cos(a)]; });
+  // neurons
+  function draw(p,col,w,dash){ ctx.strokeStyle=col; ctx.lineWidth=w; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.setLineDash(dash||[]); ctx.beginPath(); p.forEach((q,i)=>ctx[i?'lineTo':'moveTo'](q[0],q[1])); ctx.stroke(); ctx.setLineDash([]); }
+  const lit=(seg)=>t>=TL[seg][0];
+  draw(SP,'#f2c14e',5); draw(P.relay,'#b98cff',5); draw(P.motor,'#5ab0ff',5); draw(P.up,'#b98cff',4,[8,6]);
+  // labels
+  txt(ctx,'sensory neuron',185,445,'#f2c14e','700 13px '+F); txt(ctx,'relay neuron',548,236,'#cdb0ff','700 13px '+F,'right'); txt(ctx,'motor neuron',522,345,'#7cc6ff','700 13px '+F,'left');
+  // cuts
+  if(st.cs){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=4; const q=pAt(SP,0.6); ctx.beginPath(); ctx.moveTo(q[0]-10,q[1]-14); ctx.lineTo(q[0]+10,q[1]+14); ctx.stroke(); }
+  if(st.cm){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=4; const q=pAt(P.motor,0.5); ctx.beginPath(); ctx.moveTo(q[0]-10,q[1]-14); ctx.lineTo(q[0]+10,q[1]+14); ctx.stroke(); }
+  if(st.cu){ ctx.strokeStyle='#ff4d4d'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(620,110); ctx.lineTo(680,110); ctx.stroke(); txt(ctx,'injury',690,114,'#ff8d8d','700 12px '+F,'left'); }
+  // impulses
+  function pulse(p,seg,col,stopAt){ if(t<TL[seg][0]) return; const u=clamp((t-TL[seg][0])/(TL[seg][1]-TL[seg][0]),0,1); if(stopAt!=null&&u>stopAt) return; if(u>=1&&t>TL[seg][1]+30) return; const q=pAt(p,Math.min(u,stopAt==null?1:stopAt)); ctx.save(); ctx.shadowColor=col; ctx.shadowBlur=18; ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(q[0],q[1],7,0,7); ctx.fill(); ctx.restore(); }
+  if(t>=0){
+    pulse(SP,'sens','#f2c14e',st.cs?0.6:null);
+    if(!st.cs){ pulse(P.relay,'relay','#b98cff'); pulse(P.motor,'motor','#5ab0ff',st.cm?0.5:null); pulse(P.up,'up','#b98cff',st.cu?0.62:null); }
+    // synapse flashes
+    if(!st.cs && t>=25&&t<34){ ctx.fillStyle='rgba(255,255,255,.7)'; ctx.beginPath(); ctx.arc(600,186,10,0,7); ctx.arc(640,230,10,0,7); ctx.fill(); }
+    if(!st.cs && !st.cu && t>=TL.feel){ ctx.save(); ctx.shadowColor='#ff6b6b'; ctx.shadowBlur=30; txt(ctx,'OUCH!',820,95,'#ff8080','800 26px Bricolage Grotesque, sans-serif'); ctx.restore(); }
+  }
+  txt(ctx,'synapses',600,150,'#ffffff','11px '+F);
+  // steps
+  const lis=$('r-steps').children; const on=t<0?-1:t<5?0:t<25?1:t<30?2:t<54?3:t<TL.feel?4:5;
+  for(let i=0;i<lis.length;i++){ lis[i].className=i===on?'on':(i<on?'done':''); }
+  $('r-time').textContent=t<0?'-':Math.round(t)+' ms';
+  $('r-move').textContent=t>=TL.move&&!st.cm&&!st.cs?TL.move+' ms':(st.cm||st.cs)&&t>TL.move?'no movement':'-';
+  $('r-feel').textContent=t>=TL.feel&&!st.cs&&!st.cu?TL.feel+' ms':(st.cs||st.cu)&&t>TL.feel?'not felt':'-';
+  let s='Press "Touch the hot plate".';
+  if(t>=0){
+    if(st.cs) s='The sensory nerve is cut, so the impulse never reaches the spinal cord. There is no reflex and no pain is felt &ndash; the hand stays on the plate and is burned. This is why loss of feeling (for example in diabetic feet) is dangerous.';
+    else if(st.cm&&t>40) s='The impulse reaches the spinal cord and the brain, so the pain <b>is</b> felt, but the motor neuron is cut so no impulse reaches the biceps. The muscle cannot contract and the hand cannot be pulled away.';
+    else if(st.cu&&t>TL.feel) s='The reflex still works because it only needs the spinal cord at this level &ndash; the hand moves away. But the signal cannot travel up past the injury, so the person feels nothing. Reflexes do not need the brain.';
+    else if(t<TL.move) s='The impulse is on its way. In a reflex arc only two synapses separate the receptor from the motor neuron, and no decision is made in the brain, so the response is very fast and automatic (involuntary).';
+    else if(t<TL.feel) s='The biceps has contracted and the hand is moving away &ndash; but the pain has not been felt yet. The signal going up to the brain has further to travel and more synapses to cross.';
+    else s='Now the brain registers pain, about '+(TL.feel-TL.move)+' ms after the hand moved. The brain can also send signals down to motor neurons for voluntary actions, such as shaking the hand or saying "ouch".';
+  }
+  $('r-say').innerHTML=s;
+}
+function rTick(dtms){ if(R.running){ R.t+=dtms*R.speed; if(R.t>260){ R.running=false; } } }
+$('r-touch').onclick=()=>{ R.t=0; R.running=true; };
+$('r-reset').onclick=()=>{ R.t=-1; R.running=false; rDraw(); };
+for(const b of $('r-speed').children) b.onclick=()=>{ R.speed=+b.dataset.s*0.06; for(const x of $('r-speed').children) x.setAttribute('aria-pressed',x===b); };
+R.speed=0.25*0.06;
+['r-cutS','r-cutM','r-cutUp'].forEach(id=>$(id).onchange=()=>{ R.t=-1; R.running=false; rDraw(); });
+
+/* ---------- HEART & BREATHING ---------- */
+const H={};
+function hReset(){ Object.assign(H,{t:0,ex:0,co2:5.3,hr:70,ve:6,br:12,bp:93,adr:0,hold:0,stand:0,hist:[],ph:0,bph:0,lastH:-9}); }
+function hStep(dt){ // dt seconds of sim time
+  const P=1+[0,1.2,3,6][H.ex];
+  if(H.hold>0) H.hold-=dt;
+  const veT=H.hold>0?0:clamp(6+20*(H.co2-5.3)+[0,4,10,28][H.ex]+H.adr*4,4,120);
+  H.ve+=(veT-H.ve)*Math.min(1,dt*0.25);
+  if(H.hold>0) H.ve=0;
+  H.co2+=(P*0.06-(H.ve/6)*0.06*(H.co2/5.3))*dt; H.co2=clamp(H.co2,3.5,9);
+  H.stand=Math.max(0,H.stand-dt*0.06); H.adr=Math.max(0,H.adr-dt*0.012);
+  const bp=93+[0,3,8,14][H.ex]+H.adr*12-H.stand*22; H.bp+=(bp-H.bp)*Math.min(1,dt*0.5);
+  const hrT=clamp(70+[0,20,55,110][H.ex]+(H.co2-5.3)*18+H.adr*45-(H.bp-93-[0,3,8,14][H.ex])*1.2,45,200);
+  H.hr+=(hrT-H.hr)*Math.min(1,dt*0.12);
+  const brT=H.hold>0?0:clamp(12+(H.ve-6)*0.5,8,50); H.br+=(brT-H.br)*Math.min(1,dt*0.3);
+  H.t+=dt; H.ph+=dt*H.hr/60; H.bph+=dt*H.br/60;
+  if(!H.lastH||H.t-H.lastH>=2){ H.lastH=H.t; H.hist.push([H.t,H.hr,H.br,H.co2]); if(H.hist.length>400) H.hist.shift(); }
+}
+function hDraw(){
+  const c=$('c-hr'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0d12'; ctx.fillRect(0,0,900,560);
+  // brainstem
+  ctx.fillStyle='#4b3f63'; ctx.beginPath(); ctx.ellipse(450,48,150,40,0,0,7); ctx.fill(); ctx.fillStyle='#7d64a8'; rr(ctx,420,60,60,70,20); ctx.fill();
+  txt(ctx,'medulla (brainstem)',450,40,'#efe6ff','700 14px '+F); txt(ctx,'cardiovascular + breathing centres',450,58,'#d9cff0','11px '+F);
+  // heart
+  const beat=Math.pow(Math.max(0,Math.sin(H.ph*Math.PI*2)),6);
+  ctx.save(); ctx.translate(250,230); const sc=1+beat*0.08; ctx.scale(sc,sc);
+  ctx.fillStyle='#b8323f'; ctx.beginPath(); ctx.moveTo(0,40); ctx.bezierCurveTo(-70,-5,-55,-60,-10,-45); ctx.bezierCurveTo(0,-42,5,-38,8,-30); ctx.bezierCurveTo(30,-70,90,-40,50,10); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#8f1f2c'; rr(ctx,-14,-75,22,40,8); ctx.fill(); ctx.restore();
+  txt(ctx,'heart',250,300,'#ffc0c8','700 13px '+F); txt(ctx,Math.round(H.hr)+' beats/min',250,318,'#ffc0c8','12px '+F);
+  // SA node dot
+  ctx.fillStyle=beat>0.3?'#fff36b':'#9c8a2a'; ctx.beginPath(); ctx.arc(232,198,5,0,7); ctx.fill(); txt(ctx,'pacemaker',196,186,'#e9e08a','11px '+F,'right');
+  // lungs
+  const br=H.br>0.5?(0.5-0.5*Math.cos(H.bph*Math.PI*2)):0.2; const tv=H.br>0.5?clamp(H.ve/H.br,0.4,3.2):0.5;
+  const inf=0.82+0.18*br*clamp(tv/1.5,0.4,1.6);
+  for(const sgn of [-1,1]){ ctx.save(); ctx.translate(650+sgn*48,230); ctx.scale(inf,inf); ctx.fillStyle='#e48aa0'; ctx.beginPath(); ctx.ellipse(0,0,40,72,sgn*0.08,0,7); ctx.fill(); ctx.restore(); }
+  ctx.strokeStyle='#ecd2d8'; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(650,120); ctx.lineTo(650,170); ctx.moveTo(650,170); ctx.lineTo(625,190); ctx.moveTo(650,170); ctx.lineTo(675,190); ctx.stroke();
+  ctx.fillStyle='#a9645a'; ctx.beginPath(); ctx.moveTo(560,320-10*br); ctx.quadraticCurveTo(650,280-26*br,740,320-10*br); ctx.lineTo(740,328); ctx.quadraticCurveTo(650,292-26*br,560,328); ctx.fill();
+  txt(ctx,'lungs',650,148,'#ffd0dc','700 13px '+F); txt(ctx,'diaphragm',760,325,'#e3b0a6','12px '+F,'left');
+  txt(ctx,H.hold>0?'holding breath':Math.round(H.br)+' breaths/min',650,350,'#ffd0dc','12px '+F);
+  // receptors
+  ctx.fillStyle='#39d0b5'; ctx.beginPath(); ctx.arc(90,150,8,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(130,140,8,0,7); ctx.fill(); txt(ctx,'chemoreceptors and baroreceptors',110,116,'#7de8d4','12px '+F); txt(ctx,'(carotid arteries, aorta)',110,176,'#7de8d4','11px '+F);
+  // nerves
+  function nerve(x1,y1,x2,y2,col,act,lbl){ ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.setLineDash([5,5]); ctx.lineDashOffset=-H.t*40*act; ctx.globalAlpha=0.3+0.7*act; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha=1; if(lbl) txt(ctx,lbl,(x1+x2)/2+8,(y1+y2)/2,col,'11px '+F,'left'); }
+  nerve(140,140,420,92,'#7de8d4',clamp(0.3+(H.co2-5.3)*0.8+Math.abs(H.bp-93)/20,0,1),'sensory');
+  const sym=clamp((H.hr-70)/80,0,1), vag=clamp(1-(H.hr-55)/60,0,1);
+  nerve(430,128,270,180,'#ffb347',sym,'sympathetic'); nerve(440,128,290,190,'#8fb8ff',vag,'');
+  txt(ctx,'vagus',330,212,'#8fb8ff','11px '+F);
+  nerve(475,120,620,130,'#ffd0dc',clamp(H.ve/40,0.1,1),'to breathing muscles');
+  // adrenal
+  if(H.adr>0.05){ ctx.fillStyle=`rgba(255,180,60,${0.3+H.adr*0.7})`; ctx.beginPath(); ctx.ellipse(110,300,30,18,0,0,7); ctx.fill(); txt(ctx,'adrenal glands:',110,270,'#ffcf80','700 12px '+F); txt(ctx,'adrenaline',110,286,'#ffcf80','12px '+F); }
+  // graph
+  ctx.fillStyle='#10161f'; rr(ctx,10,370,880,182,10); ctx.fill();
+  const px=60, pw=730, py=384, ph=140; const t1=Math.max(H.t,240), t0=t1-240;
+  ctx.strokeStyle='rgba(200,215,240,.12)'; ctx.lineWidth=1; for(let k=0;k<=4;k++){ ctx.beginPath(); ctx.moveTo(px,py+k*ph/4); ctx.lineTo(px+pw,py+k*ph/4); ctx.stroke(); }
+  const ser=[['heart rate',1,200,'#ff6b7a'],['breaths/min',2,60,'#ffd0dc'],['CO₂ kPa',3,10,'#39d0b5']];
+  ser.forEach((s,si)=>{ ctx.strokeStyle=s[3]; ctx.lineWidth=2.5; ctx.beginPath(); let f=true; for(const p of H.hist){ if(p[0]<t0) continue; const x=px+(p[0]-t0)/240*pw, y=py+ph-(p[s[1]]/s[2])*ph; if(f){ctx.moveTo(x,y);f=false;} else ctx.lineTo(x,y);} ctx.stroke(); ctx.fillStyle=s[3]; ctx.fillRect(px+pw+12,py+6+si*20,14,4); txt(ctx,s[0],px+pw+30,py+12+si*20,'#dfe6f0','12px '+F,'left'); });
+  txt(ctx,'last 4 minutes',px,py+ph+22,'#b4c0d0','12px '+F,'left'); txt(ctx,'scaled to fit: heart rate 0-200, breaths 0-60, CO₂ 0-10',px+pw,py+ph+22,'#b4c0d0','12px '+F,'right');
+  // text
+  let s;
+  if(H.hold>0) s='Breathing has stopped, so CO<sub>2</sub> builds up in the blood and pH falls. Chemoreceptors detect this and the medulla sends stronger and stronger signals to the breathing muscles &ndash; the urge to breathe comes from high CO<sub>2</sub>, not low oxygen.';
+  else if(H.stand>0.2) s='Standing up quickly lets blood pool in the legs, so blood pressure drops. <b>Baroreceptors</b> in the aorta and carotid arteries detect the fall; the medulla sends more impulses along sympathetic nerves and fewer along the vagus nerve, so heart rate rises and pressure recovers.';
+  else if(H.adr>0.25) s='The <b>adrenal glands</b> release <b>adrenaline (epinephrine)</b> into the blood. It raises heart rate and stroke volume, widens the airways and releases glucose from the liver &ndash; preparing the body for vigorous activity ("fight or flight").';
+  else if(H.ex>0 && H.co2>5.5) s='Working muscles respire faster and release more CO<sub>2</sub>. Chemoreceptors detect the rise in CO<sub>2</sub> and fall in pH; the medulla increases the rate and depth of breathing and the heart rate. More CO<sub>2</sub> is removed and more O<sub>2</sub> delivered, so CO<sub>2</sub> stops rising: <b>negative feedback</b>.';
+  else if(H.ex>0) s='Heart rate and breathing rise as soon as exercise starts &ndash; even before CO<sub>2</sub> rises much &ndash; because the motor cortex and stretch receptors in muscles signal the medulla too. Chemoreceptors then fine-tune the response.';
+  else s='At rest the medulla keeps heart rate around 70 beats per minute and breathing around 12 breaths per minute. The pacemaker (sinoatrial node) sets the basic rhythm; nerves only speed it up or slow it down.';
+  $('h-say').innerHTML=s; $('h-hrv').textContent=Math.round(H.hr)+' /min'; $('h-br').textContent=H.hold>0?'0':Math.round(H.br)+' /min'; $('h-tv').textContent=H.hold>0?'-':(H.ve/Math.max(1,H.br)).toFixed(1)+' L';
+  $('h-ve').textContent=H.ve.toFixed(0)+' L/min'; $('h-co2').innerHTML=H.co2.toFixed(1)+' kPa / pH '+(7.4-(H.co2-5.3)*0.05).toFixed(2); $('h-bp').textContent=Math.round(H.bp)+' mmHg (mean)';
+}
+for(const b of $('h-ex').children) b.onclick=()=>{ H.ex=+b.dataset.e; for(const x of $('h-ex').children) x.setAttribute('aria-pressed',x===b); };
+$('h-hold').onclick=()=>{ H.hold=30; }; $('h-fright').onclick=()=>{ H.adr=1; }; $('h-stand').onclick=()=>{ H.stand=1; H.bp-=18; };
+$('h-reset').onclick=()=>{ hReset(); for(const x of $('h-ex').children) x.setAttribute('aria-pressed',x.dataset.e==='0'); };
+hReset();
+
+/* ---------- MELATONIN ---------- */
+const M={day:1,shift:0,clockOff:0,eve:'dark'};
+// local hour h; body clock thinks local time is h - clockOff (hours behind). melatonin wants to start at body 21:30, end body 07:00
+function mel(h,off){ if(off==null) off=M.clockOff; // h local hour 0-72 on graph; returns [light, melatonin]
+  const lh=((h%24)+24)%24; const sunUp=lh>=6.5&&lh<19.5; let lamp=lh>=19.5&&lh<(M.eve==='screen'?25:22.5)||(M.eve==='screen'&&lh<1);
+  const light=sunUp?1:lamp?(M.eve==='screen'&&lh>=22.5||M.eve==='screen'&&lh<1?0.75:0.35):0;
+  const bh=((lh-off)%24+24)%24; const night=bh>=21.5||bh<7;
+  let m=0; if(night){ const x=bh>=21.5?bh-21.5:bh+2.5; m=Math.sin(Math.PI*clamp(x/9.5,0,1)); }
+  m*=1-light; return [light,clamp(m,0,1)];
+}
+function mDraw(){
+  const c=$('c-mel'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0d12'; ctx.fillRect(0,0,900,560);
+  // eye -> SCN -> pineal
+  ctx.fillStyle='#f0f4fa'; ctx.beginPath(); ctx.ellipse(120,120,60,38,0,0,7); ctx.fill(); ctx.fillStyle='#3a7bd5'; ctx.beginPath(); ctx.arc(150,120,20,0,7); ctx.fill(); ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(152,120,9,0,7); ctx.fill();
+  txt(ctx,'eye: light-sensitive retina cells',120,180,'#cfe1ff','12px '+F);
+  ctx.fillStyle='#4b3f63'; ctx.beginPath(); ctx.ellipse(500,120,230,90,0,0,7); ctx.fill();
+  ctx.fillStyle='#8a6bc0'; ctx.beginPath(); ctx.arc(400,150,22,0,7); ctx.fill(); txt(ctx,'SCN',400,155,'#fff','700 12px '+F); txt(ctx,'hypothalamus: master clock',400,195,'#e4dcf5','12px '+F);
+  ctx.fillStyle='#c7a3ff'; ctx.beginPath(); ctx.arc(580,120,16,0,7); ctx.fill(); txt(ctx,'pineal gland',580,95,'#e4dcf5','700 12px '+F);
+  ctx.strokeStyle='#cfe1ff'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(180,120); ctx.lineTo(378,148); ctx.stroke(); ctx.beginPath(); ctx.moveTo(422,145); ctx.lineTo(565,122); ctx.stroke();
+  const nowH=M.view; const [li,me]=mel(nowH);
+  txt(ctx,li>0.5?'light: melatonin blocked':li>0?'dim/screen light':'darkness: melatonin released',600,40,'#ffe28a','700 13px '+F);
+  for(let k=0;k<Math.round(me*14);k++){ ctx.fillStyle='#c7a3ff'; ctx.beginPath(); ctx.arc(600+((k*37+nowH*60)%260),140+((k*23)%60),4,0,7); ctx.fill(); }
+  // graph 3 days (local time)
+  const X=60,Y=250,Wd=800,Hh=230; ctx.fillStyle='#10161f'; rr(ctx,10,236,880,316,10); ctx.fill();
+  for(let h=0;h<72;h+=0.25){ const [l]=mel(h+(M.day-1)*24); if(l>0){ ctx.fillStyle=l>0.5?'rgba(255,220,120,.18)':'rgba(140,180,255,.14)'; const xa=Math.round(X+h/72*Wd), xb=Math.round(X+(h+0.25)/72*Wd); ctx.fillRect(xa,Y,xb-xa,Hh); } }
+  ctx.strokeStyle='#c7a3ff'; ctx.lineWidth=3; ctx.beginPath(); for(let h=0;h<=72;h+=0.1){ const m=mel(h+(M.day-1)*24,Math.max(0,M.clockOff-1.1*Math.floor(h/24)))[1]; const x=X+h/72*Wd, y=Y+Hh-m*Hh*0.9; ctx[h?'lineTo':'moveTo'](x,y);} ctx.stroke();
+  for(let d=0;d<=3;d++){ const x=X+d*Wd/3; ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.beginPath(); ctx.moveTo(x,Y); ctx.lineTo(x,Y+Hh); ctx.stroke(); if(d<3){ txt(ctx,'Day '+(M.day+d),x+Wd/6,Y+Hh+20,'#dfe6f0','700 12px '+F); for(const hh of [6,12,18]) txt(ctx,String(hh).padStart(2,'0')+':00',x+hh/72*Wd,Y+Hh+38,'#8a97aa','11px '+F); } }
+  txt(ctx,'melatonin in blood',X+8,Y+18,'#c7a3ff','700 12px '+F,'left'); txt(ctx,'yellow: daylight  blue: lamp or screen',X+Wd,Y+18,'#b4c0d0','12px '+F,'right');
+  // say
+  let onAt='-'; for(let h=12;h<36;h+=0.25){ if(mel(h+(M.day-1)*24)[1]>0.3){ onAt=String(Math.floor(h%24)).padStart(2,'0')+':'+String(Math.round((h%1)*60)).padStart(2,'0'); break; } }
+  let s;
+  if(M.clockOff>0.5) s='Your body clock is still set to home time. The SCN signals for melatonin in the middle of the local day, but daylight blocks most of it; at local bedtime the clock thinks it is still afternoon, so you cannot sleep. Daylight each morning resets the SCN by about an hour a day.';
+  else if(M.eve==='screen') s='Bright light from the screen in the evening keeps melatonin low until the screen goes off, so the sleepiness signal arrives late and sleep is shorter before the alarm.';
+  else s='Melatonin rises a little before bedtime in darkness, peaks in the middle of the night and falls before waking. This daily rhythm is a <b>circadian rhythm</b>, set by the SCN and kept in time by daylight.';
+  $('m-say').innerHTML=s; $('m-d').textContent=M.day; $('m-where').textContent=M.shift?'7 time zones east of home':'at home'; $('m-off').textContent=M.clockOff>0.25?M.clockOff.toFixed(0)+' h':'in step'; $('m-on').textContent=onAt;
+}
+M.view=21;
+$('m-east').onclick=()=>{ if(M.shift) return; M.shift=7; M.clockOff=7; mDraw(); };
+$('m-day').onclick=()=>{ M.day++; if(M.clockOff>0) M.clockOff=Math.max(0,M.clockOff-1.1); mDraw(); };
+$('m-reset').onclick=()=>{ Object.assign(M,{day:1,shift:0,clockOff:0}); mDraw(); };
+for(const b of $('m-eve').children) b.onclick=()=>{ M.eve=b.dataset.v; for(const x of $('m-eve').children) x.setAttribute('aria-pressed',x===b); mDraw(); };
+
+/* ---------- shell ---------- */
+const TABS=['ref','hr','mel'];
+function showTab(t){ tab=t; for(const k of TABS){ $('p-'+k).hidden=k!==t; $('t-'+k).setAttribute('aria-pressed',k===t); } draw(); }
+for(const k of TABS) $('t-'+k).onclick=()=>showTab(k);
+function draw(){ if(tab==='ref') rDraw(); else if(tab==='hr') hDraw(); else mDraw(); }
+function stepMs(ms){ if(tab==='ref') rTick(ms); else if(tab==='hr'){ let s=ms/1000*3; while(s>0){ const d=Math.min(0.25,s); hStep(d); s-=d; } } else { M.view=(M.view+ms/1000*0.5)%24; } }
+let last=0;
+function frame(now){ const dt=Math.min(100,now-(last||now)); last=now; if(!$('lab').hidden){ stepMs(dt); draw(); } requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl'); setLevel(level);
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; draw(); };
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ $('intro').hidden=true; $('lab').hidden=false; showTab(h); } }
+fromHash(); window.addEventListener('hashchange',fromHash);
+window.controlDebug={ step:ms=>{ stepMs(ms); draw(); }, R, H, M, showTab };
+})();
+</script>
+
+</body>
+</html>

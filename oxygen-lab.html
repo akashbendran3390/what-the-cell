@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Haemoglobin Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/oxygen-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Haemoglobin Lab">
+<meta property="og:description" content="Haemoglobin Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/oxygen-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Haemoglobin Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#120c0c; --ink:#f8f1f0; --dim:#cbbab8; --panel:#1b1313; --panel2:#261a1a; --line:rgba(240,210,205,.18);
+  --accent:#ff7a6b;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2e0905}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0d0909}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2e0905;border-color:transparent}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:72px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider label{min-width:150px}.slider input{flex:1;min-width:140px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;margin:3px 0}
+.lab-l{font-size:13px;color:var(--dim);min-width:92px}
+.q{background:var(--panel2);border-radius:10px;padding:8px 10px;margin:8px 0}
+.q input{width:80px;font:700 14px var(--body);background:#0d0909;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Haemoglobin Lab</h1><div class="sub">DP Biology B3.1 (HL) &middot; curves follow realistic values for human blood at 37 &deg;C</div></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Picking up oxygen, letting it go</h2>
+    <p>Haemoglobin has to do two opposite jobs: load oxygen in the lungs and unload it in the tissues. Move a red blood cell from the lungs to a resting or exercising muscle and watch the four haem groups fill and empty. Then add carbon dioxide (the <b>Bohr shift</b>) and compare adult with <b>foetal haemoglobin</b> at the placenta.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="grid">
+      <div><div class="card">
+        <canvas id="c-o2" width="900" height="560" aria-label="A haemoglobin molecule with four haem groups beside an oxygen dissociation curve"></canvas>
+        <div class="row"><span class="lab-l">Go to</span><button type="button" class="btn" data-go="lung">Lungs (alveolus)</button><button type="button" class="btn" data-go="rest">Resting muscle</button><button type="button" class="btn" data-go="ex">Exercising muscle</button><button type="button" class="btn" data-go="plac">Placenta</button><button type="button" class="btn" data-go="alt">Lungs at high altitude</button></div>
+        <div class="slider"><label for="s-po2">Partial pressure of O<sub>2</sub></label><input type="range" id="s-po2" min="0" max="14" step="0.1" value="13"><b id="v-po2">13.0 kPa</b></div>
+        <div class="slider"><label for="s-co2">Partial pressure of CO<sub>2</sub></label><input type="range" id="s-co2" min="4" max="9" step="0.1" value="5.3"><b id="v-co2">5.3 kPa</b></div>
+        <div class="row"><span class="lab-l">Curves</span><label class="chk"><input type="checkbox" id="k-norm" checked> Adult, normal CO<sub>2</sub></label><label class="chk"><input type="checkbox" id="k-foet"> Foetal haemoglobin</label><label class="chk"><input type="checkbox" id="k-myo"> Myoglobin (muscle store)</label></div>
+      </div></div>
+      <div>
+        <div class="card"><h2 id="o-h">Lungs</h2><div class="explain"><p id="o-say"></p></div>
+          <div class="stat" style="margin-top:10px"><span>Adult haemoglobin saturation</span><b id="o-sat">-</b><span>Haem groups carrying O<sub>2</sub> (of 4)</span><b id="o-n">-</b><span>O<sub>2</sub> unloaded since the lungs</span><b id="o-un">-</b><span>P50 (half-saturated)</span><b id="o-p50">-</b></div>
+          <p class="note">Syllabus: B3.1.11, B3.1.12, B3.1.13 (HL)</p>
+        </div>
+        <div class="card"><h2>Check yourself</h2>
+          <div class="q">At 4 kPa O<sub>2</sub> and normal CO<sub>2</sub>, what is the adult saturation? <input id="q1" inputmode="decimal" aria-label="saturation percent">% <button type="button" class="btn" id="q1b">Check</button> <span id="q1r"></span></div>
+          <ol class="tasks">
+            <li>Why is the curve S-shaped? Use the word <b>cooperative</b>.</li>
+            <li>Compare the O<sub>2</sub> unloaded in exercising muscle with and without the Bohr shift (untick, then tick, by moving CO<sub>2</sub> back to 5.3).</li>
+            <li>At the placenta, which haemoglobin is more saturated at the same pO<sub>2</sub>? Which way does oxygen move?</li>
+            <li>Why is the steep part of the curve useful in the tissues?</li>
+          </ol></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const F='Atkinson Hyperlegible, sans-serif';
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#f8f1f0'; ctx.font=font||'700 14px '+F; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+const hill=(p,p50,n)=>p<=0?0:Math.pow(p,n)/(Math.pow(p,n)+Math.pow(p50,n));
+const P50=co2=>3.6*(1+0.085*(co2-5.3));
+const S={po2:13,co2:5.3,place:'lung',bound:[1,1,1,1],anim:0};
+const PLACES={lung:{n:'Lungs',po2:13,co2:5.3},rest:{n:'Resting muscle',po2:5.3,co2:6.1},ex:{n:'Exercising muscle',po2:2.6,co2:8},plac:{n:'Placenta',po2:4,co2:5.8},alt:{n:'Lungs at high altitude',po2:7,co2:4.6}};
+function sat(){ return hill(S.po2,P50(S.co2),2.7); }
+function upd(){ const s=sat(); // update bound haem with cooperative feel
+  const want=Math.round(s*4); let have=S.bound.reduce((a,b)=>a+b,0);
+  while(have<want){ const i=S.bound.indexOf(0); S.bound[i]=1; have++; } while(have>want){ const i=S.bound.lastIndexOf(1); S.bound[i]=0; have--; } }
+function draw(){
+  const c=$('c-o2'), ctx=c.getContext('2d'); ctx.fillStyle='#0d0909'; ctx.fillRect(0,0,900,560);
+  const s=sat(), p50=P50(S.co2);
+  // haemoglobin: 4 subunits
+  const cx=170, cy=200; const sub=[[-52,-48,'α'],[52,-48,'β'],[-52,48,'β'],[52,48,'α']];
+  ctx.fillStyle='rgba(255,120,110,.06)'; ctx.beginPath(); ctx.arc(cx,cy,140,0,7); ctx.fill();
+  sub.forEach((q,i)=>{ const b=S.bound[i]; const g=ctx.createRadialGradient(cx+q[0]-12,cy+q[1]-12,6,cx+q[0],cy+q[1],56); g.addColorStop(0,b?'#ff6a5c':'#a3485f'); g.addColorStop(1,b?'#a8231c':'#4e1f3a'); ctx.fillStyle=g; ctx.beginPath(); ctx.ellipse(cx+q[0],cy+q[1],56,50,i%2?0.4:-0.4,0,7); ctx.fill();
+    txt(ctx,q[2],cx+q[0]+(q[0]>0?24:-24),cy+q[1]+(q[1]>0?28:-20),'rgba(255,255,255,.6)','700 13px '+F);
+    // haem disc
+    ctx.fillStyle='#3b1d10'; ctx.beginPath(); ctx.ellipse(cx+q[0]*0.85,cy+q[1]*0.85,15,9,0.5,0,7); ctx.fill(); ctx.fillStyle=b?'#ffd27a':'#7c5b3a'; ctx.beginPath(); ctx.arc(cx+q[0]*0.85,cy+q[1]*0.85,4,0,7); ctx.fill();
+    if(b){ const ox=cx+q[0]*1.25, oy=cy+q[1]*1.25; ctx.fillStyle='#7cc6fe'; ctx.beginPath(); ctx.arc(ox-6,oy,8,0,7); ctx.arc(ox+6,oy,8,0,7); ctx.fill(); txt(ctx,'O₂',ox,oy+4,'#03203a','700 10px '+F); } });
+  txt(ctx,'haemoglobin',cx,46,'#ffd6d0','700 15px '+F); txt(ctx,'4 polypeptides, each with a haem group (Fe)',cx,64,'#cbbab8','12px '+F);
+  txt(ctx,(s*100).toFixed(0)+'% saturated',cx,370,'#fff','800 22px Bricolage Grotesque, sans-serif');
+  txt(ctx,PLACES[S.place]?PLACES[S.place].n:'',cx,394,'#cbbab8','13px '+F);
+  // CO2 dots
+  const nc=Math.round((S.co2-4)*3); for(let k=0;k<nc;k++){ ctx.fillStyle='rgba(180,180,180,.65)'; ctx.beginPath(); ctx.arc(40+((k*53)%260),420+((k*29)%60),5,0,7); ctx.fill(); }
+  if(nc) txt(ctx,'CO₂ / H⁺ present',170,500,'#bbb','12px '+F);
+  // graph
+  const X=400,Y=40,W=460,H=420; ctx.fillStyle='#160e0e'; rr(ctx,X-50,Y-24,W+80,H+80,10); ctx.fill();
+  const gx=p=>X+p/14*W, gy=v=>Y+H-v*H;
+  ctx.strokeStyle='rgba(240,210,205,.12)'; ctx.lineWidth=1; for(let p=0;p<=14;p+=2){ ctx.beginPath(); ctx.moveTo(gx(p),Y); ctx.lineTo(gx(p),Y+H); ctx.stroke(); txt(ctx,String(p),gx(p),Y+H+18,'#cbbab8','12px '+F); }
+  for(let v=0;v<=1;v+=0.25){ ctx.beginPath(); ctx.moveTo(X,gy(v)); ctx.lineTo(X+W,gy(v)); ctx.stroke(); txt(ctx,(v*100)+'%',X-8,gy(v)+4,'#cbbab8','12px '+F,'right'); }
+  txt(ctx,'partial pressure of oxygen / kPa',X+W/2,Y+H+38,'#cbbab8','700 12px '+F);
+  ctx.save(); ctx.translate(X-40,Y+H/2); ctx.rotate(-Math.PI/2); txt(ctx,'% saturation of haemoglobin',0,0,'#cbbab8','700 12px '+F); ctx.restore();
+  // zones
+  ctx.fillStyle='rgba(124,198,254,.08)'; ctx.fillRect(gx(12),Y,gx(14)-gx(12),H); txt(ctx,'lungs',gx(13),Y+16,'#9ed5ff','11px '+F);
+  ctx.fillStyle='rgba(255,180,90,.08)'; ctx.fillRect(gx(1.5),Y,gx(5.5)-gx(1.5),H); txt(ctx,'tissues',gx(3.5),Y+16,'#ffc890','11px '+F);
+  function curve(p50,n,col,w,dash){ ctx.strokeStyle=col; ctx.lineWidth=w; ctx.setLineDash(dash||[]); ctx.beginPath(); for(let p=0;p<=14;p+=0.05){ const v=hill(p,p50,n); p?ctx.lineTo(gx(p),gy(v)):ctx.moveTo(gx(p),gy(v)); } ctx.stroke(); ctx.setLineDash([]); }
+  if($('k-myo').checked){ curve(0.35,1,'#c9a0ff',2.5,[6,4]); txt(ctx,'myoglobin',gx(1.4),gy(0.86),'#c9a0ff','700 12px '+F,'left'); }
+  if($('k-foet').checked){ curve(2.5,2.7,'#7ee0a1',2.5); txt(ctx,'foetal',gx(1.6),gy(0.6),'#7ee0a1','700 12px '+F,'right'); }
+  if($('k-norm').checked&&Math.abs(S.co2-5.3)>0.05){ curve(3.6,2.7,'rgba(255,255,255,.45)',2,[5,5]); txt(ctx,'normal CO₂',gx(6.2),gy(0.86),'rgba(255,255,255,.7)','12px '+F,'left'); }
+  curve(p50,2.7,'#ff7a6b',3.5); txt(ctx,'adult, CO₂ '+S.co2.toFixed(1)+' kPa',gx(10.5),gy(0.72),'#ff9a8e','700 12px '+F);
+  // P50 marker
+  ctx.strokeStyle='rgba(255,122,107,.5)'; ctx.setLineDash([3,4]); ctx.beginPath(); ctx.moveTo(X,gy(0.5)); ctx.lineTo(gx(p50),gy(0.5)); ctx.lineTo(gx(p50),Y+H); ctx.stroke(); ctx.setLineDash([]);
+  // lung reference & current point
+  const sl=hill(13,3.6,2.7); ctx.fillStyle='#7cc6fe'; ctx.beginPath(); ctx.arc(gx(13),gy(sl),6,0,7); ctx.fill();
+  if(S.po2<12){ ctx.strokeStyle='#ffd166'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(gx(S.po2)+14,gy(sl)); ctx.lineTo(gx(S.po2)+14,gy(s)); ctx.stroke(); txt(ctx,'O₂ unloaded',gx(S.po2)+20,gy((sl+s)/2),'#ffd166','700 12px '+F,'left'); }
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(gx(S.po2),gy(s),8,0,7); ctx.fill(); ctx.fillStyle='#ff7a6b'; ctx.beginPath(); ctx.arc(gx(S.po2),gy(s),5,0,7); ctx.fill();
+  if($('k-foet').checked){ const sf=hill(S.po2,2.5,2.7); ctx.fillStyle='#7ee0a1'; ctx.beginPath(); ctx.arc(gx(S.po2),gy(sf),6,0,7); ctx.fill(); }
+  // text
+  let say='';
+  const un=Math.max(0,sl-s);
+  if(S.place==='lung') say='In the lungs pO<sub>2</sub> is high, so almost every haem group binds O<sub>2</sub>: haemoglobin is about 98% saturated. CO<sub>2</sub> is low here, so the curve sits to the left and loading is easy.';
+  else if(S.place==='rest') say='In resting tissue pO<sub>2</sub> is lower, so haemoglobin releases some O<sub>2</sub>: about a quarter of what it carried. The rest is a reserve for when activity increases.';
+  else if(S.place==='ex') say='In exercising muscle pO<sub>2</sub> is very low and CO<sub>2</sub> is high. CO<sub>2</sub> forms carbonic acid, and H<sup>+</sup> ions change the shape of haemoglobin so it holds O<sub>2</sub> less tightly: the curve moves right (<b>Bohr shift</b>) and even more O<sub>2</sub> is unloaded where it is needed most.';
+  else if(S.place==='plac') say='At the placenta the mother\'s and foetus\'s blood come close but do not mix. <b>Foetal haemoglobin</b> has a higher affinity for O<sub>2</sub> (its curve is to the left), so at the same pO<sub>2</sub> it is more saturated than the mother\'s haemoglobin: O<sub>2</sub> passes from mother to foetus.';
+  else if(S.place==='alt') say='At high altitude the air has a lower pO<sub>2</sub>, so less O<sub>2</sub> loads in the lungs. Because the top of the curve is flat, saturation only falls a little at first; over weeks the body makes more red blood cells.';
+  else if(s>0.9) say='On the flat top of the curve, a fall in pO<sub>2</sub> hardly changes saturation: loading is safe even if the air is a little thinner.';
+  else if(s>0.2) say='On the steep part of the curve, a small fall in pO<sub>2</sub> releases a lot of O<sub>2</sub>. This is the range found in active tissues.';
+  else say='At very low pO<sub>2</sub> nearly all the O<sub>2</sub> has been released.';
+  say+=' <i>Cooperative binding:</i> when one O<sub>2</sub> binds, the shape of the molecule changes and the other haem groups bind O<sub>2</sub> more easily, which makes the curve S-shaped (sigmoid).';
+  $('o-say').innerHTML=say; $('o-h').textContent=PLACES[S.place]?PLACES[S.place].n:'Your settings';
+  $('o-sat').textContent=(s*100).toFixed(0)+'%'; $('o-n').textContent=S.bound.reduce((a,b)=>a+b,0); $('o-un').textContent=(un*100).toFixed(0)+'% of capacity'; $('o-p50').textContent=p50.toFixed(1)+' kPa';
+  $('v-po2').textContent=S.po2.toFixed(1)+' kPa'; $('v-co2').textContent=S.co2.toFixed(1)+' kPa';
+}
+let anim=null;
+function goTo(k){ const P=PLACES[k]; S.place=k; const p0=S.po2, c0=S.co2, t0=performance.now(); if(k==='plac') $('k-foet').checked=true;
+  const stepTo=u=>{ S.po2=p0+(P.po2-p0)*u; S.co2=c0+(P.co2-c0)*u; $('s-po2').value=S.po2; $('s-co2').value=S.co2; upd(); draw(); };
+  clearInterval(anim); let u=0; anim=setInterval(()=>{ u=Math.min(1,u+0.06); stepTo(u); if(u>=1) clearInterval(anim); },30); }
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goTo(b.dataset.go));
+$('s-po2').oninput=e=>{ S.po2=+e.target.value; S.place=''; upd(); draw(); };
+$('s-co2').oninput=e=>{ S.co2=+e.target.value; S.place=''; upd(); draw(); };
+['k-norm','k-foet','k-myo'].forEach(id=>$(id).onchange=draw);
+$('q1b').onclick=()=>{ const v=parseFloat($('q1').value); const a=hill(4,3.6,2.7)*100; $('q1r').innerHTML=isNaN(v)?'Enter a number.':Math.abs(v-a)<=5?'<b style="color:#7ee0a1">Yes</b> &ndash; about '+a.toFixed(0)+'%':'Not quite: read up from 4 kPa to the red curve (about '+a.toFixed(0)+'%).'; };
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; upd(); draw(); };
+if(location.hash){ $('intro').hidden=true; $('lab').hidden=false; const k=location.hash.slice(1); upd(); draw(); if(PLACES[k]) goTo(k); }
+window.o2Debug={S,goTo,draw,sat,hill};
+})();
+</script>
+
+</body>
+</html>

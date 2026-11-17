@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Cell Signalling Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/signalling-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Cell Signalling Lab">
+<meta property="og:description" content="Cell Signalling Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/signalling-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Cell Signalling Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0b0f14; --ink:#eef4fb; --dim:#b3c2d3; --panel:#121a23; --panel2:#1a2532; --line:rgba(200,220,245,.18);
+  --accent:#9bd36a;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#122106}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0a0e13}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#122106;border-color:transparent}
+button:disabled{opacity:.4;cursor:not-allowed}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:90px}
+.dots{display:flex;gap:6px;margin:8px 0}.dots span{width:10px;height:10px;border-radius:50%;background:var(--panel2);border:1px solid var(--line)}.dots span.on{background:var(--accent)}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider input{flex:1;min-width:140px}
+.cmp{width:100%;border-collapse:collapse;font-size:13px}.cmp td,.cmp th{border-bottom:1px solid var(--line);padding:5px 4px;text-align:left;vertical-align:top}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Cell Signalling Lab</h1><div class="sub">DP Biology C2.1 (HL) &middot; shapes are simplified; sizes are not to scale</div></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>How a cell hears a message</h2>
+    <p>A signalling chemical only affects cells that have a matching <b>receptor</b>. Step through five ways a signal gets into action: bacteria counting each other, a neurotransmitter opening a channel, adrenaline switching on a G protein, insulin activating a tyrosine kinase, and a steroid hormone changing which genes are expressed.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Signal" id="tabs"></div>
+    <div class="grid">
+      <div><div class="card">
+        <canvas id="c-sig" width="900" height="520" aria-label="Animated cell membrane with receptor and signalling molecules"></canvas>
+        <div class="row"><button type="button" class="btn" id="s-back">&larr; Back</button><button type="button" class="go" id="s-next">Next step &rarr;</button><button type="button" class="btn" id="s-play">Play all</button><button type="button" class="btn" id="s-reset">Start again</button></div>
+        <div class="slider" id="qs-ctl" hidden><label for="qs-n">Bacteria in the light organ</label><input type="range" id="qs-n" min="2" max="120" value="6"><b id="qs-v">6</b></div>
+      </div></div>
+      <div>
+        <div class="card"><h2 id="s-h"></h2><div class="dots" id="s-dots"></div><div class="explain"><p id="s-say"></p></div><p class="note" id="s-codes"></p></div>
+        <div class="card"><h2>Compare the receptors</h2>
+          <table class="cmp"><tr><th>Signal</th><th>Receptor</th><th>First change inside</th></tr>
+            <tr><td>Acetylcholine</td><td>Ligand-gated ion channel in membrane</td><td>Na<sup>+</sup> flows in; membrane potential changes</td></tr>
+            <tr><td>Adrenaline</td><td>G protein-coupled receptor in membrane</td><td>G protein &rarr; cAMP (second messenger)</td></tr>
+            <tr><td>Insulin</td><td>Tyrosine kinase receptor in membrane</td><td>Receptor phosphorylates itself; relay proteins</td></tr>
+            <tr><td>Oestradiol, progesterone</td><td>Intracellular receptor (cytoplasm or nucleus)</td><td>Hormone-receptor complex alters gene expression</td></tr></table>
+          <ol class="tasks"><li>Why can steroid hormones use a receptor inside the cell, but insulin and adrenaline cannot?</li><li>Explain how one adrenaline molecule can cause the release of thousands of glucose molecules.</li><li>How is each signal switched off again?</li></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,u)=>a+(b-a)*u;
+const ease=u=>u<0?0:u>1?1:u*u*(3-2*u);
+const F='Atkinson Hyperlegible, sans-serif';
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#eef4fb'; ctx.font=font||'700 13px '+F; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function membrane(ctx,y,skip){ ctx.fillStyle='#0f1820'; ctx.fillRect(0,0,900,y-22); ctx.fillStyle='#1a1424'; ctx.fillRect(0,y+22,900,520-y-22);
+  txt(ctx,'outside the cell',20,24,'#9fb3c8','700 12px '+F,'left'); txt(ctx,'cytoplasm',20,y+44,'#c2b3d6','700 12px '+F,'left');
+  for(let x=6;x<900;x+=12){ if(skip&&skip.some(r=>x>r[0]&&x<r[1])) continue; for(const s of [-1,1]){ ctx.fillStyle='#e9c46a'; ctx.beginPath(); ctx.arc(x,y+s*16,5,0,7); ctx.fill(); ctx.strokeStyle='#d9b77a'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x-2,y+s*11); ctx.lineTo(x-2,y+s*2); ctx.moveTo(x+2,y+s*11); ctx.lineTo(x+2,y+s*2); ctx.stroke(); } } }
+function blob(ctx,x,y,rx,ry,col,rot){ ctx.fillStyle=col; ctx.beginPath(); ctx.ellipse(x,y,rx,ry,rot||0,0,7); ctx.fill(); }
+function P(ctx,x,y){ ctx.fillStyle='#ffd166'; ctx.beginPath(); ctx.arc(x,y,8,0,7); ctx.fill(); txt(ctx,'P',x,y+4,'#3a2600','800 10px '+F); }
+
+const SC={
+ qs:{name:'Quorum sensing',codes:'C2.1.1, C2.1.2',steps:[
+  'Vibrio fischeri bacteria live in the light organ of the Hawaiian bobtail squid. Each bacterium constantly releases a small signalling molecule, an <b>autoinducer</b>, which diffuses out into its surroundings.',
+  'When there are only a few bacteria, the autoinducer diffuses away and its concentration stays low. The genes for light (the lux genes) stay switched off. Move the slider to change the number of bacteria.',
+  'As the population grows, autoinducer builds up. Autoinducer enters the bacteria and binds a <b>receptor</b> protein; above a threshold concentration the receptor switches on transcription of the lux genes.',
+  'Now every bacterium makes luciferase and glows together. The squid uses the light to hide its shadow from predators below. The bacteria only spend energy on light when there are enough of them for it to be useful: this is <b>quorum sensing</b>.']},
+ ach:{name:'Ligand-gated channel',codes:'C2.1.3, C2.1.8',steps:[
+  'At a synapse, an impulse arriving at the presynaptic neuron makes it release the neurotransmitter <b>acetylcholine</b> into the synaptic gap.',
+  'Acetylcholine diffuses across the gap and binds to its receptor on the postsynaptic membrane. The receptor is a <b>ligand-gated channel</b>: binding changes its shape.',
+  'The channel opens and Na<sup>+</sup> ions rush in down their concentration gradient. The inside becomes less negative: the membrane is <b>depolarised</b>. If it reaches the threshold (about &minus;50 mV), an action potential starts.',
+  'Acetylcholinesterase in the gap breaks acetylcholine down into acetate and choline. The receptor is freed, the channel closes and the membrane returns to its resting potential. The signal is short and precise.']},
+ adr:{name:'Adrenaline (G protein)',codes:'C2.1.7, C2.1.9, C2.1.10',steps:[
+  'Adrenaline (epinephrine), released by the adrenal glands, arrives in the blood at a liver cell. Its receptor crosses the membrane seven times; on the inside sits a <b>G protein</b> made of three subunits, with GDP bound.',
+  'Adrenaline binds the receptor\'s binding site outside the cell. It does not enter the cell. Binding changes the shape of the receptor, including the part inside the cell.',
+  'The changed receptor activates the G protein: the &alpha; subunit releases GDP, takes up <b>GTP</b> and separates from the &beta;&gamma; part.',
+  'The G&alpha;&ndash;GTP slides along the membrane and switches on the enzyme <b>adenylyl cyclase</b>, which converts many ATP molecules into <b>cyclic AMP (cAMP)</b>, the <b>second messenger</b>.',
+  'cAMP activates protein kinase A, which starts a chain of phosphorylations ending in active glycogen phosphorylase. Each step activates many molecules, so the signal is <b>amplified</b>: one adrenaline can release thousands of glucose molecules.',
+  'G&alpha; slowly breaks down its GTP to GDP and rejoins &beta;&gamma;; cAMP is broken down. When adrenaline leaves the receptor, the whole pathway switches off.']},
+ ins:{name:'Insulin (tyrosine kinase)',codes:'C2.1.7, C2.1.11',steps:[
+  'Insulin, a small protein hormone from the &beta; cells of the pancreas, reaches a muscle cell. Its receptor has two halves that span the membrane. Inside, each half has a <b>tyrosine kinase</b> region.',
+  'Insulin binds to the outside part of the receptor, changing its shape. Insulin is a protein, so it cannot cross the membrane.',
+  'The two kinase regions inside phosphorylate each other: phosphate groups from ATP are added to particular <b>tyrosine</b> amino acids. This is called autophosphorylation.',
+  'Relay proteins recognise the phosphorylated tyrosines and bind to them, which activates them. They start a signalling cascade in the cytoplasm.',
+  'The cascade makes vesicles carrying <b>GLUT4</b> glucose transporters move to the cell surface and fuse with the membrane. Glucose can now enter the cell by facilitated diffusion, and blood glucose falls.']},
+ ster:{name:'Steroid hormone (intracellular receptor)',codes:'C2.1.6, C2.1.12, C2.1.13',steps:[
+  'Oestradiol and progesterone are <b>steroid</b> hormones: small, non-polar molecules made from cholesterol. They are carried in the blood to every cell.',
+  'Because they are lipid-soluble, they pass straight through the phospholipid bilayer by simple diffusion. No membrane receptor is needed.',
+  'Inside target cells the hormone binds a specific <b>receptor protein</b> in the cytoplasm or nucleus. Only cells that make this receptor respond.',
+  'The hormone-receptor complex enters the nucleus and binds to particular DNA sequences next to target genes. It acts as a <b>transcription factor</b>.',
+  'Transcription of the target genes is switched on (or off). The new mRNA is translated into proteins that change the cell. For example, oestradiol makes cells of the endometrium divide; progesterone keeps the endometrium thick and ready for implantation. These effects are slow but long-lasting.']}
+};
+const ORDER=['qs','ach','adr','ins','ster'];
+const st={sc:'qs',s:0,p:1,play:false,t:0,qsN:6,ai:0};
+function setStep(s){ const sc=SC[st.sc]; st.s=clamp(s,0,sc.steps.length-1); st.p=0; ui(); }
+function ui(){ const sc=SC[st.sc]; $('s-h').textContent=sc.name; $('s-say').innerHTML=sc.steps[st.s]; $('s-codes').textContent='Syllabus: '+sc.codes+' (HL)'; $('s-dots').innerHTML=sc.steps.map((_,i)=>'<span class="'+(i<=st.s?'on':'')+'"></span>').join(''); $('s-back').disabled=st.s===0; $('s-next').disabled=st.s===sc.steps.length-1; $('qs-ctl').hidden=st.sc!=='qs'; }
+function buildTabs(){ $('tabs').innerHTML=ORDER.map((k,i)=>'<button type="button" data-k="'+k+'" aria-pressed="'+(k===st.sc)+'">'+(i+1)+'. '+SC[k].name+'</button>').join(''); for(const b of $('tabs').children) b.onclick=()=>{ st.sc=b.dataset.k; st.play=false; $('s-play').textContent='Play all'; buildTabs(); setStep(0); if(st.sc==='qs'){ st.qsN=6; $('qs-n').value=6; } }; }
+
+/* ---- drawing per scenario ---- */
+function drawQS(ctx){
+  ctx.fillStyle='#071322'; ctx.fillRect(0,0,900,520);
+  // light organ
+  ctx.fillStyle='#10233a'; ctx.beginPath(); ctx.ellipse(450,250,330,200,0,0,7); ctx.fill(); ctx.strokeStyle='#2c4a6c'; ctx.lineWidth=3; ctx.stroke();
+  txt(ctx,'light organ of a bobtail squid (simplified)',450,36,'#9fc4ea','700 13px '+F);
+  const n=st.qsN; st.ai+=(0.018*n-st.ai)*0.04;
+  const conc=st.ai, thr=0.9, on=clamp((conc-thr)/0.35,0,1);
+  // autoinducer dots
+  const nd=Math.round(conc*40); for(let k=0;k<nd;k++){ const a=k*2.4+st.t*0.3, r=40+((k*67)%260); ctx.fillStyle='#9bd36a'; ctx.beginPath(); ctx.arc(450+Math.cos(a)*r*1.1,250+Math.sin(a)*r*0.6,2.6,0,7); ctx.fill(); }
+  // bacteria
+  for(let k=0;k<n;k++){ const a=k*2.399, r=Math.sqrt(k/120)*260; const x=450+Math.cos(a)*r*1.15+Math.sin(st.t+k)*3, y=250+Math.sin(a)*r*0.62+Math.cos(st.t*1.3+k)*3;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(a); if(on>0){ ctx.shadowColor='#5fd8ff'; ctx.shadowBlur=16*on; } ctx.fillStyle=on>0?`rgb(${Math.round(60+60*on)},${Math.round(120+100*on)},${Math.round(160+95*on)})`:'#5a7088'; rr(ctx,-11,-5,22,10,5); ctx.fill(); ctx.restore(); }
+  // meter
+  ctx.fillStyle='#0d1a2a'; rr(ctx,40,440,820,56,10); ctx.fill(); txt(ctx,'autoinducer concentration',60,462,'#cfe3f7','700 12px '+F,'left');
+  ctx.fillStyle='#243b55'; rr(ctx,240,452,560,14,7); ctx.fill(); ctx.fillStyle='#9bd36a'; rr(ctx,240,452,clamp(conc/2,0,1)*560,14,7); ctx.fill();
+  const tx=240+thr/2*560; ctx.strokeStyle='#ff9f6b'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(tx,446); ctx.lineTo(tx,472); ctx.stroke(); txt(ctx,'threshold',tx,488,'#ff9f6b','12px '+F);
+  txt(ctx,on>0.5?'lux genes ON: glowing':'lux genes off',800,488,on>0.5?'#5fd8ff':'#8aa0b6','700 12px '+F,'right');
+  if(on>0.2){ const g=ctx.createRadialGradient(450,250,40,450,250,330); g.addColorStop(0,`rgba(95,216,255,${0.18*on})`); g.addColorStop(1,'rgba(95,216,255,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,900,440); }
+  // auto-advance text step by state
+  const want=n<20?1:on>0.5?3:2; if(st.s>0&&st.s!==want){ st.s=want; ui(); }
+}
+function drawACH(ctx){
+  const y=300, s=st.s, p=ease(st.p);
+  ctx.fillStyle='#0a0e13'; ctx.fillRect(0,0,900,520);
+  // presynaptic knob
+  ctx.fillStyle='#2b3a52'; ctx.beginPath(); ctx.moveTo(150,0); ctx.lineTo(750,0); ctx.lineTo(750,110); ctx.quadraticCurveTo(450,190,150,110); ctx.closePath(); ctx.fill(); txt(ctx,'presynaptic neuron',450,40,'#cfe0f5','700 13px '+F);
+  for(let k=0;k<6;k++){ const fuse=s>=0&&k<3; const vy=fuse?lerp(90,140,s===0?p:1):80+((k*13)%30); blob(ctx,260+k*75,vy,16,16,'#3f577a'); for(let j=0;j<5;j++){ ctx.fillStyle='#ff8fb1'; ctx.beginPath(); ctx.arc(260+k*75+Math.cos(j)*7,vy+Math.sin(j*1.7)*7,2.5,0,7); ctx.fill(); } }
+  txt(ctx,'synaptic gap',830,210,'#9fb3c8','12px '+F,'right');
+  // postsynaptic membrane
+  ctx.fillStyle='#1a1424'; ctx.fillRect(0,y+22,900,200); membrane(ctx,y,[[410,490]]); ctx.fillStyle='#0a0e13'; ctx.fillRect(0,0,900,0);
+  // re-draw presyn over membrane background top part
+  ctx.fillStyle='#2b3a52'; ctx.beginPath(); ctx.moveTo(150,0); ctx.lineTo(750,0); ctx.lineTo(750,110); ctx.quadraticCurveTo(450,190,150,110); ctx.closePath(); ctx.fill(); txt(ctx,'presynaptic neuron',450,40,'#cfe0f5','700 13px '+F);
+  for(let k=0;k<6;k++){ const vy=k<3&&s>=0?lerp(90,138,s===0?p:1):82+((k*13)%30); blob(ctx,260+k*75,vy,16,16,'#3f577a'); }
+  // channel (two halves)
+  const open=s===2?p:s===3?1-p:0;
+  for(const sgn of [-1,1]){ ctx.fillStyle='#6ea8d8'; rr(ctx,450+sgn*(14+open*10)-(sgn<0?28:0),y-34,28,68,10); ctx.fill(); }
+  txt(ctx,'acetylcholine receptor (ligand-gated Na⁺ channel)',450,y+70,'#bfe0ff','700 12px '+F);
+  // ACh molecules
+  const nA=12; for(let k=0;k<nA;k++){ let x,yy; const sx=300+k*25, sy=150; const bind=k===5||k===6;
+    if(s===0){ x=sx; yy=lerp(140,170,p); } else if(s===1){ x=bind?lerp(sx,k===5?432:468,p):sx+Math.sin(k)*20*p; yy=bind?lerp(170,y-40,p):lerp(170,230,p); } else if(s===2){ x=bind?(k===5?432:468):sx+Math.sin(k)*20; yy=bind?y-40:230; } else { x=bind?(k===5?432:468):sx+Math.sin(k)*20; yy=bind?lerp(y-40,y-70,p):230; }
+    ctx.fillStyle=s===3&&bind&&p>0.4?'#b37a91':'#ff8fb1'; ctx.beginPath(); ctx.arc(x,yy,6,0,7); ctx.fill(); }
+  if(s===3){ blob(ctx,400,y-80,20,12,'#7ad8a0'); txt(ctx,'acetylcholinesterase',400,y-100,'#a7f0c4','12px '+F); }
+  // Na+ ions
+  for(let k=0;k<16;k++){ let x=200+((k*61)%500), yy=y-60-((k*37)%60); if(s===2||(s===3&&p<0.5)){ const u=((st.t*0.5+k*0.13)%1); x=lerp(x,450,clamp(u*2,0,1)); yy=u<0.5?lerp(yy,y-30,u*2):lerp(y-30,y+120,(u-0.5)*2); }
+    ctx.fillStyle='#ffd166'; ctx.beginPath(); ctx.arc(x,yy,5,0,7); ctx.fill(); txt(ctx,'+',x,yy+3,'#3a2600','800 8px '+F); }
+  txt(ctx,'Na⁺',140,y-60,'#ffd166','700 13px '+F);
+  // voltmeter
+  const mv=s===2?lerp(-70,-40,p):s===3?lerp(-40,-70,p):-70; ctx.fillStyle='#121a23'; rr(ctx,640,y+90,220,90,10); ctx.fill(); txt(ctx,'membrane potential',750,y+112,'#b3c2d3','700 12px '+F); txt(ctx,Math.round(mv)+' mV',750,y+150,mv>-55?'#ffd166':'#9bd36a','800 26px Bricolage Grotesque, sans-serif'); txt(ctx,mv>-55?'threshold reached':'resting',750,y+172,'#b3c2d3','12px '+F);
+}
+function drawADR(ctx){
+  const y=230, s=st.s, p=ease(st.p);
+  membrane(ctx,y,[[150,290],[520,620]]);
+  // receptor: 7 helices
+  const bent=s>=1?(s===1?p:1):0;
+  for(let k=0;k<7;k++){ ctx.fillStyle=bent?'#7bb4f0':'#5b8cc4'; rr(ctx,158+k*18+(k%2?bent*3:0),y-36,14,72,6); ctx.fill(); }
+  txt(ctx,'receptor',150,y-4,'#bfe0ff','700 12px '+F,'right');
+  // adrenaline
+  const ax=s===0?lerp(60,215,p):215, ay=s===0?lerp(80,y-44,p):y-44; ctx.fillStyle='#ff9f6b'; ctx.beginPath(); ctx.arc(ax,ay,9,0,7); ctx.fill(); txt(ctx,'adrenaline',ax,ay-14,'#ffc49e','700 12px '+F);
+  // G protein
+  const sep=s>=2?(s===2?p:1):0, back=s===5?p:0;
+  const gx=lerp(lerp(220,560,s>=3?(s===3?p:1):0),280,back), gy=y+42;
+  blob(ctx,gx,gy,24,16,'#9bd36a'); txt(ctx,'α',gx,gy+5,'#122106','800 13px '+F);
+  const bgx=lerp(250+sep*30,280,back); blob(ctx,bgx+26,gy+4,16,14,'#5aa06b'); blob(ctx,bgx+48,gy+2,10,10,'#3f7a50'); txt(ctx,'βγ',bgx+38,gy+28,'#b6e6c1','11px '+F);
+  const gt=s>=2&&!(s===5&&p>0.5); blob(ctx,gx-6,gy+20,12,8,gt?'#ffd166':'#c9a0ff'); txt(ctx,gt?'GTP':'GDP',gx-6,gy+24,'#1a1000','800 9px '+F);
+  txt(ctx,'G protein',220,y+92,'#b6e6c1','700 12px '+F);
+  // adenylyl cyclase
+  const act=s>=3&&!(s===5&&p>0.6); blob(ctx,570,y,40,34,act?'#e07ad0':'#8a4b82'); txt(ctx,'adenylyl',570,y-2,'#fff','700 11px '+F); txt(ctx,'cyclase',570,y+12,'#fff','700 11px '+F);
+  // cAMP
+  if(s>=3){ const n=s===3?Math.round(p*30):s===5?Math.round(30*(1-p)):30; for(let k=0;k<n;k++){ const a=k*0.9, r=30+((k*29)%90); const x=740+Math.cos(a)*r*1.1, yy=y+62+Math.abs(Math.sin(a))*r*0.5; ctx.fillStyle='#4ec9e0'; ctx.beginPath(); ctx.arc(x,yy,4.5,0,7); ctx.fill(); } txt(ctx,'cAMP (second messenger)',740,y+48,'#8be6f5','700 12px '+F); }
+  // cascade
+  if(s>=4){ const pp=s===4?p:1; const levels=[['protein kinase A',2,'#4ec9e0'],['phosphorylase kinase',6,'#7ab8ff'],['glycogen phosphorylase',14,'#c9a0ff'],['glucose',36,'#ffd166']];
+    levels.forEach((L,i)=>{ const vis=clamp(pp*4-i,0,1); if(vis<=0) return; const yy=y+130+i*42; ctx.globalAlpha=vis; for(let k=0;k<L[1];k++){ ctx.fillStyle=L[2]; ctx.beginPath(); ctx.arc(300+k*(i===3?14:i===2?34:i===1?70:140),yy,i===3?5:8,0,7); ctx.fill(); } txt(ctx,L[0],290,yy+4,'#dfe8f3','700 12px '+F,'right'); ctx.globalAlpha=1; });
+    txt(ctx,'each step activates many of the next: amplification',600,y+300,'#ffd166','700 13px '+F); }
+}
+function drawINS(ctx){
+  const y=220, s=st.s, p=ease(st.p);
+  membrane(ctx,y,[[380,520],[700,760]]);
+  // receptor halves
+  for(const sgn of [-1,1]){ const x=450+sgn*26; ctx.fillStyle='#d8a35c'; rr(ctx,x-12,y-80,24,58,10); ctx.fill(); rr(ctx,x-8,y-24,16,48,6); ctx.fill(); ctx.fillStyle='#b57a3a'; rr(ctx,x-18,y+24,36,70,12); ctx.fill(); }
+  ctx.fillStyle='#d8a35c'; ctx.fillRect(444,y-60,12,8); txt(ctx,'insulin receptor',450,y-96,'#f2d3a6','700 12px '+F); txt(ctx,'tyrosine kinase regions',450,y+112,'#f2d3a6','12px '+F);
+  // insulin
+  const ix=s===0?lerp(150,450,p):450, iy=s===0?lerp(60,y-100,p):s>=1?lerp(y-100,y-64,s===1?p:1):0; blob(ctx,ix,iy,16,11,'#7cc6fe'); txt(ctx,'insulin',ix-40,iy+4,'#bfe0ff','700 12px '+F,'right');
+  // phosphates
+  if(s>=2){ const n=s===2?Math.floor(p*4.99):4; const pts=[[424,y+40],[424,y+70],[476,y+40],[476,y+70]]; for(let k=0;k<n;k++){ const q=pts[(k*3)%4]; P(ctx,q[0]+(q[0]<450?-22:22),q[1]); } }
+  // relay proteins
+  if(s>=3){ const u=s===3?p:1; for(const [tx,ty,sx] of [[402,y+70,250],[498,y+70,650]]){ blob(ctx,lerp(sx,tx-10,u),lerp(y+190,ty,u),18,13,u>0.95?'#9bd36a':'#5f7d4a'); } txt(ctx,'relay proteins',450,y+150,'#b6e6c1','700 12px '+F); }
+  // GLUT4 vesicles
+  const vx=730; const fuse=s===4?p:0; const vy=lerp(y+170,y+18,fuse);
+  if(s<4||p<0.98){ ctx.strokeStyle='#e9c46a'; ctx.lineWidth=4; ctx.beginPath(); ctx.arc(vx,vy,26,0,7); ctx.stroke(); }
+  ctx.fillStyle='#ff9fb5'; rr(ctx,vx-8,vy-26-8+(s===4&&p>0.98?0:0),16,22,5); ctx.fill(); txt(ctx,'GLUT4',vx+36,fuse>0.9?y+50:vy,'#ffc6d2','700 12px '+F,'left');
+  if(s===4&&p>0.95){ ctx.fillStyle='#ff9fb5'; rr(ctx,vx-8,y-22,16,44,5); ctx.fill(); for(let k=0;k<8;k++){ const u=((st.t*0.4+k*0.125)%1); const gx=vx+Math.sin(k)*6, gy=lerp(y-120,y+120,u); ctx.fillStyle='#ffd166'; ctx.beginPath(); for(let h=0;h<6;h++){ const a=h*Math.PI/3; ctx[h?'lineTo':'moveTo'](gx+5*Math.cos(a),gy+5*Math.sin(a)); } ctx.fill(); } txt(ctx,'glucose enters',vx,y-130,'#ffd166','700 12px '+F); }
+  if(fuse<0.9) txt(ctx,'vesicle',vx,y+212,'#cbb98a','12px '+F);
+}
+function drawSTER(ctx){
+  const y=150, s=st.s, p=ease(st.p);
+  membrane(ctx,y);
+  // nucleus
+  ctx.fillStyle='#2a2140'; ctx.beginPath(); ctx.ellipse(620,400,240,100,0,0,7); ctx.fill(); ctx.strokeStyle='#6d5a99'; ctx.lineWidth=4; ctx.setLineDash([16,6]); ctx.stroke(); ctx.setLineDash([]); txt(ctx,'nucleus',780,330,'#cdbcf0','700 12px '+F);
+  // DNA
+  ctx.strokeStyle='#7cc6fe'; ctx.lineWidth=3; for(const o of [0,Math.PI]){ ctx.beginPath(); for(let x=440;x<=820;x+=4){ const yy=420+Math.sin(x/14+o)*8; x===440?ctx.moveTo(x,yy):ctx.lineTo(x,yy);} ctx.stroke(); }
+  ctx.fillStyle='rgba(255,209,102,.25)'; ctx.fillRect(560,404,100,32); txt(ctx,'target gene',610,456,'#ffd166','12px '+F);
+  // hormone path
+  let hx,hy; if(s===0){ hx=lerp(80,220,p); hy=lerp(40,90,p); } else if(s===1){ hx=220; hy=lerp(90,240,p); } else if(s===2){ hx=lerp(220,300,p); hy=lerp(240,270,p); } else if(s===3){ hx=lerp(300,560,p); hy=lerp(270,400,p); } else { hx=560; hy=400; }
+  // receptor
+  const rx=s<2?300:hx+14, ry=s<2?270:hy+4; blob(ctx,rx,ry,24,16,'#9bd36a'); txt(ctx,'receptor',rx,ry+32,'#b6e6c1','700 12px '+F);
+  // hormone (steroid rings)
+  ctx.save(); ctx.translate(hx,hy); ctx.strokeStyle='#ff9fb5'; ctx.lineWidth=3; for(let r=0;r<4;r++){ ctx.beginPath(); for(let h=0;h<6;h++){ const a=h*Math.PI/3+Math.PI/6; const cx=(r<3?r*10:28)-14, cy=r<3?(r%2?5:0):-4; ctx[h?'lineTo':'moveTo'](cx+6*Math.cos(a),cy+6*Math.sin(a)); } ctx.closePath(); ctx.stroke(); } ctx.restore();
+  txt(ctx,s<2?'oestradiol (steroid)':'',hx,hy-16,'#ffc6d2','700 12px '+F);
+  // mRNA and proteins
+  if(s>=4){ const n=Math.round(p*6); for(let k=0;k<n;k++){ const u=((st.t*0.2+k/6)%1); const bx=(1-u)*(1-u)*600+2*u*(1-u)*560+u*u*250, by=(1-u)*(1-u)*400+2*u*(1-u)*290+u*u*250; ctx.strokeStyle='#ffb36b'; ctx.lineWidth=3; ctx.beginPath(); for(let j=0;j<=24;j+=2){ const xx=bx-12+j, yy=by+Math.sin(j/3+k)*3; j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy); } ctx.stroke(); } if(p>0.6){ for(let k=0;k<5;k++){ blob(ctx,120+k*40,200+((k*23)%40),12,9,'#c9a0ff'); } txt(ctx,'new proteins change the cell',200,290,'#d9c6ff','700 12px '+F); } txt(ctx,'mRNA leaves the nucleus',520,300,'#ffb36b','700 12px '+F,'left'); }
+}
+function draw(){ const c=$('c-sig'), ctx=c.getContext('2d'); ctx.clearRect(0,0,900,520); ({qs:drawQS,ach:drawACH,adr:drawADR,ins:drawINS,ster:drawSTER})[st.sc](ctx); }
+$('s-next').onclick=()=>{ st.play=false; $('s-play').textContent='Play all'; setStep(st.s+1); };
+$('s-back').onclick=()=>{ st.play=false; $('s-play').textContent='Play all'; setStep(st.s-1); };
+$('s-reset').onclick=()=>{ st.play=false; $('s-play').textContent='Play all'; if(st.sc==='qs'){ st.qsN=6; $('qs-n').value=6; $('qs-v').textContent=6; st.ai=0; } setStep(0); };
+$('s-play').onclick=()=>{ st.play=!st.play; $('s-play').textContent=st.play?'Pause':'Play all'; if(st.play&&st.s===SC[st.sc].steps.length-1&&st.p>=1) setStep(0); };
+$('qs-n').oninput=e=>{ st.qsN=+e.target.value; $('qs-v').textContent=st.qsN; if(st.s===0) setStep(1); };
+function tick(ms){ st.t+=ms/1000; if(st.p<1) st.p=Math.min(1,st.p+ms/1800); else if(st.play){ if(st.sc==='qs'){ if(st.qsN<120){ st.qsN=Math.min(120,st.qsN+ms/60); $('qs-n').value=st.qsN; $('qs-v').textContent=Math.round(st.qsN); if(st.s===0) setStep(1); } } else if(st.s<SC[st.sc].steps.length-1){ st.pause=(st.pause||0)+ms; if(st.pause>2200){ st.pause=0; setStep(st.s+1); } } else { st.play=false; $('s-play').textContent='Play all'; } } }
+let last=0; function frame(now){ const dt=Math.min(100,now-(last||now)); last=now; if(!$('lab').hidden){ tick(dt); draw(); } requestAnimationFrame(frame); } requestAnimationFrame(frame);
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; ui(); draw(); };
+buildTabs(); ui();
+function fromHash(){ const h=location.hash.slice(1); if(SC[h]){ $('intro').hidden=true; $('lab').hidden=false; st.sc=h; buildTabs(); setStep(0); } }
+fromHash(); window.addEventListener('hashchange',fromHash);
+window.sigDebug={ st, setStep, tick:ms=>{ tick(ms); draw(); }, pick:k=>{ st.sc=k; buildTabs(); setStep(0); } };
+})();
+</script>
+
+</body>
+</html>

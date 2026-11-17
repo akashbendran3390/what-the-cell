@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Reproduction Hormone Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/reproduction-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Reproduction Hormone Lab">
+<meta property="og:description" content="Reproduction Hormone Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/reproduction-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Reproduction Hormone Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#120d12; --ink:#f7f1f6; --dim:#c9b9c6; --panel:#1b141b; --panel2:#251b25; --line:rgba(240,210,235,.18);
+  --accent:#f08cc0; --fsh:#7cc6fe; --lh:#ffd166; --oe:#f08cc0; --pg:#7ee0a1; --hcg:#c9a0ff;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#30061c}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0d090d}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#30061c;border-color:transparent}
+button.btn.ok{border-color:#7ee0a1;background:#183324}button.btn.no{border-color:#ff7b7b;background:#3a1717}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.hl-only{display:none} body.hl .hl-only{display:block} body.hl span.hl-only{display:inline}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:72px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider input{flex:1;min-width:140px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;margin:3px 0}
+.lab-l{font-size:13px;color:var(--dim);min-width:92px}
+.order{list-style:none;padding:0;margin:8px 0}.order li{padding:6px 10px;border-radius:8px;background:var(--panel2);margin:4px 0;line-height:1.4}
+.order li b{color:var(--accent)}
+.badge{display:inline-block;font:700 11px var(--body);padding:2px 7px;border-radius:999px;background:#3a1530;color:var(--accent);margin-left:6px;vertical-align:middle}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Reproduction Hormone Lab</h1><div class="sub">DP Biology D3.1 &middot; hormone levels are typical patterns, drawn to the same scale for comparison</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Four hormones, two cycles</h2>
+    <p>Run a 28-day cycle and watch FSH, LH, oestradiol and progesterone rise and fall as a follicle grows, an egg is released and the uterus lining builds up and breaks down. Then see what changes when an embryo implants, put the steps of IVF in the right order, and find out how a pregnancy test detects hCG.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-cyc" aria-pressed="true">1. The menstrual cycle</button><button type="button" id="t-ivf" aria-pressed="false">2. IVF</button><button type="button" id="t-test" aria-pressed="false">3. Pregnancy test <span class="badge">HL</span></button></div>
+
+    <div class="grid" id="p-cyc">
+      <div><div class="card">
+        <canvas id="c-cyc" width="900" height="600" aria-label="Pituitary, ovary and uterus lining above a graph of four hormones across 28 days"></canvas>
+        <div class="slider"><label for="cy-day">Day</label><input type="range" id="cy-day" min="1" max="40" step="0.1" value="1"><b id="cy-dv">1</b></div>
+        <div class="row"><button type="button" class="go" id="cy-play">Play</button><button type="button" class="btn" id="cy-ov">Jump to ovulation</button><label class="chk"><input type="checkbox" id="cy-preg"> An embryo implants this cycle</label></div>
+        <div class="row"><span class="lab-l">Show</span><label class="chk"><input type="checkbox" class="cy-s" value="fsh" checked> FSH</label><label class="chk"><input type="checkbox" class="cy-s" value="lh" checked> LH</label><label class="chk"><input type="checkbox" class="cy-s" value="oe" checked> Oestradiol</label><label class="chk"><input type="checkbox" class="cy-s" value="pg" checked> Progesterone</label><label class="chk"><input type="checkbox" class="cy-s" value="hcg" checked> hCG</label></div>
+      </div></div>
+      <div>
+        <div class="card"><h2 id="cy-h">Day 1</h2><div class="explain"><p id="cy-say"></p></div>
+          <p class="hl-only note" id="cy-hl"></p>
+          <p class="note">FSH and LH come from the anterior pituitary gland. Oestradiol and progesterone come from the ovary: first from the growing follicle, then from the corpus luteum.</p>
+          <p class="note">Syllabus: D3.1.5<span class="hl-only">, C2.1.13, C2.1.14, D3.1.19</span></p>
+        </div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Which hormone peaks just before ovulation? What does it cause?</li>
+          <li>Which structure makes progesterone after ovulation, and what does progesterone do to the uterus lining?</li>
+          <li>Explain why menstruation starts when progesterone falls.</li>
+          <li>Tick "An embryo implants". Which new hormone appears, and why does progesterone stay high?</li>
+          <li>Find one example of negative feedback and one of positive feedback in the cycle.</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <div class="grid" id="p-ivf" hidden>
+      <div><div class="card">
+        <canvas id="c-ivf" width="900" height="460" aria-label="An ovary, a culture dish and a uterus showing the current stage of IVF"></canvas>
+        <h2 style="margin-top:12px">What happens next?</h2>
+        <div class="row" id="ivf-opts"></div>
+        <div class="row"><button type="button" class="btn" id="ivf-reset">Start again</button><span class="note" id="ivf-score"></span></div>
+      </div></div>
+      <div>
+        <div class="card"><h2>Your IVF timeline</h2><div class="explain"><p id="ivf-say">Choose the first step of IVF from the buttons under the picture.</p></div>
+          <ol class="order" id="ivf-done"></ol>
+          <p class="note">Syllabus: D3.1.7</p>
+        </div>
+        <div class="card"><h2>Think about it</h2><ol class="tasks">
+          <li>Why are the woman's own FSH and LH switched off before the treatment starts?</li>
+          <li>Why are large doses of FSH given, rather than the normal amount?</li>
+          <li>What is the hCG (or LH) injection for, and why is egg collection timed so carefully after it?</li>
+          <li>Why is progesterone given after embryo transfer?</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <div class="grid" id="p-test" hidden>
+      <div><div class="card">
+        <canvas id="c-test" width="900" height="460" aria-label="A pregnancy test strip with urine moving along it past the test line and the control line"></canvas>
+        <div class="row"><button type="button" class="go" id="pt-preg">Add urine from a pregnant woman</button><button type="button" class="btn" id="pt-not">Add urine, not pregnant</button><button type="button" class="btn" id="pt-reset">New test</button></div>
+      </div></div>
+      <div>
+        <div class="card"><h2>How the strip works</h2><div class="explain"><p id="pt-say">Add a urine sample to the left end of the strip.</p></div>
+          <ol class="tasks">
+            <li><b>Mobile antibodies</b> near the end of the strip bind to hCG. They carry a coloured dye.</li>
+            <li>Urine carries them along the strip by capillary action.</li>
+            <li>At the <b>test line</b>, fixed antibodies bind a different part of hCG, holding hCG plus its dye-carrying antibody: a coloured line.</li>
+            <li>At the <b>control line</b>, fixed antibodies bind the mobile antibodies themselves, so a line appears whether or not hCG is present. It shows the test worked.</li>
+          </ol>
+          <p class="note">hCG is made by the embryo (later the placenta) from about a week after fertilization. It keeps the corpus luteum making progesterone. Syllabus: D3.1.17 (HL)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const F='Atkinson Hyperlegible, sans-serif';
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+let tab='cyc';
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#f7f1f6'; ctx.font=font||'700 14px '+F; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+const g=(d,m,s)=>Math.exp(-0.5*((d-m)/s)*((d-m)/s));
+
+/* ---------- CYCLE ---------- */
+const C={day:1,play:false,preg:false};
+const COL={fsh:'#7cc6fe',lh:'#ffd166',oe:'#f08cc0',pg:'#7ee0a1',hcg:'#c9a0ff'};
+const NAME={fsh:'FSH',lh:'LH',oe:'oestradiol',pg:'progesterone',hcg:'hCG'};
+function H(d,preg){ // d 1..40
+  const cyc=preg?d:((d-1)%28)+1;
+  const pre=!preg||d<22;
+  const sg=1/(1+Math.exp(-(cyc-15)/1.1)); let fsh=0.15+0.08*(1-sg)+0.32*g(cyc,3,2.4)+0.28*g(cyc,13.8,0.9)+0.1*g(cyc,28.5,1.6), lh=0.12+0.9*g(cyc,14,0.75)+0.05*g(cyc,3,3);
+  let oe=0.12+0.85*g(cyc,12.6,2.0)+0.42*g(cyc,21,3.2), pg=0.04+0.88*g(cyc,21,3.1);
+  let hcg=0;
+  if(preg&&d>=21){ const k=clamp((d-21)/3,0,1); pg=Math.max(pg,0.04+0.88*g(Math.min(d,21),21,3.1)*(1-k)+k*(0.92+0.01*(d-24))); oe=Math.max(oe,0.55+0.012*(d-21)); hcg=clamp((d-22)/10,0,1)*0.95; fsh=fsh*(1-k)+0.12*k; lh=lh*(1-k)+0.1*k; }
+  if(!preg&&cyc<=14&&d>28){ /* second cycle repeats */ }
+  // lining
+  let lin; if(cyc<=5) lin=1-0.8*(cyc-1)/4; else if(cyc<=14) lin=0.2+0.5*(cyc-5)/9; else if(cyc<=24) lin=0.7+0.3*(cyc-14)/10; else lin=1-0.15*(cyc-24)/4;
+  if(preg&&d>24) lin=1.05;
+  return {fsh,lh,oe,pg,hcg,lin,cyc};
+}
+function cySay(h){
+  const c=h.cyc, d=C.day; let s='', hl='';
+  if(C.preg&&d>=22){ s='The embryo has implanted in the endometrium and makes <b>hCG</b>. hCG keeps the corpus luteum alive, so it keeps secreting <b>progesterone</b> and oestradiol. The lining is maintained, there is no menstruation, and high progesterone keeps FSH and LH low so no new follicles develop. Later the placenta takes over making progesterone.'; hl='HL: hCG is the hormone detected by pregnancy tests. Progesterone keeps the uterus wall still and the lining rich in blood vessels throughout pregnancy.'; }
+  else if(c<=5){ s='<b>Menstruation.</b> Progesterone fell at the end of the last cycle, so the thickened uterus lining breaks down and is shed. Low oestradiol and progesterone mean the pituitary is no longer inhibited, so <b>FSH</b> rises.'; hl='HL: FSH binds to receptors on follicle cells, stimulating them to divide and secrete oestradiol.'; }
+  else if(c<12.5){ s='<b>Follicular phase.</b> FSH stimulates a follicle in the ovary to grow. The follicle cells secrete <b>oestradiol</b>, which makes the uterus lining thicken again (repair and growth). Rising oestradiol at first inhibits FSH: <b>negative feedback</b>.'; hl='HL: oestradiol is a steroid; it crosses the membrane and binds a receptor inside target cells, and the hormone-receptor complex changes gene expression.'; }
+  else if(c<14.6){ s='<b>LH surge.</b> When oestradiol is high for a while, it switches to stimulating the pituitary: a burst of <b>LH</b> (and some FSH) is released. This is <b>positive feedback</b>. The LH surge causes the mature follicle to burst and release the egg &ndash; <b>ovulation</b>, around day 14.'; hl='HL: positive feedback amplifies a change rather than reversing it; here it produces a short, sharp peak that triggers a one-off event.'; }
+  else if(c<25){ s='<b>Luteal phase.</b> LH turns the empty follicle into the <b>corpus luteum</b>, which secretes <b>progesterone</b> (and some oestradiol). Progesterone keeps the lining thick and full of blood vessels, ready for an embryo, and inhibits FSH and LH so no new follicle starts.'; hl='HL: progesterone acts on the endometrium through intracellular receptors that change which genes are expressed.'; }
+  else { s='No embryo has implanted, so there is no hCG. The <b>corpus luteum</b> breaks down, progesterone and oestradiol fall, and with them the support for the lining. The next menstruation is about to start, and FSH begins to rise again.'; hl='HL: removing the inhibition of the pituitary allows FSH to rise: the cycle restarts by negative feedback.'; }
+  $('cy-say').innerHTML=s; $('cy-hl').innerHTML=hl;
+  const phase=C.preg&&d>=22?'pregnancy':c<=5?'menstruation':c<12.5?'follicular phase':c<14.6?'ovulation':c<25?'luteal phase':'end of cycle';
+  $('cy-h').textContent='Day '+Math.floor(d)+' – '+phase;
+}
+function cyDraw(){
+  const c=$('c-cyc'), ctx=c.getContext('2d'); ctx.fillStyle='#0d090d'; ctx.fillRect(0,0,900,600);
+  const d=C.day, h=H(d,C.preg);
+  // pituitary
+  ctx.fillStyle='#4b3f63'; ctx.beginPath(); ctx.ellipse(110,70,90,46,0,0,7); ctx.fill(); ctx.fillStyle='#8a6bc0'; ctx.beginPath(); ctx.ellipse(110,110,26,18,0,0,7); ctx.fill();
+  txt(ctx,'anterior pituitary',110,58,'#efe6ff','700 13px '+F); txt(ctx,'FSH, LH',110,114,'#fff','700 12px '+F);
+  for(let k=0;k<Math.round(h.fsh*12);k++){ ctx.fillStyle=COL.fsh; ctx.beginPath(); ctx.arc(150+((k*41+d*30)%200),130+((k*17)%30),3.5,0,7); ctx.fill(); }
+  for(let k=0;k<Math.round(h.lh*14);k++){ ctx.fillStyle=COL.lh; ctx.beginPath(); ctx.arc(150+((k*53+d*44)%200),140+((k*23)%30),3.5,0,7); ctx.fill(); }
+  // ovary
+  const ox=450, oy=100; ctx.fillStyle='#d79db5'; ctx.beginPath(); ctx.ellipse(ox,oy,110,64,0,0,7); ctx.fill(); txt(ctx,'ovary',ox,oy-74,'#ffd6e8','700 13px '+F);
+  // small follicles
+  for(let k=0;k<7;k++){ const a=k*0.9+0.4; ctx.fillStyle='#f3d6e2'; ctx.beginPath(); ctx.arc(ox+Math.cos(a)*70,oy+Math.sin(a)*38,7,0,7); ctx.fill(); ctx.fillStyle='#b05a80'; ctx.beginPath(); ctx.arc(ox+Math.cos(a)*70,oy+Math.sin(a)*38,2,0,7); ctx.fill(); }
+  const c2=h.cyc; let lbl='';
+  if(!(C.preg&&d>=22) && c2<14.2){ const r=8+Math.max(0,c2-4)*3.2; ctx.fillStyle='#fbe9f1'; ctx.beginPath(); ctx.arc(ox+20,oy,r,0,7); ctx.fill(); ctx.fillStyle='#e9b2c9'; ctx.beginPath(); ctx.arc(ox+20,oy,r*0.62,0,7); ctx.fill(); ctx.fillStyle='#fff7d6'; ctx.beginPath(); ctx.arc(ox+20+r*0.35,oy-r*0.2,5,0,7); ctx.fill(); lbl=c2<5?'follicles starting to grow':'developing follicle (makes oestradiol)'; }
+  else if(c2<15.2 && !(C.preg&&d>=22)){ ctx.fillStyle='#fbe9f1'; ctx.beginPath(); ctx.arc(ox+20,oy,38,0.3,6.0); ctx.fill(); const u=(c2-14.2); ctx.fillStyle='#fff7d6'; ctx.beginPath(); ctx.arc(ox+60+u*120,oy-20-u*40,6,0,7); ctx.fill(); lbl='ovulation: the follicle bursts, the egg is released'; }
+  else { const cl=C.preg&&d>=22?1:clamp(1-(c2-22)/6,0.15,1); ctx.fillStyle=`rgba(240,200,60,${0.4+0.6*cl})`; ctx.beginPath(); ctx.arc(ox+20,oy,18+16*cl,0,7); ctx.fill(); lbl=cl>0.5?'corpus luteum (makes progesterone)':'corpus luteum breaking down'; }
+  txt(ctx,lbl,ox,oy+86,'#ffe1ef','12px '+F);
+  // uterus lining
+  const ux=760, uy=112; ctx.fillStyle='#7a2840'; ctx.beginPath(); ctx.moveTo(ux-100,uy-60); ctx.quadraticCurveTo(ux,uy-80,ux+100,uy-60); ctx.quadraticCurveTo(ux+70,uy+40,ux+22,uy+70); ctx.lineTo(ux-22,uy+70); ctx.quadraticCurveTo(ux-70,uy+40,ux-100,uy-60); ctx.fill();
+  const th=6+h.lin*26; ctx.fillStyle='#e0607e'; ctx.beginPath(); ctx.moveTo(ux-80,uy-50); ctx.quadraticCurveTo(ux,uy-66,ux+80,uy-50); ctx.quadraticCurveTo(ux+55,uy+30,ux+12,uy+60); ctx.lineTo(ux-12,uy+60); ctx.quadraticCurveTo(ux-55,uy+30,ux-80,uy-50); ctx.fill();
+  ctx.fillStyle='#2a0d16'; const inn=32-th*0.8; ctx.beginPath(); ctx.moveTo(ux-inn*1.5,uy-44+th*0.4); ctx.quadraticCurveTo(ux,uy-50+th*0.6,ux+inn*1.5,uy-44+th*0.4); ctx.quadraticCurveTo(ux+inn,uy+20,ux+4,uy+52); ctx.lineTo(ux-4,uy+52); ctx.quadraticCurveTo(ux-inn,uy+20,ux-inn*1.5,uy-44+th*0.4); ctx.fill();
+  if(h.cyc<=5 && !(C.preg&&d>=22)){ for(let k=0;k<6;k++){ ctx.fillStyle='#b3122e'; ctx.beginPath(); ctx.arc(ux+Math.sin(k*2+d*3)*6,uy+70+((k*14+d*40)%40),3,0,7); ctx.fill(); } }
+  if(C.preg&&d>=21){ ctx.fillStyle='#f6e7a8'; ctx.beginPath(); ctx.arc(ux+22,uy-10,7,0,7); ctx.fill(); txt(ctx,'embryo',ux+64,uy-14,'#f6e7a8','12px '+F); }
+  txt(ctx,"uterus lining (endometrium)",ux,uy-94,'#ffd6e8','700 13px '+F);
+  txt(ctx,h.lin>0.85?'thick, many blood vessels':h.lin>0.45?'thickening':'thin',ux,uy+108,'#ffe1ef','12px '+F);
+  // graph
+  const X=60,Y=210,Wd=740,Hh=330, maxD=C.preg?40:28; ctx.fillStyle='#160f16'; rr(ctx,10,196,880,396,10); ctx.fill();
+  ctx.strokeStyle='rgba(240,210,235,.1)'; ctx.lineWidth=1; for(let k=0;k<=4;k++){ ctx.beginPath(); ctx.moveTo(X,Y+k*Hh/4); ctx.lineTo(X+Wd,Y+k*Hh/4); ctx.stroke(); }
+  // phase bands
+  if(!C.preg){ ctx.fillStyle='rgba(200,30,60,.12)'; ctx.fillRect(X,Y,5/maxD*Wd,Hh); txt(ctx,'menstruation',X+2.5/maxD*Wd,Y+Hh+40,'#e69ab0','11px '+F); }
+  ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(X+13/maxD*Wd,Y); ctx.lineTo(X+13/maxD*Wd,Y+Hh); ctx.stroke(); ctx.setLineDash([]); txt(ctx,'ovulation',X+13/maxD*Wd,Y-4,'#fff','11px '+F);
+  for(let dd=1;dd<=maxD;dd+=dd<7?6:7){ const x=X+(dd-1)/maxD*Wd; txt(ctx,'day '+dd,x,Y+Hh+20,'#c9b9c6','12px '+F); }
+  const show=[...document.querySelectorAll('.cy-s')].filter(e=>e.checked).map(e=>e.value);
+  for(const k of show){ if(k==='hcg'&&!C.preg) continue; ctx.strokeStyle=COL[k]; ctx.lineWidth=3; ctx.beginPath(); let f=true; for(let dd=1;dd<=Math.min(d,maxD);dd+=0.1){ const v=H(dd,C.preg)[k]; const x=X+(dd-1)/maxD*Wd, y=Y+Hh-v*Hh*0.92; if(f){ctx.moveTo(x,y);f=false;} else ctx.lineTo(x,y);} ctx.stroke();
+    ctx.globalAlpha=0.18; ctx.beginPath(); f=true; for(let dd=Math.min(d,maxD);dd<=maxD;dd+=0.1){ const v=H(dd,C.preg)[k]; const x=X+(dd-1)/maxD*Wd, y=Y+Hh-v*Hh*0.92; if(f){ctx.moveTo(x,y);f=false;} else ctx.lineTo(x,y);} ctx.stroke(); ctx.globalAlpha=1; }
+  // lining band
+  ctx.fillStyle='rgba(224,96,126,.35)'; for(let dd=1;dd<=Math.min(d,maxD);dd+=0.25){ const v=H(dd,C.preg).lin; const x=X+(dd-1)/maxD*Wd; ctx.fillRect(x,Y+Hh+48,Wd/maxD/4+0.6,-v*0); ctx.fillRect(x,Y+Hh+50-v*14,Wd/maxD/4+0.6,v*14); }
+  txt(ctx,'lining',X-8,Y+Hh+48,'#e69ab0','11px '+F,'right');
+  // cursor
+  const cx=X+(Math.min(d,maxD)-1)/maxD*Wd; ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(cx,Y); ctx.lineTo(cx,Y+Hh); ctx.stroke();
+  let ly=Y+8; for(const k of ['fsh','lh','oe','pg','hcg']){ if(k==='hcg'&&!C.preg) continue; ctx.fillStyle=COL[k]; ctx.fillRect(X+Wd+12,ly,14,4); txt(ctx,NAME[k],X+Wd+30,ly+6,'#efe4ec','12px '+F,'left'); ly+=20; }
+  txt(ctx,'relative level',X-30,Y+10,'#c9b9c6','11px '+F,'left');
+  cySay(h); $('cy-dv').textContent=Math.floor(d);
+}
+$('cy-day').oninput=e=>{ C.day=+e.target.value; C.play=false; $('cy-play').textContent='Play'; cyDraw(); };
+$('cy-play').onclick=()=>{ C.play=!C.play; if(C.play&&C.day>=(C.preg?40:28)) C.day=1; $('cy-play').textContent=C.play?'Pause':'Play'; };
+$('cy-ov').onclick=()=>{ C.day=14; C.play=false; $('cy-play').textContent='Play'; $('cy-day').value=14; cyDraw(); };
+$('cy-preg').onchange=e=>{ C.preg=e.target.checked; $('cy-day').max=C.preg?40:28; if(C.day>28&&!C.preg) C.day=28; cyDraw(); };
+document.querySelectorAll('.cy-s').forEach(e=>e.onchange=cyDraw);
+$('cy-day').max=28;
+
+/* ---------- IVF ---------- */
+const STEPS=[
+ {k:'down',b:'Switch off the natural cycle',t:'A drug stops the pituitary releasing FSH and LH (down-regulation). This stops the woman ovulating on her own at the wrong time, so the doctors control the timing completely.'},
+ {k:'fsh',b:'Inject FSH for about 10 days',t:'Daily injections of a large dose of FSH make many follicles grow at once (superovulation), so that several eggs can be collected instead of one. Follicle growth is checked by ultrasound.'},
+ {k:'hcg',b:'Trigger injection of hCG',t:'One injection of hCG (which acts like LH) completes the maturation of the eggs. Egg collection is timed for about 36 hours later, just before the follicles would burst.'},
+ {k:'col',b:'Collect the eggs',t:'Under ultrasound guidance, a fine needle is passed into each follicle and the fluid containing the egg is sucked out.'},
+ {k:'fert',b:'Mix eggs with sperm in a dish',t:'Each egg is mixed with prepared sperm (or one sperm is injected straight into the egg). Fertilization happens outside the body: "in vitro" means "in glass".'},
+ {k:'cult',b:'Grow the embryos for 3 to 5 days',t:'The zygotes divide in a warm culture medium. After about five days the best embryos have become blastocysts.'},
+ {k:'trans',b:'Transfer an embryo into the uterus',t:'One (sometimes two) embryos are placed in the uterus through a thin tube. Extra embryos can be frozen.'},
+ {k:'prog',b:'Give progesterone',t:'Progesterone (as pessaries or injections) keeps the uterus lining thick so that the embryo can implant. About two weeks later a pregnancy test checks for hCG.'}];
+const I={n:0,wrong:0,opts:[]};
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function ivfOpts(){ const box=$('ivf-opts'); box.innerHTML=''; if(I.n>=STEPS.length){ box.innerHTML='<b>All eight steps are in order. Well done.</b>'; return; }
+  const left=STEPS.slice(I.n); const pick=shuffle(left.slice()).slice(0,Math.min(4,left.length)); if(!pick.includes(STEPS[I.n])){ pick[0]=STEPS[I.n]; shuffle(pick); }
+  for(const s of pick){ const b=document.createElement('button'); b.type='button'; b.className='btn'; b.textContent=s.b; b.onclick=()=>{ if(s===STEPS[I.n]){ I.n++; ivfDone(); ivfOpts(); ivfDraw(); $('ivf-say').innerHTML=s.t; } else { I.wrong++; b.classList.add('no'); b.disabled=true; $('ivf-say').innerHTML='Not yet &ndash; think about what has to be in place first. '+hint(); } $('ivf-score').textContent='Wrong guesses: '+I.wrong; }; box.appendChild(b); } }
+function hint(){ return ['The woman\'s own hormones must not interfere with the timing.','You need several eggs, not one.','The eggs need a final signal to mature, like the natural LH surge.','The eggs are ready: take them out.','Now the eggs need sperm.','The fertilized eggs need time to divide.','The embryo is ready to go back into the body.','The lining must be kept ready for implantation.'][I.n]; }
+function ivfDone(){ $('ivf-done').innerHTML=STEPS.slice(0,I.n).map((s,i)=>'<li><b>'+(i+1)+'.</b> '+s.b+'</li>').join(''); }
+function ivfDraw(){
+  const c=$('c-ivf'), ctx=c.getContext('2d'); ctx.fillStyle='#0d090d'; ctx.fillRect(0,0,900,460); const n=I.n;
+  // pituitary
+  ctx.fillStyle='#4b3f63'; ctx.beginPath(); ctx.ellipse(110,70,90,44,0,0,7); ctx.fill(); txt(ctx,'pituitary',110,62,'#efe6ff','700 13px '+F); txt(ctx,n>=1?'switched off':'releasing FSH, LH',110,82,n>=1?'#ff9aa8':'#d9cff0','12px '+F);
+  // syringe
+  if(n>=2&&n<=3){ ctx.save(); ctx.translate(250,170); ctx.rotate(-0.5); ctx.fillStyle='#d8e6f0'; rr(ctx,0,0,110,18,4); ctx.fill(); ctx.fillStyle=n===2?'#7cc6fe':'#c9a0ff'; ctx.fillRect(10,4,70,10); ctx.strokeStyle='#d8e6f0'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(110,9); ctx.lineTo(150,9); ctx.stroke(); ctx.restore(); txt(ctx,n===2?'FSH injections':'hCG trigger',230,230,n===2?'#7cc6fe':'#c9a0ff','700 13px '+F); }
+  // ovary with follicles
+  const ox=430, oy=150; ctx.fillStyle='#d79db5'; ctx.beginPath(); ctx.ellipse(ox,oy,120,76,0,0,7); ctx.fill(); txt(ctx,'ovary',ox,oy-88,'#ffd6e8','700 13px '+F);
+  const nf=n>=2?9:1, big=n>=2?(n>=3?24:18):10;
+  for(let k=0;k<nf;k++){ const a=k/nf*6.283+0.3, rad=nf>1?52:0; const x=ox+Math.cos(a)*rad*1.3, y=oy+Math.sin(a)*rad*0.7; if(n>=4){ ctx.strokeStyle='#fbe9f1'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(x,y,big*0.7,0,7); ctx.stroke(); continue; } ctx.fillStyle='#fbe9f1'; ctx.beginPath(); ctx.arc(x,y,big,0,7); ctx.fill(); ctx.fillStyle='#fff7d6'; ctx.beginPath(); ctx.arc(x+big*0.3,y-big*0.2,4,0,7); ctx.fill(); }
+  txt(ctx,n<2?'one follicle (normal cycle)':n<4?'many follicles growing':'eggs collected',ox,oy+100,'#ffe1ef','12px '+F);
+  if(n===4){ ctx.strokeStyle='#d8e6f0'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(ox-180,oy+120); ctx.lineTo(ox-30,oy+10); ctx.stroke(); }
+  // dish
+  const dx=720, dy=150; ctx.strokeStyle='#cfe1ea'; ctx.lineWidth=3; ctx.beginPath(); ctx.ellipse(dx,dy,120,46,0,0,7); ctx.stroke(); ctx.fillStyle='rgba(255,210,150,.12)'; ctx.fill(); txt(ctx,'culture dish',dx,dy-60,'#d8eef6','700 13px '+F);
+  if(n>=4){ for(let k=0;k<5;k++){ const x=dx-70+k*35, y=dy+(k%2?10:-8); ctx.fillStyle='#fff7d6'; ctx.beginPath(); ctx.arc(x,y,10,0,7); ctx.fill();
+      if(n>=6){ ctx.fillStyle='#f2d58f'; const cells=n>=7?8:4; for(let j=0;j<cells;j++){ ctx.beginPath(); ctx.arc(x+Math.cos(j/cells*6.28)*5,y+Math.sin(j/cells*6.28)*5,3.4,0,7); ctx.fill(); } }
+      if(n===5){ for(let j=0;j<5;j++){ ctx.strokeStyle='#bfe3ff'; ctx.lineWidth=1.5; const a=j*1.3; ctx.beginPath(); ctx.moveTo(x+Math.cos(a)*12,y+Math.sin(a)*12); ctx.lineTo(x+Math.cos(a)*22,y+Math.sin(a)*22); ctx.stroke(); } } } }
+  txt(ctx,n<4?'empty':n===4?'eggs':n===5?'eggs + sperm':n===6?'early embryos':'blastocysts',dx,dy+66,'#d8eef6','12px '+F);
+  // uterus
+  const ux=450, uy=360; ctx.fillStyle='#7a2840'; ctx.beginPath(); ctx.moveTo(ux-110,uy-60); ctx.quadraticCurveTo(ux,uy-80,ux+110,uy-60); ctx.quadraticCurveTo(ux+70,uy+40,ux+22,uy+80); ctx.lineTo(ux-22,uy+80); ctx.quadraticCurveTo(ux-70,uy+40,ux-110,uy-60); ctx.fill();
+  const th=n>=8?30:16; ctx.fillStyle='#e0607e'; ctx.beginPath(); ctx.ellipse(ux,uy-20,80,th,0,0,7); ctx.fill(); ctx.fillStyle='#2a0d16'; ctx.beginPath(); ctx.ellipse(ux,uy-20,70,Math.max(4,th-14),0,0,7); ctx.fill();
+  txt(ctx,'uterus',ux+140,uy-30,'#ffd6e8','700 13px '+F,'left'); if(n>=8) txt(ctx,'lining kept thick by progesterone',ux+140,uy-10,'#7ee0a1','12px '+F,'left');
+  if(n>=7){ ctx.fillStyle='#f2d58f'; ctx.beginPath(); ctx.arc(ux+20,uy-22,8,0,7); ctx.fill(); txt(ctx,'embryo',ux+20,uy-40,'#f6e7a8','12px '+F); }
+  txt(ctx,'Step '+Math.min(n+1,8)+' of 8',60,440,'#c9b9c6','700 13px '+F,'left');
+}
+$('ivf-reset').onclick=()=>{ I.n=0; I.wrong=0; ivfDone(); ivfOpts(); ivfDraw(); $('ivf-score').textContent=''; $('ivf-say').innerHTML='Choose the first step of IVF from the buttons under the picture.'; };
+
+/* ---------- PREGNANCY TEST ---------- */
+const PT={t:-1,preg:true,parts:[]};
+function ptStart(preg){ PT.t=0; PT.preg=preg; PT.parts=[]; for(let k=0;k<26;k++) PT.parts.push({x:150+Math.random()*30,y:200+Math.random()*60,kind:'ab',hcg:false,stuck:null}); if(preg) for(let k=0;k<14;k++) PT.parts.push({x:60+Math.random()*60,y:200+Math.random()*60,kind:'hcg',stuck:null}); }
+function ptStep(dt){ if(PT.t<0) return; PT.t+=dt; const front=60+PT.t*90;
+  for(const p of PT.parts){ if(p.stuck) continue; if(p.x<front-10){ p.x+=dt*(70+Math.random()*30); p.y+=Math.sin(PT.t*3+p.x)*0.3; p.y=clamp(p.y,198,262); }
+    if(p.kind==='ab'&&!p.hcg){ for(const q of PT.parts){ if(q.kind==='hcg'&&!q.bound&&Math.abs(q.x-p.x)<14&&Math.abs(q.y-p.y)<14){ p.hcg=true; q.bound=true; q.dead=true; break; } } }
+    if(p.kind==='ab'&&p.hcg&&p.x>=480&&p.x<=500&&!p.stuck){ p.stuck='test'; p.x=480+Math.random()*16; }
+    if(p.kind==='ab'&&!p.hcg&&p.x>=640&&p.x<=660&&!p.stuck&&Math.random()<0.8){ p.stuck='ctrl'; p.x=640+Math.random()*16; }
+    if(p.kind==='hcg'&&!p.bound&&p.x>=480&&p.x<=500&&Math.random()<0.5){ p.stuck='testfree'; }
+    if(p.x>820) p.x=820; } }
+function ptDraw(){
+  const c=$('c-test'), ctx=c.getContext('2d'); ctx.fillStyle='#0d090d'; ctx.fillRect(0,0,900,460);
+  // strip housing
+  ctx.fillStyle='#f2f2f2'; rr(ctx,30,170,820,120,24); ctx.fill(); ctx.fillStyle='#fbfbf6'; rr(ctx,50,190,780,80,10); ctx.fill();
+  const front=PT.t<0?50:clamp(60+PT.t*90,50,830); ctx.fillStyle='rgba(240,220,120,.35)'; ctx.fillRect(50,190,front-50,80);
+  // zones
+  ctx.strokeStyle='#ccc'; ctx.setLineDash([4,4]); for(const x of [140,480,640]){ ctx.beginPath(); ctx.moveTo(x,190); ctx.lineTo(x,270); ctx.stroke(); } ctx.setLineDash([]);
+  txt(ctx,'sample',90,160,'#f7f1f6','700 13px '+F); txt(ctx,'mobile antibodies',215,160,'#f7f1f6','700 13px '+F); txt(ctx,'test line (T)',490,160,'#f7f1f6','700 13px '+F); txt(ctx,'control line (C)',650,160,'#f7f1f6','700 13px '+F);
+  // fixed antibodies
+  function Y(x,y,col,s){ ctx.strokeStyle=col; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(x,y+s); ctx.lineTo(x,y); ctx.lineTo(x-s*0.7,y-s*0.7); ctx.moveTo(x,y); ctx.lineTo(x+s*0.7,y-s*0.7); ctx.stroke(); }
+  for(let k=0;k<6;k++){ Y(488,200+k*13,'#4c8f6a',6); Y(648,200+k*13,'#4c7fb0',6); }
+  // line intensity
+  const nt=PT.parts.filter(p=>p.stuck==='test').length, nc=PT.parts.filter(p=>p.stuck==='ctrl').length;
+  ctx.fillStyle=`rgba(200,30,90,${clamp(nt/8,0,0.85)})`; ctx.fillRect(478,190,20,80); ctx.fillStyle=`rgba(200,30,90,${clamp(nc/8,0,0.85)})`; ctx.fillRect(638,190,20,80);
+  // particles
+  for(const p of PT.parts){ if(p.dead) continue; if(p.kind==='hcg'){ ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.arc(p.x,p.y,5,0,7); ctx.fill(); }
+    else { Y(p.x,p.y,'#ffb3c8',7); ctx.fillStyle='#e01e5a'; ctx.beginPath(); ctx.arc(p.x,p.y+8,3,0,7); ctx.fill(); if(p.hcg){ ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.arc(p.x,p.y-8,5,0,7); ctx.fill(); } } }
+  // key
+  Y(80,360,'#ffb3c8',8); ctx.fillStyle='#e01e5a'; ctx.beginPath(); ctx.arc(80,370,3,0,7); ctx.fill(); txt(ctx,'mobile antibody with dye',96,366,'#efe4ec','12px '+F,'left');
+  ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.arc(320,362,5,0,7); ctx.fill(); txt(ctx,'hCG',334,366,'#efe4ec','12px '+F,'left');
+  Y(420,362,'#4c8f6a',7); txt(ctx,'fixed antibody: binds hCG',434,366,'#efe4ec','12px '+F,'left');
+  Y(640,362,'#4c7fb0',7); txt(ctx,'fixed antibody: binds mobile antibody',654,366,'#efe4ec','12px '+F,'left');
+  // result window
+  if(PT.t>8){ const pos=nt>2; txt(ctx,pos?'Two lines: pregnant (hCG present)':'One line (control only): not pregnant',450,420,pos?'#ff9ac0':'#bfe3ff','800 20px Bricolage Grotesque, sans-serif'); }
+  let s='Add a urine sample to the left end of the strip.';
+  if(PT.t>=0&&PT.t<2.5) s='Urine soaks along the strip. '+(PT.preg?'It contains hCG made by the embryo.':'It contains no hCG.')+' It picks up the mobile antibodies, which carry a pink dye.';
+  else if(PT.t>=2.5&&PT.t<6) s=PT.preg?'Mobile antibodies have bound hCG. At the test line, fixed antibodies grab the hCG (by a different site), so hCG plus its dyed antibody collect there and a line appears.':'With no hCG, the mobile antibodies pass straight over the test line &ndash; the fixed antibodies there only bind hCG.';
+  else if(PT.t>=6) s='At the control line, fixed antibodies bind the mobile antibodies themselves. A control line shows that the urine flowed along the strip and the test worked. '+(PT.preg?'Two lines = positive.':'Only the control line = negative.');
+  $('pt-say').innerHTML=s;
+}
+$('pt-preg').onclick=()=>ptStart(true); $('pt-not').onclick=()=>ptStart(false); $('pt-reset').onclick=()=>{ PT.t=-1; PT.parts=[]; ptDraw(); };
+
+/* ---------- shell ---------- */
+const TABS=['cyc','ivf','test'];
+function showTab(t){ tab=t; for(const k of TABS){ $('p-'+k).hidden=k!==t; $('t-'+k).setAttribute('aria-pressed',k===t); } if(t==='ivf'&&!$('ivf-opts').children.length) ivfOpts(); draw(); }
+for(const k of TABS) $('t-'+k).onclick=()=>showTab(k);
+function draw(){ if(tab==='cyc') cyDraw(); else if(tab==='ivf') ivfDraw(); else ptDraw(); }
+function stepMs(ms){ if(tab==='cyc'&&C.play){ C.day+=ms/1000*1.6; const mx=C.preg?40:28; if(C.day>=mx){ C.day=mx; C.play=false; $('cy-play').textContent='Play'; } $('cy-day').value=C.day; } if(tab==='test') ptStep(ms/1000); }
+let last=0;
+function frame(now){ const dt=Math.min(100,now-(last||now)); last=now; if(!$('lab').hidden){ stepMs(dt); if(tab!=='ivf'||true) draw(); } requestAnimationFrame(frame); }
+requestAnimationFrame(frame);
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl'); setLevel(level);
+$('b-start').onclick=()=>{ $('intro').hidden=true; $('lab').hidden=false; draw(); };
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ $('intro').hidden=true; $('lab').hidden=false; showTab(h); } }
+fromHash(); window.addEventListener('hashchange',fromHash);
+ivfOpts();
+window.reproDebug={ step:ms=>{ stepMs(ms); draw(); }, C, I, PT, STEPS, showTab, H };
+})();
+</script>
+
+</body>
+</html>

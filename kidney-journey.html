@@ -220,17 +220,179 @@ window.JOURNEY = {
     function updateSide() { A.side('<h3>What reaches the urine</h3><div class="row"><span class="dot" style="background:#4fb3ff"></span>Water: ' + (adh ? 'little (ADH high)' : 'a lot (ADH low)') + '</div><div class="row"><span class="dot" style="background:#69d27a"></span>Urea: all of it</div><div class="row"><span class="dot" style="background:#ffd166"></span>Glucose: none</div><div class="row"><span class="dot" style="background:#ff8c42"></span>Sodium: very little</div><div class="row"><span class="dot" style="background:#9b5de5"></span>Proteins and cells: never filtered</div><p style="margin:6px 0 0">' + (adh ? 'Small volume of concentrated urine.' : 'Large volume of dilute urine.') + '</p>'); }
     updateSide();
     const hero = new THREE.Mesh(new THREE.SphereGeometry(0.9, 16, 12), M(0xffffff, { emissive: 0x555555 })); scene.add(hero);
+    // ---------- close-ups (2026-11-18) ----------
+    const polyAt = (P, f) => { const n = P.length - 1, x = Math.max(0, Math.min(0.9999, f)) * n, i = Math.floor(x); return P[i].clone().lerp(P[i + 1], x - i); };
+    function flow(g, P, n, col, r, speed, oct) { const geo = oct ? new THREE.OctahedronGeometry(r) : new THREE.SphereGeometry(r, 10, 8), mat = M(col, { emissive: col, emissiveIntensity: 0.3 }), ms = [];
+      for (let i = 0; i < n; i++) { const m = new THREE.Mesh(geo, mat); g.add(m); ms.push({ m, ph: i / n, j: V(A.rnd(-0.5, 0.5), A.rnd(-0.5, 0.5), A.rnd(-0.8, 0.8)) }); }
+      return { set(on) { ms.forEach(o => o.m.visible = on); }, tick(t) { ms.forEach(o => o.m.position.copy(polyAt(P, (t * speed + o.ph) % 1)).add(o.j)); } }; }
+    const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+    const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+    const D_FILTER = { n: 'The filtration barrier', bg: '#1b0f12', dist: 52, target: V(0, 2, 0), yaw: 0.25, pitch: 0.18,
+      steps: [
+        { n: 'Three layers between blood and filtrate', s: 'Blood in the glomerulus (top) is separated from Bowman\'s capsule (bottom) by three layers. High blood pressure pushes fluid down through all three: this is **ultrafiltration**.', pts: ['Capillary wall with pores', 'Basement membrane', 'Podocyte foot processes with slits'], cs: 'D3.3.8' },
+        { n: 'Pores in the capillary wall', s: 'The cells lining the glomerular capillaries have many **pores** (fenestrations). Plasma passes through easily, but red and white blood cells are far too big.', cs: 'D3.3.8' },
+        { n: 'The basement membrane: the real filter', s: 'Under the capillary cells is the **basement membrane**, a mesh of glycoproteins. It lets small molecules through but holds back **plasma proteins** such as albumin.', h: 'Its mesh is fine enough to stop molecules larger than about 65 000 daltons, and its negative charge repels negatively charged proteins too.', cs: 'D3.3.8' },
+        { n: 'Podocytes and filtration slits', s: 'The inner wall of Bowman\'s capsule is made of **podocytes**: cells with many interlocking foot processes. The narrow gaps between them, the **filtration slits**, are the last barrier.', cs: 'D3.3.8' },
+        { n: 'What gets through', s: 'The filtrate that collects in Bowman\'s capsule is like plasma without the proteins.', pts: ['Through: water, glucose, amino acids, salts (ions), urea.', 'Kept in the blood: blood cells and plasma proteins.'], q: { q: 'A urine test finds protein in a patient\'s urine. Which part of the nephron is most likely damaged?', o: ['The loop of Henle', 'The filtration barrier in the glomerulus', 'The collecting duct'], a: 1, why: 'Proteins are normally held back by the basement membrane and podocytes, so protein in urine points to a damaged filter.' }, cs: 'D3.3.8' }
+      ],
+      build(D) { const g = D.scene;
+        const blood = new THREE.Mesh(new THREE.BoxGeometry(46, 9, 16), T(0xd62828, 0.1)); blood.position.y = 12; g.add(blood);
+        const capsule = new THREE.Mesh(new THREE.BoxGeometry(46, 9, 16), T(0xf2a477, 0.08)); capsule.position.y = -9; g.add(capsule);
+        const endoM = M(0xe76f51, { roughness: 0.6 }); for (let x = -22; x < 22; x += 5.4) { const b = new THREE.Mesh(new THREE.BoxGeometry(4.2, 1, 14), endoM); b.position.set(x + 2.1, 7, 0); g.add(b); }
+        const bm = new THREE.Mesh(new THREE.BoxGeometry(46, 1.8, 14), T(0xb5a4d6, 0.55)); bm.position.y = 5; g.add(bm);
+        const footM = M(0xf4a261, { roughness: 0.5 }); for (let x = -22.5; x < 22; x += 2.9) { const f = new THREE.Mesh(new THREE.SphereGeometry(1.2, 12, 8), footM); f.position.set(x + 1.2, 2.6, 0); f.scale.set(1, 1, 6); g.add(f); }
+        const body = new THREE.Mesh(new THREE.SphereGeometry(5, 24, 16), M(0xe9967a)); body.scale.set(1.6, 0.8, 1); body.position.set(0, -6, -2); g.add(body);
+        for (let k = -3; k <= 3; k++) { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.9, 7, 8), M(0xe9967a)); c.position.set(k * 3, -1.5, -2); c.rotation.z = -k * 0.12; g.add(c); }
+        D.label('Blood in the glomerulus', V(-14, 15, 0)); const lp = D.label('Pore', V(-17.2, 7.8, 7.5)); const lb = D.label('Basement membrane', V(14, 5.2, 7.5)); const lf = D.label('Foot processes', V(12, 1.4, 7.5)); const ls = D.label('Filtration slit', V(-9.4, 1.4, 7.5)); const lpod = D.label('Podocyte', V(8, -7, 4)); D.label("Bowman's capsule space", V(-14, -12, 0));
+        // particles: small ones pass all the way; proteins stop at the basement membrane; cells stop at the pores
+        const small = [[0x4fb3ff, 30, 0.38, false], [0xffd166, 10, 0.5, true], [0xff8c42, 12, 0.42, false], [0x69d27a, 10, 0.46, false]].map(([c, n, r, o]) => { const arr = []; const geo = o ? new THREE.OctahedronGeometry(r) : new THREE.SphereGeometry(r, 10, 8), mat = M(c, { emissive: c, emissiveIntensity: 0.3 });
+          for (let i = 0; i < n; i++) { const m = new THREE.Mesh(geo, mat); g.add(m); const slot = Math.floor(A.rnd(0, 8)); arr.push({ m, ph: Math.random(), x: -19.2 + slot * 5.4 + A.rnd(-0.2, 0.2), z: A.rnd(-6, 6), x2: A.rnd(-20, 20) }); } return arr; }).flat();
+        const prot = []; for (let i = 0; i < 10; i++) { const m = new THREE.Mesh(new THREE.IcosahedronGeometry(0.85), M(0x9b5de5)); g.add(m); prot.push({ m, ph: Math.random(), x: -19.2 + Math.floor(A.rnd(0, 8)) * 5.4, z: A.rnd(-6, 6) }); }
+        const cells = []; for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.6, 10, 18), M(0xc1121f)); g.add(m); cells.push({ m, ph: i / 6, z: A.rnd(-5, 5) }); }
+        let step = 0, tt = 0;
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) tt += dt;
+            small.forEach(p => { const f = (tt * 0.12 + p.ph) % 1, y = 16 - f * 30; p.m.position.set(y < -1 ? p.x + (p.x2 - p.x) * ease((-1 - y) / 12) : p.x, y, p.z); });
+            prot.forEach(p => { const f = (tt * 0.16 + p.ph) % 1, y = f < 0.6 ? 16 - f / 0.6 * 9.6 : 6.4 + (f - 0.6) / 0.4 * 9.6; p.m.position.set(p.x + Math.sin(f * 9) * 0.6, y, p.z); p.m.rotation.y += dt; });
+            cells.forEach(c => { const f = (tt * 0.06 + c.ph) % 1; c.m.position.set(-22 + f * 44, 11 + Math.sin(f * 20) * 0.8, c.z); c.m.rotation.x = Math.PI / 2; });
+            const sh = s => [0, s, 4].indexOf(step) < 0; hideL(lp, sh(1)); hideL(lb, sh(2)); hideL(lf, sh(3)); hideL(ls, sh(3)); hideL(lpod, sh(3)); } };
+      } };
+
+    const D_PCT = { n: 'A proximal tubule cell', bg: '#1b0f12', dist: 50, target: V(0, 0, 0), yaw: 0.35, pitch: 0.15,
+      steps: [
+        { n: 'Built for reabsorption', s: 'Each cell lining the proximal convoluted tubule has **microvilli** facing the filtrate, giving a huge surface area, and many **mitochondria** near its base to supply ATP for active transport.', pts: ['Top: filtrate in the tubule (lumen).', 'Bottom: tissue fluid and a capillary that carries reabsorbed substances away.'], cs: 'D3.3.8' },
+        { n: 'Step 1: sodium is pumped out', s: 'Sodium-potassium pumps in the base of the cell use ATP to push sodium ions (orange) out into the tissue fluid. This keeps the sodium concentration **inside the cell low**.', cs: 'D3.3.8' },
+        { n: 'Step 2: cotransport brings glucose in', s: 'Sodium ions now diffuse into the cell from the filtrate, down their gradient, through a **cotransporter** protein. Each one carries a glucose molecule (yellow) in with it, even against glucose\'s own concentration gradient.', h: 'This is secondary active transport: the energy comes from the sodium gradient, which the pump made using ATP. Amino acids are reabsorbed the same way.', cs: 'D3.3.8' },
+        { n: 'Step 3: glucose into the blood', s: 'Glucose leaves the base of the cell by **facilitated diffusion** through channel proteins and enters the capillary.', cs: 'D3.3.8' },
+        { n: 'Step 4: water follows by osmosis', s: 'Taking solutes out of the filtrate lowers its solute concentration, so **water** (blue) follows by osmosis, through aquaporins and between the cells.', pts: ['About two thirds of the water and salt, and all the glucose and amino acids, are reabsorbed here.'], q: { q: 'Why do proximal tubule cells contain so many mitochondria?', o: ['To make glucose for the blood', 'To supply ATP for the sodium-potassium pumps', 'To break down urea'], a: 1, why: 'The pumps need ATP to keep sodium low inside the cell, and that sodium gradient drives glucose reabsorption.' }, cs: 'D3.3.8' }
+      ],
+      build(D) { const g = D.scene;
+        const cell = new THREE.Mesh(new THREE.BoxGeometry(18, 12, 10), T(0xf2a477, 0.22)); g.add(cell);
+        [-1, 1].forEach(s => { const n = new THREE.Mesh(new THREE.BoxGeometry(6, 12, 10), T(0xf2a477, 0.1)); n.position.x = s * 12.2; g.add(n); });
+        const nuc = new THREE.Mesh(new THREE.SphereGeometry(2.4, 24, 16), M(0x6d4c9f)); nuc.position.set(-3, 1.5, 0); g.add(nuc);
+        const mG = new THREE.SphereGeometry(0.8, 14, 10); mG.scale(2.2, 1, 1); for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(mG, M(0xf08a3c, { emissive: 0x401800 })); m.position.set(-7 + i * 1.8, -4.4 + (i % 2) * 1.1, A.rnd(-3, 3)); m.rotation.z = A.rnd(-0.4, 0.4); g.add(m); }
+        const mv = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.28, 0.28, 2.6, 8), M(0xffd6b8), 140); const d = new THREE.Object3D(); let k = 0;
+        for (let x = -8.5; x <= 8.5; x += 1.25) for (let z = -4.2; z <= 4.2; z += 1.25) { if (k >= 140) break; d.position.set(x, 7.3, z); d.updateMatrix(); mv.setMatrixAt(k++, d.matrix); } mv.count = k; g.add(mv);
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 40, 24, 1, true), T(0xd62828, 0.3)); cap.rotation.z = Math.PI / 2; cap.position.y = -13; g.add(cap);
+        const pump = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1.6, 14), M(0x2a9d8f)); pump.position.set(3, -6, 4.5); g.add(pump);
+        const cot = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1.6, 14), M(0x8338ec)); cot.position.set(4, 6, 4.5); g.add(cot);
+        const chan = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 1.6, 14), M(0xffd166)); chan.position.set(7, -6, 4.5); g.add(chan);
+        const aq = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 1.6, 12), M(0x4fb3ff)); aq.position.set(-6.5, 6, 4.5); g.add(aq);
+        D.label('Microvilli', V(-7, 10, 5)); D.label('Filtrate in the tubule', V(-12, 12.5, 0)); D.label('Nucleus', V(-3, 4.4, 2)); D.label('Mitochondria', V(-9, -4, 5)); D.label('Capillary', V(-14, -13, 3));
+        const lPump = D.label('Na+/K+ pump (ATP)', V(3, -7.8, 5)), lCot = D.label('Cotransporter', V(4, 4.2, 5)), lCh = D.label('Glucose channel', V(8.5, -7.8, 5)), lAq = D.label('Aquaporin', V(-6.5, 4.2, 5));
+        const naOut = flow(g, [V(3, -3, 4.5), V(3, -6, 4.5), V(3, -10, 4.5), V(1, -13, 0)], 6, 0xff8c42, 0.45, 0.35);
+        const kIn = flow(g, [V(2, -11, 4), V(2.4, -6, 4.5), V(2, -2, 4)], 4, 0xb388eb, 0.42, 0.35);
+        const naIn = flow(g, [V(3.6, 11, 4.5), V(3.6, 6, 4.5), V(3, 1, 4.5), V(3, -3, 4.5)], 6, 0xff8c42, 0.45, 0.3);
+        const glIn = flow(g, [V(4.6, 11, 4.5), V(4.6, 6, 4.5), V(6, 0, 4.5), V(7, -3, 4.5)], 6, 0xffd166, 0.55, 0.3, true);
+        const glOut = flow(g, [V(7, -3, 4.5), V(7, -6, 4.5), V(7, -10, 4.5), V(6, -13, 0)], 5, 0xffd166, 0.55, 0.35, true);
+        const wat = flow(g, [V(-6.5, 11, 4.5), V(-6.5, 6, 4.5), V(-6.5, 0, 4.5), V(-6.5, -6, 4.5), V(-6, -13, 0)], 10, 0x4fb3ff, 0.38, 0.3);
+        const ATP = new THREE.Mesh(new THREE.SphereGeometry(0.5, 10, 8), M(0xffffff, { emissive: 0xffee88 })); g.add(ATP);
+        let step = 0, tt = 0;
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) tt += dt;
+            const on = { naOut: step >= 1, kIn: step >= 1, naIn: step >= 2, glIn: step >= 2, glOut: step >= 3, wat: step >= 4 };
+            naOut.set(on.naOut); kIn.set(on.kIn); naIn.set(on.naIn); glIn.set(on.glIn); glOut.set(on.glOut); wat.set(on.wat);
+            [naOut, kIn, naIn, glIn, glOut, wat].forEach(f => f.tick(tt));
+            ATP.visible = step >= 1; const a = (tt * 0.35) % 1; ATP.position.set(-2 + a * 5, -4.5, 4.5); ATP.scale.setScalar(a > 0.85 ? 1 + (a - 0.85) * 8 : 1);
+            hideL(lPump, step < 1); hideL(lCot, step < 2); hideL(lCh, step < 3); hideL(lAq, step < 4); } };
+      } };
+
+    const D_LOOP = { n: 'Building the salty medulla', bg: '#1b0f12', dist: 66, target: V(4, -2, 0), yaw: 0, pitch: 0.05,
+      steps: [
+        { n: 'Two limbs, two different walls', s: 'The loop of Henle dips down into the medulla and comes back up. Its two limbs behave differently:', pts: ['**Descending limb** (blue): water can leave, salt cannot.', '**Ascending limb** (orange): salt is pumped out, water cannot leave.'], cs: 'D3.3.9' },
+        { n: 'The ascending limb pumps salt out', s: 'Cells of the ascending limb actively transport sodium and chloride ions out into the tissue fluid of the medulla, using ATP. Because this limb is **impermeable to water**, the water stays behind.', pts: ['So the medulla gets saltier, and the fluid going up the limb gets more dilute.'], cs: 'D3.3.9' },
+        { n: 'The descending limb loses water', s: 'The fluid round the descending limb is now salty, so **water leaves** it by osmosis. The filtrate inside becomes more concentrated as it goes down.', cs: 'D3.3.9' },
+        { n: 'A gradient builds up', s: 'Because fluid flows down one limb and up the other (in opposite directions), the effect is multiplied along the loop. The medulla ends up about **four times** as concentrated as blood at its deepest point.', h: 'This is the countercurrent multiplier. Values are typical for humans: about 300 mOsm at the cortex rising to about 1200 mOsm deep in the medulla. Blood vessels called the vasa recta also run in a loop, so they take away water without washing the gradient away.', cs: 'D3.3.9' },
+        { n: 'The collecting duct uses the gradient', s: 'The collecting duct (lilac) runs down through the same salty medulla. When its walls let water through, water leaves by osmosis into the salty tissue, and the urine becomes concentrated.', pts: ['This is how the kidney can make urine much more concentrated than blood.'], q: { q: 'Desert mammals such as kangaroo rats have very long loops of Henle. What is the advantage?', o: ['They filter blood faster', 'A longer loop builds a saltier medulla, so more water can be reabsorbed', 'Longer loops make more urea'], a: 1, why: 'A longer loop multiplies the gradient further, so the collecting duct can draw out more water and the urine is very concentrated.' }, cs: 'D3.3.9, D3.3.10' }
+      ],
+      build(D) { const g = D.scene;
+        const bands = [[0x5a3a33, 300], [0x6b3d22, 600], [0x86471d, 900], [0xa3561c, 1200]];
+        bands.forEach(([c, v], i) => { const b = new THREE.Mesh(new THREE.PlaneGeometry(56, 9), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.55 })); b.position.set(4, 13.5 - i * 9, -3); g.add(b); });
+        const gl = bands.map(([c, v], i) => D.label(v + ' mOsm', V(-22, 13.5 - i * 9, 0)));
+        const dl = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 34, 16), T(0x8ec5ff, 0.55)); dl.position.set(-6, 1, 0); g.add(dl);
+        const al = new THREE.Mesh(new THREE.CylinderGeometry(1.7, 1.7, 34, 16), T(0xffb067, 0.6)); al.position.set(6, 1, 0); g.add(al);
+        const bend = new THREE.Mesh(new THREE.TorusGeometry(6, 1.5, 12, 30, Math.PI), T(0xd8a0ff, 0.5)); bend.rotation.z = Math.PI; bend.position.set(0, -16, 0); g.add(bend);
+        const cd = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 40, 16), T(0xd9d1ff, 0.45)); cd.position.set(20, -1, 0); g.add(cd);
+        D.label('Descending limb', V(-12, 20, 0)); D.label('Ascending limb', V(10, 20, 0)); const lcd = D.label('Collecting duct', V(25, 21, 0));
+        const fin = [D.label('300', V(-6, 15, 2.5)), D.label('1200', V(0, -21, 2.5)), D.label('100', V(6, 15, 2.5))];
+        const naF = [], wF = [];
+        for (let i = 0; i < 4; i++) { const y = 12 - i * 8; naF.push(flow(g, [V(6, y, 0), V(0, y - 1, 1.5)], 3, 0xff8c42, 0.5, 0.45)); wF.push(flow(g, [V(-6, y - 2, 0), V(-1, y - 3, -1.5)], 3, 0x4fb3ff, 0.42, 0.45)); }
+        const cdW = []; for (let i = 0; i < 4; i++) cdW.push(flow(g, [V(20, 12 - i * 8, 0), V(13.5, 11 - i * 8, -1.5)], 3, 0x4fb3ff, 0.42, 0.45));
+        const down = flow(g, [V(-6, 18, 0), V(-6, -14, 0), V(0, -21, 0), V(6, -14, 0), V(6, 18, 0)], 14, 0xffffff, 0.35, 0.08);
+        let step = 0, tt = 0;
+        return { onStep(i) { step = i; },
+          update(dt) { if (!A.paused) tt += dt; down.tick(tt);
+            naF.forEach(f => { f.set(step >= 1); f.tick(tt); }); wF.forEach(f => { f.set(step >= 2); f.tick(tt); }); cdW.forEach(f => { f.set(step >= 4); f.tick(tt); });
+            const grad = step >= 3 ? 1 : step >= 1 ? 0.5 : 0; gl.forEach((el, i) => { el.textContent = Math.round(300 + i * 300 * grad) + ' mOsm'; hideL(el, step < 1); });
+            fin.forEach(el => hideL(el, step < 3)); hideL(lcd, step < 4); cd.visible = step >= 4; } };
+      } };
+
+    const D_ADH = { n: 'ADH and aquaporins', bg: '#1b0f12', dist: 50, target: V(0, -1, 0), yaw: 0.3, pitch: 0.15,
+      steps: [
+        { n: 'The blood is too concentrated', s: 'After sweating or drinking little, the blood has too little water. **Osmoreceptors** in the hypothalamus detect this, and the **pituitary gland** releases more **ADH** (antidiuretic hormone) into the blood.', cs: 'D3.3.10' },
+        { n: 'ADH reaches the collecting duct', s: 'ADH (gold) travels in the blood and binds to receptors on the side of the collecting duct cells that faces the blood.', cs: 'D3.3.10' },
+        { n: 'Aquaporins are inserted', s: 'Inside the cell, vesicles carrying **aquaporins** (water channels) move to the membrane facing the urine and fuse with it. Now that membrane is full of water channels.', cs: 'D3.3.10' },
+        { n: 'Water is reabsorbed', s: 'Water flows out of the collecting duct by osmosis, into the salty medulla and back into the blood. The result is a **small volume of concentrated urine**.', cs: 'D3.3.10' },
+        { n: 'Too much water: less ADH', s: 'After drinking a lot, the blood is too dilute. Less ADH is released, aquaporins are taken back into the cell in vesicles, and the duct becomes almost waterproof. The result is a **large volume of dilute urine**.', pts: ['Either way the change is reversed: this is **negative feedback**.'], q: { q: 'A person drinks two litres of water quickly. What happens?', o: ['More ADH, fewer aquaporins, dilute urine', 'Less ADH, fewer aquaporins, large volume of dilute urine', 'Less ADH, more aquaporins, concentrated urine'], a: 1, why: 'Dilute blood means less ADH, so aquaporins are removed and less water is reabsorbed.' }, cs: 'D3.3.10, D3.3.2' }
+      ],
+      build(D) { const g = D.scene;
+        const cell = new THREE.Mesh(new THREE.BoxGeometry(18, 12, 10), T(0xd9d1ff, 0.22)); g.add(cell);
+        const nuc = new THREE.Mesh(new THREE.SphereGeometry(2.2, 24, 16), M(0x6d4c9f)); nuc.position.set(-4, 0, 0); g.add(nuc);
+        const urine = new THREE.Mesh(new THREE.BoxGeometry(30, 5, 12), T(0xffe28a, 0.12)); urine.position.y = 9; g.add(urine);
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 34, 24, 1, true), T(0xd62828, 0.3)); cap.rotation.z = Math.PI / 2; cap.position.y = -12; g.add(cap);
+        const rec = []; for (let i = 0; i < 3; i++) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.6, 1.4, 12), M(0x2a9d8f)); r.position.set(-1 + i * 4, -6.2, 4); g.add(r); rec.push(r); }
+        const aqM = M(0x4fb3ff), aqs = [], ves = [];
+        for (let i = 0; i < 5; i++) { const v = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), T(0xffffff, 0.35)); const a = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.3, 10), aqM); v.add(a); g.add(v); ves.push({ v, x: -6 + i * 3.4, z: A.rnd(-2, 3) });
+          const aq = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 1.4, 10), aqM); aq.position.set(-6 + i * 3.4, 6, 4); g.add(aq); aqs.push(aq); }
+        const adh = []; for (let i = 0; i < 3; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.6, 12, 8), M(0xffd166, { emissive: 0x664400 })); g.add(m); adh.push(m); }
+        const wat = []; for (let i = 0; i < 5; i++) wat.push(flow(g, [V(-6 + i * 3.4, 10, 4), V(-6 + i * 3.4, 6, 4), V(-5 + i * 3.4, -6, 4), V(-4 + i * 3.4, -12, 0)], 3, 0x4fb3ff, 0.4, 0.4));
+        D.label('Urine in the collecting duct', V(-13, 12.5, 0)); D.label('Blood capillary', V(-13, -15.5, 0)); const lr = D.label('ADH receptor', V(7, -8, 4)); const la = D.label('Aquaporins', V(9, 7.6, 4)); const lv = D.label('Vesicles', V(8, 1.2, 4)); const lad = D.label('ADH', V(-12, -10, 3));
+        const status = D.label('', V(0, -19, 0));
+        let step = 0, tt = 0, t0 = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+            const bind = step === 1 ? ease(t / 2.5) : step >= 2 && step <= 3 ? 1 : step === 4 ? 1 - ease(t / 2) : 0;
+            adh.forEach((m, i) => { m.visible = step >= 1 && !(step === 4 && t > 2); m.position.set(-12 + (rec[i].position.x + 12) * bind, -12 + 5 * bind, 4); });
+            const ins = step === 2 ? ease(t / 3) : step === 3 ? 1 : step === 4 ? 1 - ease((t - 1) / 3) : 0;
+            ves.forEach((o, i) => { o.v.visible = step >= 2 && ins < 0.98; o.v.position.set(o.x, -2 + 7.4 * ins, o.z + (4 - o.z) * ins); });
+            aqs.forEach(a => a.visible = ins > 0.95 || (step === 3)); const flowOn = step === 3 || (step === 4 && t < 1);
+            wat.forEach(f => { f.set(flowOn); f.tick(tt); });
+            hideL(lr, step < 1); hideL(la, !(step === 3 || step === 2 && ins > 0.95)); hideL(lv, !(step === 2 && ins < 0.9) && step !== 4); hideL(lad, step < 1 || step === 4);
+            status.textContent = step >= 3 && step < 4 ? 'Small volume of concentrated urine' : step === 4 ? 'Large volume of dilute urine' : ''; hideL(status, !status.textContent); } };
+      } };
+
+    const ORG = [['Brain', 0.75, 0.75], ['Heart muscle', 0.25, 1.0], ['Skeletal muscle', 1.2, 20], ['Gut and liver', 1.4, 0.5], ['Kidneys', 1.1, 0.6], ['Skin', 0.5, 1.6]];
+    const D_FLOW = { n: 'Blood flow at rest and in exercise', bg: '#1b0f12', dist: 58, target: V(0, 9, 0), yaw: 0, pitch: 0.1,
+      steps: [
+        { n: 'At rest', s: 'At rest the heart pumps about **5 litres** of blood a minute. The gut, liver and kidneys get a large share. The bars show typical values (approximate, litres per minute).', cs: 'D3.3.11' },
+        { n: 'During hard exercise', s: 'The heart now pumps up to about **25 litres** a minute, and most of it goes to the **skeletal muscles**, which need oxygen and glucose for aerobic respiration and must lose heat and CO2.', pts: ['Heart muscle gets more too: it is working harder.', 'Skin gets more, to lose heat.'], cs: 'D3.3.11' },
+        { n: 'How the blood is redirected', s: 'Small arteries (arterioles) have rings of smooth muscle. **Vasodilation** widens the arterioles supplying active muscles; **vasoconstriction** narrows those supplying the gut and kidneys.', h: 'The changes are controlled by sympathetic nerves and adrenaline, and by local signals from active muscle such as low oxygen and high CO2.', cs: 'D3.3.11' },
+        { n: 'Some organs stay the same', s: 'Blood flow to the brain stays almost constant: it always needs a steady supply of glucose and oxygen.', q: { q: 'Why does blood flow to the kidneys fall during hard exercise?', o: ['The kidneys stop working', 'Their arterioles constrict so more blood can go to the muscles', 'Blood pressure falls'], a: 1, why: 'Vasoconstriction of arterioles to the gut and kidneys diverts blood to where it is needed most.' }, cs: 'D3.3.11' }
+      ],
+      build(D) { const g = D.scene; const bars = ORG.map((o, i) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 1, 20), M(i === 2 ? 0xe63946 : 0xf4a261)); m.position.x = -17.5 + i * 7; g.add(m);
+          const lab = D.label(o[0], V(m.position.x, -2.8, 0)); const vp = V(m.position.x, 1, 2), val = D.label('', vp); return { m, o, val, vp, lab }; });
+        const base = new THREE.Mesh(new THREE.BoxGeometry(46, 0.4, 6), M(0x5a3a33)); base.position.y = -0.4; g.add(base);
+        const tot = D.label('', V(0, 27, 0)); const art = []; [[-12, 1.8, 'Arteriole to muscle: dilated'], [12, 0.7, 'Arteriole to gut: constricted']].forEach(([x, r, t]) => { const ring = new THREE.Mesh(new THREE.TorusGeometry(r + 0.8, 0.5, 10, 28), M(0xb56576)); ring.position.set(x, 18, 0); g.add(ring); const lab = D.label(t, V(x, 14.5, 0)); art.push({ ring, lab, r }); });
+        let step = 0, tt = 0, t0 = 0, mix = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const goal = step === 0 ? 0 : 1; mix += (goal - mix) * Math.min(1, dt * 1.5);
+            let sum = 0; bars.forEach(b => { const v = b.o[1] + (b.o[2] - b.o[1]) * mix; sum += v; const h = Math.max(0.15, v * 1.1); b.m.scale.y = h; b.m.position.y = h / 2; b.vp.y = h + 1.2; b.val.textContent = v.toFixed(v < 2 ? 2 : 1) + ' L/min'; });
+            tot.textContent = 'Heart output: about ' + Math.round(sum + 0.3) + ' L/min'; art.forEach(a => { a.ring.visible = step === 2; hideL(a.lab, step !== 2); }); } };
+      } };
+
     return {
       route: F, hero, camOffset: V(0, 3, 9), outside: { target: V(-12, 0, 0), dist: 150, pitch: 0 },
-      outsideInfo: { n: 'One nephron', s: 'Each kidney has about a million nephrons like this one. The glomeruli and convoluted tubules sit in the cortex; the loops of Henle and collecting ducts run down into the medulla.', h: 'The deeper the loop of Henle reaches into the medulla, the saltier the medulla can become, and the more concentrated the urine can be.', cs: 'D3.3.7', ch: 'D3.3.9' },
+      outsideInfo: { n: 'One nephron', s: 'Each kidney has about a million nephrons like this one. The glomeruli and convoluted tubules sit in the cortex; the loops of Henle and collecting ducts run down into the medulla.', pts: ['The kidneys **excrete** urea, the waste made when the liver breaks down excess amino acids.', 'They also **osmoregulate**: they keep the water and salt content of the blood steady.'], h: 'The deeper the loop of Henle reaches into the medulla, the saltier the medulla can become, and the more concentrated the urine can be.', cs: 'D3.3.7', ch: 'D3.3.9' },
+      dives: [D_FILTER, D_PCT, D_LOOP, D_ADH, D_FLOW],
       stops: [
-        { at: V(-34, 44, 0), n: 'Ultrafiltration', s: 'Blood arrives in the wide afferent arteriole and leaves through the narrower efferent arteriole, so the pressure in the glomerulus is high. Water and small molecules are forced into Bowman’s capsule. Proteins and blood cells are too big and stay in the blood.', h: 'The filter has three layers: the capillary wall with pores, the basement membrane (the real filter) and the podocytes with slits between their feet. About 180 litres of filtrate are made each day.', cs: 'D3.3.7', ch: 'D3.3.8' },
-        { at: V(-15, 50, 4), n: 'Proximal convoluted tubule', s: 'Selective reabsorption: all the glucose and most of the water and sodium are taken back into the blood. Watch the yellow glucose leave. Urea stays in the tubule.', h: 'The tubule cells have microvilli (the fuzzy lining) for a large surface and many mitochondria for active transport. Glucose is carried in by cotransport with sodium ions.', cs: 'D3.3.8', ch: 'D3.3.8' },
-        { at: V(2, -20, 0), n: 'Descending limb of the loop of Henle', s: 'Water leaves the descending limb by osmosis, because the fluid around it in the medulla is salty.', h: 'This limb is permeable to water but not very permeable to salt.', cs: 'D3.3.9', ch: 'D3.3.9' },
-        { at: V(13, -20, 0), n: 'Ascending limb of the loop of Henle', s: 'Sodium ions (orange) are pumped out of the ascending limb into the medulla. This makes the medulla salty.', h: 'The ascending limb is impermeable to water, so water cannot follow the salt out. This keeps a high solute concentration in the medulla, which the collecting duct uses to reabsorb water.', cs: 'D3.3.9', ch: 'D3.3.9' },
-        { at: V(27, 42, 3), n: 'Distal convoluted tubule', s: 'A little more sodium is taken back here, adjusting the salt balance of the blood.', h: 'The filtrate is now more dilute than blood plasma, because salt left the ascending limb without water.', cs: 'D3.3.8', ch: '' },
-        { at: V(40, -10, 0), n: 'Collecting duct and ADH', s: 'Use the ADH button. With a lot of ADH, the duct lets water out into the salty medulla, so the urine is small in volume and concentrated. With little ADH, more water stays in the duct.', h: 'ADH from the pituitary makes duct cells insert aquaporins into their membranes. When the blood is too dilute, less ADH is released, aquaporins are removed, and more water is lost: negative feedback.', cs: 'D3.3.10', ch: 'D3.3.10' },
-        { at: V(40, -70, 0), n: 'Urine', s: 'What is left flows to the renal pelvis and the bladder: urea, a little salt and some water. There is no glucose or protein in healthy urine.', h: 'Glucose in urine is a sign of diabetes: blood glucose is so high that the tubule carriers cannot take all of it back.', cs: 'D3.3.7', ch: 'D3.3.4' }
+        { at: V(-34, 44, 0), n: 'Ultrafiltration', s: 'Blood arrives in the wide **afferent arteriole** and leaves through the narrower **efferent arteriole**, so the pressure in the glomerulus is high. Water and small molecules are forced out into Bowman\'s capsule.', pts: ['Filtered: water, glucose, amino acids, salts, urea.', 'Not filtered: blood cells and plasma proteins, which are too big.', 'About 180 litres of filtrate are made each day, and about 99% of it is reabsorbed.'], h: 'The filter has three layers: the capillary wall with pores, the basement membrane (the real filter) and the podocytes with slits between their feet.', q: { q: 'Why is the blood pressure in the glomerulus so high?', o: ['The efferent arteriole is narrower than the afferent arteriole', 'The heart beats faster near the kidney', 'Bowman\'s capsule pumps fluid'], a: 0, why: 'Blood enters through a wide vessel and leaves through a narrow one, so pressure builds up in the capillaries between them.' }, cs: 'D3.3.7, D3.3.8', dive: D_FILTER },
+        { at: V(-15, 50, 4), n: 'Proximal convoluted tubule', s: '**Selective reabsorption**: all the glucose and amino acids and about two thirds of the water and sodium are taken back into the blood. Watch the yellow glucose leave. Urea stays in the tubule.', h: 'The tubule cells have microvilli (the fuzzy lining) for a large surface and many mitochondria for active transport. Glucose is carried in by cotransport with sodium ions.', q: { q: 'Which substance is completely reabsorbed in a healthy proximal tubule?', o: ['Urea', 'Glucose', 'Water'], a: 1, why: 'All glucose is taken back; some urea and water stay in the filtrate.' }, cs: 'D3.3.8', dive: D_PCT },
+        { at: V(2, -20, 0), n: 'Descending limb of the loop of Henle', s: 'Water leaves the descending limb by osmosis, because the fluid around it in the medulla is salty.', h: 'This limb is permeable to water but not very permeable to salt, so the filtrate becomes more concentrated as it goes down.', cs: 'D3.3.9', dive: D_LOOP },
+        { at: V(13, -20, 0), n: 'Ascending limb of the loop of Henle', s: 'Sodium ions (orange) are **pumped out** of the ascending limb into the medulla. This makes the medulla salty.', h: 'The ascending limb is impermeable to water, so water cannot follow the salt out. This keeps a high solute concentration in the medulla, which the collecting duct uses to reabsorb water.', q: { q: 'What would happen if the ascending limb became permeable to water?', o: ['The medulla would get saltier', 'Water would follow the salt out, so the gradient in the medulla would be lost', 'More glucose would be reabsorbed'], a: 1, why: 'The gradient depends on salt leaving without water. If water followed, the medulla could not become concentrated.' }, cs: 'D3.3.9', dive: D_LOOP },
+        { at: V(27, 42, 3), n: 'Distal convoluted tubule', s: 'A little more sodium is taken back here, adjusting the salt balance of the blood.', h: 'The filtrate is now more dilute than blood plasma, because salt left the ascending limb without water.', cs: 'D3.3.8' },
+        { at: V(40, -10, 0), n: 'Collecting duct and ADH', s: 'Use the **ADH** button. With a lot of ADH, the duct lets water out into the salty medulla, so the urine is small in volume and concentrated. With little ADH, more water stays in the duct.', h: 'ADH from the pituitary makes duct cells insert aquaporins into their membranes. When the blood is too dilute, less ADH is released, aquaporins are removed, and more water is lost: negative feedback.', cs: 'D3.3.10', dive: D_ADH },
+        { at: V(40, -70, 0), n: 'Urine', s: 'What is left flows to the renal pelvis and the bladder: urea, a little salt and some water. There is no glucose or protein in healthy urine.', pts: ['Glucose in urine is a sign of diabetes: blood glucose is so high that the tubule carriers cannot take all of it back.', 'Protein in urine suggests the filter in the glomerulus is damaged.'], h: 'The kidneys also get less blood during hard exercise, as blood is sent to the muscles instead. Open the close-up to compare organs.', q: { q: 'Which of these is normally found in urine?', o: ['Glucose', 'Plasma proteins', 'Urea'], a: 2, why: 'Urea is filtered and not all reabsorbed; glucose is all reabsorbed and proteins are not filtered.' }, cs: 'D3.3.7', ch: 'D3.3.4, D3.3.11', dives: [D_FLOW] }
       ],
       update(dt, A) {
         const run = A.paused ? 0 : dt;
@@ -298,7 +460,24 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Extras (2026-11-18): <name>.extra.js sets J.extra(api, W) -> {stops:{name:{...}}, outside:{...}, dives:[new close-ups],
+// dive:{name:{...}}, steps:{'dive/step':{...}}, addSteps:{dive:[{after, step}]}, addStops:[{after, stop}]}. Added steps and stops
+// reuse the animation state of the step or stop before them, so existing onStep/onStop code keeps working.
+W.stops.forEach((s,i)=>{ s._i=i; });
+if(J.extra){ const X=J.extra(api,W)||{};
+  const allD=()=>{ const s=[]; (W.dives||[]).concat(...W.stops.map(st=>dives(st))).forEach(d=>{ if(s.indexOf(d)<0) s.push(d); }); return s; };
+  allD().forEach(d=>d.steps.forEach((st,i)=>{ st._oi=i; }));
+  (X.dives||[]).forEach(d=>{ d.steps.forEach((st,i)=>{ st._oi=i; }); (W.dives=W.dives||[]).push(d); });
+  const byName=n=>allD().find(d=>d.n===n);
+  W.stops.forEach(st=>{ const e=X.stops&&X.stops[st.n]; if(!e) return; const ad=e.dives; Object.keys(e).forEach(k=>{ if(k!=='dives') st[k]=e[k]; });
+    if(ad){ st.dives=dives(st).concat(ad.map(byName).filter(Boolean)); delete st.dive; } });
+  if(X.outside&&W.outsideInfo) Object.assign(W.outsideInfo,X.outside);
+  allD().forEach(d=>{ if(X.dive&&X.dive[d.n]) Object.assign(d,X.dive[d.n]);
+    d.steps.forEach(st=>{ const e=X.steps&&X.steps[d.n+'/'+st.n]; if(e) Object.assign(st,e); });
+    ((X.addSteps&&X.addSteps[d.n])||[]).forEach(a=>{ const i=a.after?d.steps.findIndex(s=>s.n===a.after):d.steps.length-1; const prev=d.steps[i]; a.step._oi=prev?prev._oi:0; d.steps.splice(i+1,0,a.step); }); });
+  (X.addStops||[]).forEach(a=>{ const i=W.stops.findIndex(s=>s.n===a.after); const prev=W.stops[i]; a.stop._i=prev?prev._i:0; if(!a.stop.at&&prev) a.stop.at=prev.at; if(!a.stop.look&&prev) a.stop.look=prev.look; if(a.stop.u==null&&prev&&prev.u!=null) a.stop.u=prev.u; W.stops.splice(i+1,0,a.stop); });
+  if(X.dives&&X.dives.length) W.dives=W.dives; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 // Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
 // h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
 const forLevel=o=>!o.hl||level==='hl';
@@ -347,7 +526,7 @@ function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.le
   const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+  if(dive.ctl.onStep) dive.ctl.onStep(st._oi!=null?st._oi:dive.steps.indexOf(st),st); }
 function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
 function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
@@ -361,7 +540,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+api.goStop=i=>{ setView('ride'); const t=STOPS.find(s=>s._i===i)||STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }

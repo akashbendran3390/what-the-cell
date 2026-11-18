@@ -629,6 +629,135 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the heart walk-through (2026-11-18): check questions on every stop, and HL close-ups for B3.2.11-16.
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  const polyAt = (P, f) => { const n = P.length - 1, x = Math.max(0, Math.min(0.9999, f)) * n, i = Math.floor(x); return P[i].clone().lerp(P[i + 1], x - i); };
+  function flow(g, P, n, col, r, speed) { const geo = new THREE.SphereGeometry(r, 10, 8), mat = M(col, { emissive: col, emissiveIntensity: 0.3 }), ms = [];
+    for (let i = 0; i < n; i++) { const m = new THREE.Mesh(geo, mat); g.add(m); ms.push({ m, ph: i / n }); }
+    return { set(on) { ms.forEach(o => o.m.visible = on); }, tick(t) { ms.forEach(o => o.m.position.copy(polyAt(P, (t * speed + o.ph) % 1))); } }; }
+
+  const D_TF = { n: 'Tissue fluid and lymph', hl: true, bg: '#1b0d10', dist: 60, target: V(0, -2, 0), yaw: 0, pitch: 0.35,
+    steps: [
+      { n: 'A capillary bed', s: 'Blood enters a capillary from an **arteriole** (left) at fairly high pressure and leaves into a **venule** (right) at low pressure. Body cells sit in **tissue fluid** around it.', cs: 'B3.2.11' },
+      { n: 'Fluid is pushed out', s: 'At the arteriole end, blood pressure is higher than the pull of water back in by osmosis, so plasma is **forced out** through gaps in the capillary wall. Red cells and large plasma proteins stay inside. This fluid is **tissue fluid**.', cs: 'B3.2.11' },
+      { n: 'Exchange with cells', s: 'Oxygen, glucose and amino acids diffuse from the tissue fluid into the cells. Carbon dioxide and urea diffuse out of the cells into the tissue fluid.', cs: 'B3.2.12' },
+      { n: 'Most fluid returns', s: 'By the venule end, blood pressure has fallen. The plasma proteins left in the blood give it a lower water potential, so **water moves back in by osmosis**, carrying waste with it.', h: 'Two forces act: hydrostatic pressure (pushing out) and the osmotic effect of plasma proteins (pulling in). Out wins at the arterial end, in wins at the venous end.', cs: 'B3.2.11' },
+      { n: 'Lymph drains the rest', s: 'Not all the fluid gets back into the capillary. The surplus enters blind-ended **lymph vessels** (green), which have valves. Lymph flows slowly through lymph nodes and returns to the blood in veins near the heart.', q: { q: 'Why does more fluid leave a capillary at the arteriole end than at the venule end?', o: ['The wall is thinner at the arteriole end', 'Blood pressure is higher at the arteriole end', 'There are more plasma proteins at the arteriole end'], a: 1, why: 'Hydrostatic pressure pushes fluid out, and it is highest where blood has just arrived from the arteriole.' }, cs: 'B3.2.13' }
+    ],
+    build(D) { const g = D.scene;
+      const cap = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 44, 24, 1, true), T(0xd62828, 0.3)); cap.rotation.z = Math.PI / 2; g.add(cap);
+      const art = new THREE.Mesh(new THREE.CylinderGeometry(3.4, 2.4, 10, 24, 1, true), T(0xd62828, 0.45)); art.rotation.z = Math.PI / 2; art.position.x = -27; g.add(art);
+      const ven = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 3.6, 10, 24, 1, true), T(0x7b2cbf, 0.45)); ven.rotation.z = Math.PI / 2; ven.position.x = 27; g.add(ven);
+      const fluid = new THREE.Mesh(new THREE.BoxGeometry(50, 22, 18), T(0x9ad1d4, 0.08)); fluid.position.y = -4; g.add(fluid);
+      const cells = []; for (let i = 0; i < 6; i++) { const c = new THREE.Mesh(new THREE.SphereGeometry(3, 20, 14), M(0xf4a261)); c.scale.set(1.3, 0.8, 1); c.position.set(-15 + i * 6, -10, i % 2 ? 4 : -3); g.add(c); cells.push(c); }
+      const lymph = A.tube([V(14, -4, 7), V(18, -9, 6), V(22, -14, 4), V(28, -18, 2)], 1.2, T(0x52b788, 0.55), 30); g.add(lymph);
+      const lymphEnd = new THREE.Mesh(new THREE.SphereGeometry(1.2, 14, 10), T(0x52b788, 0.55)); lymphEnd.position.set(14, -4, 7); g.add(lymphEnd);
+      const rbc = flow(g, [V(-30, 0, 0), V(30, 0, 0)], 10, 0xc1121f, 0.9, 0.1);
+      const outF = flow(g, [V(-14, -1.5, 1), V(-14, -6, 3)], 4, 0x4fb3ff, 0.45, 0.6), outF2 = flow(g, [V(-9, -1.5, -1), V(-9, -6, -2)], 4, 0x4fb3ff, 0.45, 0.6);
+      const inF = flow(g, [V(10, -6, 2), V(10, -1.5, 0)], 4, 0x4fb3ff, 0.45, 0.6), inF2 = flow(g, [V(5, -6, -2), V(5, -1.5, 0)], 4, 0x4fb3ff, 0.45, 0.6);
+      const o2 = flow(g, [V(-12, -6, 0), V(-12, -9, -2)], 3, 0xff6b6b, 0.4, 0.5), co2 = flow(g, [V(0, -8, 3), V(1, -4, 2)], 3, 0x8d99ae, 0.4, 0.5);
+      const ly = flow(g, [V(14, -4, 7), V(18, -9, 6), V(22, -14, 4), V(28, -18, 2)], 6, 0x95d5b2, 0.45, 0.25), lyIn = flow(g, [V(10, -9, 6), V(14, -4.5, 7)], 3, 0x4fb3ff, 0.4, 0.5);
+      D.label('Arteriole: high pressure', V(-27, 5.5, 0)); D.label('Venule: low pressure', V(27, 5.5, 0)); D.label('Body cells', V(-15, -14.5, 0)); const lt = D.label('Tissue fluid', V(-20, -5, 6)), ll = D.label('Lymph vessel', V(25, -21, 2)), lo = D.label('Out: pressure', V(-12, -7.5, 6)), li = D.label('In: osmosis', V(8, -7.5, 6));
+      let step = 0, tt = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { if (!A.paused) tt += dt; rbc.tick(tt);
+          [outF, outF2].forEach(f => { f.set(step >= 1); f.tick(tt); }); [o2, co2].forEach(f => { f.set(step >= 2); f.tick(tt); }); [inF, inF2].forEach(f => { f.set(step >= 3); f.tick(tt); }); [ly, lyIn].forEach(f => { f.set(step >= 4); f.tick(tt); });
+          lymph.visible = lymphEnd.visible = step >= 4; hideL(ll, step < 4); hideL(lt, step < 1); hideL(lo, step < 1); hideL(li, step < 3); } };
+    } };
+
+  const D_CYCLE = { n: 'The cardiac cycle', hl: true, bg: '#1b0d10', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'Pressure in the left side of the heart', s: 'The graph shows pressure in the **left atrium** (green), **left ventricle** (red) and **aorta** (blue) during one heartbeat of about 0.8 s. Valves open and close because of the pressure differences.', cs: 'B3.2.16' },
+      { n: 'Atrial systole', s: 'The atria contract and push the last blood into the relaxed ventricles. Atrial pressure is slightly higher than ventricular pressure, so the **AV valve is open**.', cs: 'B3.2.16' },
+      { n: 'Ventricular systole begins', s: 'The ventricle contracts. As soon as ventricular pressure rises above atrial pressure the **AV valve closes** (first heart sound). Both valves are briefly shut and pressure rises steeply.', cs: 'B3.2.16' },
+      { n: 'Blood is ejected', s: 'When ventricular pressure rises above aortic pressure the **semilunar valve opens** and blood is forced into the aorta. Aortic pressure peaks at about 16 kPa.', cs: 'B3.2.16' },
+      { n: 'Diastole', s: 'The ventricle relaxes. When its pressure falls below the aorta\'s, the **semilunar valve closes** (second heart sound). When it falls below the atrium\'s, the **AV valve opens** and the ventricle refills.', pts: ['The aorta\'s elastic wall recoils, so aortic pressure never falls to zero: about 10 kPa between beats.'], q: { q: 'At what point does the semilunar valve open?', o: ['When atrial pressure is higher than ventricular pressure', 'When ventricular pressure becomes higher than aortic pressure', 'When the ventricle starts to relax'], a: 1, why: 'Valves move passively: the semilunar valve is pushed open once the ventricle pressure exceeds the aorta pressure.' }, cs: 'B3.2.16' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      const X = t => 110 + t / 0.8 * 860, Y = p => 560 - p / 18 * 500;
+      const sm = (a, b, x) => { const k = Math.max(0, Math.min(1, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+      // A simple pressure model: ventricle and atrium follow set shapes; the aorta is simulated (it follows the ventricle while the
+      // semilunar valve is open, then recoils and drains away), so the valve events fall exactly where the curves cross.
+      const lv = t => t < 0.1 ? 0.4 + 0.5 * Math.sin(t / 0.1 * Math.PI) : 0.4 + 15.6 * sm(0.1, 0.25, t) * (1 - sm(0.31, 0.43, t));
+      const la = t => t < 0.1 ? 0.6 + 0.8 * Math.sin(t / 0.1 * Math.PI) : 0.4 + 0.8 * sm(0.12, 0.42, t) * (1 - sm(0.44, 0.56, t)) + 0.2;
+      const DT = 0.001, N = 801, AO = new Float32Array(N); const EV = {};
+      let aoP = 10.6; for (let cyc = 0; cyc < 2; cyc++) { let open = false, notch = 0; for (let i = 0; i < N; i++) { const t = i * DT, L = lv(t);
+        if (!open && L > aoP && t > 0.1 && t < 0.35) { open = true; if (cyc) EV.slo = t; }
+        if (open) { aoP = Math.max(L - 0.15, aoP - 6 * DT); if (aoP - L > 1.0) { open = false; notch = 0.03; if (cyc) EV.slc = t; } }
+        else { aoP -= (aoP - 6) * DT / 0.9; if (notch > 0) { aoP += 0.6 * DT / 0.03; notch -= DT; } }
+        if (cyc) AO[i] = aoP; } }
+      for (let i = 101; i < N; i++) { const t = i * DT; if (EV.avc == null && lv(t) > la(t)) EV.avc = t; if (EV.slc != null && t > EV.slc && EV.avo == null && lv(t) < la(t)) EV.avo = t; }
+      const ao = t => AO[Math.max(0, Math.min(N - 1, Math.round(t / DT)))];
+      const phases = [[0, 0.1, 'Atrial systole', '#d8f3dc'], [0.1, 0.4, 'Ventricular systole', '#ffe5e5'], [0.4, 0.8, 'Diastole', '#e7f0ff']];
+      function draw(cur, hl) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640);
+        phases.forEach(([a, b, n, col], i) => { if (hl === i) { c.fillStyle = col; c.fillRect(X(a), 40, X(b) - X(a), 520); } c.fillStyle = '#666'; c.font = '20px sans-serif'; c.fillText(n, X(a) + 6, 60 + (i === 1 ? 24 : 0)); });
+        c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 40); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke(); c.fillStyle = '#222'; c.font = '22px sans-serif';
+        for (let p = 0; p <= 16; p += 4) c.fillText(p, 60, Y(p) + 8); for (let t = 0; t <= 0.8; t += 0.2) c.fillText(t.toFixed(1), X(t) - 14, 590); c.fillText('Time / s', 500, 625); c.save(); c.translate(30, 380); c.rotate(-Math.PI / 2); c.fillText('Pressure / kPa', 0, 0); c.restore();
+        [[ao, '#1d4ed8', 'Aorta'], [lv, '#e63946', 'Left ventricle'], [la, '#2d6a4f', 'Left atrium']].forEach(([f, col, n]) => { c.strokeStyle = col; c.lineWidth = 5; c.beginPath(); for (let t = 0; t <= cur; t += 0.004) { const x = X(t), y = Y(f(t)); t ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); });
+        c.font = 'bold 20px sans-serif'; c.fillStyle = '#1d4ed8'; c.fillText('Aorta', X(0.6), Y(12.4)); c.fillStyle = '#e63946'; c.fillText('Left ventricle', X(0.2), Y(16.6)); c.fillStyle = '#2d6a4f'; c.fillText('Left atrium', X(0.55), Y(2.3));
+        const ev = [[EV.avc, 'AV valve closes'], [EV.slo, 'Semilunar valve opens'], [EV.slc, 'Semilunar valve closes'], [EV.avo, 'AV valve opens']];
+        ev.forEach(([t, n], i) => { if (t == null || cur < t) return; c.strokeStyle = '#999'; c.setLineDash([6, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(X(t), 100); c.lineTo(X(t), 560); c.stroke(); c.setLineDash([]); c.fillStyle = '#333'; c.font = '18px sans-serif'; c.fillText(n, X(t) + 4, 300 + i * 26); });
+        c.fillStyle = '#000'; c.beginPath(); c.arc(X(cur), Y(lv(cur)), 8, 0, 7); c.fill(); tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const lim = [0.8, 0.1, EV.slo - 0.004, EV.slc + 0.01, 0.8][step], start = [0, 0, 0.1, EV.slo - 0.004, EV.slc + 0.01][step];
+          const cur = step === 0 ? Math.min(0.8, t * 0.25) : Math.min(lim, start + t * 0.06); draw(cur, step === 0 ? -1 : step === 1 ? 0 : step <= 3 ? 1 : 2); } };
+    } };
+
+  const D_CIRC = { n: 'Single and double circulation', hl: true, bg: '#1b0d10', dist: 64, target: V(0, 0, 0), yaw: 0, pitch: 0.2,
+    steps: [
+      { n: 'A fish: single circulation', s: 'In a bony fish, blood passes through the heart **once** on each circuit: heart, gills, body, back to the heart. The heart has one atrium and one ventricle.', cs: 'B3.2.14' },
+      { n: 'Pressure falls in the gills', s: 'Blood loses most of its pressure squeezing through the gill capillaries, so it flows slowly round the rest of the body (watch the pressure bar). This is enough for a cold-blooded animal supported by water.', cs: 'B3.2.14' },
+      { n: 'A mammal: double circulation', s: 'In a mammal, blood passes through the heart **twice** on each circuit: the right side pumps it to the lungs, and it returns to the left side, which pumps it to the body.', cs: 'B3.2.14' },
+      { n: 'Why double is better for mammals', s: 'After the lungs, blood is **pumped again**, so it reaches the body at high pressure. Lung capillaries get low pressure (safer for delicate alveoli), the body gets high pressure (fast delivery of oxygen for a high metabolic rate).', q: { q: 'Why is the left ventricle wall thicker than the right?', o: ['It pumps more blood per beat', 'It pumps blood all round the body against more resistance, so it must make a higher pressure', 'It receives oxygenated blood'], a: 1, why: 'Both ventricles pump the same volume, but the systemic circuit needs a much higher pressure than the lungs.' }, cs: 'B3.2.14, B3.2.15' }
+    ],
+    build(D) { const g = D.scene;
+      const loop = (pts, col) => { const m = A.tube(pts, 0.7, T(col, 0.55), 120, true); g.add(m); return m; };
+      const fishP = [V(-26, -8, 0), V(-26, 8, 0), V(-14, 12, 0), V(-6, 6, 0), V(-6, -8, 0), V(-14, -13, 0)];
+      const fish = loop(fishP, 0xe76f51);
+      const fh = new THREE.Mesh(new THREE.SphereGeometry(2.2, 18, 12), M(0xc1121f)); fh.position.copy(fishP[0]); g.add(fh);
+      const gills = new THREE.Mesh(new THREE.BoxGeometry(5, 3, 3), M(0xff99ac)); gills.position.set(-20, 11, 0); g.add(gills);
+      const fbody = new THREE.Mesh(new THREE.BoxGeometry(5, 3, 3), M(0xf4a261)); fbody.position.set(-6, -1, 0); g.add(fbody);
+      const mamP1 = [V(10, 0, 0), V(10, 12, 0), V(16, 15, 0), V(22, 12, 0), V(22, 0, 0)], mamP2 = [V(22, 0, 0), V(26, -12, 0), V(16, -16, 0), V(6, -12, 0), V(10, 0, 0)];
+      const m1 = loop(mamP1.concat([V(16, 2, 0)]), 0x4361ee), m2 = loop(mamP2.concat([V(16, -2, 0)]), 0xe63946);
+      const mh = [V(10, 0, 0), V(22, 0, 0)].map((p, i) => { const h = new THREE.Mesh(new THREE.SphereGeometry(2.2, 18, 12), M(i ? 0xc1121f : 0x6d597a)); h.position.copy(p); g.add(h); return h; });
+      const lungs = new THREE.Mesh(new THREE.BoxGeometry(5, 3, 3), M(0xff99ac)); lungs.position.set(16, 15, 0); g.add(lungs); const mbody = new THREE.Mesh(new THREE.BoxGeometry(5, 3, 3), M(0xf4a261)); mbody.position.set(16, -16, 0); g.add(mbody);
+      const fF = flow(g, fishP.concat([fishP[0]]), 12, 0xffffff, 0.45, 0.08), mF1 = flow(g, mamP1, 7, 0xffffff, 0.45, 0.16), mF2 = flow(g, mamP2, 7, 0xffffff, 0.45, 0.16);
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1, 1.6), M(0xffd166)); g.add(bar); const lbp = V(0, 0, 0), lbar = D.label('Blood pressure', lbp);
+      const lf = [D.label('Fish heart', V(-29, -11, 0)), D.label('Gills', V(-20, 15, 0)), D.label('Body', V(-2, -4, 0))]; const lm = [D.label('Right side', V(6, 3, 0)), D.label('Left side', V(26, 3, 0)), D.label('Lungs', V(16, 18.5, 0)), D.label('Body', V(16, -19.5, 0))];
+      let step = 0, tt = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { if (!A.paused) tt += dt; const fish0 = step <= 1, mam = step >= 2;
+          fF.tick(tt); mF1.tick(tt); mF2.tick(tt);
+          [m1, m2, lungs, mbody, ...mh].forEach(o => o.visible = step >= 2);
+          mF1.set(mam); mF2.set(mam); lm.forEach(l => hideL(l, !mam));
+          let pr = 0, bx = -16, by = -22; if (step === 1) { const f = (tt * 0.08) % 1; pr = f < 0.33 ? 1 - f / 0.33 * 0.75 : 0.25; bx = -16; }
+          else if (step === 3) { const f = (tt * 0.16) % 2; pr = f < 1 ? 0.45 - f * 0.3 : 1 - (f - 1) * 0.5; bx = 16; } bar.visible = step === 1 || step === 3; hideL(lbar, !bar.visible);
+          const h = Math.max(0.2, pr * 10); bar.scale.y = h; bar.position.set(bx + (step === 3 ? 18 : -14), by + h / 2, 0); lbp.set(bar.position.x, by + h + 1.6, 0); } };
+    } };
+
+  return {
+    dives: [D_TF, D_CYCLE, D_CIRC],
+    outside: { pts: ['Mammals have a **double circulation**: the right side of the heart pumps blood to the lungs, the left side pumps it to the rest of the body.', 'Open a close-up below, or ride with a red blood cell.'], q: { q: 'Which chamber pumps blood to the lungs?', o: ['Left ventricle', 'Right ventricle', 'Right atrium'], a: 1, why: 'The right ventricle sends deoxygenated blood to the lungs in the pulmonary artery.' } },
+    stops: {
+      'Vena cava': { pts: ['Superior vena cava: blood from the head and arms. Inferior vena cava: blood from the rest of the body.'], q: { q: 'Which vessel brings deoxygenated blood from the body back to the heart?', o: ['Aorta', 'Vena cava', 'Pulmonary vein'], a: 1, why: 'The venae cavae return blood from the body to the right atrium.' }, dives: ['Tissue fluid and lymph'] },
+      'Right atrium': { q: { q: 'What does it mean that cardiac muscle is myogenic?', o: ['It needs a nerve impulse to contract', 'It starts its own contractions, without a nerve impulse', 'It never contracts'], a: 1, why: 'The sinoatrial node starts each beat itself; nerves only speed it up or slow it down.' }, dives: ['The cardiac cycle'] },
+      'Tricuspid valve': { q: { q: 'What closes the tricuspid valve?', o: ['A muscle in the valve', 'Pressure in the ventricle rising above pressure in the atrium', 'A nerve impulse'], a: 1, why: 'Heart valves are passive: pressure differences push them open or shut.' }, dives: ['The cardiac cycle'] },
+      'Right ventricle': { q: { q: 'Why is the wall of the right ventricle thinner than the left?', o: ['It holds less blood', 'It only pumps blood to the nearby lungs, at lower pressure', 'It has no cardiac muscle'], a: 1, why: 'Lower pressure is enough for the short lung circuit and protects the lung capillaries.' }, dives: ['Single and double circulation'] },
+      'Pulmonary artery': { pts: ['Arteries carry blood away from the heart, veins carry it towards the heart, whatever its oxygen content.'], q: { q: 'Why is the pulmonary artery called an artery when it carries deoxygenated blood?', o: ['It has valves', 'It carries blood away from the heart', 'It has a thin wall'], a: 1, why: 'Arteries are defined by direction: away from the heart.' } },
+      'The lungs': { q: { q: 'In which blood vessels is the blood most oxygenated?', o: ['Pulmonary artery', 'Pulmonary veins', 'Vena cava'], a: 1, why: 'Blood has just left the lung capillaries and travels in the pulmonary veins to the left atrium.' }, dives: ['Single and double circulation'] },
+      'Pulmonary vein to the left atrium': { q: { q: 'Which side of the heart holds oxygenated blood?', o: ['Right side', 'Left side', 'Both sides'], a: 1, why: 'Oxygenated blood from the lungs enters the left atrium and leaves from the left ventricle.' } },
+      'Bicuspid (mitral) valve': { q: { q: 'What stops the flaps of the AV valves turning inside out?', o: ['Semilunar valves', 'Chordae tendineae', 'The septum'], a: 1, why: 'These tendon-like cords hold the flaps when ventricular pressure is high.' } },
+      'Left ventricle': { pts: ['The **septum** separates the left and right sides, so oxygenated and deoxygenated blood do not mix.'], q: { q: 'Which chamber has the thickest wall?', o: ['Right atrium', 'Left ventricle', 'Right ventricle'], a: 1, why: 'It pumps blood all round the body and makes the highest pressure.' }, dives: ['The cardiac cycle'] },
+      'Aortic valve and aorta': { q: { q: 'What blocks a coronary artery in coronary heart disease?', o: ['A fatty plaque, sometimes with a clot on it', 'A valve', 'Too many red blood cells'], a: 0, why: 'Atherosclerosis narrows the artery; a clot forming on a plaque can block it completely.' } }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
@@ -680,7 +809,24 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Extras (2026-11-18): <name>.extra.js sets J.extra(api, W) -> {stops:{name:{...}}, outside:{...}, dives:[new close-ups],
+// dive:{name:{...}}, steps:{'dive/step':{...}}, addSteps:{dive:[{after, step}]}, addStops:[{after, stop}]}. Added steps and stops
+// reuse the animation state of the step or stop before them, so existing onStep/onStop code keeps working.
+W.stops.forEach((s,i)=>{ s._i=i; });
+if(J.extra){ const X=J.extra(api,W)||{};
+  const allD=()=>{ const s=[]; (W.dives||[]).concat(...W.stops.map(st=>dives(st))).forEach(d=>{ if(s.indexOf(d)<0) s.push(d); }); return s; };
+  allD().forEach(d=>d.steps.forEach((st,i)=>{ st._oi=i; }));
+  (X.dives||[]).forEach(d=>{ d.steps.forEach((st,i)=>{ st._oi=i; }); (W.dives=W.dives||[]).push(d); });
+  const byName=n=>allD().find(d=>d.n===n);
+  W.stops.forEach(st=>{ const e=X.stops&&X.stops[st.n]; if(!e) return; const ad=e.dives; Object.keys(e).forEach(k=>{ if(k!=='dives') st[k]=e[k]; });
+    if(ad){ st.dives=dives(st).concat(ad.map(byName).filter(Boolean)); delete st.dive; } });
+  if(X.outside&&W.outsideInfo) Object.assign(W.outsideInfo,X.outside);
+  allD().forEach(d=>{ if(X.dive&&X.dive[d.n]) Object.assign(d,X.dive[d.n]);
+    d.steps.forEach(st=>{ const e=X.steps&&X.steps[d.n+'/'+st.n]; if(e) Object.assign(st,e); });
+    ((X.addSteps&&X.addSteps[d.n])||[]).forEach(a=>{ const i=a.after?d.steps.findIndex(s=>s.n===a.after):d.steps.length-1; const prev=d.steps[i]; a.step._oi=prev?prev._oi:0; d.steps.splice(i+1,0,a.step); }); });
+  (X.addStops||[]).forEach(a=>{ const i=W.stops.findIndex(s=>s.n===a.after); const prev=W.stops[i]; a.stop._i=prev?prev._i:0; if(!a.stop.at&&prev) a.stop.at=prev.at; if(!a.stop.look&&prev) a.stop.look=prev.look; if(a.stop.u==null&&prev&&prev.u!=null) a.stop.u=prev.u; W.stops.splice(i+1,0,a.stop); });
+  if(X.dives&&X.dives.length) W.dives=W.dives; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 // Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
 // h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
 const forLevel=o=>!o.hl||level==='hl';
@@ -729,7 +875,7 @@ function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.le
   const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+  if(dive.ctl.onStep) dive.ctl.onStep(st._oi!=null?st._oi:dive.steps.indexOf(st),st); }
 function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
 function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
@@ -743,7 +889,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+api.goStop=i=>{ setView('ride'); const t=STOPS.find(s=>s._i===i)||STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }

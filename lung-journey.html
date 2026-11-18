@@ -324,6 +324,59 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the lungs walk-through (2026-11-18): check questions, HL steps (pneumocytes, intercostal muscles) and an HL close-up
+// on haemoglobin's oxygen dissociation curve (B3.1.11-13).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  const D_HB = { n: 'Haemoglobin and oxygen', hl: true, bg: '#0f1622', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'The oxygen dissociation curve', s: 'The curve shows how saturated haemoglobin is with oxygen (vertical axis) at different partial pressures of oxygen (horizontal axis). Its **S shape** comes from cooperative binding.', h: 'Each haemoglobin has four haem groups. Once one O2 binds, the protein changes shape and the next ones bind more easily, so saturation rises steeply over a narrow range of pO2.', cs: 'B3.1.13' },
+      { n: 'Loading in the lungs', s: 'In the alveoli pO2 is high (about 13 kPa), so haemoglobin becomes almost **fully saturated** (about 97%).', cs: 'B3.1.13' },
+      { n: 'Unloading in the tissues', s: 'In respiring tissues pO2 is low (about 5 kPa at rest, 2 kPa in hard-working muscle). On the steep part of the curve a small fall in pO2 makes haemoglobin release a lot of oxygen.', cs: 'B3.1.13' },
+      { n: 'The Bohr shift', s: 'Where respiration is fast there is more **CO2**, which lowers the pH. This makes haemoglobin hold oxygen less tightly: the curve shifts **to the right** (orange), so even more oxygen is unloaded exactly where it is needed.', cs: 'B3.1.12' },
+      { n: 'Foetal haemoglobin', s: 'A foetus gets its oxygen from its mother\'s blood in the placenta. **Foetal haemoglobin** (green) has a higher affinity for oxygen, so its curve lies **to the left**: at the same pO2 it takes oxygen from the mother\'s haemoglobin.', q: { q: 'Why does a shift of the curve to the right help a muscle during exercise?', o: ['Haemoglobin binds oxygen more tightly', 'Haemoglobin releases more oxygen at the same pO2', 'The muscle makes more haemoglobin'], a: 1, why: 'Lower affinity means more oxygen is released in the tissues at the same partial pressure.' }, cs: 'B3.1.11' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      const X = p => 110 + p / 14 * 860, Y = s => 560 - s / 100 * 500;
+      const hill = (p, p50) => 100 * Math.pow(p, 2.7) / (Math.pow(p, 2.7) + Math.pow(p50, 2.7));
+      function curve(p50, col, lw, upTo) { c.strokeStyle = col; c.lineWidth = lw; c.beginPath(); for (let p = 0; p <= upTo; p += 0.05) { const x = X(p), y = Y(hill(p, p50)); p ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); }
+      function draw(step, k) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 40); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke();
+        c.fillStyle = '#222'; c.font = '22px sans-serif'; for (let s = 0; s <= 100; s += 20) c.fillText(s, 55, Y(s) + 8); for (let p = 0; p <= 14; p += 2) c.fillText(p, X(p) - 8, 590);
+        c.fillText('Partial pressure of oxygen / kPa', 380, 625); c.save(); c.translate(28, 470); c.rotate(-Math.PI / 2); c.fillText('Saturation of haemoglobin / %', 0, 0); c.restore();
+        curve(3.6, '#d62828', 6, step === 0 ? 14 * k : 14);
+        if (step >= 1) { c.fillStyle = 'rgba(29,78,216,.12)'; c.fillRect(X(12), 40, X(14) - X(12), 520); c.fillStyle = '#1d4ed8'; c.font = 'bold 20px sans-serif'; c.fillText('Lungs', X(12.2), 70); c.beginPath(); c.arc(X(13), Y(hill(13, 3.6)), 9, 0, 7); c.fill(); }
+        if (step >= 2) { c.fillStyle = 'rgba(244,162,97,.18)'; c.fillRect(X(1.5), 40, X(5.5) - X(1.5), 520); c.fillStyle = '#b5651d'; c.font = 'bold 20px sans-serif'; c.fillText('Tissues', X(2.4), 70);
+          [5, 2].forEach(p => { c.beginPath(); c.arc(X(p), Y(hill(p, 3.6)), 9, 0, 7); c.fill(); });
+          c.strokeStyle = '#555'; c.setLineDash([6, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(X(13), Y(hill(13, 3.6))); c.lineTo(X(13), Y(hill(2, 3.6))); c.lineTo(X(2), Y(hill(2, 3.6))); c.stroke(); c.setLineDash([]);
+          c.fillStyle = '#333'; c.font = '19px sans-serif'; c.fillText('O2 released: ' + Math.round(hill(13, 3.6) - hill(2, 3.6)) + '% of capacity', X(6.5), Y(hill(2, 3.6)) + 30); }
+        if (step >= 3) { const p50 = 3.6 + 1.2 * (step === 3 ? k : 1); curve(p50, '#f77f00', 5, 14); c.fillStyle = '#f77f00'; c.font = 'bold 20px sans-serif'; c.fillText('More CO2 (Bohr shift)', X(5.6), Y(hill(5.6, p50)) + 34); }
+        if (step >= 4) { const p50 = 3.6 - 1.4 * k; curve(p50, '#2d6a4f', 5, 14); c.fillStyle = '#2d6a4f'; c.font = 'bold 20px sans-serif'; c.fillText('Foetal haemoglobin', X(0.6), Y(hill(2.6, p50)) - 18); }
+        c.fillStyle = '#d62828'; c.font = 'bold 20px sans-serif'; c.fillText('Adult haemoglobin', X(7.2), Y(hill(7, 3.6)) - 14); tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const k = Math.min(1, (tt - t0) / 2.5); const kk = step + ':' + Math.round(k * 40); if (kk !== key) { key = kk; draw(step, k); } } };
+    } };
+  return {
+    dives: [D_HB],
+    outside: { q: { q: 'What makes air move into the lungs?', o: ['The lungs expand by themselves', 'The thorax gets bigger, so pressure inside falls below air pressure', 'The trachea pumps air in'], a: 1, why: 'Muscles enlarge the thorax; lower pressure inside means air flows in from outside.' } },
+    stops: {
+      'Trachea': { pts: ['C-shaped rings of cartilage keep the trachea open while you breathe in.', 'Ciliated cells and mucus-secreting goblet cells line it: mucus traps dust and pathogens, and cilia sweep it up.'], q: { q: 'Why does the trachea have rings of cartilage?', o: ['To exchange gases', 'To stop it collapsing when pressure inside falls', 'To produce mucus'], a: 1, why: 'Cartilage keeps the airway open during inspiration, when pressure inside is low.' } },
+      'Bronchi': { q: { q: 'Which order does air pass through?', o: ['Trachea, bronchioles, bronchi, alveoli', 'Trachea, bronchi, bronchioles, alveoli', 'Bronchi, trachea, alveoli, bronchioles'], a: 1, why: 'The airways branch from large to small: trachea, bronchi, bronchioles, then alveoli.' } },
+      'Bronchioles': { pts: ['Bronchioles have smooth muscle in their walls, which can narrow them, as in an asthma attack.'] },
+      'Alveoli': { q: { q: 'Which feature gives the lungs a huge surface area for gas exchange?', o: ['Cartilage rings', 'Millions of tiny alveoli', 'Thick capillary walls'], a: 1, why: 'About 300 to 500 million alveoli give a surface of around 70 m2.' }, dives: ['Haemoglobin and oxygen'] },
+      'Gas exchange': { q: { q: 'Why does oxygen diffuse from the alveolus into the blood?', o: ['Active transport by pneumocytes', 'Its concentration is higher in the alveolus than in the blood', 'Blood pressure pulls it in'], a: 1, why: 'Ventilation keeps alveolar oxygen high and blood flow carries oxygen away, keeping the gradient steep.' }, dives: ['Haemoglobin and oxygen'] }
+    },
+    addSteps: {
+      'Gas exchange in an alveolus': [{ after: 'A very thin wall', step: { hl: true, n: 'Type I and type II pneumocytes', s: 'The alveolus wall is lined by two kinds of cell.', hpts: ['**Type I pneumocytes**: extremely thin, flattened cells covering about 95% of the surface, so the diffusion distance is tiny (about 0.2 um together with the capillary wall).', '**Type II pneumocytes**: rounder cells that secrete **surfactant**, which lowers surface tension so the alveoli do not collapse and stick together when you breathe out.'], hq: { q: 'Which cells make surfactant?', o: ['Type I pneumocytes', 'Type II pneumocytes', 'Red blood cells'], a: 1, why: 'Type II pneumocytes secrete surfactant; type I cells are thin for diffusion.' }, cs: 'B3.1.4', ch: 'B2.3.8' } }],
+      'Breathing in and out': [{ after: 'Forced breathing out', step: { hl: true, n: 'Antagonistic intercostal muscles', s: 'Two sets of muscles between the ribs work against each other.', hpts: ['**External intercostals** contract in inspiration: ribs move up and out. The internal intercostals are relaxed and stretched.', '**Internal intercostals** contract in forced expiration: ribs move down and in. Now the external intercostals are stretched.', 'Because a muscle can only pull, each set is needed to undo the work of the other: an **antagonistic pair**.'], hq: { q: 'Why are the internal and external intercostal muscles called an antagonistic pair?', o: ['They contract at the same time', 'They produce opposite movements of the ribs, and each stretches the other', 'They are both attached to the diaphragm'], a: 1, why: 'Muscles can only contract and pull, so opposite movements need opposite muscles.' }, cs: 'B3.1.5', ch: 'B3.3.8' } }]
+    },
+    steps: {
+      'Lung volumes/Vital capacity': { q: { q: 'Vital capacity is 4.6 dm3, tidal volume 0.5 dm3 and inspiratory reserve 3.0 dm3. What is the expiratory reserve volume?', o: ['1.1 dm3', '3.5 dm3', '4.1 dm3'], a: 0, why: 'Vital capacity = tidal + inspiratory reserve + expiratory reserve, so 4.6 - 0.5 - 3.0 = 1.1 dm3.' } },
+      'Gas exchange in an alveolus/Keeping the gradients steep': { q: { q: 'Which of these does NOT help keep the oxygen gradient steep?', o: ['Ventilation bringing fresh air', 'Blood flow carrying oxygenated blood away', 'Surfactant lowering surface tension'], a: 2, why: 'Surfactant stops alveoli collapsing; the gradient is kept by ventilation and blood flow.' } }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
@@ -375,7 +428,24 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Extras (2026-11-18): <name>.extra.js sets J.extra(api, W) -> {stops:{name:{...}}, outside:{...}, dives:[new close-ups],
+// dive:{name:{...}}, steps:{'dive/step':{...}}, addSteps:{dive:[{after, step}]}, addStops:[{after, stop}]}. Added steps and stops
+// reuse the animation state of the step or stop before them, so existing onStep/onStop code keeps working.
+W.stops.forEach((s,i)=>{ s._i=i; });
+if(J.extra){ const X=J.extra(api,W)||{};
+  const allD=()=>{ const s=[]; (W.dives||[]).concat(...W.stops.map(st=>dives(st))).forEach(d=>{ if(s.indexOf(d)<0) s.push(d); }); return s; };
+  allD().forEach(d=>d.steps.forEach((st,i)=>{ st._oi=i; }));
+  (X.dives||[]).forEach(d=>{ d.steps.forEach((st,i)=>{ st._oi=i; }); (W.dives=W.dives||[]).push(d); });
+  const byName=n=>allD().find(d=>d.n===n);
+  W.stops.forEach(st=>{ const e=X.stops&&X.stops[st.n]; if(!e) return; const ad=e.dives; Object.keys(e).forEach(k=>{ if(k!=='dives') st[k]=e[k]; });
+    if(ad){ st.dives=dives(st).concat(ad.map(byName).filter(Boolean)); delete st.dive; } });
+  if(X.outside&&W.outsideInfo) Object.assign(W.outsideInfo,X.outside);
+  allD().forEach(d=>{ if(X.dive&&X.dive[d.n]) Object.assign(d,X.dive[d.n]);
+    d.steps.forEach(st=>{ const e=X.steps&&X.steps[d.n+'/'+st.n]; if(e) Object.assign(st,e); });
+    ((X.addSteps&&X.addSteps[d.n])||[]).forEach(a=>{ const i=a.after?d.steps.findIndex(s=>s.n===a.after):d.steps.length-1; const prev=d.steps[i]; a.step._oi=prev?prev._oi:0; d.steps.splice(i+1,0,a.step); }); });
+  (X.addStops||[]).forEach(a=>{ const i=W.stops.findIndex(s=>s.n===a.after); const prev=W.stops[i]; a.stop._i=prev?prev._i:0; if(!a.stop.at&&prev) a.stop.at=prev.at; if(!a.stop.look&&prev) a.stop.look=prev.look; if(a.stop.u==null&&prev&&prev.u!=null) a.stop.u=prev.u; W.stops.splice(i+1,0,a.stop); });
+  if(X.dives&&X.dives.length) W.dives=W.dives; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 // Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
 // h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
 const forLevel=o=>!o.hl||level==='hl';
@@ -424,7 +494,7 @@ function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.le
   const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+  if(dive.ctl.onStep) dive.ctl.onStep(st._oi!=null?st._oi:dive.steps.indexOf(st),st); }
 function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
 function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
@@ -438,7 +508,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+api.goStop=i=>{ setView('ride'); const t=STOPS.find(s=>s._i===i)||STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }

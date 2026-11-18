@@ -544,6 +544,93 @@ window.JOURNEY = {
   }
 };
 
+// Extras for Inside a Muscle (2026-11-18): check questions, close-ups on titin and antagonistic muscles (B3.3.3) and on the
+// elbow as a lever and synovial joint (B3.3.5-7), and a stop on why animals move (B3.3.1, B3.3.9-10).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+  const D_TITIN = { n: 'Titin and relaxing', bg: '#1a1216', dist: 44, target: V(0, 0, 0), yaw: 0, pitch: 0.15,
+    steps: [
+      { n: 'A sarcomere at rest', s: 'Between two Z lines, thin **actin** filaments (blue) overlap thick **myosin** filaments (red). A giant protein, **titin** (green coils), joins each end of the myosin filament to a Z line.', cs: 'B3.3.3' },
+      { n: 'Contraction', s: 'Cross-bridges pull the actin towards the centre: the sarcomere shortens and the titin springs are **compressed**.', cs: 'B3.3.2, B3.3.3' },
+      { n: 'Muscles cannot push', s: 'When the cross-bridges let go, nothing inside the sarcomere can push it longer again. Instead the **antagonistic muscle** on the other side of the joint contracts and pulls this muscle back out.', cs: 'B3.3.3' },
+      { n: 'Titin as a spring', s: 'Titin stretches as the sarcomere is pulled longer, storing energy like a spring, and stops the sarcomere being **over-stretched**. When the pull stops, titin recoils and helps return the sarcomere to its resting length.', pts: ['Titin also keeps each myosin filament centred between the Z lines.'], q: { q: 'Which statement explains how a contracted muscle returns to its resting length?', o: ['Myosin heads push the actin back out', 'An antagonistic muscle pulls it longer, and titin recoils', 'The Z lines repel each other'], a: 1, why: 'Muscles can only pull. Lengthening needs an opposing muscle, helped by titin\'s elastic recoil.' }, cs: 'B3.3.3' }
+    ],
+    build(D) { const g = D.scene; const zM = M(0x9d8189), aM = M(0x4895ef), mM = M(0xe63946), tM = M(0x52b788, { emissive: 0x0b3d2e });
+      const z = [-1, 1].map(() => { const p = new THREE.Mesh(new THREE.BoxGeometry(0.8, 14, 6), zM); g.add(p); return p; });
+      const myo = []; [-3, 0, 3].forEach(y => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 14, 12), mM); m.rotation.z = Math.PI / 2; m.position.y = y; g.add(m); myo.push(m); });
+      const act = []; [-4.5, -1.5, 1.5, 4.5].forEach(y => [-1, 1].forEach(s => { const a = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 10, 8), aM); a.rotation.z = Math.PI / 2; a.position.y = y; g.add(a); act.push({ a, s }); }));
+      const pts = []; for (let i = 0; i <= 120; i++) { const u = i / 120; pts.push(V(u, Math.sin(u * Math.PI * 12) * 0.75, Math.cos(u * Math.PI * 12) * 0.75)); }
+      const helix = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 240, 0.12, 6, false);
+      const tit = []; [-3, 0, 3].forEach(y => [-1, 1].forEach(s => { const m = new THREE.Mesh(helix, tM); m.position.y = y; g.add(m); tit.push({ m, s }); }));
+      const arrow = new THREE.Mesh(new THREE.ConeGeometry(1, 2.4, 14), M(0xffd166)); g.add(arrow); const arrow2 = arrow.clone(); g.add(arrow2);
+      D.label('Z line', V(-14, 8, 0)); D.label('Actin', V(-9, -6.8, 3)); D.label('Myosin', V(0, 5.2, 3)); const lt = D.label('Titin', V(-9.5, 1.8, 3)); const ll = D.label('', V(0, -10, 0)); const lp = D.label('Pulled by the antagonistic muscle', V(0, 10, 0));
+      let step = 0, tt = 0, t0 = 0, half = 13;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+          const goal = step === 0 ? 13 : step === 1 ? 9.5 : step === 2 ? 9.5 + 6 * ease((t - 0.5) / 2.5) : 15.5 - 2.5 * ease((t - 1) / 2);
+          half += (goal - half) * Math.min(1, dt * 3);
+          z[0].position.x = -half; z[1].position.x = half;
+          act.forEach(o => { o.a.position.x = o.s * (half - 5); });
+          tit.forEach(o => { const x0 = o.s * half, x1 = o.s * 7; o.m.position.x = Math.min(x0, x1); o.m.scale.x = Math.abs(x0 - x1); });
+          const stretch = (half - 13) / 2.5; tM.emissive.setHex(stretch > 0.3 ? 0x2d6a4f : 0x0b3d2e);
+          arrow.visible = arrow2.visible = step === 2; arrow.rotation.z = Math.PI / 2; arrow.position.set(-half - 3, 0, 0); arrow2.rotation.z = -Math.PI / 2; arrow2.position.set(half + 3, 0, 0); hideL(lp, step !== 2);
+          ll.textContent = 'Sarcomere length: ' + (half * 2 * 0.0865).toFixed(1) + ' um'; } };
+    } };
+
+  const D_JOINT = { n: 'The elbow: lever and joint', bg: '#151a22', dist: 64, target: V(4, 0, 0), yaw: 0, pitch: 0.1,
+    steps: [
+      { n: 'Bones as levers', s: 'Muscles are attached to bones by **tendons**. The skeleton gives them something to pull on, and each bone acts as a **lever** turning about a joint.', pts: ['**Fulcrum**: the elbow joint.', '**Effort**: where the biceps tendon attaches to the forearm.', '**Load**: the weight in the hand.'], cs: 'B3.3.5' },
+      { n: 'Flexing the arm', s: 'The **biceps** contracts and shortens, pulling the forearm up: the elbow **flexes**. The **triceps** relaxes and is stretched.', cs: 'B3.3.3, B3.3.5' },
+      { n: 'Extending the arm', s: 'Now the **triceps** contracts, pulling on the ulna behind the elbow: the arm **extends**. The biceps is stretched. Biceps and triceps are an **antagonistic pair**.', cs: 'B3.3.3' },
+      { n: 'Inside a synovial joint', s: 'The elbow is a **synovial joint**.', pts: ['**Cartilage** covers the ends of the bones: smooth and slightly springy, it reduces friction and absorbs shock.', '**Synovial fluid** fills the joint and lubricates it.', 'A **joint capsule** and **ligaments** (bone to bone) hold the joint together and limit its movement.'], cs: 'B3.3.6' },
+      { n: 'Range of motion', s: 'The elbow is a **hinge joint**: it moves in one plane only. Its range of motion, measured with a **goniometer** or from photos, is about 0 to 145 degrees in most people.', q: { q: 'A student measures elbow flexion at 140 degrees and extension at 0 degrees. What is the range of motion?', o: ['70 degrees', '140 degrees', '280 degrees'], a: 1, why: 'Range of motion is the difference between the two extreme angles: 140 - 0 = 140 degrees.' }, hq: { q: 'Why can the knee and elbow not move in all directions like the shoulder?', o: ['They have no cartilage', 'They are hinge joints, shaped and held by ligaments to move in one plane', 'They have fewer muscles'], a: 1, why: 'The shape of the bone ends and the ligaments restrict hinge joints to one plane, unlike ball-and-socket joints.' }, cs: 'B3.3.7' }
+    ],
+    build(D) { const g = D.scene; const boneM = M(0xf1e9da, { roughness: 0.7 });
+      const hum = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.6, 26, 16), boneM); hum.position.set(-13, 0, 0); hum.rotation.z = Math.PI / 2; g.add(hum);
+      const elbow = V(0, 0, 0); const fore = new THREE.Group(); fore.position.copy(elbow); g.add(fore);
+      [0.9, -0.9].forEach((z, i) => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.1, 22, 14), boneM); b.rotation.z = Math.PI / 2; b.position.set(11, i ? -0.6 : 0.4, z); fore.add(b); });
+      const olec = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 12), boneM); olec.position.set(-1.6, -0.3, 0); fore.add(olec);
+      const hand = new THREE.Mesh(new THREE.SphereGeometry(2.4, 16, 12), M(0xe0a98a)); hand.position.set(23, 0, 0); fore.add(hand);
+      const weight = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 3, 16), M(0x495057)); weight.position.set(23, -4, 0); fore.add(weight);
+      const cart = new THREE.Mesh(new THREE.SphereGeometry(2.2, 20, 14), T(0xbde0fe, 0.55)); g.add(cart); const caps = new THREE.Mesh(new THREE.SphereGeometry(3.3, 20, 14), T(0x8ecae6, 0.18)); g.add(caps);
+      const insB = V(4, 1.2, 0), insT = V(-1.6, -1.6, 0);
+      const bic = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), M(0xd62828, { roughness: 0.5 })); g.add(bic); const tri = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), M(0x9d0208, { roughness: 0.5 })); g.add(tri);
+      const tendB = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 1, 8), M(0xf8f9fa)); g.add(tendB);
+      const pB = V(), pT = V(), pE = V(), pL = V();
+      const lb = D.label('Biceps', pB), lt = D.label('Triceps', pT), lf = D.label('Fulcrum (elbow)', V(0, -4.5, 3)), le = D.label('Effort', pE), ll = D.label('Load', pL), la = D.label('', V(14, 14, 0)), lc = D.label('Cartilage, synovial fluid, capsule', V(0, 5, 4));
+      let step = 0, tt = 0, t0 = 0, ang = 20;
+      const muscle = (m, a, b, fat) => { const mid = a.clone().add(b).multiplyScalar(0.5), d = b.clone().sub(a), len = d.length(); m.position.copy(mid); m.scale.set(fat, len / 2, fat); m.quaternion.setFromUnitVectors(V(0, 1, 0), d.normalize()); return mid; };
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+          const goal = step === 0 ? 20 : step === 1 ? 20 + 110 * ease(t / 2.5) : step === 2 ? 130 - 125 * ease(t / 2.5) : step === 3 ? 60 : 72 + 70 * Math.sin(t * 0.8);
+          ang += (goal - ang) * Math.min(1, dt * 4); fore.rotation.z = ang * Math.PI / 180;
+          fore.updateMatrixWorld(); const B2 = insB.clone().applyMatrix4(fore.matrixWorld), T2 = insT.clone().applyMatrix4(fore.matrixWorld);
+          const flexK = (ang - 5) / 140; const mb = muscle(bic, V(-22, 2.2, 0), B2.clone().add(V(-2.5, 1, 0)), 2.6 + 1.4 * flexK); const mt = muscle(tri, V(-22, -2.2, 0), T2, 3.4 - 1.2 * flexK);
+          const tb = B2.clone().add(V(-2.5, 1, 0)); tendB.position.copy(tb.clone().add(B2).multiplyScalar(0.5)); tendB.scale.y = tb.distanceTo(B2); tendB.quaternion.setFromUnitVectors(V(0, 1, 0), B2.clone().sub(tb).normalize());
+          pB.copy(mb).add(V(0, 4, 2)); pT.copy(mt).add(V(0, -4.5, 2)); pE.copy(B2).add(V(0, 2.5, 2)); pL.copy(V(23, -6, 0).applyMatrix4(fore.matrixWorld));
+          cart.visible = caps.visible = step === 3; hideL(lc, step !== 3); hideL(le, step !== 0); hideL(ll, step !== 0); hideL(lf, step > 0 && step < 3);
+          la.textContent = 'Elbow angle: ' + Math.round(180 - ang) + ' degrees (flexion ' + Math.round(ang) + ')'; hideL(la, step < 4); } };
+    } };
+
+  return {
+    dives: [D_TITIN, D_JOINT],
+    addStops: [{ after: 'What starts a contraction?', stop: { n: 'Why animals move', s: 'Movement is a feature of almost all living things: even plants and sessile animals move parts of their bodies. Animals that move from place to place (**locomotion**) do so to:', pts: ['find food, water or mates', 'escape predators and other dangers', 'migrate to better conditions or disperse to new areas'], h: 'Marine mammals such as dolphins and seals show adaptations for swimming:', hpts: ['a streamlined body shape that reduces drag', 'limbs modified into flippers, and a tail with horizontal flukes moved up and down', 'a thick layer of blubber for insulation and buoyancy', 'nostrils on top of the head (a blowhole), so they can breathe at the surface'], q: { q: 'Which is NOT a reason animals move from place to place?', o: ['To find food', 'To escape predators', 'To photosynthesize'], a: 2, why: 'Animals are heterotrophs: they move to find food, mates and safety, not to photosynthesize.' }, cs: 'B3.3.1, B3.3.9', ch: 'B3.3.10', dives: [D_JOINT] } }],
+    stops: {
+      'A whole muscle': { q: { q: 'What attaches a skeletal muscle to a bone?', o: ['A ligament', 'A tendon', 'Cartilage'], a: 1, why: 'Tendons join muscle to bone; ligaments join bone to bone.' }, dives: ['The elbow: lever and joint'] },
+      'A bundle of fibres': { q: { q: 'What is a fascicle?', o: ['A single sarcomere', 'A bundle of muscle fibres wrapped in connective tissue', 'A nerve ending'], a: 1, why: 'Muscles are made of fascicles, which are made of muscle fibres.' } },
+      'One muscle fibre': { pts: ['A muscle fibre is one very long cell with many nuclei, formed by many cells fusing.', 'It is packed with myofibrils and mitochondria, and its sarcoplasmic reticulum stores calcium ions.'], q: { q: 'Why does a muscle fibre have many nuclei?', o: ['It divides very often', 'It formed when many cells fused together', 'Each myofibril needs its own nucleus'], a: 1, why: 'Muscle fibres develop by fusion of many cells, so they are multinucleate.' } },
+      'A myofibril and its bands': { q: { q: 'Which band contains only actin filaments?', o: ['A band', 'I band', 'H zone'], a: 1, why: 'The light I band has only thin actin filaments; the A band is the length of the myosin.' } },
+      'Inside one sarcomere': { q: { q: 'What are the boundaries of a sarcomere?', o: ['Two M lines', 'Two Z lines', 'Two H zones'], a: 1, why: 'A sarcomere runs from one Z line to the next.' } },
+      'The sarcomere contracts': { q: { q: 'During contraction, which part of the sarcomere stays the same length?', o: ['The I band', 'The A band', 'The H zone'], a: 1, why: 'The A band is the length of the myosin filaments, which do not change; the I band and H zone shrink as the filaments slide.' } },
+      'Relaxing again': { dives: ['Titin and relaxing', 'The elbow: lever and joint'] },
+      'What starts a contraction?': { q: { q: 'What is a motor unit?', o: ['One muscle fibre and its nerve ending', 'One motor neuron and all the muscle fibres it controls', 'A pair of antagonistic muscles'], a: 1, why: 'All the fibres in a motor unit contract together when their motor neuron fires.' } }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
@@ -595,7 +682,24 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Extras (2026-11-18): <name>.extra.js sets J.extra(api, W) -> {stops:{name:{...}}, outside:{...}, dives:[new close-ups],
+// dive:{name:{...}}, steps:{'dive/step':{...}}, addSteps:{dive:[{after, step}]}, addStops:[{after, stop}]}. Added steps and stops
+// reuse the animation state of the step or stop before them, so existing onStep/onStop code keeps working.
+W.stops.forEach((s,i)=>{ s._i=i; });
+if(J.extra){ const X=J.extra(api,W)||{};
+  const allD=()=>{ const s=[]; (W.dives||[]).concat(...W.stops.map(st=>dives(st))).forEach(d=>{ if(s.indexOf(d)<0) s.push(d); }); return s; };
+  allD().forEach(d=>d.steps.forEach((st,i)=>{ st._oi=i; }));
+  (X.dives||[]).forEach(d=>{ d.steps.forEach((st,i)=>{ st._oi=i; }); (W.dives=W.dives||[]).push(d); });
+  const byName=n=>allD().find(d=>d.n===n);
+  W.stops.forEach(st=>{ const e=X.stops&&X.stops[st.n]; if(!e) return; const ad=e.dives; Object.keys(e).forEach(k=>{ if(k!=='dives') st[k]=e[k]; });
+    if(ad){ st.dives=dives(st).concat(ad.map(byName).filter(Boolean)); delete st.dive; } });
+  if(X.outside&&W.outsideInfo) Object.assign(W.outsideInfo,X.outside);
+  allD().forEach(d=>{ if(X.dive&&X.dive[d.n]) Object.assign(d,X.dive[d.n]);
+    d.steps.forEach(st=>{ const e=X.steps&&X.steps[d.n+'/'+st.n]; if(e) Object.assign(st,e); });
+    ((X.addSteps&&X.addSteps[d.n])||[]).forEach(a=>{ const i=a.after?d.steps.findIndex(s=>s.n===a.after):d.steps.length-1; const prev=d.steps[i]; a.step._oi=prev?prev._oi:0; d.steps.splice(i+1,0,a.step); }); });
+  (X.addStops||[]).forEach(a=>{ const i=W.stops.findIndex(s=>s.n===a.after); const prev=W.stops[i]; a.stop._i=prev?prev._i:0; if(!a.stop.at&&prev) a.stop.at=prev.at; if(!a.stop.look&&prev) a.stop.look=prev.look; if(a.stop.u==null&&prev&&prev.u!=null) a.stop.u=prev.u; W.stops.splice(i+1,0,a.stop); });
+  if(X.dives&&X.dives.length) W.dives=W.dives; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 // Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
 // h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
 const forLevel=o=>!o.hl||level==='hl';
@@ -644,7 +748,7 @@ function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.le
   const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+  if(dive.ctl.onStep) dive.ctl.onStep(st._oi!=null?st._oi:dive.steps.indexOf(st),st); }
 function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
 function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
@@ -658,7 +762,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+api.goStop=i=>{ setView('ride'); const t=STOPS.find(s=>s._i===i)||STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }

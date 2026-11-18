@@ -185,18 +185,204 @@ window.JOURNEY = {
     // Memory cells
     const mem = []; for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(2.4, 20, 16), M(0x9d4edd, { emissive: 0x2a0a44 })); m.position.set(98 + (i % 2) * 6, -8 + Math.floor(i / 2) * 6, A.rnd(-3, 3)); scene.add(m); mem.push(m); }
     A.label('Skin', V(-78, 18, 8)); A.label('Mucus', V(-75, 20, -6)); A.label('Cut sealed by a clot', V(-60, 20, 6)); A.label('Bacteria', V(-40, 0, 6)); A.label('Phagocyte', V(0, 0, 0)); A.label('Lymph node', V(32, 12, 0), 400); A.label('Helper T-cell', V(26, -1, 2)); A.label('B-cell', V(37, -1, 2)); A.label('Antigen', V(31.5, -9.5, 2)); A.label('Plasma cells (clones)', V(63, 2, 0)); A.label('Antibodies on bacteria', V(84, 4, 0)); A.label('Memory cells', V(101, 2, 0));
+    // ---------- new scene objects for the later stops (2026-11-18) ----------
+    const vial = new THREE.Group(); { const g = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 6, 24), T(0xdff3ff, 0.45)); const liq = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 3.6, 24), M(0xbde0fe, { transparent: true, opacity: 0.8 })); liq.position.y = -1; const cap = new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.3, 1.2, 24), M(0xe63946)); cap.position.y = 3.6; vial.add(g, liq, cap);
+      const syr = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 9, 16), T(0xffffff, 0.5)); syr.rotation.z = 1.1; syr.position.set(7, 1, 0); const ndl = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 4, 6), M(0xc0c0c0)); ndl.rotation.z = 1.1; ndl.position.set(1.6, -1.6, 0); vial.add(syr, ndl); }
+    vial.position.set(124, -6, 0); scene.add(vial);
+    const tH = new THREE.Mesh(new THREE.SphereGeometry(5, 28, 20), M(0x4361ee)); tH.position.set(148, -6, 0); scene.add(tH);
+    function hivParticle(r) { const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(r, 1), M(0xe5989b))); for (let i = 0; i < 14; i++) { const s = new THREE.Mesh(new THREE.ConeGeometry(r * 0.22, r * 0.5, 6), M(0xffb703)); const d = A.onSphere(1); s.position.copy(d).multiplyScalar(r * 1.1); s.quaternion.setFromUnitVectors(V(0, 1, 0), d); g.add(s); } return g; }
+    const hivs = []; for (let i = 0; i < 6; i++) { const h = hivParticle(0.9); scene.add(h); hivs.push({ h, a: i / 6 * Math.PI * 2 }); }
+    const dish = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 1, 40), T(0xe9f5db, 0.5)); dish.position.set(171, -10, 0); scene.add(dish);
+    for (let i = 0; i < 26; i++) { const c = new THREE.Mesh(new THREE.SphereGeometry(A.rnd(0.5, 1.1), 10, 8), M(i < 4 ? 0xe63946 : 0x7cb518)); const a = A.rnd(0, 6.28), r = A.rnd(2.5, 8); c.position.set(171 + Math.cos(a) * r, -9.3, Math.sin(a) * r); c.scale.y = 0.4; scene.add(c); }
+    const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 0.3, 20), M(0xffffff)); disc.position.set(171, -9.3, 0); scene.add(disc);
+    const people = []; for (let i = 0; i < 36; i++) { const p = new THREE.Mesh(new THREE.SphereGeometry(0.9, 12, 8), M(i % 5 === 0 ? 0x4cc9f0 : 0xadb5bd)); p.position.set(186 + (i % 6) * 3.2, -9, -8 + Math.floor(i / 6) * 3.2); scene.add(p); people.push(p); }
+    A.label('Vaccine', V(124, 2, 0)); A.label('HIV and a helper T-cell', V(148, 2, 0)); A.label('Antibiotic disc', V(171, -5, 0)); A.label('A population', V(194, -4, 0));
     const hero = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
+
+    // ---------- close-ups ----------
+    const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+    const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+    function abY(g, col, tip) { const grp = new THREE.Group(); const hm = M(col), lm = M(0xffe8a3), vm = M(tip || 0x52b788, { emissive: 0x113322 });
+      const stem = [-0.45, 0.45].map(x => { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 4, 10), hm); c.position.set(x, -2, 0); grp.add(c); return c; });
+      [-1, 1].forEach(s => { const arm = new THREE.Group(); const h = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 4, 10), hm); h.position.y = 2; const l = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 3.2, 10), lm); l.position.set(s * 0.8, 2.4, 0);
+        const v1 = new THREE.Mesh(new THREE.SphereGeometry(0.55, 12, 8), vm); v1.position.set(0, 4.1, 0); const v2 = new THREE.Mesh(new THREE.SphereGeometry(0.5, 12, 8), vm); v2.position.set(s * 0.8, 4.1, 0); arm.add(h, l, v1, v2); arm.rotation.z = -s * 0.65; grp.add(arm); });
+      g.add(grp); return grp; }
+
+    const D_CLOT = { n: 'How a clot forms', bg: '#1a0d12', dist: 48, target: V(0, 0, 0), yaw: 0.2, pitch: 0.25,
+      steps: [
+        { n: 'A cut in a blood vessel', s: 'When a vessel wall is cut, blood starts to escape through the gap. Blood must clot quickly to stop the bleeding and to keep pathogens out of the body.', cs: 'C3.2.3' },
+        { n: 'Platelets plug the gap', s: '**Platelets** (pink), small cell fragments in the blood, stick to the damaged wall and to each other, forming a loose plug. They release **clotting factors**.', cs: 'C3.2.3' },
+        { n: 'A cascade of enzymes', s: 'The clotting factors set off a chain of reactions. The last one turns the inactive protein **prothrombin** (grey) into the active enzyme **thrombin** (gold).', h: 'Each step activates the next, so a small signal is amplified into a large response: a cascade. Calcium ions and vitamin K are needed for several steps.', cs: 'C3.2.3' },
+        { n: 'Fibrin threads', s: 'Thrombin converts soluble **fibrinogen** in the plasma into insoluble **fibrin**. Long fibrin threads form a mesh across the wound.', cs: 'C3.2.3' },
+        { n: 'A clot', s: 'Red blood cells get caught in the fibrin mesh and the gap is sealed. The clot later dries into a scab while the tissue below repairs.', q: { q: 'Which change makes the clot solid?', o: ['Prothrombin is made in the liver', 'Soluble fibrinogen is converted into insoluble fibrin', 'Red blood cells divide'], a: 1, why: 'Insoluble fibrin threads form the mesh that traps blood cells.' }, cs: 'C3.2.3' }
+      ],
+      build(D) { const g = D.scene;
+        [-1, 1].forEach(s => { const w = new THREE.Mesh(new THREE.BoxGeometry(20, 2, 16), M(0xb56576)); w.position.set(s * 13, -1, 0); g.add(w); });
+        const tissue = new THREE.Mesh(new THREE.BoxGeometry(46, 8, 16), T(0x6d1a36, 0.3)); tissue.position.y = -7; g.add(tissue);
+        const rbc = []; for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.5, 8, 16), M(0xc1121f)); g.add(m); rbc.push({ m, ph: i / 14, z: A.rnd(-6, 6), y: A.rnd(2, 7), trap: i % 3 === 0 ? V(A.rnd(-2.5, 2.5), A.rnd(-2, 1), A.rnd(-5, 5)) : null }); }
+        const pl = []; for (let i = 0; i < 16; i++) { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.3, 10), M(0xff8fab)); g.add(m); pl.push({ m, from: V(A.rnd(-20, -8), A.rnd(2, 7), A.rnd(-6, 6)), to: V(A.rnd(-3, 3), A.rnd(-1.5, 1.5), A.rnd(-6, 6)) }); }
+        const fac = []; for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 6), M(0x90e0ef, { emissive: 0x2277aa })); g.add(m); fac.push({ m, d: A.onSphere(1) }); }
+        const pro = []; for (let i = 0; i < 10; i++) { const m = new THREE.Mesh(new THREE.DodecahedronGeometry(0.55), M(0x9a9a9a)); m.position.set(A.rnd(-6, 6), A.rnd(1, 5), A.rnd(-6, 6)); g.add(m); pro.push(m); }
+        const fib = []; for (let i = 0; i < 16; i++) { const a = V(-4, A.rnd(-2, 1.5), A.rnd(-7, 7)), b = V(4, A.rnd(-2, 1.5), A.rnd(-7, 7)); const m = A.tube([a, a.clone().lerp(b, 0.5).add(V(0, A.rnd(-1, 1), A.rnd(-1, 1))), b], 0.12, M(0xfff1e6), 12); g.add(m); fib.push(m); }
+        D.label('Vessel wall', V(-14, 1.2, 8)); D.label('Blood', V(-16, 8, 0)); D.label('Tissue', V(-16, -9, 0)); const lpl = D.label('Platelets', V(0, -3.5, 8)), lpro = D.label('Prothrombin to thrombin', V(0, 6.5, 6)), lfib = D.label('Fibrin mesh', V(5.5, -2.5, 8));
+        let step = 0, tt = 0, t0 = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+            const pk = step === 0 ? 0 : step === 1 ? ease(t / 2.5) : 1; pl.forEach(p => p.m.position.copy(p.from).lerp(p.to, pk));
+            fac.forEach((f, i) => { f.m.visible = step >= 1; const r = 1 + ((tt * 0.8 + i / 12) % 1) * 6; f.m.position.copy(f.d).multiplyScalar(r).add(V(0, 0.5, 0)); });
+            const pc = step < 2 ? 0 : step === 2 ? ease((t - 0.5) / 2) : 1; pro.forEach((m, i) => { m.visible = step >= 2; m.material.color.setHex(pc > i / 10 ? 0xffd166 : 0x9a9a9a); m.rotation.y += dt; });
+            const fk = step < 3 ? 0 : step === 3 ? ease(t / 2.5) : 1; fib.forEach(m => { m.visible = fk > 0.01; m.scale.set(Math.max(0.01, fk), 1, 1); });
+            rbc.forEach(r => { if (step >= 4 && r.trap) { r.m.position.lerp(r.trap, Math.min(1, dt * 2)); return; } const f = (tt * (step === 0 ? 0.08 : 0.06) + r.ph) % 1; const x = -22 + f * 44; let y = r.y; if (step === 0 && Math.abs(x) < 4) y = r.y - (4 - Math.abs(x)) * 2.2; r.m.position.set(x, y, r.z); r.m.rotation.y += dt; });
+            hideL(lpl, step < 1); hideL(lpro, step !== 2); hideL(lfib, step < 3); } };
+      } };
+
+    const D_AB = { n: 'Antibodies', bg: '#1a0d12', dist: 36, target: V(0, 1, 0), yaw: 0, pitch: 0.12,
+      steps: [
+        { n: 'A Y-shaped protein', s: 'An antibody is made of **four polypeptide chains**: two long heavy chains (orange) and two short light chains (cream), held together by disulfide bonds.', pts: ['The stem and lower arms are the **constant region**: the same in all antibodies of one class.', 'The tips of the arms are the **variable regions** (green): different in every antibody.'], cs: 'C3.2.6, C3.2.7' },
+        { n: 'Binding one antigen', s: 'Each variable region has a shape that fits **one specific antigen** (yellow). A different antigen (red) does not fit, so it is not bound.', h: 'The fit depends on the sequence of amino acids in the variable region, which folds into a binding site complementary to part of the antigen (an epitope).', cs: 'C3.2.7' },
+        { n: 'Clumping pathogens together', s: 'An antibody has **two binding sites**, so it can hold two pathogens at once. Many antibodies link bacteria into a clump (agglutination), which stops them spreading.', cs: 'C3.2.6' },
+        { n: 'Marking pathogens for phagocytes', s: 'Bacteria coated with antibodies are recognised and engulfed much more quickly by **phagocytes**. Antibodies can also block the parts of a virus or toxin that it uses to attack cells.', q: { q: 'Why can each antibody bind only one kind of antigen?', o: ['Its constant region is unique', 'Its variable region has a shape that fits only that antigen', 'It has only one binding site'], a: 1, why: 'Specificity comes from the variable region, whose shape is complementary to one antigen.' }, cs: 'C3.2.6, C3.2.7' }
+      ],
+      build(D) { const g = D.scene; const big = abY(g, 0xf4a261); big.scale.setScalar(1.6);
+        const ag = new THREE.Mesh(new THREE.OctahedronGeometry(1.1), M(0xffd166, { emissive: 0x554400 })); g.add(ag); const bad = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.6, 1.6), M(0xe63946)); g.add(bad);
+        const bac = []; for (let i = 0; i < 6; i++) { const b = new THREE.Group(); const body = new THREE.Mesh(new THREE.CylinderGeometry(1.4, 1.4, 4, 14), M(0x7cb518)); b.add(body); [1, -1].forEach(s => { const c = new THREE.Mesh(new THREE.SphereGeometry(1.4, 14, 10), M(0x7cb518)); c.position.y = s * 2; b.add(c); }); b.position.set((i % 3 - 1) * 6.5, (Math.floor(i / 3) - 0.5) * 6, 0); b.rotation.z = A.rnd(-0.6, 0.6); g.add(b); bac.push(b); }
+        const smalls = []; for (let i = 0; i < 7; i++) { const a = abY(g, 0xf4a261); a.scale.setScalar(0.5); smalls.push(a); }
+        const ph = new THREE.Mesh(new THREE.SphereGeometry(7, 30, 20), T(0xcdb4db, 0.4)); ph.position.set(16, 0, -2); g.add(ph);
+        D.label('Heavy chain', V(-2.4, -4, 1)); const lv = D.label('Variable region', V(-5.6, 7.5, 1)), lc = D.label('Constant region', V(2.6, -5.8, 1)), ll = D.label('Light chain', V(4.8, 3, 1)), lag = D.label('Fits: bound', V(-5, 10.6, 1)), lbad = D.label('Does not fit', V(6.5, 10.6, 1)), lph = D.label('Phagocyte', V(16, 8, 0));
+        const lh = [...D.scene.children].length;
+        let step = 0, tt = 0, t0 = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+            big.visible = step <= 1; ag.visible = bad.visible = step === 1; const k = ease(t / 2);
+            ag.position.set(-4.6 - 3 * (1 - k), 10.4 - 3 * (1 - k) + 0, 0); ag.rotation.y += dt;
+            const bk = (t % 3) / 3; bad.position.set(4.6 + (bk < 0.5 ? 3 * (1 - bk * 2) : 3 * (bk - 0.5) * 2) + 0.6, 10.4 + 2, 0);
+            bac.forEach((b, i) => { b.visible = step >= 2; const home = V((i % 3 - 1) * 6.5, (Math.floor(i / 3) - 0.5) * 6, 0); const clump = home.clone().multiplyScalar(step >= 2 ? 1 - 0.38 * ease(t / 2) : 1); b.position.copy(step === 3 ? clump.clone().add(V(ease(t / 4) * 8, 0, 0)) : clump); });
+            smalls.forEach((a, i) => { a.visible = step >= 2; const p = bac[i % 6].position.clone().lerp(bac[(i + 1) % 6].position, 0.5); a.position.copy(p).add(V(0, 0, 1.8)); a.rotation.z = i; });
+            ph.visible = step === 3; ph.scale.setScalar(1 + 0.05 * Math.sin(tt * 2)); ph.position.x = 16 - ease(t / 4) * 2;
+            hideL(lv, step > 1); hideL(lc, step !== 0); hideL(ll, step !== 0); hideL(lag, step !== 1); hideL(lbad, step !== 1); hideL(lph, step !== 3); } };
+      } };
+
+    const D_RESP = { n: 'First and second infection', bg: '#1a0d12', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+      steps: [
+        { n: 'Measuring the response', s: 'The graph shows the concentration of one antibody in the blood (vertical axis, log scale) over 70 days. Watch what happens after the first and second meeting with the same antigen.', cs: 'C3.2.10' },
+        { n: 'Primary response', s: 'After the first infection there is a **delay** of about a week while the right B-cells are activated and cloned. Antibody levels then rise, but not very high, and you may feel ill meanwhile.', cs: 'C3.2.9, C3.2.10' },
+        { n: 'Memory cells remain', s: 'Antibody levels fall again, but **memory cells** from the clone stay in the body for years, ready to recognise the same antigen.', cs: 'C3.2.10' },
+        { n: 'Secondary response', s: 'At the second exposure (day 40) memory cells respond at once: antibodies rise **sooner, faster and much higher** (often 10 to 100 times), and last longer. The pathogen is usually destroyed before you notice any symptoms: you are **immune**.', cs: 'C3.2.10' },
+        { n: 'What a vaccine does', s: 'A **vaccine** contains antigens from a pathogen (a weakened or inactivated pathogen, part of it, or mRNA that makes cells produce the antigen) but does not cause the disease. It triggers a primary response and memory cells, so a real infection later gets a secondary response.', pts: ['Booster doses give another secondary response, raising antibody and memory cell numbers again.'], q: { q: 'Why does a second infection with the same pathogen usually not make you ill?', o: ['Antibodies from the first infection last for life', 'Memory cells make a faster and larger antibody response', 'The pathogen cannot enter the body again'], a: 1, why: 'Antibodies fade, but memory cells remain and respond quickly, so the pathogen is destroyed before it can multiply much.' }, cs: 'C3.2.10, C3.2.16' }
+      ],
+      build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+        const pl = new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })); D.scene.add(pl);
+        const X = d => 110 + d / 70 * 860, Y = v => 560 - (Math.log10(v) + 1) / 4 * 500;
+        const resp = d => { let v = 0.1; if (d > 7) v += 10 * Math.min(1, (d - 7) / 7) * Math.exp(-Math.max(0, d - 14) / 8); if (d > 41) v += 900 * Math.min(1, (d - 41) / 4) * Math.exp(-Math.max(0, d - 46) / 18); return v; };
+        function draw(upTo, mem) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 40); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke();
+          c.font = '24px sans-serif'; c.fillStyle = '#222'; for (let d = 0; d <= 70; d += 10) { c.fillText(d, X(d) - 10, 592); } [0.1, 1, 10, 100, 1000].forEach(v => { c.fillText(v, 30, Y(v) + 8); c.strokeStyle = '#e5ddd0'; c.lineWidth = 1; c.beginPath(); c.moveTo(112, Y(v)); c.lineTo(980, Y(v)); c.stroke(); });
+          c.fillText('Time / days', 500, 630); c.save(); c.translate(24, 420); c.rotate(-Math.PI / 2); c.fillText('Antibody (arbitrary units)', 0, 0); c.restore();
+          c.fillStyle = '#e63946'; [0, 40].forEach(d => { c.beginPath(); c.moveTo(X(d), 560); c.lineTo(X(d) - 10, 584); c.lineTo(X(d) + 10, 584); c.fill(); });
+          c.font = 'bold 22px sans-serif'; c.fillText('1st exposure', X(0) + 6, 532); if (upTo > 40) c.fillText('2nd exposure', X(40) + 6, 532);
+          c.strokeStyle = '#1d4ed8'; c.lineWidth = 6; c.beginPath(); for (let d = 0; d <= upTo; d += 0.25) { const x = X(d), y = Y(resp(d)); d ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke();
+          c.fillStyle = '#1d4ed8'; c.font = 'bold 24px sans-serif'; if (upTo > 16) c.fillText('Primary', X(10), Y(12) - 14); if (upTo > 48) c.fillText('Secondary', X(48), Y(900) - 14);
+          if (mem) { c.fillStyle = '#7b2cbf'; c.font = 'bold 22px sans-serif'; c.fillText('Memory cells remain', X(20), Y(0.4)); for (let d = 18; d < 70; d += 3) { c.beginPath(); c.arc(X(d), Y(0.25), 6, 0, 7); c.fill(); } }
+          tex.needsUpdate = true; }
+        let step = 0, tt = 0, t0 = 0, last = -1;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const upTo = step === 0 ? 0 : step === 1 ? Math.min(38, t * 8) : step === 2 ? 38 : Math.min(70, 38 + (step === 3 ? t * 8 : 99));
+            const key = Math.round(upTo * 4) + '/' + (step >= 2); if (key !== last) { last = key; draw(upTo, step >= 2); } } };
+      } };
+
+    const D_HIV = { n: 'HIV and the immune system', bg: '#1a0d12', dist: 40, target: V(0, 0, 0), yaw: 0.3, pitch: 0.15,
+      steps: [
+        { n: 'How HIV spreads', s: 'HIV (human immunodeficiency virus) passes between people only in body fluids: blood, semen, vaginal fluids and breast milk.', pts: ['Unprotected sex, sharing needles, from mother to baby at birth or in breastfeeding, and (rarely now) blood transfusions.', 'It does not pass by touch, coughs or sharing cups.'], cs: 'C3.2.11' },
+        { n: 'HIV attaches to a helper T-cell', s: 'Proteins on the virus surface (yellow spikes) bind to **CD4 receptors** found on helper T-cells. The virus fuses with the cell membrane and its RNA enters the cell.', cs: 'C3.2.12' },
+        { n: 'The virus hijacks the cell', s: 'HIV is a retrovirus: its enzyme **reverse transcriptase** copies the viral RNA into DNA, which is inserted into the cell\'s own chromosomes. The cell then makes new viruses.', h: 'Because the viral DNA becomes part of the host genome, the infection lasts for life. Antiretroviral drugs block steps such as reverse transcription.', cs: 'C3.2.12' },
+        { n: 'New viruses bud out', s: 'New virus particles bud from the T-cell and infect more helper T-cells. Infected T-cells are destroyed.', cs: 'C3.2.12' },
+        { n: 'From HIV to AIDS', s: 'Over years, the number of helper T-cells falls. Without them, B-cells are not activated, so few antibodies are made. People then get infections a healthy immune system would beat easily: this is **AIDS** (acquired immune deficiency syndrome).', q: { q: 'Why do people with AIDS make few antibodies?', o: ['HIV destroys plasma cells directly', 'HIV destroys helper T-cells, which are needed to activate B-cells', 'HIV blocks the bone marrow'], a: 1, why: 'B-cells need a signal from helper T-cells before they divide into plasma cells. With few helper T-cells, few antibodies are made.' }, cs: 'C3.2.12' }
+      ],
+      build(D) { const g = D.scene; const cell = new THREE.Mesh(new THREE.SphereGeometry(9, 40, 28), T(0x4361ee, 0.4)); g.add(cell); const nuc = new THREE.Mesh(new THREE.SphereGeometry(4, 28, 20), M(0x3a0ca3)); g.add(nuc);
+        const recs = []; for (let i = 0; i < 16; i++) { const d = A.onSphere(1); const r = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 1.4, 8), M(0x90e0ef)); r.position.copy(d).multiplyScalar(9.4); r.quaternion.setFromUnitVectors(V(0, 1, 0), d); g.add(r); recs.push(d); }
+        const vir = []; for (let i = 0; i < 3; i++) { const h = hivParticle(1.2); g.add(h); const d = recs[i * 3].clone(); vir.push({ h, d }); }
+        const rna = A.tube([V(-1, 6, 2), V(0, 4, 2.5), V(1, 3, 2), V(0, 1.5, 1.5)], 0.18, M(0xff006e), 20); g.add(rna); const dna = A.tube([V(-1, 3, 3.8), V(0, 1.5, 4), V(1, 0.5, 3.8)], 0.22, M(0x06d6a0), 20); g.add(dna);
+        const buds = []; for (let i = 0; i < 8; i++) { const h = hivParticle(0.8); g.add(h); buds.push({ h, d: A.onSphere(1) }); }
+        const bar = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 2), M(0x4361ee)); bar.position.set(17, 0, 0); g.add(bar); const lbar = D.label('', V(17, -2, 0));
+        const lcd = D.label('CD4 receptor', V(0, 11, 4)), lr = D.label('Viral RNA', V(-3, 7, 3)), ld = D.label('Viral DNA', V(3, 1, 4.5)); D.label('Helper T-cell', V(-8, -10, 0));
+        let step = 0, tt = 0, t0 = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+            vir.forEach((v, i) => { const far = step === 0 ? 16 + Math.sin(tt + i) : step === 1 ? 16 - 5.6 * ease(t / 2.5) : 10.4; v.h.visible = step <= 2; v.h.position.copy(v.d).multiplyScalar(far); v.h.rotation.y += dt; });
+            rna.visible = step === 2 || (step === 1 && t > 2.5); dna.visible = step >= 2 && step <= 3; hideL(lr, !rna.visible); hideL(ld, !dna.visible); hideL(lcd, step > 1);
+            buds.forEach((b, i) => { b.h.visible = step >= 3; const f = ((tt * 0.2 + i / 8) % 1); b.h.position.copy(b.d).multiplyScalar(9.5 + f * 9); b.h.scale.setScalar(0.4 + Math.min(1, f * 3) * 0.6); });
+            const k = step === 4 ? ease(t / 4) : 0; cell.scale.setScalar(1 - 0.3 * k); cell.material.opacity = 0.4 - 0.25 * k; nuc.scale.setScalar(1 - 0.3 * k);
+            const count = step < 4 ? 1000 : Math.round(1000 - 820 * k); bar.visible = step >= 3; bar.scale.y = Math.max(0.2, count / 60); bar.position.y = bar.scale.y / 2 - 6; lbar.textContent = 'Helper T-cells: about ' + count + ' per mm3'; hideL(lbar, step < 3); } };
+      } };
+
+    const D_RES = { n: 'Antibiotic resistance', bg: '#0f1a12', dist: 46, target: V(0, 0, 0), yaw: 0, pitch: 0.95,
+      steps: [
+        { n: 'How antibiotics work', s: 'Antibiotics block processes that bacteria need but our cells do not have, or have in a different form. So they kill bacteria without harming us.', pts: ['Penicillin blocks building of the bacterial cell wall (human cells have no cell wall).', 'Others block 70S ribosomes; our cytoplasm uses 80S ribosomes.', 'Antibiotics do not work against viruses, which have none of these processes of their own.'], cs: 'C3.2.13' },
+        { n: 'A mixed population', s: 'In a large population of bacteria, a few happen to carry a gene that makes them **resistant** (orange) to antibiotic A, because of random mutation. One even resists two antibiotics (red).', cs: 'C3.2.14' },
+        { n: 'Antibiotic A is used', s: 'Susceptible bacteria (green) are killed. The resistant ones **survive**.', cs: 'C3.2.14' },
+        { n: 'Survivors multiply', s: 'With no competition, the survivors reproduce and pass on the resistance gene. The new population is mostly resistant to A. This is **natural selection**.', h: 'Resistance genes are often on plasmids, which bacteria can pass to each other, even between species, so resistance spreads faster than by reproduction alone.', cs: 'C3.2.14' },
+        { n: 'Antibiotic B is used', s: 'Now antibiotic B is tried. Only bacteria resistant to both survive, and they multiply: the population becomes **multi-resistant**, like MRSA.', q: { q: 'Which practice makes resistance spread faster?', o: ['Finishing the full course of antibiotics', 'Using antibiotics to make healthy farm animals grow faster', 'Not using antibiotics for viral infections'], a: 1, why: 'Wide use of antibiotics where they are not needed selects for resistant bacteria.' }, hq: { q: 'Resistance to several antibiotics often appears together in one bacterium. Why?', o: ['One mutation makes bacteria resistant to all antibiotics', 'Several resistance genes can be carried on the same plasmid and passed on together', 'Antibiotics cause the mutations'], a: 1, why: 'Plasmids can carry several resistance genes, and they pass between bacteria in one step.' }, cs: 'C3.2.14' }
+      ],
+      build(D) { const g = D.scene; const dish = new THREE.Mesh(new THREE.CylinderGeometry(20, 20, 1, 60), T(0xe9f5db, 0.35)); dish.position.y = -1; g.add(dish);
+        const N = 60, cells = []; const geo = new THREE.CylinderGeometry(0.55, 0.55, 1.8, 10); geo.rotateZ(Math.PI / 2);
+        for (let i = 0; i < N; i++) { const a = i * 2.39996, r = 1.5 + Math.sqrt(i / N) * 16.5; const m = new THREE.Mesh(geo, M(0x7cb518)); m.position.set(Math.cos(a) * r, 0, Math.sin(a) * r); m.rotation.y = A.rnd(0, 3); g.add(m); cells.push({ m, kind: 0 }); }
+        const gen = [{}, {}, {}, {}, {}];
+        function kindsFor(step) { return cells.map((c, i) => { if (step <= 2) return i === 7 ? 2 : (i === 13 || i === 29 || i === 41) ? 1 : 0; if (step === 3) return i % 9 === 0 ? 2 : 1; return 2; }); }
+        const col = [0x7cb518, 0xf77f00, 0xe63946]; const lab = D.label('', V(0, 4, -18)); const drug = new THREE.Mesh(new THREE.CylinderGeometry(19.6, 19.6, 0.2, 60), T(0x90e0ef, 0.25)); drug.position.y = 0.6; g.add(drug);
+        let step = 0, tt = 0, t0 = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const ks = kindsFor(step);
+            const dying = step === 2 ? ease((t - 0.8) / 2) : step === 4 ? ease((t - 0.8) / 2) : 0, regrow = step === 3 ? ease(t / 3) : step === 4 ? ease((t - 3.5) / 3) : 0;
+            cells.forEach((c, i) => { let k = ks[i]; let s = 1;
+              if (step === 0) k = 0;
+              if (step === 2 && k === 0) s = 1 - dying;
+              if (step === 3) { s = (i === 7 || i === 13 || i === 29 || i === 41) ? 1 : regrow; }
+              if (step === 4) { const prev = i % 9 === 0 ? 2 : 1; if (t < 3.5) { k = prev; s = prev === 1 ? 1 - dying : 1; } else { k = 2; s = i % 9 === 0 ? 1 : regrow; } }
+              c.m.material.color.setHex(col[k]); c.m.visible = s > 0.02; c.m.scale.setScalar(Math.max(0.02, s)); });
+            drug.visible = step === 2 || step === 4; drug.material.color.setHex(step === 4 ? 0xffb4a2 : 0x90e0ef);
+            lab.textContent = ['All bacteria look alike', 'Green: killed by A. Orange: resistant to A. Red: resistant to A and B', 'Antibiotic A added', 'The population regrows: mostly resistant to A', 'Antibiotic B added'][step]; } };
+      } };
+
+    const D_HERD = { n: 'Zoonoses and herd immunity', bg: '#101820', dist: 52, target: V(0, 0, 0), yaw: 0, pitch: 1.05,
+      steps: [
+        { n: 'A disease jumps from animals', s: 'A **zoonosis** is an infectious disease that passes from another species to humans. One person in this town (red) has caught a new virus from an animal.', pts: ['Examples: COVID-19 (thought to have come from bats, possibly through another animal), rabies, bird flu, Ebola, West Nile virus.', 'Contact with wild and farm animals, and their markets, makes spillover more likely.'], cs: 'C3.2.15' },
+        { n: 'Nobody is immune', s: 'Each infected person passes the virus to the people around them. With no immunity, the outbreak spreads through most of the population.', cs: 'C3.2.17' },
+        { n: 'Half are vaccinated', s: 'Now half the people (blue) are vaccinated. The virus still finds paths between unvaccinated people, but fewer are infected.', cs: 'C3.2.16, C3.2.17' },
+        { n: 'Herd immunity', s: 'With most people vaccinated, an infected person rarely meets anyone they can infect, so the outbreak dies out. Even the unvaccinated (grey) are protected: this is **herd immunity**.', pts: ['It protects people who cannot be vaccinated, such as newborn babies and people with weak immune systems.', 'The more infectious the disease, the higher the share of people who must be immune.'], cs: 'C3.2.17' },
+        { n: 'Reading pandemic data', s: 'During COVID-19, data were reported every day. When you evaluate them, ask:', pts: ['**Cases** depend on how much testing is done; deaths per 100 000 people compare countries more fairly.', '**Excess deaths** (deaths above the normal number for that time of year) include deaths never tested.', 'A correlation (for example, more vaccination and fewer deaths) is not proof of cause on its own: look for controlled trials.'], q: { q: 'Country X reports twice as many COVID-19 cases as country Y with the same population. Which conclusion is safest?', o: ['The virus spread twice as much in X', 'X may simply have tested more; compare deaths or excess deaths too', 'X has worse hospitals'], a: 1, why: 'Reported cases depend strongly on testing, so other measures are needed before comparing spread.' }, cs: 'C3.2.18' }
+      ],
+      build(D) { const g = D.scene; const n = 14, P = []; const geo = new THREE.SphereGeometry(0.75, 14, 10);
+        for (let i = 0; i < n * n; i++) { const m = new THREE.Mesh(geo, M(0xadb5bd)); m.position.set((i % n - (n - 1) / 2) * 2.2, 0, (Math.floor(i / n) - (n - 1) / 2) * 2.2); g.add(m); P.push({ m, s: 0, t: 0 }); }
+        const bat = new THREE.Mesh(new THREE.SphereGeometry(1.2, 14, 10), M(0x6b4f3a)); bat.position.set(-18.5, 0, 0); g.add(bat); [-1, 1].forEach(s => { const w = new THREE.Mesh(new THREE.ConeGeometry(1, 2.4, 3), M(0x6b4f3a)); w.rotation.z = s * 1.3; w.position.set(-18.5 + s * 1.6, 0.4, 0); bat.parent.add(w); });
+        D.label('Animal host', V(-18.5, 2.5, 0)); const stat = D.label('', V(0, 2, -17));
+        let step = 0, tt = 0, acc = 0, rng = 1;
+        const rand = () => { rng = (rng * 16807) % 2147483647; return rng / 2147483647; };
+        function reset(vac) { rng = 7 + vac * 1000; P.forEach((p, i) => { p.s = rand() < vac ? 3 : 0; p.t = 0; }); const s0 = Math.floor(n * n / 2) - Math.floor(n / 2) - 6; P[s0].s = 1; }
+        const colr = [0xadb5bd, 0xe63946, 0x495057, 0x4cc9f0];
+        function tick() { const nxt = P.map(p => p.s); P.forEach((p, i) => { if (p.s !== 1) return; p.t++; const x = i % n, y = Math.floor(i / n);
+            [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1]].forEach(([dx, dy]) => { const X = x + dx, Y = y + dy; if (X < 0 || Y < 0 || X >= n || Y >= n) return; const j = Y * n + X; if (P[j].s === 0 && rand() < 0.42) nxt[j] = 1; });
+            if (p.t > 3) nxt[i] = 2; }); P.forEach((p, i) => { if (nxt[i] === 1 && p.s === 0) p.t = 0; p.s = nxt[i]; }); }
+        return { onStep(i) { step = i; acc = 0; reset(i === 2 ? 0.5 : i === 3 ? 0.85 : i === 4 ? 0.85 : 0); },
+          update(dt) { if (!A.paused) { tt += dt; acc += dt; } if (acc > 0.45 && step >= 1) { acc = 0; tick(); }
+            P.forEach(p => p.m.material.color.setHex(colr[p.s])); let ever = 0, vac = 0; P.forEach(p => { if (p.s === 1 || p.s === 2) ever++; if (p.s === 3) vac++; });
+            stat.textContent = 'Ever infected: ' + ever + ' of ' + (n * n - vac) + ' unvaccinated' + (vac ? '   Vaccinated: ' + vac : ''); hideL(stat, step === 0 && false); } };
+      } };
+
     return {
-      route: [V(-100, 40, 50), V(-78, 26, 30), V(-60, 22, 26), V(-14, 2, 26), V(31, 4, 24), V(63, 2, 34), V(84, 6, 22), V(101, 4, 24)], hero, camOffset: V(0, 0, 0), outside: { target: V(10, -2, 0), dist: 170 },
-      outsideInfo: { n: 'Defending the body', s: 'The body has three lines of defence: barriers that keep pathogens out, innate cells such as phagocytes that attack any invader, and adaptive lymphocytes that make antibodies against one particular pathogen.', h: 'The innate response is fast but the same every time. The adaptive response is slower the first time but specific, and it leaves memory cells so a second infection is stopped quickly.', cs: 'C3.2.1, C3.2.4', ch: '' },
+      route: [V(-100, 40, 50), V(-78, 26, 30), V(-60, 22, 26), V(-14, 2, 26), V(31, 4, 24), V(63, 2, 34), V(84, 6, 22), V(101, 4, 24), V(124, 4, 24), V(148, 4, 26), V(171, 8, 26), V(194, 10, 30)], hero, camOffset: V(0, 0, 0), outside: { target: V(50, -2, 0), dist: 230 },
+      outsideInfo: { n: 'Defending the body', s: 'The body has three lines of defence: barriers that keep pathogens out, innate cells such as phagocytes that attack any invader, and adaptive lymphocytes that make antibodies against one particular pathogen.', pts: ['A **pathogen** is an organism or virus that causes disease: bacteria, viruses, fungi, protists and some worms.'], h: 'The innate response is fast but the same every time. The adaptive response is slower the first time but specific, and it leaves memory cells so a second infection is stopped quickly.', cs: 'C3.2.1, C3.2.4', ch: '' },
+      dives: [D_CLOT, D_AB, D_RESP, D_HIV, D_RES, D_HERD],
       stops: [
-        { at: V(-78, 26, 30), look: V(-75, 12, 0), n: 'Skin and mucous membranes', s: 'Unbroken skin is a tough, dry barrier that most pathogens cannot cross. Mucous membranes in the airways trap pathogens in sticky mucus.', h: 'The outer skin cells are dead and full of keratin; skin secretions are slightly acidic and contain enzymes, which slow bacterial growth.', cs: 'C3.2.1, C3.2.2', ch: '' },
-        { at: V(-60, 22, 26), look: V(-60, 11, 0), n: 'A clot seals the cut', s: 'When the skin is cut, platelets stick together at the wound. Threads of fibrin form a mesh that traps red blood cells, making a clot that stops bleeding and keeps more pathogens out.', h: 'Damaged tissue and platelets release clotting factors, starting a cascade: prothrombin is converted to thrombin, which turns soluble fibrinogen into insoluble fibrin.', cs: 'C3.2.3', ch: '' },
-        { at: V(-14, 2, 26), look: V(-2, -9, 0), n: 'Phagocytes engulf bacteria', s: 'Bacteria that get in are found by phagocytes. A phagocyte wraps around a bacterium (endocytosis) and digests it with enzymes from its lysosomes.', h: 'This is part of the innate system: phagocytes respond to any pathogen in the same way, and they gather where tissue is infected.', cs: 'C3.2.4, C3.2.5', ch: '' },
-        { at: V(31, 4, 24), look: V(31.5, -6, 0), n: 'Helper T-cells activate a B-cell', s: 'Each pathogen carries antigens: molecules the body recognises as foreign. In a lymph node, a helper T-cell that recognises the antigen activates the B-cell that makes the matching antibody.', h: 'The B-cell needs two signals: binding the antigen itself, and contact with a helper T-cell that has recognised the same antigen. This double check stops antibodies being made against the body’s own cells.', cs: 'C3.2.6, C3.2.7, C3.2.8', ch: '' },
-        { at: V(63, 2, 34), look: V(63, -8, 0), n: 'Clones of plasma cells', s: 'The activated B-cell divides many times, making a clone of identical cells. They become plasma cells, which secrete large amounts of one antibody.', h: 'Plasma cells are packed with rough ER for making antibody protein. Antibodies bind to antigens, clumping pathogens together and marking them for phagocytes.', cs: 'C3.2.9', ch: '' },
-        { at: V(84, 6, 22), look: target, n: 'Antibodies at work', s: 'Each Y-shaped antibody binds to a specific antigen on the bacteria. Bound bacteria are easier for phagocytes to engulf and destroy.', h: 'The tips of the two arms are the variable regions that fit one antigen; one antibody can bind two pathogens at once, linking them into clumps.', cs: 'C3.2.6, C3.2.7', ch: '' },
-        { at: V(101, 4, 24), look: V(101, -5, 0), n: 'Memory cells', s: 'Some of the clone become memory cells, which stay in the body for years. If the same pathogen returns, they respond so quickly that you usually do not become ill: you are immune.', h: 'Vaccines work the same way: they present the antigen without the disease, so memory cells form in advance.', cs: 'C3.2.10, C3.2.16', ch: '' }
+        { at: V(-78, 26, 30), look: V(-75, 12, 0), n: 'Skin and mucous membranes', s: 'Unbroken **skin** is a tough, dry barrier that most pathogens cannot cross. **Mucous membranes** lining the airways, gut and other openings trap pathogens in sticky mucus.', pts: ['In the airways, cilia sweep the mucus up to the throat to be swallowed, and stomach acid kills most of the trapped pathogens.'], h: 'The outer skin cells are dead and full of keratin; skin secretions are slightly acidic and contain enzymes such as lysozyme, which slow bacterial growth.', q: { q: 'Which of these is a first line of defence?', o: ['Antibodies', 'Mucus in the airways', 'Memory cells'], a: 1, why: 'Barriers such as skin and mucus stop pathogens getting in; antibodies and memory cells act after they are inside.' }, cs: 'C3.2.1, C3.2.2', ch: '' },
+        { at: V(-60, 22, 26), look: V(-60, 11, 0), n: 'A clot seals the cut', s: 'When the skin is cut, **platelets** stick together at the wound. Threads of **fibrin** form a mesh that traps red blood cells, making a clot that stops bleeding and keeps more pathogens out.', h: 'Damaged tissue and platelets release clotting factors, starting a cascade: prothrombin is converted to thrombin, which turns soluble fibrinogen into insoluble fibrin.', cs: 'C3.2.3', ch: '', dive: D_CLOT },
+        { at: V(-14, 2, 26), look: V(-2, -9, 0), n: 'Phagocytes engulf bacteria', s: 'Bacteria that get in are found by **phagocytes**, white blood cells that move out of capillaries into infected tissue. A phagocyte wraps around a bacterium (endocytosis) and digests it with enzymes from its lysosomes.', pts: ['This is part of the **innate** immune system: it responds to any pathogen in the same way, at once.', 'The **adaptive** immune system (lymphocytes) is slower at first but targets one pathogen and remembers it.'], q: { q: 'What makes the innate response different from the adaptive response?', o: ['It is specific to one pathogen', 'It responds to all pathogens in the same way and does not improve with repeat infections', 'It produces antibodies'], a: 1, why: 'Innate defences are non-specific and have no memory; the adaptive response is specific and leaves memory cells.' }, cs: 'C3.2.4, C3.2.5', ch: '' },
+        { at: V(31, 4, 24), look: V(31.5, -6, 0), n: 'Helper T-cells activate a B-cell', s: 'Each pathogen carries **antigens**: molecules the body recognises as foreign. In a lymph node, a **helper T-cell** that recognises the antigen activates the **B-cell** that makes the matching antibody.', pts: ['There are millions of different B-cells, each able to make one antibody. Only the one that matches is selected.'], h: 'The B-cell needs two signals: binding the antigen itself, and contact with a helper T-cell that has recognised the same antigen. This double check stops antibodies being made against the body\'s own cells.', cs: 'C3.2.6, C3.2.7, C3.2.8', ch: '' },
+        { at: V(63, 2, 34), look: V(63, -8, 0), n: 'Clones of plasma cells', s: 'The activated B-cell divides many times by mitosis, making a **clone** of identical cells. Most become **plasma cells**, which secrete large amounts of one antibody.', h: 'Plasma cells are packed with rough ER and Golgi for making and secreting antibody protein: thousands of antibody molecules per second.', cs: 'C3.2.9', ch: '' },
+        { at: V(84, 6, 22), look: target, n: 'Antibodies at work', s: 'Each Y-shaped antibody binds to a specific antigen on the bacteria. Bound bacteria are clumped together and are easier for phagocytes to engulf and destroy.', h: 'The tips of the two arms are the variable regions that fit one antigen; one antibody can bind two pathogens at once, linking them into clumps.', cs: 'C3.2.6, C3.2.7', ch: '', dive: D_AB },
+        { at: V(101, 4, 24), look: V(101, -5, 0), n: 'Memory cells', s: 'Some of the clone become **memory cells**, which stay in the body for years. If the same pathogen returns, they respond so quickly that you usually do not become ill: you are **immune**.', cs: 'C3.2.10', ch: '', dive: D_RESP },
+        { at: V(124, 4, 24), look: V(124, -6, 0), n: 'Vaccines', s: 'A vaccine gives the immune system the antigen without the disease, so memory cells form in advance.', pts: ['Types: weakened or inactivated pathogens, parts of a pathogen (such as a surface protein), or mRNA that makes our cells produce the antigen for a short time.', 'Some vaccines need boosters to keep memory cell numbers high.'], q: { q: 'An mRNA vaccine is injected. What makes the antigen?', o: ['The vaccine itself contains the antigen', 'The person\'s own cells translate the mRNA into the antigen protein', 'The virus in the vaccine'], a: 1, why: 'The mRNA is translated by the body\'s ribosomes; the antigen then triggers a primary response and memory cells.' }, cs: 'C3.2.16', ch: '', dive: D_RESP },
+        { at: V(148, 4, 26), look: V(148, -6, 0), n: 'HIV and AIDS', s: 'HIV infects **helper T-cells**. Over years their numbers fall, antibody production fails, and the person develops **AIDS**, open to many infections.', pts: ['HIV spreads only in body fluids: blood, semen, vaginal fluids, breast milk.', 'Treatment with antiretroviral drugs keeps the virus in check, so people with HIV can live long lives.'], cs: 'C3.2.11, C3.2.12', ch: '', dive: D_HIV },
+        { at: V(171, 8, 26), look: V(171, -10, 0), n: 'Antibiotics and resistance', s: '**Antibiotics** block processes in bacteria that our own cells do not have, so they kill bacteria but not us, and they do nothing to viruses. Overuse has let **resistant** bacteria evolve.', pts: ['The clear zone around the antibiotic disc shows where bacteria were killed. The red colonies growing inside it are resistant.'], q: { q: 'Why does an antibiotic not help someone with flu?', o: ['Flu is caused by a virus, which has no cell wall or ribosomes of its own to block', 'The dose is too small', 'Flu viruses are all resistant'], a: 0, why: 'Antibiotics target bacterial structures and processes. Viruses use the host cell\'s machinery instead.' }, cs: 'C3.2.13, C3.2.14', ch: '', dive: D_RES },
+        { at: V(194, 10, 30), look: V(194, -9, 0), n: 'Zoonoses and herd immunity', s: 'Many new diseases are **zoonoses**, caught from animals. When enough people in a population are immune, a disease cannot spread far: **herd immunity** protects even those who are not immune.', h: 'The share needed depends on how many people one case infects on average (R0): the higher R0, the higher the share. For measles it is about 95%.', cs: 'C3.2.15, C3.2.17, C3.2.18', ch: '', dive: D_HERD }
       ],
       update(dt, A) { const t = A.t, run = A.paused ? 0 : dt;
         bact.forEach(b => { b.u = (b.u + run * 0.06) % 1; b.m.position.copy(bPath.getPointAt(b.u)).add(b.o.clone().multiplyScalar(1 - b.u)); b.m.rotation.z += run; b.m.scale.setScalar(b.u > 0.88 ? Math.max(0.05, (1 - b.u) / 0.12) : 1); });
@@ -209,6 +395,8 @@ window.JOURNEY = {
         abs.forEach(a => { a.u = (a.u + run * 0.15) % 1; a.m.position.copy(a.from).lerp(target.clone().add(a.o), Math.min(1, a.u * 1.3)); a.m.lookAt(target); a.m.rotateX(Math.PI / 2); });
         cluster.forEach((c, i) => { c.rotation.y += run * 0.2; });
         mem.forEach((m, i) => { m.material.emissiveIntensity = 0.6 + 0.4 * Math.sin(t * 2 + i); });
+        hivs.forEach((h, i) => { const a = h.a + t * 0.3; h.h.position.set(148 + Math.cos(a) * 8, -6 + Math.sin(a * 1.3) * 2, Math.sin(a) * 8); h.h.rotation.y += run; });
+        vial.rotation.y += run * 0.3;
       }
     };
   }
@@ -265,7 +453,24 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Extras (2026-11-18): <name>.extra.js sets J.extra(api, W) -> {stops:{name:{...}}, outside:{...}, dives:[new close-ups],
+// dive:{name:{...}}, steps:{'dive/step':{...}}, addSteps:{dive:[{after, step}]}, addStops:[{after, stop}]}. Added steps and stops
+// reuse the animation state of the step or stop before them, so existing onStep/onStop code keeps working.
+W.stops.forEach((s,i)=>{ s._i=i; });
+if(J.extra){ const X=J.extra(api,W)||{};
+  const allD=()=>{ const s=[]; (W.dives||[]).concat(...W.stops.map(st=>dives(st))).forEach(d=>{ if(s.indexOf(d)<0) s.push(d); }); return s; };
+  allD().forEach(d=>d.steps.forEach((st,i)=>{ st._oi=i; }));
+  (X.dives||[]).forEach(d=>{ d.steps.forEach((st,i)=>{ st._oi=i; }); (W.dives=W.dives||[]).push(d); });
+  const byName=n=>allD().find(d=>d.n===n);
+  W.stops.forEach(st=>{ const e=X.stops&&X.stops[st.n]; if(!e) return; const ad=e.dives; Object.keys(e).forEach(k=>{ if(k!=='dives') st[k]=e[k]; });
+    if(ad){ st.dives=dives(st).concat(ad.map(byName).filter(Boolean)); delete st.dive; } });
+  if(X.outside&&W.outsideInfo) Object.assign(W.outsideInfo,X.outside);
+  allD().forEach(d=>{ if(X.dive&&X.dive[d.n]) Object.assign(d,X.dive[d.n]);
+    d.steps.forEach(st=>{ const e=X.steps&&X.steps[d.n+'/'+st.n]; if(e) Object.assign(st,e); });
+    ((X.addSteps&&X.addSteps[d.n])||[]).forEach(a=>{ const i=a.after?d.steps.findIndex(s=>s.n===a.after):d.steps.length-1; const prev=d.steps[i]; a.step._oi=prev?prev._oi:0; d.steps.splice(i+1,0,a.step); }); });
+  (X.addStops||[]).forEach(a=>{ const i=W.stops.findIndex(s=>s.n===a.after); const prev=W.stops[i]; a.stop._i=prev?prev._i:0; if(!a.stop.at&&prev) a.stop.at=prev.at; if(!a.stop.look&&prev) a.stop.look=prev.look; if(a.stop.u==null&&prev&&prev.u!=null) a.stop.u=prev.u; W.stops.splice(i+1,0,a.stop); });
+  if(X.dives&&X.dives.length) W.dives=W.dives; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 // Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
 // h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
 const forLevel=o=>!o.hl||level==='hl';
@@ -314,7 +519,7 @@ function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.le
   const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+  if(dive.ctl.onStep) dive.ctl.onStep(st._oi!=null?st._oi:dive.steps.indexOf(st),st); }
 function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
 function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
@@ -328,7 +533,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+api.goStop=i=>{ setView('ride'); const t=STOPS.find(s=>s._i===i)||STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }

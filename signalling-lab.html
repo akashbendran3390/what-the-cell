@@ -272,5 +272,98 @@ window.sigDebug={ st, setStep, tick:ms=>{ tick(ms); draw(); }, pick:k=>{ st.sc=k
 })();
 </script>
 
+<script>
+window.LAB_GUIDE = { title: 'Cell Signalling Lab: step by step', section: function () { var b = document.querySelector('[data-k][aria-pressed="true"]'); return b ? b.getAttribute('data-k') : 'qs'; }, sections: {
+  qs: { n: 'Quorum sensing', tab: '[data-k="qs"]', steps: [
+    { n: 'Signals and receptors', s: 'Cells communicate with **signalling chemicals (ligands)** that bind to **receptors**: proteins with a binding site that fits one ligand, like a substrate fits an enzyme.', cs: 'C2.1.1' },
+    { n: 'Bacteria counting themselves', s: 'Each *Vibrio fischeri* bacterium releases a small signal molecule (an autoinducer). Use the slider to add bacteria: when there are enough, the signal concentration passes a threshold and every cell switches on its light genes at once.', pts: ['This is **quorum sensing**: a response that only makes sense when the population is dense.', 'In the light organ of the bobtail squid, the glowing bacteria hide the squid\'s shadow from predators below.'], q: { q: 'Why do the bacteria only glow when there are many of them?', o: ['Each cell needs more food', 'The signal only reaches the threshold concentration when the population is dense', 'Light genes are only present in large cells'], a: 1, why: 'Every cell releases the signal, so its concentration reflects the number of cells.' }, cs: 'C2.1.2' }
+  ] },
+  ach: { n: 'Ligand-gated channel', tab: '[data-k="ach"]', steps: [
+    { n: 'Four kinds of signal in animals', s: 'Animal cells use **hormones**, **neurotransmitters**, **cytokines** and **calcium ions** as signals. They range from small molecules and ions to proteins and steroids.', cs: 'C2.1.3, C2.1.4' },
+    { n: 'A receptor that is also a channel', s: 'Step through the scenario. **Acetylcholine** binds to its receptor in the postsynaptic membrane; the receptor changes shape and opens a channel. **Sodium ions** flow in and the membrane depolarizes.', q: { q: 'How does acetylcholine change the membrane potential of the next cell?', o: ['It enters the cell and acts on the nucleus', 'It opens a channel in its receptor, letting Na+ in', 'It activates a G protein'], a: 1, why: 'The acetylcholine receptor is a ligand-gated ion channel.' }, cs: 'C2.1.8' }
+  ] },
+  adr: { n: 'Adrenaline', tab: '[data-k="adr"]', steps: [
+    { n: 'Near and far', s: 'Neurotransmitters act over a tiny gap; hormones such as adrenaline travel in the blood and act on target cells all over the body.', cs: 'C2.1.5' },
+    { n: 'A G-protein-coupled receptor', s: 'Step through: adrenaline binds a receptor on the outside of a liver cell. Inside, the receptor activates a **G protein**, which activates an enzyme that makes **cyclic AMP**, a second messenger. cAMP switches on enzymes that break down glycogen.', pts: ['The hormone never enters the cell: the message is passed on (transduced) inside.', 'Each step amplifies the signal: one adrenaline molecule leads to millions of glucose molecules.'], q: { q: 'What is the role of cyclic AMP in adrenaline signalling?', o: ['It is the receptor', 'It is a second messenger that carries the signal inside the cell', 'It is the hormone'], a: 1, why: 'Adrenaline stays outside; cAMP relays and amplifies the signal inside the cell.' }, cs: 'C2.1.7, C2.1.9, C2.1.10' }
+  ] },
+  ins: { n: 'Insulin', tab: '[data-k="ins"]', steps: [
+    { n: 'A tyrosine kinase receptor', s: 'Step through: insulin binds two receptor halves, which join and **phosphorylate** each other on tyrosine amino acids. This starts a chain of reactions that moves vesicles with **glucose transporters** to the cell membrane.', q: { q: 'What happens to the insulin receptor once insulin binds?', o: ['It opens an ion channel', 'It phosphorylates itself, starting a signalling cascade', 'It enters the nucleus'], a: 1, why: 'The receptor is a tyrosine kinase: it adds phosphate groups to tyrosines, which activates relay proteins.' }, cs: 'C2.1.7, C2.1.11' }
+  ] },
+  ster: { n: 'Steroid hormone', tab: '[data-k="ster"]', steps: [
+    { n: 'Receptors inside the cell', s: 'Steroid hormones such as **oestradiol** and **progesterone** are lipid-soluble, so they pass through the membrane and bind receptors in the cytoplasm or nucleus.', pts: ['The hormone-receptor complex binds to DNA and changes which genes are transcribed.', 'So the response is slower than with membrane receptors, but longer-lasting.'], cs: 'C2.1.6, C2.1.12' },
+    { n: 'Oestradiol and progesterone', s: 'In the uterus, oestradiol switches on genes that rebuild the endometrium, and makes cells more sensitive to progesterone. Progesterone then maintains the thick lining.', q: { q: 'Why can steroid hormones bind receptors inside the cell while adrenaline cannot?', o: ['Steroids are proteins', 'Steroids are lipid-soluble and cross the membrane', 'Adrenaline is too small'], a: 1, why: 'The hydrophobic steroid passes through the phospholipid bilayer; adrenaline is hydrophilic.' }, cs: 'C2.1.13' },
+    { n: 'Compare the receptor types', s: 'Summary of the five scenarios:', pts: ['**Transmembrane receptors** (acetylcholine, adrenaline, insulin): the ligand stays outside.', '**Intracellular receptors** (steroids): the ligand enters and acts on genes.', '**Feedback**: many pathways are switched off by their own products (negative feedback), and a few amplify themselves (positive feedback).'], cs: 'C2.1.6, C2.1.14' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
 </body>
 </html>

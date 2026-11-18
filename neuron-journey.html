@@ -392,6 +392,86 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the neuron walk-through (2026-11-18): check questions, HL-only steps, and HL close-ups on summation (C2.2.13-14)
+// and pain receptors and consciousness (C2.2.15-16).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+
+  const D_SUM = { n: 'Adding up signals', hl: true, bg: '#0d1424', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'One neuron, many synapses', s: 'A neuron in the brain or spinal cord receives synapses from many others. Each excitatory synapse makes a small **EPSP** (excitatory postsynaptic potential): the membrane depolarizes a little, then recovers.', pts: ['Here: three excitatory synapses (E1 to E3) and one inhibitory synapse (I).', 'An action potential starts only if the membrane reaches **threshold** (about -55 mV).'], cs: 'C2.2.7', ch: 'C2.2.14' },
+      { n: 'One EPSP is not enough', s: 'E1 fires once. The membrane rises from -70 mV towards threshold but falls back: **no action potential**.', cs: 'C2.2.7', ch: 'C2.2.14' },
+      { n: 'Temporal summation', s: 'E1 fires three times in quick succession. Each EPSP starts before the last has faded, so they **add up over time** and reach threshold: an action potential.', cs: 'C2.2.14' },
+      { n: 'Spatial summation', s: 'E1, E2 and E3 fire together at different places on the neuron. Their EPSPs **add up** and reach threshold.', cs: 'C2.2.14' },
+      { n: 'Inhibition', s: 'The same three fire, but so does inhibitory synapse I. Its neurotransmitter (such as GABA) opens chloride or potassium channels, making the inside **more negative** (an **IPSP**). The total stays below threshold: no action potential.', q: { q: 'Why does the inhibitory synapse stop the action potential here?', o: ['It blocks the excitatory neurotransmitter', 'Its IPSP hyperpolarizes the membrane, so the summed potential stays below threshold', 'It destroys the receptors'], a: 1, why: 'The neuron adds all inputs together; a hyperpolarizing IPSP cancels part of the depolarization.' }, cs: 'C2.2.13, C2.2.14' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      const X = t => 140 + t / 60 * 830, Y = v => 560 - (v + 90) / 140 * 480;
+      const psp = (t, t0, amp) => { const d = t - t0; return d < 0 ? 0 : amp * (d / 3) * Math.exp(1 - d / 3); };
+      const events = [[], [[5, 'E1']], [[5, 'E1'], [8, 'E1'], [11, 'E1']], [[5, 'E1'], [5.3, 'E2'], [5.6, 'E3']], [[5, 'E1'], [5.3, 'E2'], [5.6, 'E3'], [4.6, 'I']]];
+      function trace(step) { const ev = events[step], pts = []; let fired = -1;
+        for (let t = 0; t <= 60; t += 0.1) { let v = -70; ev.forEach(([t0, n]) => { v += psp(t, t0, n === 'I' ? -9 : 7.5); });
+          if (fired < 0 && v >= -55) fired = t; if (fired >= 0) { const d = t - fired; v = d < 1 ? -55 + 95 * (d / 1) : d < 2.4 ? 40 - 120 * ((d - 1) / 1.4) : d < 8 ? -80 + 10 * ((d - 2.4) / 5.6) : -70; } pts.push([t, v]); } return { pts, fired }; }
+      function draw(step, upTo) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(140, 60); c.lineTo(140, 560); c.lineTo(980, 560); c.stroke();
+        c.fillStyle = '#222'; c.font = '22px sans-serif'; [-80, -55, -40, 0, 40].forEach(v => c.fillText(v, 70, Y(v) + 8)); c.fillText('Time / ms', 520, 615); c.save(); c.translate(36, 420); c.rotate(-Math.PI / 2); c.fillText('Membrane potential / mV', 0, 0); c.restore();
+        for (let t = 0; t <= 60; t += 10) c.fillText(t, X(t) - 10, 590);
+        c.strokeStyle = '#e63946'; c.setLineDash([8, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(140, Y(-55)); c.lineTo(980, Y(-55)); c.stroke(); c.setLineDash([]); c.fillStyle = '#e63946'; c.font = 'bold 20px sans-serif'; c.fillText('Threshold', 860, Y(-55) - 10);
+        const { pts, fired } = trace(step); c.strokeStyle = '#1d4ed8'; c.lineWidth = 5; c.beginPath(); pts.forEach(([t, v], i) => { if (t > upTo) return; i ? c.lineTo(X(t), Y(v)) : c.moveTo(X(t), Y(v)); }); c.stroke();
+        events[step].forEach(([t0, n]) => { if (t0 > upTo) return; c.fillStyle = n === 'I' ? '#7b2cbf' : '#2d6a4f'; c.beginPath(); c.moveTo(X(t0), 520); c.lineTo(X(t0) - 9, 545); c.lineTo(X(t0) + 9, 545); c.fill(); c.font = 'bold 18px sans-serif'; c.fillText(n, X(t0) - 10, n === 'I' ? 500 : 510 - (n === 'E2' ? 20 : n === 'E3' ? 40 : 0)); });
+        c.font = 'bold 24px sans-serif'; if (upTo > 30) { c.fillStyle = fired >= 0 ? '#2d6a4f' : '#6c757d'; c.fillText(fired >= 0 ? 'Action potential!' : 'No action potential', 600, 120); }
+        tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const up = Math.min(60, (tt - t0) * 14); const k = step + ':' + Math.round(up * 2); if (k !== key) { key = k; draw(step, up); } } };
+    } };
+
+  const D_PAIN = { n: 'Pain receptors', hl: true, bg: '#1a0f14', dist: 46, target: V(0, -2, 0), yaw: 0.35, pitch: 0.2,
+    steps: [
+      { n: 'Free nerve endings', s: 'Pain receptors are the bare, branching endings of sensory neurons in the skin (yellow), called **free nerve endings**. They have no special covering.', cs: 'C2.2.15' },
+      { n: 'Detecting damage', s: 'Their membranes contain channel proteins that open in response to **heat above about 42 degrees C, acid, strong pressure or chemicals** such as capsaicin from chilli peppers.', cs: 'C2.2.15' },
+      { n: 'Ions flow in', s: 'When the channels open, positive ions (sodium and calcium, orange) flow in and depolarize the ending. If the depolarization reaches **threshold**, action potentials start along the sensory neuron.', cs: 'C2.2.15' },
+      { n: 'Signals to the brain', s: 'Impulses travel to the spinal cord and up to the brain (glow). A stronger stimulus gives a **higher frequency** of impulses, not bigger ones.', cs: 'C2.2.15' },
+      { n: 'Feeling pain: consciousness', s: 'The ending only sends impulses. The **feeling** of pain arises in the brain, from the activity of very large numbers of interacting neurons.', h: 'Consciousness is thought to be an emergent property: it is not a feature of any single neuron but arises from the interactions of billions of them. How this happens is still not understood.', q: { q: 'A stronger burn produces more pain. How is this signalled?', o: ['Larger action potentials', 'More action potentials per second', 'Faster action potentials'], a: 1, why: 'Action potentials are all-or-nothing, so intensity is coded by frequency and by how many neurons fire.' }, cs: 'C2.2.15', ch: 'C2.2.16' }
+    ],
+    build(D) { const g = D.scene; const layers = [[0xf1c6a7, 6, 7], [0xe6a57e, 0, 5], [0xf7d9c4, -8, 9]];
+      layers.forEach(([col, y, h]) => { const b = new THREE.Mesh(new THREE.BoxGeometry(44, h, 18), T(col, 0.3)); b.position.y = y; g.add(b); });
+      const axon = A.tube([V(-4, -16, 0), V(-2, -8, 0), V(0, -2, 0), V(0, 3, 0)], 0.6, M(0xffd166, { emissive: 0x332200 }), 40); g.add(axon);
+      const branches = []; for (let i = 0; i < 6; i++) { const a = i / 6 * Math.PI * 2; const tip = V(Math.cos(a) * 6, 7 + (i % 2), Math.sin(a) * 4); const br = A.tube([V(0, 3, 0), V(Math.cos(a) * 3, 5, Math.sin(a) * 2), tip], 0.3, M(0xffd166, { emissive: 0x332200 }), 20); g.add(br); branches.push({ br, tip }); }
+      const heat = new THREE.Mesh(new THREE.SphereGeometry(2.4, 20, 14), M(0xff6b35, { emissive: 0xff3300, transparent: true, opacity: 0.85 })); heat.position.set(0, 13.5, 0); g.add(heat);
+      const ions = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6), M(0xff8c42, { emissive: 0x552200 })); g.add(m); ions.push({ m, b: branches[i % 6], ph: Math.random() }); }
+      const pulses = []; for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), M(0xffffff, { emissive: 0xffee88 })); g.add(m); pulses.push({ m, ph: i / 4 }); }
+      const path = new THREE.CatmullRomCurve3([V(0, 3, 0), V(0, -2, 0), V(-2, -8, 0), V(-4, -16, 0), V(-6, -24, 0)]);
+      D.label('Epidermis', V(-18, 9, 9)); D.label('Dermis', V(-18, 1, 9)); const lf = D.label('Free nerve endings', V(8, 8, 3)), lh = D.label('Heat', V(0, 17, 0)), lc = D.label('Ion channels open', V(-8, 7.5, 3)), lb = D.label('To spinal cord and brain', V(-6, -22, 0));
+      let step = 0, tt = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { if (!A.paused) tt += dt; heat.visible = step >= 1; heat.scale.setScalar(1 + 0.1 * Math.sin(tt * 6));
+          ions.forEach(o => { o.m.visible = step >= 2; const f = (tt * 0.6 + o.ph) % 1; o.m.position.copy(o.b.tip).add(V(0, 2.5 * (1 - f), 0)); });
+          const rate = step === 4 ? 1.1 : 0.7; pulses.forEach(p => { p.m.visible = step >= 3; const f = (tt * rate * 0.5 + p.ph) % 1; p.m.position.copy(path.getPointAt(f)); });
+          branches.forEach(b => b.br.material.emissive.setHex(step >= 2 ? 0x664400 : 0x332200));
+          hideL(lh, step < 1); hideL(lc, step < 2 || step > 2); hideL(lb, step < 3); } };
+    } };
+
+  return {
+    dives: [D_SUM, D_PAIN],
+    stops: {
+      'Dendrites': { q: { q: 'Which part of a neuron receives signals from other neurons?', o: ['Axon', 'Dendrites', 'Synaptic knob'], a: 1, why: 'Dendrites (and the cell body) receive inputs; the axon carries impulses away.' }, dives: ['Adding up signals'] },
+      'Resting potential': { q: { q: 'What does the sodium-potassium pump move?', o: ['2 Na+ in and 3 K+ out', '3 Na+ out and 2 K+ in', 'Equal numbers both ways'], a: 1, why: 'Each cycle uses one ATP to pump 3 sodium ions out and 2 potassium ions in.' } },
+      'Action potential': { q: { q: 'What causes depolarization during an action potential?', o: ['K+ ions leaving the axon', 'Na+ ions rushing into the axon through opened channels', 'The sodium-potassium pump'], a: 1, why: 'Voltage-gated sodium channels open and Na+ diffuses in, making the inside positive.' }, hq: { q: 'On an oscilloscope trace, why does the potential briefly fall below -70 mV after an action potential?', o: ['Sodium channels stay open', 'Potassium channels are slow to close, so extra K+ leaves', 'The pump stops working'], a: 1, why: 'Voltage-gated potassium channels close slowly, causing a short hyperpolarization before the resting potential is restored.' } },
+      'Myelin and nodes of Ranvier': { q: { q: 'Why do impulses travel faster along myelinated axons?', o: ['Myelin carries the current', 'Action potentials only happen at the nodes, so the impulse jumps from node to node', 'Myelinated axons are always thinner'], a: 1, why: 'Myelin insulates the axon, so depolarization only happens at nodes of Ranvier: saltatory conduction.' } },
+      'Synaptic knob': { q: { q: 'What triggers release of neurotransmitter from the synaptic knob?', o: ['Calcium ions entering when the impulse arrives', 'Sodium ions leaving', 'The neurotransmitter binding to receptors'], a: 0, why: 'Depolarization opens voltage-gated calcium channels; Ca2+ entry makes vesicles fuse with the membrane.' } },
+      'Synaptic cleft and receptors': { q: { q: 'Why must acetylcholine be broken down quickly in the cleft?', o: ['To make more of it', 'So the postsynaptic cell is not stimulated continuously', 'To open calcium channels'], a: 1, why: 'Acetylcholinesterase removes it so each impulse gives one response.' }, dives: ['Adding up signals', 'Pain receptors'] }
+    },
+    steps: {
+      'Synaptic transmission/Chemicals that change transmission': { hl: true },
+      'Synaptic transmission/Inhibitory synapses': { hl: true },
+      'An action potential/Two kinds of gated channel': { hl: true },
+      'An action potential/Local currents': { hl: true },
+      'An action potential/Overshoot and recovery': { hl: true }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,
@@ -443,7 +523,24 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Extras (2026-11-18): <name>.extra.js sets J.extra(api, W) -> {stops:{name:{...}}, outside:{...}, dives:[new close-ups],
+// dive:{name:{...}}, steps:{'dive/step':{...}}, addSteps:{dive:[{after, step}]}, addStops:[{after, stop}]}. Added steps and stops
+// reuse the animation state of the step or stop before them, so existing onStep/onStop code keeps working.
+W.stops.forEach((s,i)=>{ s._i=i; });
+if(J.extra){ const X=J.extra(api,W)||{};
+  const allD=()=>{ const s=[]; (W.dives||[]).concat(...W.stops.map(st=>dives(st))).forEach(d=>{ if(s.indexOf(d)<0) s.push(d); }); return s; };
+  allD().forEach(d=>d.steps.forEach((st,i)=>{ st._oi=i; }));
+  (X.dives||[]).forEach(d=>{ d.steps.forEach((st,i)=>{ st._oi=i; }); (W.dives=W.dives||[]).push(d); });
+  const byName=n=>allD().find(d=>d.n===n);
+  W.stops.forEach(st=>{ const e=X.stops&&X.stops[st.n]; if(!e) return; const ad=e.dives; Object.keys(e).forEach(k=>{ if(k!=='dives') st[k]=e[k]; });
+    if(ad){ st.dives=dives(st).concat(ad.map(byName).filter(Boolean)); delete st.dive; } });
+  if(X.outside&&W.outsideInfo) Object.assign(W.outsideInfo,X.outside);
+  allD().forEach(d=>{ if(X.dive&&X.dive[d.n]) Object.assign(d,X.dive[d.n]);
+    d.steps.forEach(st=>{ const e=X.steps&&X.steps[d.n+'/'+st.n]; if(e) Object.assign(st,e); });
+    ((X.addSteps&&X.addSteps[d.n])||[]).forEach(a=>{ const i=a.after?d.steps.findIndex(s=>s.n===a.after):d.steps.length-1; const prev=d.steps[i]; a.step._oi=prev?prev._oi:0; d.steps.splice(i+1,0,a.step); }); });
+  (X.addStops||[]).forEach(a=>{ const i=W.stops.findIndex(s=>s.n===a.after); const prev=W.stops[i]; a.stop._i=prev?prev._i:0; if(!a.stop.at&&prev) a.stop.at=prev.at; if(!a.stop.look&&prev) a.stop.look=prev.look; if(a.stop.u==null&&prev&&prev.u!=null) a.stop.u=prev.u; W.stops.splice(i+1,0,a.stop); });
+  if(X.dives&&X.dives.length) W.dives=W.dives; }
+const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
 // Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
 // h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
 const forLevel=o=>!o.hl||level==='hl';
@@ -492,7 +589,7 @@ function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.le
   const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+  if(dive.ctl.onStep) dive.ctl.onStep(st._oi!=null?st._oi:dive.steps.indexOf(st),st); }
 function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
 function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
@@ -506,7 +603,7 @@ function showStop(){ if(dive) return showDive(); const info=$('info');
   const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
   if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
 function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+api.goStop=i=>{ setView('ride'); const t=STOPS.find(s=>s._i===i)||STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
 function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }

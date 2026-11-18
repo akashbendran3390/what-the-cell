@@ -205,6 +205,103 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the nucleus (2026-11-18): a stop on the nuclear envelope (B2.2.2, B2.2.6), check questions, SL close-ups on stem
+// cells (B2.3.1-4) and surface area to volume (B2.3.5-7), and HL close-ups on specialised cells (B2.3.8-10) and viruses (A2.3).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+  const D_STEM = { n: 'Stem cells and differentiation', bg: '#10141f', dist: 40, target: V(0, 0, 0), yaw: 0.2, pitch: 0.2,
+    steps: [
+      { n: 'From one cell', s: 'Fertilization makes a single cell, the **zygote**. It divides by mitosis again and again: 2, 4, 8, 16 cells. At first every cell is unspecialised.', cs: 'B2.3.1' },
+      { n: 'The blastocyst', s: 'After about five days the embryo is a hollow ball, the **blastocyst**. Its **inner cell mass** (purple) will form the whole body. These cells are **pluripotent**: they can become any body cell type.', pts: ['The zygote and the first few cells are **totipotent**: they can also form the placenta.'], cs: 'B2.3.2, B2.3.4' },
+      { n: 'Differentiation', s: 'Cells **differentiate**: different genes are switched on in different cells, so they develop different structures and jobs: nerve cells, red blood cells, muscle fibres...', cs: 'B2.3.1' },
+      { n: 'Stem cells in adults', s: 'Adults keep small groups of stem cells in **niches**, such as the **bone marrow** (making all blood cells) and **hair follicles**. These are **multipotent**: they make a limited range of cell types.', q: { q: 'Which type of stem cell can become any cell of the body, but not the placenta?', o: ['Totipotent', 'Pluripotent', 'Multipotent'], a: 1, why: 'Pluripotent cells of the inner cell mass make all body tissues; only totipotent cells also make the placenta.' }, cs: 'B2.3.3, B2.3.4' }
+    ],
+    build(D) { const g = D.scene; const cells = []; for (let i = 0; i < 16; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.6, 18, 12), M(0xf4a261)); g.add(m); cells.push({ m, p: A.onSphere(2.6) }); }
+      const blast = new THREE.Mesh(new THREE.SphereGeometry(7, 32, 20), T(0xf4a261, 0.35)); g.add(blast); const icm = []; for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.3, 14, 10), M(0x9d4edd)); m.position.copy(A.onSphere(1.6)).add(V(0, 4, 0)); g.add(m); icm.push(m); }
+      const types = []; const mk = (geo, col, x, y, sx, sy, sz) => { const m = new THREE.Mesh(geo, M(col)); m.position.set(x, y, 0); m.scale.set(sx || 1, sy || 1, sz || 1); g.add(m); types.push(m); return m; };
+      mk(new THREE.SphereGeometry(1.4, 16, 12), 0xffd166, -12, 6, 4, 0.5, 0.5); mk(new THREE.TorusGeometry(1.4, 0.7, 10, 20), 0xc1121f, 12, 6); mk(new THREE.CylinderGeometry(1.1, 1.1, 8, 16), 0xe76f51, -12, -6, 1, 1, 1).rotation.z = Math.PI / 2; mk(new THREE.BoxGeometry(3, 3, 3), 0x52b788, 12, -6);
+      const tl = [D.label('Nerve cell', V(-12, 8.5, 0)), D.label('Red blood cell', V(12, 9, 0)), D.label('Muscle fibre', V(-12, -3.5, 0)), D.label('Gut lining cell', V(12, -3.5, 0))];
+      const lz = D.label('', V(0, -6, 0)), li = D.label('Inner cell mass', V(0, 9, 0)), lb = D.label('Bone marrow niche', V(0, -8, 0));
+      const marrow = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 10, 24, 1, true), T(0xf1e9da, 0.35)); marrow.rotation.z = Math.PI / 2; g.add(marrow);
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const n = step === 0 ? Math.min(16, Math.pow(2, Math.floor(t / 1.2))) : 0; cells.forEach((c, i) => { c.m.visible = i < n; c.m.position.copy(c.p).multiplyScalar(n > 1 ? 1 : 0); c.m.scale.setScalar(n > 1 ? Math.pow(1 / n, 1 / 3) * 2 : 1.5); });
+          lz.textContent = step === 0 ? (n === 1 ? 'Zygote' : n + ' cells') : ''; hideL(lz, step !== 0);
+          blast.visible = step === 1; icm.forEach(m => m.visible = step === 1); hideL(li, step !== 1);
+          types.forEach(m => { m.visible = step === 2; m.rotation.y += dt * 0.5; }); tl.forEach(l => hideL(l, step !== 2));
+          marrow.visible = step === 3; hideL(lb, step !== 3); if (step === 3) cells.forEach((c, i) => { if (i < 6) { c.m.visible = true; c.m.scale.setScalar(0.6); c.m.position.set(-4 + i * 1.6, Math.sin(tt * 2 + i) * 0.8, 0); } }); } };
+    } };
+
+  const D_SAV = { n: 'Surface area and volume', bg: '#10141f', dist: 44, target: V(0, 0, 0), yaw: 0.5, pitch: 0.35,
+    steps: [
+      { n: 'Why cells are small', s: 'A cell exchanges materials (oxygen, nutrients, waste) across its **surface**, but its needs depend on its **volume**. Compare three cubes.', cs: 'B2.3.6' },
+      { n: 'The ratio falls as size rises', s: 'Doubling the side length multiplies surface area by 4 but volume by 8, so the **surface area to volume ratio** halves. A large cell could not exchange materials fast enough for its volume.', pts: ['Side 1: SA 6, V 1, ratio 6 : 1.', 'Side 2: SA 24, V 8, ratio 3 : 1.', 'Side 4: SA 96, V 64, ratio 1.5 : 1.'], q: { q: 'What happens to the SA:V ratio as a cell grows?', o: ['It increases', 'It decreases', 'It stays the same'], a: 1, why: 'Volume grows faster (cube) than surface area (square).' }, cs: 'B2.3.5, B2.3.6' },
+      { hl: true, n: 'Raising the ratio', s: 'Some cells have shapes that increase their SA:V ratio.', hpts: ['**Flattening**: type I pneumocytes and red blood cells (biconcave discs).', '**Microvilli**: folds of membrane on gut and kidney tubule cells.', '**Long and thin**: root hair cells.'], hq: { q: 'Why do cells lining the small intestine have microvilli?', o: ['To move food', 'To increase surface area for absorption without increasing volume much', 'To store enzymes'], a: 1, why: 'Microvilli greatly increase membrane area for absorption.' }, ch: 'B2.3.7' }
+    ],
+    build(D) { const g = D.scene; const cubes = [[1, -10], [2, -5], [4, 4]].map(([s, x]) => { const m = new THREE.Mesh(new THREE.BoxGeometry(s * 2, s * 2, s * 2), M(0x4895ef, { transparent: true, opacity: 0.85 })); m.position.set(x, s, 0); g.add(m); const e = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({ color: 0xffffff })); m.add(e); return { m, s, x }; });
+      const labs = cubes.map(o => D.label('Side ' + o.s + ': SA:V = ' + (6 / o.s).toFixed(1), V(o.x, o.s * 2 + 2.2, 0)));
+      const flat = new THREE.Mesh(new THREE.BoxGeometry(14, 0.6, 9), M(0x52b788)); flat.position.set(0, 0.3, -12); g.add(flat); const mv = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.2, 0.2, 2, 6), M(0xb7e4c7), 60); const d = new THREE.Object3D(); for (let i = 0; i < 60; i++) { d.position.set(-6.5 + (i % 12) * 1.2, 1.6, -15.5 + Math.floor(i / 12) * 1.6); d.updateMatrix(); mv.setMatrixAt(i, d.matrix); } g.add(mv);
+      const lf = D.label('Microvilli raise the surface area', V(0, 4.5, -12));
+      let step = 0; return { onStep(i) { step = i; }, update(dt) { labs.forEach(l => hideL(l, step === 0)); flat.visible = mv.visible = step === 2; hideL(lf, step !== 2); cubes.forEach(o => o.m.rotation.y += dt * 0.2); } };
+    } };
+
+  const D_SPEC = { n: 'Specialised cells', hl: true, bg: '#10141f', dist: 46, target: V(0, 0, 0), yaw: 0.3, pitch: 0.2,
+    steps: [
+      { n: 'Sperm: built to swim', s: 'A sperm cell is small and streamlined.', hpts: ['**Head**: a haploid nucleus and an **acrosome** with enzymes to digest a way into the egg.', '**Midpiece** packed with **mitochondria** to supply ATP for swimming.', '**Tail** (flagellum) that beats to move the cell.'], ch: 'B2.3.10' },
+      { n: 'Egg: built to feed the embryo', s: 'An egg cell is one of the largest human cells (about 0.1 mm).', hpts: ['A large cytoplasm with nutrients for the early embryo.', 'A haploid nucleus.', 'A glycoprotein coat (**zona pellucida**) and **cortical granules** that harden it after one sperm enters, blocking others.'], ch: 'B2.3.10' },
+      { n: 'Pneumocytes and muscle', s: 'Other examples of specialised cells, shown in other walk-throughs:', hpts: ['**Type I pneumocytes**: very thin for diffusion. **Type II**: secrete surfactant (Journey Through the Lungs).', '**Cardiac muscle cells**: branched, joined by intercalated discs, so impulses spread (Journey Through the Heart).', '**Striated muscle fibres**: very long, multinucleate cells packed with myofibrils and mitochondria (Inside a Muscle).'], hq: { q: 'Why does the midpiece of a sperm contain many mitochondria?', o: ['To store nutrients for the embryo', 'To supply ATP for the beating tail', 'To make enzymes for the acrosome'], a: 1, why: 'Swimming needs a lot of ATP from aerobic respiration.' }, ch: 'B2.3.8, B2.3.9' }
+    ],
+    build(D) { const g = D.scene; const sperm = new THREE.Group(); g.add(sperm); const head = new THREE.Mesh(new THREE.SphereGeometry(1.4, 18, 12), M(0x8ecae6)); head.scale.set(1.5, 1, 0.8); sperm.add(head); const acr = new THREE.Mesh(new THREE.SphereGeometry(1.45, 18, 12, 0, Math.PI), T(0x9d4edd, 0.6)); acr.scale.set(1.5, 1, 0.8); acr.rotation.y = -Math.PI / 2; sperm.add(acr);
+      const mid = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 4, 12), M(0xf08a3c)); mid.rotation.z = Math.PI / 2; mid.position.x = 3.8; sperm.add(mid); const tailPts = []; for (let i = 0; i < 20; i++) tailPts.push(V(5.8 + i * 0.8, 0, 0)); const tail = A.tube(tailPts, 0.18, M(0xbde0fe), 40); sperm.add(tail); sperm.position.set(-14, 4, 0);
+      const egg = new THREE.Mesh(new THREE.SphereGeometry(8, 36, 24), T(0xffc8dd, 0.55)); egg.position.set(8, -2, 0); g.add(egg); const zp = new THREE.Mesh(new THREE.SphereGeometry(9, 36, 24), T(0xffffff, 0.15)); zp.position.copy(egg.position); g.add(zp); const en = new THREE.Mesh(new THREE.SphereGeometry(2, 18, 12), M(0x6d4c9f)); en.position.set(8, -1, 2); g.add(en);
+      for (let i = 0; i < 14; i++) { const cg = new THREE.Mesh(new THREE.SphereGeometry(0.4, 10, 8), M(0xffd166)); cg.position.copy(A.onSphere(7.4)).add(egg.position); g.add(cg); }
+      const L = [D.label('Acrosome', V(-16.5, 6.5, 0)), D.label('Haploid nucleus', V(-14, 1.6, 0)), D.label('Midpiece: mitochondria', V(-10, 6.5, 0)), D.label('Tail (flagellum)', V(-2, 6.5, 0))]; const E = [D.label('Zona pellucida', V(8, 8.2, 0)), D.label('Cortical granules', V(15, 2, 4)), D.label('Large cytoplasm', V(4, -6, 4))];
+      let step = 0, tt = 0; return { onStep(i) { step = i; }, update(dt) { if (!A.paused) tt += dt; const a = tt * 6; tailPts.forEach((p, i) => p.z = Math.sin(a - i * 0.6) * i * 0.08); sperm.remove(tail); tail.geometry.dispose(); const nt = A.tube(tailPts, 0.18, tail.material, 40); sperm.add(nt); tail.geometry = nt.geometry; sperm.remove(nt); sperm.add(tail);
+        L.forEach(l => hideL(l, step !== 0)); E.forEach(l => hideL(l, step !== 1)); } };
+    } };
+
+  const D_VIR = { n: 'Viruses', hl: true, bg: '#10141f', dist: 50, target: V(0, 0, 0), yaw: 0.25, pitch: 0.2,
+    steps: [
+      { n: 'What every virus has', s: 'Viruses are not cells. Every virus has **genetic material** (DNA or RNA) inside a protein coat, the **capsid**. They have no metabolism of their own and can only reproduce inside a host cell.', hpts: ['Some, such as HIV and flu, also have a lipid **envelope** taken from the host membrane.', 'They vary hugely: helical (tobacco mosaic virus), icosahedral, enveloped, and complex phages with tails.'], ch: 'A2.3.1, A2.3.2' },
+      { n: 'Lytic cycle 1: attach and inject', s: 'A **bacteriophage** lands on a bacterium, binds to receptors on its surface and injects its DNA.', ch: 'A2.3.3' },
+      { n: 'Lytic cycle 2: take over', s: 'The phage DNA takes over the cell\'s machinery: it is replicated and transcribed, and the host makes new capsid proteins.', ch: 'A2.3.3' },
+      { n: 'Lytic cycle 3: burst', s: 'New phages are assembled, then an enzyme breaks down the cell wall: the cell **lyses** (bursts), releasing perhaps 100 new phages to infect other cells.', ch: 'A2.3.3' },
+      { n: 'The lysogenic cycle', s: 'Some phages, such as lambda, can instead **insert their DNA into the host chromosome** (as a prophage). It is copied every time the bacterium divides, silently, for many generations. Later, a trigger such as UV damage can switch it into the lytic cycle.', ch: 'A2.3.4' },
+      { n: 'Origins and fast evolution', s: 'Viruses probably arose several times: from escaped pieces of cell genomes, from cells that became simpler, or alongside the first cells.', hpts: ['They evolve fast: huge numbers, short generation times and (in RNA viruses) error-prone copying give many mutations, so new strains of flu and HIV appear quickly.'], hq: { q: 'How does a lysogenic phage spread without killing its host at first?', o: ['It stays outside the cell', 'Its DNA is inserted into the host chromosome and copied each time the host divides', 'It makes the host divide faster'], a: 1, why: 'As a prophage, the viral DNA is replicated along with the bacterial chromosome.' }, ch: 'A2.3.5, A2.3.6' }
+    ],
+    build(D) { const g = D.scene; const bact = new THREE.Mesh(new THREE.SphereGeometry(6, 30, 20), T(0x7cb518, 0.45)); bact.scale.set(2, 1, 1); g.add(bact);
+      const chrom = A.tube([V(-6, 0, 0), V(-2, 2, 1), V(3, -1, 1), V(6, 1, 0), V(2, 1.5, -1), V(-3, -1.5, -1), V(-6, 0, 0)], 0.25, M(0x1d4ed8), 60, true); g.add(chrom);
+      function phage() { const p = new THREE.Group(); const hd = new THREE.Mesh(new THREE.IcosahedronGeometry(1.1), M(0xd8e2dc)); hd.position.y = 2.2; p.add(hd); const tl = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 2, 8), M(0xadb5bd)); tl.position.y = 0.8; p.add(tl); for (let i = 0; i < 6; i++) { const a = i / 6 * 6.28; const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 1.6, 6), M(0xadb5bd)); leg.position.set(Math.cos(a) * 0.6, -0.4, Math.sin(a) * 0.6); leg.rotation.set(Math.sin(a) * 0.6, 0, -Math.cos(a) * 0.6); p.add(leg); } g.add(p); return p; }
+      const ph = phage(); const kids = []; for (let i = 0; i < 12; i++) { const k = phage(); k.scale.setScalar(0.6); kids.push({ k, d: A.onSphere(1), x: A.rnd(-8, 8) }); }
+      const vdna = A.tube([V(-1, 6, 0), V(0, 4, 0.5), V(1, 3, 0), V(0, 2, -0.5)], 0.22, M(0xe63946), 20); g.add(vdna);
+      const pro = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 3, 10), M(0xe63946)); pro.rotation.z = 1.2; pro.position.set(3, -0.4, 1); g.add(pro);
+      const capsid = new THREE.Mesh(new THREE.IcosahedronGeometry(3.4, 0), M(0xd8e2dc, { flatShading: true })); capsid.position.set(-20, 6, 0); g.add(capsid); const env = new THREE.Mesh(new THREE.SphereGeometry(3.4, 24, 16), T(0xffb703, 0.35)); env.position.set(-20, -4, 0); g.add(env);
+      const l1 = D.label('Capsid (protein coat)', V(-20, 10.5, 0)), l2 = D.label('Envelope (some viruses)', V(-20, -8.5, 0)), lb = D.label('Bacterium', V(0, -7.5, 0)), lp = D.label('Bacteriophage', V(0, 12, 0)), lpr = D.label('Prophage: viral DNA in the chromosome', V(4, 2.5, 3)), lys = D.label('Cell bursts (lysis)', V(0, 9, 0));
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const bx = 0;
+          capsid.visible = env.visible = step === 0; hideL(l1, step !== 0); hideL(l2, step !== 0); capsid.rotation.y += dt * 0.5;
+          ph.visible = step >= 1 && step <= 2 || step === 4; ph.position.set(0, step === 1 ? 6.3 + 6 * (1 - ease(t / 2)) : 6.3, 0); hideL(lp, !(step === 1 || step === 4));
+          vdna.visible = (step === 1 && t > 2) || step === 2 || (step === 4 && t < 2); vdna.position.y = step === 1 ? -Math.min(1, (t - 2) / 1.5) * 3 : -3;
+          kids.forEach((o, i) => { const show = step === 2 ? i < Math.floor(t * 2) : step === 3; o.k.visible = show; if (step === 2) o.k.position.set(o.x * 0.8, o.d.y * 3, o.d.z * 2); if (step === 3) o.k.position.copy(o.d).multiplyScalar(7 + ease(t / 2) * 10); });
+          bact.visible = !(step === 3 && t > 1.5) && step !== 0; bact.scale.set(step === 3 ? 2 + t * 0.2 : 2, 1, 1); chrom.visible = bact.visible; hideL(lb, !bact.visible || step === 0); hideL(lys, step !== 3);
+          pro.visible = step === 4 && t > 2; hideL(lpr, !(step === 4 && t > 2)); if (step === 5) { capsid.visible = true; capsid.position.set(-8 + Math.sin(tt) * 2, 4, 0); } else capsid.position.set(-20, 6, 0); } };
+    } };
+
+  return {
+    dives: [D_STEM, D_SAV, D_SPEC, D_VIR],
+    addStops: [{ after: 'The nucleus', stop: { n: 'Double membrane and pores', s: 'The nucleus is surrounded by a **double membrane**, the nuclear envelope, with **pores** where mRNA leaves and proteins enter.', pts: ['Keeping DNA in its own compartment protects it and keeps transcription separate from translation.'], h: 'In eukaryotes, separating the nucleus from the cytoplasm lets pre-mRNA be modified (introns removed, cap and tail added) before any ribosome reads it. The outer membrane is continuous with the rough ER.', q: { q: 'What passes out of the nucleus through the nuclear pores?', o: ['DNA', 'mRNA', 'Chromosomes'], a: 1, why: 'mRNA carries copies of genes out to the ribosomes; DNA stays inside.' }, cs: 'B2.2.2', ch: 'B2.2.6' } }],
+    stops: {
+      'The nucleus': { q: { q: 'Why do red blood cells in mammals have no nucleus?', o: ['They do not need proteins', 'It leaves more room for haemoglobin and gives a biconcave shape', 'They are prokaryotic'], a: 1, why: 'Losing the nucleus makes space for haemoglobin; the trade-off is that they cannot divide or repair themselves.' }, dives: ['Stem cells and differentiation', 'Surface area and volume'] },
+      'DNA wrapped round histones': { hq: { q: 'What is a nucleosome made of?', o: ['DNA wrapped round eight histone proteins', 'mRNA and ribosomes', 'A single histone'], a: 0, why: 'A core of eight histones with DNA wrapped about 1.7 times round it.' } },
+      'Genes are copied here': { dives: ['Stem cells and differentiation', 'Specialised cells', 'Viruses'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

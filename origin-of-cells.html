@@ -232,6 +232,62 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the origin of cells (2026-11-18): check questions on every stop, and HL close-ups on dating early life (A2.1.8)
+// and on endosymbiosis and multicellularity (A2.2.12-14).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+  const D_TIME = { n: 'Dating the first cells', hl: true, bg: '#14100c', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'A timeline of early life', s: 'Earth formed about **4.54 billion years ago**. Life appeared surprisingly soon after the oceans formed.', ch: 'A2.1.8' },
+      { n: 'Evidence from rocks', s: '**Stromatolites**: layered rocks built by mats of cyanobacteria, the oldest about 3.5 billion years old. Microfossils and carbon isotope ratios typical of living things in rocks from about 3.7 billion years ago push the date back further.', ch: 'A2.1.8' },
+      { n: 'Evidence from genes', s: 'The **molecular clock**: differences in DNA sequences between living groups build up at a roughly steady rate. Working backwards puts **LUCA** at around 4.2 billion years ago, though estimates vary widely.', hq: { q: 'Why are molecular clock estimates of LUCA\'s age uncertain?', o: ['DNA does not change over time', 'Mutation rates vary between genes and lineages, and calibration fossils are scarce', 'LUCA had no DNA'], a: 1, why: 'The clock assumes a steady rate, which is only roughly true, and needs dated fossils to calibrate it.' }, ch: 'A2.1.8' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv); D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      const X = bya => 80 + (4.6 - bya) / 4.6 * 860; const ev = [[4.54, 'Earth forms', 0], [4.4, 'Oceans', 0], [4.2, 'LUCA (molecular clock)', 2], [3.7, 'Chemical traces of life', 1], [3.5, 'Stromatolites', 1], [2.4, 'Oxygen builds up in air', 0], [1.8, 'Eukaryotes', 0], [0.6, 'Animals', 0]];
+      function draw(step, k) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); const g = c.createLinearGradient(80, 0, 940, 0); g.addColorStop(0, '#9c4221'); g.addColorStop(0.4, '#457b9d'); g.addColorStop(1, '#2d6a4f'); c.fillStyle = g; c.fillRect(80, 300, 860, 26);
+        c.fillStyle = '#222'; c.font = '20px sans-serif'; for (let b = 4; b >= 0; b--) c.fillText(b + ' bya', X(b) - 22, 360); c.font = 'bold 24px sans-serif'; c.fillText('Billion years ago (bya)', 380, 410);
+        ev.forEach(([b, n, s], i) => { if (s > step) return; const up = i % 2 === 0; c.strokeStyle = s === step && step ? '#e63946' : '#555'; c.lineWidth = 3; c.beginPath(); c.moveTo(X(b), 300); c.lineTo(X(b), up ? 200 - i * 6 : 440 + i * 6); c.stroke(); c.fillStyle = s === step && step ? '#e63946' : '#222'; c.font = 'bold 20px sans-serif'; c.fillText(n, X(b) - 20, up ? 190 - i * 6 : 465 + i * 6); });
+        if (step === 1) { c.fillStyle = '#6d4c41'; for (let i = 0; i < 6; i++) { c.beginPath(); c.ellipse(760, 560 - i * 14, 120 - i * 10, 10, 0, Math.PI, 0); c.fill(); } c.fillStyle = '#222'; c.font = 'bold 20px sans-serif'; c.fillText('Stromatolite layers', 690, 620); } tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = ''; return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const k = Math.min(1, (tt - t0) / 2); const kk = step + ':' + Math.round(k * 10); if (kk !== key) { key = kk; draw(step, k); } } };
+    } };
+
+  const D_ENDO = { n: 'Endosymbiosis', hl: true, bg: '#14100c', dist: 46, target: V(0, 0, 0), yaw: 0.2, pitch: 0.2,
+    steps: [
+      { n: 'A large host cell', s: 'About 2 billion years ago a large cell, probably related to today\'s archaea, lived by engulfing food.', ch: 'A2.2.12' },
+      { n: 'Engulfing an aerobic bacterium', s: 'It took in a small **aerobic bacterium** by endocytosis but did not digest it. The bacterium survived inside, supplying ATP; the host supplied food and protection. Over time it became the **mitochondrion**.', ch: 'A2.2.12' },
+      { n: 'And a photosynthetic one', s: 'Later, in the ancestors of algae and plants, a **cyanobacterium** was taken in the same way and became the **chloroplast**.', ch: 'A2.2.12' },
+      { n: 'The evidence', s: 'Mitochondria and chloroplasts are like bacteria living inside our cells:', hpts: ['They have their own **circular DNA** and **70S ribosomes**.', 'They have a **double membrane** (the inner one from the bacterium, the outer from the host\'s vesicle).', 'They divide by **binary fission**, and cannot be made by the cell from scratch.', 'Their DNA sequences are closest to those of aerobic bacteria and cyanobacteria.'], hq: { q: 'Which feature of mitochondria supports the endosymbiotic theory?', o: ['They make ATP', 'They have their own circular DNA and 70S ribosomes', 'They are found in all cells'], a: 1, why: 'Circular DNA and 70S ribosomes are prokaryote features.' }, ch: 'A2.2.12' },
+      { n: 'Many cells together', s: '**Multicellularity** evolved independently many times: in animals, plants, fungi and several groups of algae. Cells that stayed together after dividing could become larger and **specialise**: different genes are expressed in different cells, so tissues with different jobs develop.', ch: 'A2.2.13, A2.2.14' }
+    ],
+    build(D) { const g = D.scene; const host = new THREE.Mesh(new THREE.SphereGeometry(9, 36, 24), T(0xd4a373, 0.35)); g.add(host); const hn = new THREE.Mesh(new THREE.SphereGeometry(2.6, 20, 14), M(0x6d4c9f)); hn.position.set(-3, 1, 0); g.add(hn);
+      const aer = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 12), M(0xf08a3c)); aer.scale.set(2.2, 1, 1); g.add(aer); const cyan = new THREE.Mesh(new THREE.SphereGeometry(1.2, 18, 12), M(0x2d6a4f)); cyan.scale.set(1.8, 1, 1); g.add(cyan);
+      const ves = new THREE.Mesh(new THREE.SphereGeometry(2.6, 18, 12), T(0xffffff, 0.2)); g.add(ves); const ves2 = ves.clone(); g.add(ves2);
+      const colony = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.6, 14, 10), M(i < 6 ? 0x52b788 : i < 12 ? 0xf4a261 : 0x4895ef)); m.position.copy(A.onSphere(5)); g.add(m); colony.push(m); }
+      const la = D.label('Aerobic bacterium', V(0, 0, 0)), lc = D.label('Cyanobacterium', V(0, 0, 0)), lh = D.label('Host cell', V(-6, 10.5, 0)), lm = D.label('Different cells, different jobs', V(0, 8.5, 0)); const pA = V(), pC = V(); const la2 = D.label('', pA), lc2 = D.label('', pC); la.dataset.off = '1'; lc.dataset.off = '1';
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const inA = step === 0 ? 0 : step === 1 ? ease(t / 3) : 1, inC = step < 2 ? 0 : step === 2 ? ease(t / 3) : 1;
+          host.visible = hn.visible = step <= 3; aer.visible = step >= 0 && step <= 3; cyan.visible = step >= 2 && step <= 3; colony.forEach(m => m.visible = step === 4);
+          aer.position.set(18 - 14 * inA, 3, 0); cyan.position.set(-18 + 15 * inC, -4, 0); ves.visible = inA > 0.6 && step <= 3; ves.position.copy(aer.position); ves2.visible = inC > 0.6 && step <= 3; ves2.position.copy(cyan.position);
+          pA.copy(aer.position).add(V(0, 2.6, 0)); pC.copy(cyan.position).add(V(0, -2.8, 0)); la2.textContent = inA > 0.9 ? 'Becomes a mitochondrion' : 'Aerobic bacterium'; lc2.textContent = inC > 0.9 ? 'Becomes a chloroplast' : 'Cyanobacterium'; hideL(la2, step > 3); hideL(lc2, !(step >= 2 && step <= 3)); hideL(lh, step > 3); hideL(lm, step !== 4); colony.forEach((m, i) => m.rotation.y += dt); } };
+    } };
+
+  return {
+    dives: [D_TIME, D_ENDO],
+    stops: {
+      'The young Earth': { hq: { q: 'Why could organic molecules build up on the early Earth but not today?', o: ['There was more water', 'There was no free oxygen to break them down, and no life to consume them', 'The Sun was hotter'], a: 1, why: 'The early atmosphere had little or no oxygen, and no organisms existed to feed on the molecules.' }, ch: 'A2.1.1, A2.1.2, A2.1.3', dives: ['Dating the first cells'] },
+      'The Miller-Urey experiment': { hq: { q: 'What did the Miller-Urey experiment show?', o: ['That life can form in a flask', 'That amino acids can form from simple gases with an energy source such as sparks', 'That DNA was the first genetic material'], a: 1, why: 'Sparks through methane, ammonia, hydrogen and water vapour produced amino acids: carbon compounds can form without life.' }, ch: 'A2.1.4' },
+      'Vesicles form by themselves': { hq: { q: 'Why might fatty acid vesicles have been important for the first cells?', o: ['They make ATP', 'They form spontaneously and separate an inside from the outside, so chemicals can concentrate', 'They carry genes'], a: 1, why: 'A membrane boundary lets the contents differ from the surroundings, a key step towards a cell.' }, ch: 'A2.1.5' },
+      'RNA: genes and catalyst in one': { hq: { q: 'Why is RNA thought to have come before DNA and proteins?', o: ['It is more stable than DNA', 'It can both store genetic information and act as a catalyst (ribozyme)', 'It is made of amino acids'], a: 1, why: 'RNA can do both jobs that DNA and enzymes later took over, so one molecule could replicate itself.' }, ch: 'A2.1.6' },
+      'A hydrothermal vent': { hq: { q: 'What evidence links LUCA to hydrothermal vents?', o: ['Fossils of LUCA in vents', 'Genes shared by all living things include ones for living in hot, mineral-rich, oxygen-free conditions', 'Vents contain DNA'], a: 1, why: 'Reconstructing LUCA\'s genes suggests it used hydrogen and lived in hot, anaerobic conditions, like those at alkaline vents.' }, ch: 'A2.1.9' },
+      'LUCA and the tree of life': { hq: { q: 'Which evidence suggests all life shares one common ancestor?', o: ['All organisms are the same size', 'All life uses the same genetic code, DNA, ATP and similar ribosomes', 'All life lives in water'], a: 1, why: 'Such universal features are best explained by inheritance from a single ancestor, LUCA.' }, ch: 'A2.1.7', dives: ['Dating the first cells', 'Endosymbiosis'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

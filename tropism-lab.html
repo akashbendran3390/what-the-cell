@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Plant Hormone Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/tropism-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Plant Hormone Lab">
+<meta property="og:description" content="Plant Hormone Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/tropism-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Plant Hormone Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0c120d; --ink:#f1f6ef; --dim:#b9c9b5; --panel:#131c14; --panel2:#1b281c; --line:rgba(205,235,200,.18);
+  --accent:#8fd16a; --aux:#ff9f1c;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#0f2408}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0a0f0a}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#0f2408;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+button:disabled{opacity:.45;cursor:default}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:820px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:72px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider label{min-width:150px}.slider input{flex:1;min-width:140px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;margin:3px 0}
+.lab-l{font-size:13px;color:var(--dim);min-width:92px}
+select{font:700 14px var(--body);background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%}
+.verdict{font-weight:700;margin-top:6px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Plant Hormone Lab</h1><div class="sub">DP Biology C3.1 (HL) &middot; tropisms, auxin, cytokinin and ethylene</div></div>
+    <div class="seg" role="group" aria-label="Choose a part of the lab">
+      <button type="button" id="t-photo" aria-pressed="true">Phototropism</button>
+      <button type="button" id="t-cell" aria-pressed="false">How auxin makes cells grow</button>
+      <button type="button" id="t-root" aria-pressed="false">Auxin and cytokinin</button>
+      <button type="button" id="t-eth" aria-pressed="false">Ripening and ethylene</button>
+    </div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Plants without nerves</h2>
+    <p>A plant cannot move to the light, but it can grow towards it. In this lab you repeat the classic seedling experiments on phototropism, follow auxin from the shoot tip into the cell wall, change the balance of auxin and cytokinin to decide whether a plant makes roots or shoots, and watch one ripe banana set off a whole bowl.</p>
+    <p class="note">The seedlings are grass coleoptiles (the sheath around a young grass shoot), the plant used in the original experiments. Rates are typical values; real seedlings vary.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+
+  <!-- PHOTOTROPISM -->
+  <div id="p-photo"><div class="grid">
+    <div><div class="card">
+      <canvas id="c-photo" width="900" height="560" aria-label="A grass seedling in a pot with a lamp; auxin particles move down the shoot and the shoot bends"></canvas>
+      <div class="row"><span class="lab-l">Light</span>
+        <button type="button" class="btn" data-light="left" aria-pressed="true">From the left</button>
+        <button type="button" class="btn" data-light="right" aria-pressed="false">From the right</button>
+        <button type="button" class="btn" data-light="top" aria-pressed="false">From above</button>
+        <button type="button" class="btn" data-light="none" aria-pressed="false">Darkness</button></div>
+      <div class="row"><span class="lab-l">Treatment</span>
+        <select id="p-tr" aria-label="Treatment of the seedling">
+          <option value="none">Untreated seedling</option>
+          <option value="tipcut">Tip cut off</option>
+          <option value="foil">Opaque cap over the tip</option>
+          <option value="clear">Transparent cap over the tip</option>
+          <option value="sleeve">Opaque sleeve below the tip</option>
+          <option value="micaShade">Mica barrier in the shaded side</option>
+          <option value="micaLit">Mica barrier in the lit side</option>
+          <option value="agar">Tip cut off, agar block with auxin on the left</option>
+          <option value="agar0">Tip cut off, plain agar block on the left</option>
+        </select></div>
+      <div class="row"><span class="lab-l">My prediction</span>
+        <select id="p-pred" aria-label="Your prediction">
+          <option value="">Choose before you run it</option>
+          <option value="toward">Bends towards the light</option>
+          <option value="away">Bends away from the light</option>
+          <option value="left">Bends to the left (no side light)</option>
+          <option value="right">Bends to the right (no side light)</option>
+          <option value="straight">Grows straight up</option>
+          <option value="nogrow">Hardly grows at all</option>
+        </select></div>
+      <div class="row"><button type="button" class="go" id="p-run">Run 6 hours</button><button type="button" class="btn" id="p-reset">Reset seedling</button><button type="button" class="btn" id="p-clear">Clear graph</button></div>
+    </div></div>
+    <div>
+      <div class="card"><h2 id="p-h">Untreated seedling</h2><div class="explain"><p id="p-say"></p></div>
+        <p class="verdict" id="p-verdict"></p>
+        <div class="stat" style="margin-top:8px"><span>Time</span><b id="p-time">0.0 h</b><span>Bending angle</span><b id="p-ang">0&deg;</b><span>Shoot length</span><b id="p-len">-</b><span>Auxin reaching the growth zone (left : right)</span><b id="p-split">-</b></div>
+        <p class="note">Syllabus: C3.1.17, C3.1.18, C3.1.19, C3.1.20 (HL)</p></div>
+      <div class="card"><h2>Bending over time</h2>
+        <canvas id="g-photo" width="440" height="250" aria-label="Graph of bending angle against time for each run"></canvas>
+        <p class="note">+ = bends towards the light (to the right when there is no side light). Up to five runs are kept so you can compare them.</p>
+        <ol class="tasks">
+          <li>Which part of the shoot detects the light? Use the cap and sleeve runs.</li>
+          <li>Does the signal need a living tip, or only a chemical from it? Use the agar runs.</li>
+          <li>Explain the two mica runs: which side does auxin need to travel down?</li>
+          <li>Why do the auxin efflux carriers (PIN proteins) matter for keeping the gradient?</li>
+        </ol></div>
+    </div>
+  </div></div>
+
+  <!-- ACID GROWTH -->
+  <div id="p-cell" hidden><div class="grid">
+    <div><div class="card">
+      <canvas id="c-cell" width="900" height="560" aria-label="A plant cell with its wall, proton pumps, expansins and a pH meter"></canvas>
+      <div class="row"><button type="button" class="btn" id="c-back">&larr; Back</button><button type="button" class="go" id="c-next">Next step &rarr;</button><button type="button" class="btn" id="c-play">Play all</button><button type="button" class="btn" id="c-reset">Start again</button></div>
+    </div></div>
+    <div>
+      <div class="card"><h2 id="c-h"></h2><div class="explain"><p id="c-say"></p></div>
+        <div class="stat" style="margin-top:10px"><span>Step</span><b id="c-n"></b><span>pH in the cell wall</span><b id="c-ph"></b><span>Cell length</span><b id="c-len"></b></div>
+        <p class="note">Syllabus: C3.1.21 (HL). The model shows the acid-growth idea; the cell is drawn lying on its side.</p></div>
+      <div class="card"><h2>Check yourself</h2><ol class="tasks">
+        <li>Why does pumping H<sup>+</sup> ions <i>out</i> of the cell make the wall easier to stretch?</li>
+        <li>Where does the force that stretches the cell come from?</li>
+        <li>Why does the cell get longer rather than fatter? Look at which way the cellulose fibres run.</li>
+        <li>Link this to phototropism: which side of a shoot lit from the left has the lower wall pH?</li>
+      </ol></div>
+    </div>
+  </div></div>
+
+  <!-- AUXIN AND CYTOKININ -->
+  <div id="p-root" hidden><div class="grid">
+    <div><div class="card">
+      <div class="row"><div class="seg" role="group" aria-label="Choose an experiment"><button type="button" id="r-tc" aria-pressed="true">Tissue culture</button><button type="button" id="r-ad" aria-pressed="false">Buds and the shoot tip</button></div></div>
+      <canvas id="c-root" width="900" height="560" aria-label="Plant hormone experiment"></canvas>
+      <div id="r-tc-ctl">
+        <div class="slider"><label for="s-aux">Auxin in the gel</label><input type="range" id="s-aux" min="0" max="3" step="0.1" value="2"><b id="v-aux"></b></div>
+        <div class="slider"><label for="s-cyt">Cytokinin in the gel</label><input type="range" id="s-cyt" min="0" max="3" step="0.1" value="0.2"><b id="v-cyt"></b></div>
+        <div class="row"><button type="button" class="go" id="r-grow">Grow for 4 weeks</button><button type="button" class="btn" id="r-tcreset">New piece of tissue</button>
+          <span class="lab-l">Try</span><button type="button" class="btn" data-mix="2,0.2">Mostly auxin</button><button type="button" class="btn" data-mix="1,1">Balanced</button><button type="button" class="btn" data-mix="0.2,2">Mostly cytokinin</button></div>
+      </div>
+      <div id="r-ad-ctl" hidden>
+        <div class="row"><button type="button" class="btn" id="a-cut">Cut off the shoot tip</button><button type="button" class="btn" id="a-paste">Put auxin paste on the cut</button><button type="button" class="btn" id="a-cyt">Put cytokinin on the top bud</button><button type="button" class="btn" id="a-reset">New plant</button></div>
+        <div class="row"><button type="button" class="go" id="a-grow">Grow for 3 weeks</button></div>
+      </div>
+    </div></div>
+    <div>
+      <div class="card"><h2 id="r-h"></h2><div class="explain"><p id="r-say"></p></div>
+        <div class="stat" style="margin-top:10px" id="r-stat"></div>
+        <p class="note">Syllabus: C3.1.19, C3.1.22 (HL)</p></div>
+      <div class="card"><h2>Check yourself</h2><ol class="tasks">
+        <li>Which ratio of auxin to cytokinin gives roots, and which gives shoots?</li>
+        <li>Why do side buds start to grow when the shoot tip is cut off?</li>
+        <li>What does the auxin paste experiment show about where the signal comes from?</li>
+        <li>Cytokinin is made mainly in root tips and auxin in shoot tips. How does this help a plant keep its roots and shoots in balance?</li>
+      </ol></div>
+    </div>
+  </div></div>
+
+  <!-- ETHYLENE -->
+  <div id="p-eth" hidden><div class="grid">
+    <div><div class="card">
+      <canvas id="c-eth" width="900" height="560" aria-label="Twelve bananas ripening with a graph of ethylene and ripeness"></canvas>
+      <div class="row"><span class="lab-l">Keep them in</span>
+        <button type="button" class="btn" data-box="open" aria-pressed="true">Open bowl</button>
+        <button type="button" class="btn" data-box="bag" aria-pressed="false">Paper bag</button>
+        <button type="button" class="btn" data-box="sealed" aria-pressed="false">Sealed box</button></div>
+      <div class="row"><span class="lab-l">Temperature</span>
+        <button type="button" class="btn" data-temp="4" aria-pressed="false">4 &deg;C fridge</button>
+        <button type="button" class="btn" data-temp="20" aria-pressed="true">20 &deg;C room</button>
+        <button type="button" class="btn" data-temp="30" aria-pressed="false">30 &deg;C warm</button></div>
+      <div class="row"><label class="chk"><input type="checkbox" id="e-ripe"> Add one ripe banana</label><label class="chk"><input type="checkbox" id="e-block"> Ethylene blocker (1-MCP) on the fruit</label></div>
+      <div class="row"><button type="button" class="go" id="e-run">Run 12 days</button><button type="button" class="btn" id="e-reset">Fresh green bananas</button></div>
+    </div></div>
+    <div>
+      <div class="card"><h2>Day <span id="e-day">0</span></h2><div class="explain"><p id="e-say"></p></div>
+        <div class="stat" style="margin-top:10px"><span>Ethylene in the air around the fruit</span><b id="e-E">-</b><span>Bananas ripe or riper</span><b id="e-n">-</b><span>Days until half are ripe</span><b id="e-half">-</b></div>
+        <p class="note">Syllabus: C3.1.23 (HL). Values are typical for bananas; ripening is faster in warm rooms.</p></div>
+      <div class="card"><h2>Check yourself</h2><ol class="tasks">
+        <li>Why is ripening called <b>positive feedback</b>? Name the two things that boost each other.</li>
+        <li>Why does a paper bag speed up ripening, and why is a sealed box faster still?</li>
+        <li>What does the blocker run show about how ethylene works?</li>
+        <li>Why are bananas picked green and shipped cool, then given ethylene in a ripening room?</li>
+      </ol></div>
+    </div>
+  </div></div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const F='Atkinson Hyperlegible, sans-serif', FD='Bricolage Grotesque, sans-serif';
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#f1f6ef'; ctx.font=font||'700 14px '+F; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function line(ctx,x1,y1,x2,y2,col,w){ ctx.strokeStyle=col; ctx.lineWidth=w||1; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); }
+let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; };
+let tab='photo';
+
+/* ================= PHOTOTROPISM ================= */
+const TRN={none:'Untreated seedling',tipcut:'Tip cut off',foil:'Opaque cap over the tip',clear:'Transparent cap over the tip',sleeve:'Opaque sleeve below the tip',micaShade:'Mica barrier in the shaded side',micaLit:'Mica barrier in the lit side',agar:'Agar block with auxin',agar0:'Plain agar block'};
+const LN={left:'light from the left',right:'light from the right',top:'light from above',none:'darkness'};
+const COLS=['#ffd166','#7cc6fe','#ff8fab','#b9f18c','#c9a0ff'];
+const P={light:'left',tr:'none',t:0,L:190,theta:0,parts:[],runs:[],cur:null,running:false,spawn:0};
+const L0=190, BX=560, BY=462, W=30, TH=6, MM=18/190;
+function shadedSide(){ return P.light==='left'?1:P.light==='right'?-1:1; } // +1 = right half is shaded
+function flows(){
+  const tr=P.tr, tip=!['tipcut','agar','agar0'].includes(tr);
+  const prod=tip?1:(tr==='agar'?0.6:0);
+  const side=(P.light==='left'||P.light==='right');
+  const senses=tip&&side&&tr!=='foil';
+  let sL=0.5,sR=0.5;
+  if(senses){ if(shadedSide()>0){ sR=0.7; sL=0.3; } else { sL=0.7; sR=0.3; } }
+  if(tr==='agar'||tr==='agar0'){ sL=0.94; sR=0.06; }
+  let bL=false,bR=false;
+  if(tr==='micaShade'){ if(shadedSide()>0) bR=true; else bL=true; }
+  if(tr==='micaLit'){ if(shadedSide()>0) bL=true; else bR=true; }
+  const fL=prod*sL*(bL?0.03:1), fR=prod*sR*(bR?0.03:1);
+  return {prod,sL,sR,bL,bR,fL,fR,senses,tip};
+}
+function elong(){ const f=flows(); return {eL:Math.max(0,f.fL-0.3), eR:Math.max(0,f.fR-0.3), f}; }
+function towards(){ return P.light==='right'?P.theta:P.light==='left'?-P.theta:P.theta; }
+function pReset(keepRun){
+  P.t=0; P.L=L0; P.theta=0; P.parts=[]; P.running=false; P.spawn=0; P.cur=null;
+  if(!keepRun) {}
+  drawPhoto();
+}
+function pStep(dt){ // dt in hours
+  const {eL,eR,f}=elong();
+  P.L+=(eL+eR)/2*52*dt;
+  const lag=clamp((P.t-0.3)/0.9,0,1); // bending shows after about half an hour
+  P.theta=clamp(P.theta+(eL-eR)*20*lag*dt,-75,75);
+  P.t+=dt;
+  // auxin particles (for the picture)
+  P.spawn+=f.prod*dt*90;
+  while(P.spawn>=1){ P.spawn-=1; const right=rnd()<f.sR; P.parts.push({s:2+rnd()*4,side:right?1:-1,o:0.25+rnd()*0.6}); }
+  const mica=40;
+  for(const q of P.parts){ const blocked=(q.side>0?f.bR:f.bL); const v=95*dt; if(blocked&&q.s<mica-3&&q.s+v>=mica-3){ q.s=mica-3-rnd()*4; q.stuck=true; } else if(!q.stuck) q.s+=v; }
+  P.parts=P.parts.filter(q=>q.s<P.L*0.82);
+  if(P.parts.length>260) P.parts.splice(0,P.parts.length-260);
+  if(P.cur){ const last=P.cur.pts[P.cur.pts.length-1]; if(P.t-last[0]>=0.099) P.cur.pts.push([P.t,towards()]); }
+  if(P.t>=6){ P.running=false; $('p-run').disabled=false; }
+}
+function stem(){ // points from base to tip
+  const N=48, ds=P.L/N, pts=[]; let x=BX,y=BY;
+  for(let i=0;i<=N;i++){ const s=i*ds; const k=clamp((s-0.28*P.L)/(0.6*P.L),0,1); const a=P.theta*Math.PI/180*k; pts.push({x,y,a}); x+=Math.sin(a)*ds; y-=Math.cos(a)*ds; }
+  return pts;
+}
+function atFromTip(pts,s,off){ const N=pts.length-1; const idx=clamp(N-s/(P.L/N),0,N); const i=Math.floor(idx), u=idx-i; const p=pts[i], q=pts[Math.min(N,i+1)]; const x=p.x+(q.x-p.x)*u, y=p.y+(q.y-p.y)*u, a=p.a+(q.a-p.a)*u; return {x:x+Math.cos(a)*off, y:y+Math.sin(a)*off, a}; }
+function drawPhoto(){
+  const c=$('c-photo'), ctx=c.getContext('2d');
+  const dark=P.light==='none';
+  const bg=ctx.createLinearGradient(0,0,0,560); bg.addColorStop(0,dark?'#050705':'#101a12'); bg.addColorStop(1,dark?'#070907':'#0b120c'); ctx.fillStyle=bg; ctx.fillRect(0,0,900,560);
+  const f=flows();
+  // lamp and light
+  if(P.light==='left'||P.light==='right'){
+    const lx=P.light==='left'?70:830, ly=170, dir=P.light==='left'?1:-1;
+    const g=ctx.createLinearGradient(lx,0,lx+dir*800,0); g.addColorStop(0,'rgba(255,230,140,.32)'); g.addColorStop(1,'rgba(255,230,140,.03)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(lx+dir*30,ly-36); ctx.lineTo(lx+dir*820,ly-150); ctx.lineTo(lx+dir*820,ly+330); ctx.lineTo(lx+dir*30,ly+36); ctx.closePath(); ctx.fill();
+    for(let k=-2;k<=2;k++){ ctx.strokeStyle='rgba(255,220,120,.35)'; ctx.lineWidth=2; ctx.setLineDash([10,12]); ctx.beginPath(); ctx.moveTo(lx+dir*44,ly+k*14); ctx.lineTo(lx+dir*200,ly+k*40); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.fillStyle='#3a3f3a'; ctx.beginPath(); ctx.moveTo(lx-dir*18,ly-34); ctx.lineTo(lx+dir*26,ly-44); ctx.lineTo(lx+dir*26,ly+44); ctx.lineTo(lx-dir*18,ly+34); ctx.closePath(); ctx.fill();
+    const bg2=ctx.createRadialGradient(lx+dir*22,ly,2,lx+dir*22,ly,30); bg2.addColorStop(0,'#fffbe0'); bg2.addColorStop(1,'rgba(255,220,120,0)'); ctx.fillStyle=bg2; ctx.beginPath(); ctx.arc(lx+dir*22,ly,30,0,7); ctx.fill();
+    line(ctx,lx-dir*6,ly+36,lx-dir*6,470,'#3a3f3a',5); txt(ctx,'lamp',lx,ly-56,'#ffe7a0','700 13px '+F);
+  } else if(P.light==='top'){
+    const g=ctx.createLinearGradient(0,40,0,470); g.addColorStop(0,'rgba(255,230,140,.28)'); g.addColorStop(1,'rgba(255,230,140,.04)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(BX-30,52); ctx.lineTo(BX+30,52); ctx.lineTo(BX+190,470); ctx.lineTo(BX-190,470); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#3a3f3a'; rr(ctx,BX-40,22,80,26,6); ctx.fill(); ctx.fillStyle='#fffbe0'; ctx.beginPath(); ctx.ellipse(BX,50,26,7,0,0,7); ctx.fill(); txt(ctx,'lamp above',BX+60,40,'#ffe7a0','700 13px '+F,'left');
+  } else { txt(ctx,'dark box: no light',BX,50,'#7f8f7c','700 14px '+F); }
+  // pot and soil
+  ctx.fillStyle='#7a4a2c'; ctx.beginPath(); ctx.moveTo(BX-120,470); ctx.lineTo(BX+120,470); ctx.lineTo(BX+95,556); ctx.lineTo(BX-95,556); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#8d5a37'; rr(ctx,BX-130,460,260,16,4); ctx.fill();
+  ctx.fillStyle='#3b2a1d'; ctx.fillRect(BX-118,462,236,10);
+  ctx.fillStyle='#d9c48a'; ctx.beginPath(); ctx.ellipse(BX,470,14,8,0.3,0,7); ctx.fill();
+  // stem
+  const pts=stem(), N=pts.length-1;
+  const shade=t=>{ const g=Math.round(150+60*t); return 'rgb('+Math.round(g*0.85)+','+(g+20)+','+Math.round(g*0.45)+')'; };
+  ctx.beginPath();
+  for(let i=0;i<=N;i++){ const p=pts[i]; const x=p.x-Math.cos(p.a)*W/2, y=p.y-Math.sin(p.a)*W/2; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+  const tp=pts[N];
+  if(f.tip){ ctx.arc(tp.x,tp.y,W/2,Math.PI+tp.a,tp.a,false); }
+  for(let i=N;i>=0;i--){ const p=pts[i]; ctx.lineTo(p.x+Math.cos(p.a)*W/2,p.y+Math.sin(p.a)*W/2); }
+  ctx.closePath();
+  const sg=ctx.createLinearGradient(BX-60,0,BX+60,0); sg.addColorStop(0,shade(0.2)); sg.addColorStop(0.5,shade(0.9)); sg.addColorStop(1,shade(0.3));
+  ctx.fillStyle=sg; ctx.fill(); ctx.strokeStyle='#5f7d34'; ctx.lineWidth=1.5; ctx.stroke();
+  // cell lines across the stem; spacing shows faster growth on one side
+  const {eL,eR}=elong();
+  for(let s=14;s<P.L-6;s+=9){ const a=atFromTip(pts,s,-W/2+1), b=atFromTip(pts,s,W/2-1); line(ctx,a.x,a.y,b.x,b.y,'rgba(70,95,40,.35)',1); }
+  line(ctx,atFromTip(pts,4,0).x,atFromTip(pts,4,0).y,pts[0].x,pts[0].y,'rgba(70,95,40,.25)',1);
+  // growth zone marker
+  const z1=atFromTip(pts,P.L*0.14,W/2+10), z2=atFromTip(pts,P.L*0.6,W/2+10);
+  if(f.prod>0){ ctx.strokeStyle='rgba(185,241,140,.5)'; ctx.lineWidth=2; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(z1.x,z1.y); ctx.lineTo(z2.x,z2.y); ctx.stroke(); ctx.setLineDash([]); txt(ctx,'growth zone',z2.x+8,z2.y+4,'#b9f18c','12px '+F,'left'); }
+  // auxin
+  for(const q of P.parts){ const p=atFromTip(pts,q.s,q.side*q.o*W/2); ctx.fillStyle=q.stuck?'#c46d00':'#ff9f1c'; ctx.beginPath(); ctx.arc(p.x,p.y,2.6,0,7); ctx.fill(); }
+  // treatments
+  const tipAt=atFromTip(pts,0,0);
+  if(P.tr==='foil'||P.tr==='clear'){ ctx.save(); ctx.translate(tipAt.x,tipAt.y); ctx.rotate(tipAt.a); ctx.fillStyle=P.tr==='foil'?'#9aa3a8':'rgba(200,240,255,.22)'; ctx.strokeStyle=P.tr==='foil'?'#d7dde0':'rgba(220,245,255,.7)'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(-W/2-3,34); ctx.lineTo(-W/2-3,0); ctx.arc(0,0,W/2+3,Math.PI,0); ctx.lineTo(W/2+3,34); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+    txt(ctx,P.tr==='foil'?'foil cap':'clear cap',tipAt.x+30,tipAt.y-10,'#dfe7ea','700 12px '+F,'left'); }
+  if(P.tr==='sleeve'){ ctx.fillStyle='#9aa3a8'; ctx.beginPath(); for(let s=44;s<=110;s+=2){ const p=atFromTip(pts,s,-W/2-3); s===44?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y); } for(let s=110;s>=44;s-=2){ const p=atFromTip(pts,s,W/2+3); ctx.lineTo(p.x,p.y); } ctx.closePath(); ctx.fill(); const p=atFromTip(pts,78,W/2+6); txt(ctx,'foil sleeve',p.x+8,p.y,'#dfe7ea','700 12px '+F,'left'); }
+  if(P.tr==='micaShade'||P.tr==='micaLit'){ const side=(f.bR?1:-1); const a=atFromTip(pts,40,0), b=atFromTip(pts,40,side*(W/2+8)); line(ctx,a.x,a.y,b.x,b.y,'#e8eef0',4); txt(ctx,'mica',b.x+side*10,b.y+4,'#e8eef0','700 12px '+F,side>0?'left':'right'); }
+  if(P.tr==='tipcut'||P.tr==='agar'||P.tr==='agar0'){ if(P.tr!=='tipcut'){ ctx.save(); ctx.translate(tipAt.x,tipAt.y); ctx.rotate(tipAt.a); ctx.fillStyle=P.tr==='agar'?'rgba(255,190,90,.85)':'rgba(240,235,200,.75)'; rr(ctx,-W/2-1,-9,W/2+2,10,2); ctx.fill(); ctx.restore(); txt(ctx,P.tr==='agar'?'agar + auxin':'plain agar',tipAt.x-24,tipAt.y-12,'#ffe1b0','700 12px '+F,'right'); }
+    else txt(ctx,'cut surface',tipAt.x+18,tipAt.y-6,'#dfe7ea','700 12px '+F,'left'); }
+  // inset: tip cells and PIN carriers
+  const ix=18, iy=300, iw=250, ih=240;
+  ctx.fillStyle='rgba(12,20,13,.92)'; rr(ctx,ix,iy,iw,ih,12); ctx.fill(); ctx.strokeStyle='rgba(205,235,200,.3)'; ctx.lineWidth=1; ctx.stroke();
+  txt(ctx,'Close-up: cells in the tip',ix+iw/2,iy+20,'#e7f3e2','700 13px '+F);
+  const cw=54, chh=40, gx0=ix+18, gy0=iy+38;
+  for(let r=0;r<4;r++) for(let k=0;k<4;k++){ const x=gx0+k*cw, y=gy0+r*chh; ctx.fillStyle='rgba(185,215,122,.18)'; rr(ctx,x+2,y+2,cw-4,chh-4,5); ctx.fill(); ctx.strokeStyle='rgba(185,215,122,.55)'; ctx.stroke();
+    // PIN carriers
+    ctx.fillStyle='#ff5d5d';
+    if(f.prod===0||!f.tip){ }
+    else if(f.senses){ const sx=shadedSide()>0?x+cw-4:x+2; for(let d=0;d<3;d++){ ctx.fillRect(sx,y+8+d*9,2.5,5); } ctx.fillRect(x+cw/2-3,y+chh-4,6,2.5); }
+    else { for(let d=0;d<3;d++) ctx.fillRect(x+10+d*14,y+chh-4,6,2.5); }
+  }
+  if(f.tip&&f.prod>0){
+    if(f.senses){ const dir=shadedSide(); for(let r=0;r<4;r++){ const y=gy0+r*chh+chh/2; const x1=dir>0?gx0+30:gx0+4*cw-30, x2=dir>0?gx0+4*cw-10:gx0+10; ctx.strokeStyle='rgba(255,159,28,.8)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x1,y); ctx.lineTo(x2,y); ctx.stroke(); ctx.fillStyle='#ff9f1c'; ctx.beginPath(); ctx.moveTo(x2,y); ctx.lineTo(x2-dir*8,y-5); ctx.lineTo(x2-dir*8,y+5); ctx.closePath(); ctx.fill(); }
+      txt(ctx,'auxin pumped to the shaded side',ix+iw/2,iy+ih-30,'#ffc26b','12px '+F); }
+    else { for(let k=0;k<4;k++){ const x=gx0+k*cw+cw/2; ctx.strokeStyle='rgba(255,159,28,.8)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,gy0+10); ctx.lineTo(x,gy0+4*chh-6); ctx.stroke(); ctx.fillStyle='#ff9f1c'; ctx.beginPath(); ctx.moveTo(x,gy0+4*chh-2); ctx.lineTo(x-5,gy0+4*chh-10); ctx.lineTo(x+5,gy0+4*chh-10); ctx.closePath(); ctx.fill(); }
+      txt(ctx,'auxin moves straight down',ix+iw/2,iy+ih-30,'#ffc26b','12px '+F); }
+  } else txt(ctx,f.prod>0?'no tip: auxin comes from the agar':'no tip, so no auxin is made',ix+iw/2,iy+ih-30,'#ffc26b','12px '+F);
+  ctx.fillStyle='#ff5d5d'; ctx.fillRect(ix+20,iy+ih-16,10,3); txt(ctx,'PIN auxin efflux carriers',ix+36,iy+ih-11,'#ffb3b3','12px '+F,'left');
+  // readouts
+  txt(ctx,'t = '+P.t.toFixed(1)+' h',880,30,'#e7f3e2','800 20px '+FD,'right');
+  txt(ctx,'bend '+Math.abs(P.theta).toFixed(0)+'°',880,54,'#b9f18c','700 14px '+F,'right');
+  updPhotoText(); drawPhotoGraph();
+}
+function drawPhotoGraph(){
+  const c=$('g-photo'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f0a'; ctx.fillRect(0,0,440,250);
+  const X=46,Y=14,Wd=376,H=196, gx=t=>X+t/6*Wd, gy=a=>Y+H/2-a/60*(H/2);
+  ctx.strokeStyle='rgba(205,235,200,.12)'; ctx.lineWidth=1;
+  for(let t=0;t<=6;t++){ line(ctx,gx(t),Y,gx(t),Y+H,'rgba(205,235,200,.12)'); txt(ctx,String(t),gx(t),Y+H+14,'#b9c9b5','11px '+F); }
+  for(let a=-60;a<=60;a+=30){ line(ctx,X,gy(a),X+Wd,gy(a),a===0?'rgba(205,235,200,.4)':'rgba(205,235,200,.12)'); txt(ctx,(a>0?'+':'')+a+'°',X-6,gy(a)+4,'#b9c9b5','11px '+F,'right'); }
+  txt(ctx,'time / hours',X+Wd/2,Y+H+30,'#b9c9b5','700 11px '+F);
+  const all=P.runs.concat(P.cur&&!P.runs.includes(P.cur)?[P.cur]:[]);
+  all.forEach(r=>{ ctx.strokeStyle=r.col; ctx.lineWidth=2.5; ctx.beginPath(); r.pts.forEach((p,i)=>i?ctx.lineTo(gx(p[0]),gy(clamp(p[1],-60,60))):ctx.moveTo(gx(p[0]),gy(clamp(p[1],-60,60)))); ctx.stroke(); });
+  let ly=Y+12; all.slice(-5).forEach(r=>{ ctx.fillStyle=r.col; ctx.fillRect(X+8,ly-8,10,10); txt(ctx,r.label,X+24,ly+1,'#e7f3e2','11px '+F,'left'); ly+=15; });
+}
+function outcome(){ const {eL,eR}=elong(); const g=(eL+eR)/2; if(g<0.03) return 'nogrow'; const d=eL-eR; if(Math.abs(d)<0.05) return 'straight'; const bendsRight=d>0; if(P.light==='left') return bendsRight?'away':'toward'; if(P.light==='right') return bendsRight?'toward':'away'; return bendsRight?'right':'left'; }
+function updPhotoText(){
+  const f=flows(); const tr=P.tr; let s='';
+  const lt=P.light==='left'||P.light==='right';
+  if(tr==='none') s=lt?'Light hits one side of the tip. Proteins in the tip sense blue light, and <b>PIN efflux carriers</b> in the tip cells move to the walls on the shaded side. Auxin is pumped out of each cell towards the shade, so more of it travels down the shaded side. Those cells elongate faster and the shoot curves towards the light: <b>positive phototropism</b>.':'With no light from one side, auxin from the tip moves straight down both sides equally. Both sides grow at the same rate, so the shoot grows straight.';
+  else if(tr==='tipcut') s='The tip makes the auxin. Without it there is almost no auxin in the growth zone, so the shoot stops growing and cannot bend.';
+  else if(tr==='foil') s='The opaque cap stops light reaching the tip. Auxin still moves down evenly, so the shoot grows but does not bend. The tip is the part that detects the direction of light.';
+  else if(tr==='clear') s='A transparent cap lets light through, so the tip still detects it. This is the control for the foil cap: it shows that covering the tip is not what stops the bending.';
+  else if(tr==='sleeve') s='The sleeve shades the growth zone but not the tip. The shoot still bends, even though the part that bends is in darkness, so the signal must travel down from the tip.';
+  else if(tr==='micaShade') s='Mica does not let chemicals pass. On the shaded side it stops auxin from moving down, so neither side gets enough auxin to grow faster: no bending. The signal is a chemical that travels down the shaded side.';
+  else if(tr==='micaLit') s='Mica on the lit side blocks the side that carries little auxin anyway. Auxin still flows down the shaded side, so the shoot bends towards the light.';
+  else if(tr==='agar') s='Auxin collected from tips into an agar block is placed on the left of a cut shoot. Auxin diffuses into the left side only, those cells elongate, and the shoot bends to the right, even in the dark. The signal is a chemical: a <b>phytohormone</b>.';
+  else if(tr==='agar0') s='Plain agar has no auxin, so nothing happens. This is the control for the auxin block.';
+  if(!lt&&(tr==='micaShade'||tr==='micaLit')) s='With no light from one side there is no shaded side, so here the mica is pushed into the '+(f.bR?'right':'left')+' side. Auxin still flows down the other side, so only that side grows faster and the shoot bends to the '+(f.bR?'right':'left')+'. Try it with side light to repeat the real experiment.';
+  $('p-say').innerHTML=s; $('p-h').textContent=TRN[tr]+', '+LN[P.light];
+  $('p-time').textContent=P.t.toFixed(1)+' h';
+  const tw=towards(); $('p-ang').textContent=(Math.abs(tw)<0.5?'0':(tw>0?'+':'')+tw.toFixed(0))+'°';
+  $('p-len').textContent=(P.L*MM).toFixed(1)+' mm';
+  $('p-split').textContent=f.prod?(Math.round(f.fL/(f.fL+f.fR+1e-9)*100)+' : '+Math.round(f.fR/(f.fL+f.fR+1e-9)*100)):'no auxin';
+  const pred=$('p-pred').value, v=$('p-verdict');
+  if(P.t>=6){ const o=outcome(); const names={toward:'it bent towards the light',away:'it bent away from the light',left:'it bent to the left',right:'it bent to the right',straight:'it grew straight up',nogrow:'it hardly grew'};
+    v.innerHTML=pred?(pred===o?'<span style="color:#b9f18c">Your prediction was right:</span> '+names[o]+'.':'<span style="color:#ffb36b">Not what you predicted:</span> '+names[o]+'. Read the explanation above.'):'Result: '+names[o]+'.'; }
+  else v.textContent=pred?'':'Make a prediction, then run it.';
+}
+function pRun(){ if(P.t>=6||P.t>0) { P.t=0; P.L=L0; P.theta=0; P.parts=[]; }
+  const label=TRN[P.tr].replace(' over the tip','').replace(' below the tip','')+', '+LN[P.light].replace('light from the ','').replace('light from ','');
+  P.cur={label,col:COLS[P.runs.length%5],pts:[[0,0]]}; P.runs.push(P.cur); if(P.runs.length>5) P.runs.shift();
+  P.running=true; $('p-run').disabled=true; }
+document.querySelectorAll('[data-light]').forEach(b=>b.onclick=()=>{ P.light=b.dataset.light; document.querySelectorAll('[data-light]').forEach(x=>x.setAttribute('aria-pressed',x===b)); P.running=false; $('p-run').disabled=false; pReset(); });
+$('p-tr').onchange=e=>{ P.tr=e.target.value; P.running=false; $('p-run').disabled=false; pReset(); };
+$('p-pred').onchange=updPhotoText;
+$('p-run').onclick=pRun; $('p-reset').onclick=()=>{ P.running=false; $('p-run').disabled=false; pReset(); };
+$('p-clear').onclick=()=>{ P.runs=[]; P.cur=null; drawPhotoGraph(); };
+
+/* ================= ACID GROWTH ================= */
+const CS=[
+ {h:'A young cell in the growth zone',s:'The cell wall is made of <b>cellulose microfibrils</b> held together by cross-links. The fibres run around the cell like hoops (shown as lines across the top and bottom walls). The wall is slightly acidic, about pH 6, and too stiff to stretch.'},
+ {h:'Auxin arrives',s:'Auxin (orange) moving down from the tip reaches the cell. It enters the cell; on its way out it is carried by the PIN efflux carriers on one side, which is how the flow is kept in one direction.'},
+ {h:'Auxin binds to a receptor',s:'Inside the cell auxin binds to a <b>receptor protein</b>. This sets off a response: proton pumps in the plasma membrane are switched on, and genes for more pumps are activated.'},
+ {h:'Proton pumps acidify the wall',s:'The pumps use ATP to move <b>H<sup>+</sup> ions</b> out of the cytoplasm into the cell wall. The wall pH falls from about 6 to about 4.5.'},
+ {h:'Expansins loosen the wall',s:'Low pH activates proteins in the wall called <b>expansins</b>. They break the cross-links between cellulose microfibrils, so the fibres can slide apart. The wall is now easier to stretch.'},
+ {h:'Water enters and the cell elongates',s:'The vacuole has a high solute concentration, so water enters by <b>osmosis</b>. Turgor pressure pushes on the loosened wall. Because the cellulose hoops run around the cell, it gets <b>longer</b>, not fatter.'},
+ {h:'Growth is kept going',s:'Auxin also changes gene expression, so the cell makes more pumps and new wall material. Cells on the shaded side of a shoot, with more auxin, do all of this faster than cells on the lit side.'}
+];
+const C={step:0,u:1,play:false,t:0};
+function cVals(){ const s=C.step,u=C.u;
+  return {aux:s>=1?(s===1?u:1):0, rec:s>=2?(s===2?u:1):0, pump:s>=3?1:0, ph:s<3?6:s===3?6-1.5*u:4.5, exp:s>=4?(s===4?u:1):0, len:s>=5?420+130*(s===5?u:1):420, water:s===5?u:s>5?1:0, genes:s>=6?(s===6?u:1):0}; }
+function hsh(k){ return ((Math.sin(k*91.7)*43758.5)%1+1)%1; }
+function drawCell(){
+  const c=$('c-cell'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f0a'; ctx.fillRect(0,0,900,560);
+  const v=cVals(); const len=v.len, h=220, x0=440-len/2, y0=180, wt=20;
+  // neighbouring cells hint
+  ctx.fillStyle='rgba(185,215,122,.06)'; rr(ctx,x0-200,y0,180,h,14); ctx.fill(); rr(ctx,x0+len+20,y0,180,h,14); ctx.fill();
+  // wall
+  ctx.fillStyle='#4b3f22'; rr(ctx,x0,y0,len,h,18); ctx.fill();
+  ctx.fillStyle='rgba(255,120,170,'+(0.05+0.25*(6-v.ph)/1.5)+')'; rr(ctx,x0,y0,len,h,18); ctx.fill();
+  // microfibrils in top and bottom walls
+  const nf=26, sp=(len-40)/(nf-1);
+  for(const yy of [y0, y0+h-wt]){
+    for(let k=0;k<nf;k++){ const x=x0+20+k*sp; line(ctx,x,yy+3,x,yy+wt-3,'#e9d9a6',2.2);
+      if(k<nf-1){ const broken=hsh(k+yy)<v.exp*0.85; if(!broken){ line(ctx,x,yy+wt*0.35,x+sp,yy+wt*0.65,'rgba(150,220,255,.75)',1.4); } } }
+  }
+  // side walls
+  for(const xx of [x0, x0+len-wt]) for(let k=0;k<8;k++){ const y=y0+28+k*22; line(ctx,xx+3,y,xx+wt-3,y,'#e9d9a6',2); }
+  // cytoplasm
+  ctx.fillStyle='#1f3320'; rr(ctx,x0+wt,y0+wt,len-2*wt,h-2*wt,10); ctx.fill();
+  ctx.strokeStyle='#7ed957'; ctx.lineWidth=2; rr(ctx,x0+wt+1,y0+wt+1,len-2*wt-2,h-2*wt-2,10); ctx.stroke();
+  // vacuole
+  const vg=ctx.createLinearGradient(0,y0,0,y0+h); vg.addColorStop(0,'rgba(120,190,255,.35)'); vg.addColorStop(1,'rgba(80,150,230,.25)');
+  ctx.fillStyle=vg; rr(ctx,x0+wt+104,y0+wt+18,len-2*wt-134,h-2*wt-36,24); ctx.fill(); ctx.strokeStyle='rgba(150,210,255,.6)'; ctx.lineWidth=1.5; ctx.stroke();
+  txt(ctx,'vacuole',x0+len/2+30,y0+h/2+4,'#cfe8ff','700 13px '+F);
+  // nucleus
+  const nx=x0+wt+42, ny=y0+h/2; ctx.fillStyle=v.genes?'rgba(201,160,255,'+(0.45+0.4*v.genes)+')':'rgba(201,160,255,.45)'; ctx.beginPath(); ctx.ellipse(nx,ny,24,30,0,0,7); ctx.fill(); txt(ctx,'nucleus',nx,ny+48,'#e0ccff','11px '+F);
+  if(v.genes){ for(let k=0;k<4;k++){ const yy=ny-10+k*7; line(ctx,nx-10,yy,nx+10,yy,'rgba(255,255,255,'+(0.6*v.genes)+')',1.5); } }
+  // receptor
+  const rx=x0+wt+80, ry=y0+wt+36; ctx.fillStyle=v.rec?'#ffd166':'#6f6a50'; ctx.beginPath(); for(let k=0;k<10;k++){ const a=k*Math.PI/5, r=k%2?6:12; ctx.lineTo(rx+Math.cos(a)*r,ry+Math.sin(a)*r); } ctx.closePath(); ctx.fill();
+  txt(ctx,'receptor',rx,ry+26,'#ffe3a0','11px '+F);
+  // pumps on membrane
+  const pumps=[0.3,0.5,0.7].map(fx=>x0+len*fx);
+  pumps.forEach((px,i)=>{ for(const top of [true,false]){ const py=top?y0+wt+1:y0+h-wt-1; ctx.fillStyle=v.pump?'#5bc0eb':'#2f5566'; ctx.beginPath(); ctx.arc(px,py,9,0,7); ctx.fill(); txt(ctx,'',px,py); if(v.pump){ const a=((C.t*0.9+i*0.3)%1); const yy=top?py-6-a*12:py+6+a*12; ctx.fillStyle='#ff6fae'; ctx.beginPath(); ctx.arc(px,yy,3.5,0,7); ctx.fill(); } } });
+  txt(ctx,'proton pump',pumps[0],y0+h-wt+34,'#a9e3fb','11px '+F);
+  // H+ in wall
+  const nh=Math.round((6-v.ph)/1.5*44);
+  for(let k=0;k<nh;k++){ const top=k%2===0; const x=x0+24+hsh(k*3.1)*(len-48), y=(top?y0:y0+h-wt)+4+hsh(k*7.7)*(wt-8); ctx.fillStyle='#ff6fae'; ctx.beginPath(); ctx.arc(x,y,2.6,0,7); ctx.fill(); }
+  if(nh){ txt(ctx,'H⁺',x0+len-36,y0-6,'#ff9fca','700 13px '+F); }
+  // expansins
+  if(v.exp>0){ const ne=Math.round(10*v.exp); for(let k=0;k<ne;k++){ const top=k%2===0; const x=x0+40+hsh(k*5.3+1)*(len-80), y=(top?y0:y0+h-wt)+wt/2; ctx.fillStyle='#7ee0a1'; ctx.beginPath(); ctx.arc(x,y,6,0.5,Math.PI*2-0.5); ctx.lineTo(x,y); ctx.closePath(); ctx.fill(); }
+    txt(ctx,'expansins',x0+60,y0-6,'#9ef0b8','700 12px '+F,'left'); }
+  // auxin
+  if(v.aux>0){ for(let k=0;k<7;k++){ const tx=k<4?rx-16+((k*13)%26):x0+wt+30+(k-4)*16, ty=k<4?ry+44+k*8:y0+h-wt-24; const sx=x0-140, sy=y0+h/2+(k-3)*16; const u=v.aux; const x=sx+(tx-sx)*u, y=sy+(ty-sy)*u; ctx.fillStyle='#ff9f1c'; ctx.beginPath(); ctx.arc(x,y,4.5,0,7); ctx.fill(); }
+    txt(ctx,'auxin',x0-130,y0+h/2-60,'#ffc26b','700 13px '+F); }
+  // water
+  if(v.water>0&&v.water<1){ for(let k=0;k<10;k++){ const a=(v.water*2+k*0.1)%1; const top=k%2===0; const x=x0+60+k*(len-120)/9, y=top?y0-40+a*90:y0+h+40-a*90; ctx.fillStyle='rgba(124,198,254,.9)'; ctx.beginPath(); ctx.arc(x,y,4,0,7); ctx.fill(); } txt(ctx,'water enters by osmosis',440,y0-44,'#9ed5ff','700 13px '+F); }
+  // length arrow
+  line(ctx,x0,y0+h+56,x0+len,y0+h+56,'#b9f18c',2); for(const xx of [x0,x0+len]) line(ctx,xx,y0+h+48,xx,y0+h+64,'#b9f18c',2);
+  txt(ctx,'length '+(len/420*100).toFixed(0)+'% of start',440,y0+h+80,'#b9f18c','700 13px '+F);
+  // pH meter
+  const mx=760, my=24; ctx.fillStyle='#141e15'; rr(ctx,mx,my,120,120,12); ctx.fill(); ctx.strokeStyle='rgba(205,235,200,.3)'; ctx.stroke();
+  txt(ctx,'cell wall pH',mx+60,my+20,'#e7f3e2','700 12px '+F);
+  const a0=Math.PI*0.8, a1=Math.PI*2.2; ctx.lineWidth=10; for(let k=0;k<20;k++){ const p=k/20; const ph=4+p*3; ctx.strokeStyle='hsl('+(ph<5?330:ph<6?40:120)+',60%,'+(40+p*10)+'%)'; ctx.beginPath(); ctx.arc(mx+60,my+78,38,a0+(a1-a0)*p,a0+(a1-a0)*(p+0.05)); ctx.stroke(); }
+  const pa=a0+(a1-a0)*clamp((v.ph-4)/3,0,1); line(ctx,mx+60,my+78,mx+60+Math.cos(pa)*32,my+78+Math.sin(pa)*32,'#fff',3);
+  txt(ctx,v.ph.toFixed(1),mx+60,my+112,'#fff','800 18px '+FD);
+  txt(ctx,'Step '+(C.step+1)+' of '+CS.length,30,36,'#e7f3e2','800 18px '+FD,'left');
+  $('c-h').textContent=CS[C.step].h; $('c-say').innerHTML=CS[C.step].s; $('c-n').textContent=(C.step+1)+' of '+CS.length; $('c-ph').textContent=v.ph.toFixed(1); $('c-len').textContent=(len/420*100).toFixed(0)+'%';
+  $('c-back').disabled=C.step===0; $('c-next').disabled=C.step===CS.length-1;
+}
+function cGo(i){ C.step=clamp(i,0,CS.length-1); C.u=0; drawCell(); }
+function cTick(dt){ C.t+=dt; if(C.u<1) C.u=Math.min(1,C.u+dt/1.8); else if(C.play){ if(C.step<CS.length-1){ C.step++; C.u=0; } else C.play=false; } }
+$('c-next').onclick=()=>{ C.play=false; cGo(C.step+1); }; $('c-back').onclick=()=>{ C.play=false; C.step=Math.max(0,C.step-1); C.u=1; drawCell(); };
+$('c-play').onclick=()=>{ C.step=0; C.u=0; C.play=true; }; $('c-reset').onclick=()=>{ C.play=false; C.step=0; C.u=1; drawCell(); };
+
+/* ================= AUXIN AND CYTOKININ ================= */
+const R={mode:'tc',aux:2,cyt:0.2,w:0,grow:false,res:null};
+const A={cut:false,paste:false,cytBud:false,w:0,grow:false,g:[0,0,0,0],tip:0};
+function tcOutcome(a,c){ if(a+c<0.25) return 'none'; const r=a/Math.max(c,0.02); if(r>=3) return 'roots'; if(r<=1/3) return 'shoots'; return 'callus'; }
+function drawRoot(){ if(R.mode==='tc') drawTC(); else drawAD(); }
+function drawTC(){
+  const c=$('c-root'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f0a'; ctx.fillRect(0,0,900,560);
+  const res=R.res||tcOutcome(R.aux,R.cyt), w=R.w/4;
+  // glass jar
+  const jx=270, jy=70, jw=360, jh=440;
+  ctx.fillStyle='rgba(200,230,255,.05)'; rr(ctx,jx,jy,jw,jh,26); ctx.fill(); ctx.strokeStyle='rgba(200,230,255,.45)'; ctx.lineWidth=3; ctx.stroke();
+  ctx.fillStyle='rgba(200,230,255,.18)'; rr(ctx,jx+20,jy-22,jw-40,26,6); ctx.fill();
+  // gel
+  const gy=300; const gg=ctx.createLinearGradient(0,gy,0,jy+jh); gg.addColorStop(0,'rgba(240,220,150,.55)'); gg.addColorStop(1,'rgba(220,190,110,.45)'); ctx.fillStyle=gg; rr(ctx,jx+6,gy,jw-12,jy+jh-gy-6,20); ctx.fill();
+  txt(ctx,'nutrient gel + hormones',jx+jw/2,jy+jh-16,'#3a2f10','700 13px '+F);
+  // tiny hormone dots in gel
+  for(let k=0;k<Math.round(R.aux*14);k++){ ctx.fillStyle='#ff9f1c'; ctx.beginPath(); ctx.arc(jx+20+hsh(k*2.1)*(jw-40),gy+60+hsh(k*3.7)*120,2.4,0,7); ctx.fill(); }
+  for(let k=0;k<Math.round(R.cyt*14);k++){ ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.arc(jx+20+hsh(k*5.3+9)*(jw-40),gy+60+hsh(k*1.9+3)*120,2.4,0,7); ctx.fill(); }
+  const cx=jx+jw/2, cy=gy-8;
+  const grow=res==='none'?0.1:1; const size=22+ (res==='callus'?56:30)*w*grow;
+  // roots
+  if(res==='roots'&&w>0){ for(let k=0;k<7;k++){ const ang=-0.9+k*0.3; let x=cx+Math.sin(ang)*size*0.6, y=cy+size*0.3; ctx.strokeStyle='#f3efe0'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(x,y); const Lr=150*w*(0.7+hsh(k)*0.5); for(let s=0;s<Lr;s+=6){ x+=Math.sin(ang+Math.sin(s/30+k)*0.25)*6; y+=Math.cos(ang*0.6)*6; ctx.lineTo(x,y); } ctx.stroke(); for(let s=10;s<Lr-10;s+=8){ } } }
+  // callus blob
+  ctx.fillStyle='#d9e7a6'; ctx.beginPath(); for(let k=0;k<=24;k++){ const a=k/24*Math.PI*2; const r=size*(1+0.12*Math.sin(a*5+1)+0.08*Math.sin(a*3)); ctx.lineTo(cx+Math.cos(a)*r*1.2,cy+Math.sin(a)*r*0.75); } ctx.closePath(); ctx.fill(); ctx.strokeStyle='#9fb860'; ctx.lineWidth=1.5; ctx.stroke();
+  for(let k=0;k<20;k++){ const a=hsh(k)*6.28, r=hsh(k+50)*size*0.9; ctx.fillStyle='rgba(160,185,90,.6)'; ctx.beginPath(); ctx.arc(cx+Math.cos(a)*r*1.1,cy+Math.sin(a)*r*0.65,3,0,7); ctx.fill(); }
+  // shoots
+  if(res==='shoots'&&w>0){ for(let k=0;k<5;k++){ const bx=cx-size*0.8+k*size*0.4, by=cy-size*0.55; const hgt=(60+hsh(k*4)*60)*w; const tx=bx+(k-2)*10*w; line(ctx,bx,by,tx,by-hgt,'#5fae3e',3.5);
+      for(let j=1;j<=3;j++){ const fy=by-hgt*j/3.4, fx=bx+(tx-bx)*j/3.4; if(hgt*j/3.4<8) continue; ctx.fillStyle='#78c850'; ctx.beginPath(); ctx.ellipse(fx-11,fy,12,5,-0.5,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(fx+11,fy-4,12,5,0.5,0,7); ctx.fill(); } } }
+  // ratio bar
+  txt(ctx,'auxin : cytokinin',140,96,'#e7f3e2','700 14px '+F);
+  const r=R.aux/Math.max(R.cyt,0.02); const p=clamp((Math.log10(r)+1.5)/3,0,1);
+  const bx=40,by=110,bw=200; const g=ctx.createLinearGradient(bx,0,bx+bw,0); g.addColorStop(0,'#c9a0ff'); g.addColorStop(0.5,'#d9e7a6'); g.addColorStop(1,'#ff9f1c'); ctx.fillStyle=g; rr(ctx,bx,by,bw,16,8); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(bx+p*bw,by+8,9,0,7); ctx.fill();
+  txt(ctx,'shoots',bx+10,by+36,'#d8c2ff','12px '+F,'left'); txt(ctx,'callus',bx+bw/2,by+36,'#e7f3e2','12px '+F); txt(ctx,'roots',bx+bw-10,by+36,'#ffc26b','12px '+F,'right');
+  txt(ctx,R.aux+0>0?('ratio '+(R.cyt<0.02?'very high':r>=10?r.toFixed(0)+' : 1':r>=1?r.toFixed(1)+' : 1':'1 : '+(1/r).toFixed(1))):'',140,by+60,'#b9c9b5','12px '+F);
+  txt(ctx,'week '+R.w.toFixed(1),860,36,'#e7f3e2','800 20px '+FD,'right');
+  ctx.fillStyle='#ff9f1c'; ctx.beginPath(); ctx.arc(700,420,5,0,7); ctx.fill(); txt(ctx,'auxin',712,424,'#ffc26b','12px '+F,'left'); ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.arc(700,442,5,0,7); ctx.fill(); txt(ctx,'cytokinin',712,446,'#d8c2ff','12px '+F,'left');
+  // text
+  const names={roots:'Roots grow',shoots:'Shoots grow',callus:'An undifferentiated callus',none:'Very little growth'};
+  const says={roots:'With much more auxin than cytokinin, the cells of the callus differentiate into <b>roots</b>. Auxin promotes root formation.',shoots:'With much more cytokinin than auxin, buds form and grow into leafy <b>shoots</b>. Cytokinin promotes cell division and shoot growth.',callus:'With similar amounts of the two hormones the cells keep dividing but do not specialise: they form a lump of <b>callus</b>. Growers use this to multiply tissue, then move it to a gel with a different ratio.',none:'Without growth hormones the tissue hardly divides. Both hormones are needed for growth, and their <b>ratio</b> decides what forms.'};
+  $('r-h').textContent=R.w>0?names[res]:'Tissue culture'; $('r-say').innerHTML=R.w>0?says[res]+' This is how plants are cloned in tissue culture.':'A small piece of tissue sits on sterile nutrient gel. Choose how much auxin and cytokinin the gel contains, then grow it for four weeks. The ratio is what matters.';
+  $('r-stat').innerHTML='<span>Auxin</span><b>'+R.aux.toFixed(1)+' mg/L</b><span>Cytokinin</span><b>'+R.cyt.toFixed(1)+' mg/L</b><span>Prediction from the ratio</span><b>'+names[tcOutcome(R.aux,R.cyt)]+'</b>';
+  $('v-aux').textContent=R.aux.toFixed(1)+' mg/L'; $('v-cyt').textContent=R.cyt.toFixed(1)+' mg/L';
+}
+const NODES=[{y:178,d:70},{y:246,d:140},{y:318,d:212},{y:392,d:286}];
+function budRate(i){ const src=A.cut&&!A.paste?0:1; const aux=src*1.25*Math.exp(-NODES[i].d/250); const cyt=0.45+0.05*i+(A.cytBud&&i===0?1:0); return clamp((cyt-aux)/0.6,0,1); }
+function drawAD(){
+  const c=$('c-root'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f0a'; ctx.fillRect(0,0,900,560);
+  const X=450, base=470; const top=A.cut?150:108-A.tip;
+  // pot
+  ctx.fillStyle='#7a4a2c'; ctx.beginPath(); ctx.moveTo(X-110,470); ctx.lineTo(X+110,470); ctx.lineTo(X+88,552); ctx.lineTo(X-88,552); ctx.closePath(); ctx.fill(); ctx.fillStyle='#3b2a1d'; ctx.fillRect(X-108,466,216,10);
+  // roots hint with cytokinin arrows
+  for(let k=0;k<5;k++){ ctx.strokeStyle='rgba(243,239,224,.35)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(X,476); ctx.quadraticCurveTo(X+(k-2)*30,500,X+(k-2)*50,540); ctx.stroke(); }
+  // stem
+  line(ctx,X,base,X,top,'#5fae3e',9);
+  // cytokinin arrows up, auxin arrows down
+  for(let k=0;k<4;k++){ const y=440-k*80; ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.moveTo(X-22,y-10); ctx.lineTo(X-28,y); ctx.lineTo(X-16,y); ctx.closePath(); ctx.fill(); line(ctx,X-22,y,X-22,y+18,'#c9a0ff',2); }
+  const src=A.cut&&!A.paste?0:1;
+  if(src){ for(let k=0;k<4;k++){ const y=top+40+k*78; if(y>base-20) continue; const al=Math.exp(-(y-top)/250); ctx.fillStyle='rgba(255,159,28,'+al+')'; ctx.beginPath(); ctx.moveTo(X+22,y+10); ctx.lineTo(X+16,y); ctx.lineTo(X+28,y); ctx.closePath(); ctx.fill(); ctx.strokeStyle='rgba(255,159,28,'+al+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(X+22,y-18); ctx.lineTo(X+22,y); ctx.stroke(); } }
+  ctx.fillStyle='rgba(20,30,21,.9)'; rr(ctx,24,440,250,64,10); ctx.fill(); ctx.fillStyle='#ff9f1c'; ctx.beginPath(); ctx.moveTo(44,468); ctx.lineTo(38,458); ctx.lineTo(50,458); ctx.closePath(); ctx.fill(); txt(ctx,'auxin from the shoot tip, moving down',60,467,'#ffc26b','12px '+F,'left'); ctx.fillStyle='#c9a0ff'; ctx.beginPath(); ctx.moveTo(44,480); ctx.lineTo(38,490); ctx.lineTo(50,490); ctx.closePath(); ctx.fill(); txt(ctx,'cytokinin from the roots, moving up',60,489,'#d8c2ff','12px '+F,'left');
+  // tip
+  if(!A.cut){ ctx.fillStyle='#8fd16a'; ctx.beginPath(); ctx.moveTo(X,top-26); ctx.quadraticCurveTo(X+16,top-6,X+4,top+4); ctx.lineTo(X-4,top+4); ctx.quadraticCurveTo(X-16,top-6,X,top-26); ctx.fill(); ctx.beginPath(); ctx.ellipse(X-20,top+8,18,7,0.5,0,7); ctx.ellipse(X+20,top+8,18,7,-0.5,0,7); ctx.fill(); txt(ctx,'shoot tip (apical bud)',X+30,top-14,'#d6f5c0','700 12px '+F,'left'); }
+  else { line(ctx,X-8,top,X+8,top,'#cfd8c8',3); if(A.paste){ ctx.fillStyle='#ffb347'; ctx.beginPath(); ctx.ellipse(X,top-4,14,8,0,0,7); ctx.fill(); txt(ctx,'auxin paste',X+22,top-2,'#ffc26b','700 12px '+F,'left'); } else txt(ctx,'cut',X+16,top+4,'#cfd8c8','700 12px '+F,'left'); }
+  // nodes: leaves and buds/branches
+  NODES.forEach((n,i)=>{ const side=i%2?-1:1; const y=n.y;
+    // leaf
+    ctx.fillStyle='#4f9a33'; ctx.save(); ctx.translate(X-side*6,y); ctx.rotate(side>0?-2.4:-0.7); ctx.beginPath(); ctx.ellipse(34,0,36,12,0,0,7); ctx.fill(); ctx.restore();
+    const g=A.g[i];
+    if(g<0.04){ ctx.fillStyle='#a8d672'; ctx.beginPath(); ctx.moveTo(X+side*5,y-2); ctx.lineTo(X+side*16,y-10); ctx.lineTo(X+side*8,y+4); ctx.closePath(); ctx.fill(); txt(ctx,'dormant bud',X+side*22,y-8,'#cfe7b5','11px '+F,side>0?'left':'right'); }
+    else { const Lb=g*150; const ex=X+side*Lb*0.8, ey=y-Lb*0.6; line(ctx,X,y,ex,ey,'#5fae3e',5); for(let j=1;j<=Math.floor(Lb/30);j++){ const fx=X+(ex-X)*j*30/Lb, fy=y+(ey-y)*j*30/Lb; ctx.fillStyle='#78c850'; ctx.beginPath(); ctx.ellipse(fx,fy-9,10,5,0.4*side,0,7); ctx.fill(); } ctx.fillStyle='#8fd16a'; ctx.beginPath(); ctx.arc(ex,ey,5,0,7); ctx.fill(); txt(ctx,'side shoot '+(Lb*0.1).toFixed(0)+' cm',ex+side*10,ey-6,'#d6f5c0','11px '+F,side>0?'left':'right'); }
+    if(i===0&&A.cytBud){ ctx.fillStyle='rgba(201,160,255,.7)'; ctx.beginPath(); ctx.arc(X+side*12,y-4,9,0,7); ctx.fill(); txt(ctx,'cytokinin',X+side*30,y+14,'#d8c2ff','700 11px '+F,side>0?'left':'right'); }
+  });
+  txt(ctx,'week '+A.w.toFixed(1),860,36,'#e7f3e2','800 20px '+FD,'right');
+  let s='';
+  if(A.w===0) s='Auxin made in the shoot tip moves down the stem and keeps the side buds near the top dormant: this is <b>apical dominance</b>. Cytokinin from the roots moves up and promotes bud growth. Change something, then grow the plant.';
+  else if(!A.cut&&!A.cytBud) s='With the tip in place, the upper buds get a lot of auxin and stay dormant. Only the lowest bud, furthest from the tip, grows a little: there the cytokinin from the roots outweighs the auxin.';
+  else if(A.cut&&!A.paste) s='Without the tip, auxin no longer reaches the buds. Cytokinin now wins, so the side buds grow into shoots. Gardeners pinch off shoot tips to make bushier plants.';
+  else if(A.cut&&A.paste) s='The auxin paste replaces the tip, and the buds stay dormant. So it is the auxin coming from the tip, not the tip itself, that holds the buds back.';
+  else s='Extra cytokinin on the top bud outweighs the auxin from the tip, so that bud grows even though the tip is still there. It is the <b>balance</b> of auxin and cytokinin that decides.';
+  if(A.cytBud&&A.cut) s+=' The cytokinin on the top bud makes it grow even faster.';
+  $('r-h').textContent='Buds and the shoot tip'; $('r-say').innerHTML=s;
+  $('r-stat').innerHTML='<span>Shoot tip</span><b>'+(A.cut?(A.paste?'cut, auxin paste':'cut off'):'in place')+'</b><span>Side shoots growing</span><b>'+A.g.filter(g=>g>=0.04).length+' of 4</b><span>Longest side shoot</span><b>'+(Math.max(...A.g)*15).toFixed(0)+' cm</b>';
+  $('a-cut').disabled=A.cut; $('a-paste').disabled=!A.cut||A.paste; $('a-cyt').disabled=A.cytBud;
+}
+function rTick(dt){
+  if(R.mode==='tc'&&R.grow){ R.w=Math.min(4,R.w+dt*1.2); if(R.w>=4) R.grow=false; }
+  if(R.mode==='ad'&&A.grow){ const dw=Math.min(dt*1.0,3-A.w); A.w+=dw; for(let i=0;i<4;i++) A.g[i]=Math.min(1,A.g[i]+budRate(i)*dw/3); if(!A.cut) A.tip=Math.min(60,A.tip+dw*20); if(A.w>=3) A.grow=false; }
+}
+function setMode(m){ R.mode=m; $('r-tc').setAttribute('aria-pressed',m==='tc'); $('r-ad').setAttribute('aria-pressed',m==='ad'); $('r-tc-ctl').hidden=m!=='tc'; $('r-ad-ctl').hidden=m!=='ad'; drawRoot(); }
+$('r-tc').onclick=()=>setMode('tc'); $('r-ad').onclick=()=>setMode('ad');
+$('s-aux').oninput=e=>{ R.aux=+e.target.value; R.w=0; R.res=null; R.grow=false; drawRoot(); };
+$('s-cyt').oninput=e=>{ R.cyt=+e.target.value; R.w=0; R.res=null; R.grow=false; drawRoot(); };
+document.querySelectorAll('[data-mix]').forEach(b=>b.onclick=()=>{ const m=b.dataset.mix.split(',').map(Number); R.aux=m[0]; R.cyt=m[1]; $('s-aux').value=m[0]; $('s-cyt').value=m[1]; R.w=0; R.res=null; R.grow=false; drawRoot(); });
+$('r-grow').onclick=()=>{ R.w=0; R.res=tcOutcome(R.aux,R.cyt); R.grow=true; };
+$('r-tcreset').onclick=()=>{ R.w=0; R.res=null; R.grow=false; drawRoot(); };
+function aReset(){ A.cut=false; A.paste=false; A.cytBud=false; A.w=0; A.grow=false; A.g=[0,0,0,0]; A.tip=0; drawRoot(); }
+$('a-cut').onclick=()=>{ A.cut=true; A.w=0; A.g=[0,0,0,0]; drawRoot(); }; $('a-paste').onclick=()=>{ A.paste=true; A.w=0; A.g=[0,0,0,0]; drawRoot(); };
+$('a-cyt').onclick=()=>{ A.cytBud=true; A.w=0; A.g=[0,0,0,0]; drawRoot(); }; $('a-reset').onclick=aReset;
+$('a-grow').onclick=()=>{ A.w=0; A.g=[0,0,0,0]; A.tip=0; A.grow=true; };
+
+/* ================= ETHYLENE ================= */
+const E={box:'open',temp:20,ripe:false,block:false,day:0,E:0,f:[],hist:[],run:false,half:null,mol:[]};
+const LEAK={open:15,bag:2,sealed:0.35};
+function eReset(){ seed=11; E.day=0; E.f=[]; for(let i=0;i<12;i++) E.f.push({r:0.02*rnd(),k:0.8+0.4*rnd()}); if(E.ripe) E.f.push({r:0.58,k:1,extra:true}); E.E=0.02; E.hist=[]; E.half=null; E.run=false; E.mol=[]; for(let i=0;i<60;i++) E.mol.push({x:rnd(),y:rnd(),vx:rnd()-0.5,vy:rnd()-0.5}); $('e-run').disabled=false; drawEth(); }
+const prodOf=r=>0.02+1.2*clamp((r-0.15)/0.3,0,1)*(r>0.85?0.6:1);
+function tf(){ return E.temp===4?0.08:E.temp===30?1.6:1; }
+function eStep(dt){ // dt in days
+  const sub=Math.max(1,Math.round(dt/0.02)), h=dt/sub;
+  for(let s=0;s<sub;s++){
+    let P=0; for(const f of E.f) P+=prodOf(f.r)*(E.temp===4?0.15:1);
+    E.E+= (P - LEAK[E.box]*E.E)*h*(E.box==='open'?1:1);
+    E.E=Math.max(0,E.E);
+    const resp=E.block?0:E.E/(E.E+0.5);
+    for(const f of E.f){ f.r=Math.min(1, f.r + tf()*f.k*(0.02+0.3*resp)*(f.r>0.5?0.45:1)*h); }
+    E.day+=h; if(E.half===null){ let n=0; for(const q of E.f) if(!q.extra&&q.r>=0.5) n++; if(n>=6) E.half=E.day; }
+  }
+  const main=E.f.filter(f=>!f.extra); const nr=main.filter(f=>f.r>=0.5).length;
+  if(E.half===null&&nr>=6) E.half=E.day;
+  if(!E.hist.length||E.day-E.hist[E.hist.length-1][0]>=0.05) E.hist.push([E.day,E.E,main.reduce((a,f)=>a+f.r,0)/main.length]);
+  if(E.day>=12){ E.run=false; $('e-run').disabled=false; }
+}
+function banana(ctx,x,y,s,r,rot){
+  ctx.save(); ctx.translate(x,y); ctx.rotate(rot); ctx.scale(s,s);
+  let col; if(r<0.5){ const t=r/0.5; col='rgb('+Math.round(95+(242-95)*t)+','+Math.round(158+(208-158)*t)+','+Math.round(58+(59-58)*t)+')'; } else { const t=(r-0.5)/0.5; col='rgb('+Math.round(242-(242-120)*t*t)+','+Math.round(208-(208-80)*t*t)+','+Math.round(59-(59-30)*t*t)+')'; }
+  ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(-46,-4); ctx.quadraticCurveTo(0,34,46,-6); ctx.quadraticCurveTo(48,-12,44,-14); ctx.quadraticCurveTo(0,14,-44,-14); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.25)'; ctx.lineWidth=1.2; ctx.stroke();
+  ctx.fillStyle='#4a3a1c'; ctx.beginPath(); ctx.arc(-46,-9,3.5,0,7); ctx.fill(); ctx.fillStyle='#6b5a2a'; ctx.fillRect(44,-16,7,5);
+  if(r>0.55){ const n=Math.round((r-0.55)*60); for(let k=0;k<n;k++){ const u=hsh(k*1.7+x)*80-40; const v=hsh(k*2.9+y)*10; ctx.fillStyle='rgba(70,45,20,.75)'; ctx.beginPath(); ctx.arc(u,u*u*0.006+v-4,1.4+hsh(k)*1.6,0,7); ctx.fill(); } }
+  ctx.restore();
+}
+function drawEth(){
+  const c=$('c-eth'), ctx=c.getContext('2d'); ctx.fillStyle='#0a0f0a'; ctx.fillRect(0,0,900,560);
+  // container
+  const bx=30, by=40, bw=470, bh=300;
+  if(E.box==='open'){ ctx.fillStyle='#3a2c22'; ctx.beginPath(); ctx.moveTo(bx,by+62); ctx.quadraticCurveTo(bx+bw/2,by+bh+200,bx+bw,by+62); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#6b5240'; ctx.lineWidth=4; ctx.beginPath(); ctx.ellipse(bx+bw/2,by+62,bw/2,14,0,0,7); ctx.stroke(); txt(ctx,'open bowl: ethylene escapes',bx+bw/2,by+bh+22,'#d6c7b8','700 13px '+F); }
+  else if(E.box==='bag'){ ctx.fillStyle='rgba(196,160,110,.22)'; rr(ctx,bx,by,bw,bh,20); ctx.fill(); ctx.strokeStyle='#c4a06e'; ctx.lineWidth=3; ctx.stroke(); txt(ctx,'paper bag: some ethylene escapes',bx+bw/2,by+bh+22,'#e2c9a0','700 13px '+F); }
+  else { ctx.fillStyle='rgba(200,230,255,.07)'; rr(ctx,bx,by,bw,bh,14); ctx.fill(); ctx.strokeStyle='rgba(200,230,255,.6)'; ctx.lineWidth=3; ctx.stroke(); txt(ctx,'sealed box: ethylene builds up',bx+bw/2,by+bh+22,'#cfe8ff','700 13px '+F); }
+  // ethylene molecules
+  const nm=Math.round(clamp(Math.log10(E.E*100+1)/3.3,0,1)*60);
+  for(let i=0;i<nm;i++){ const m=E.mol[i]; const x=bx+10+m.x*(bw-20), y=by+10+m.y*(bh-20); ctx.fillStyle='rgba(150,240,200,.8)'; ctx.beginPath(); ctx.arc(x-3,y,3,0,7); ctx.arc(x+3,y,3,0,7); ctx.fill(); }
+  // bananas in 3 rows
+  E.f.forEach((f,i)=>{ const extra=!!f.extra; const col=i%4, row=Math.floor(i/4); const x=extra?bx+bw-70:bx+80+col*105, y=extra?by+40:by+100+row*70; banana(ctx,x,y,0.95,f.r,-0.15+((i*37)%10-5)*0.02); if(extra) txt(ctx,'ripe banana added',x,y-26,'#ffe08a','700 12px '+F); });
+  if(E.block) txt(ctx,'1-MCP blocks the ethylene receptors',bx+bw/2,by+20,'#ffb3b3','700 12px '+F);
+  // graph
+  const X=560,Y=40,Wd=310,H=300, gx=d=>X+d/12*Wd;
+  ctx.fillStyle='#101810'; rr(ctx,X-40,Y-20,Wd+70,H+70,10); ctx.fill();
+  for(let d=0;d<=12;d+=2){ line(ctx,gx(d),Y,gx(d),Y+H,'rgba(205,235,200,.1)'); txt(ctx,String(d),gx(d),Y+H+16,'#b9c9b5','11px '+F); }
+  txt(ctx,'days',X+Wd/2,Y+H+34,'#b9c9b5','700 11px '+F);
+  for(let v=0;v<=1;v+=0.25){ line(ctx,X,Y+H-v*H,X+Wd,Y+H-v*H,'rgba(205,235,200,.1)'); }
+  txt(ctx,'green',X-6,Y+H+4,'#8fd16a','10px '+F,'right'); txt(ctx,'ripe',X-6,Y+H/2+4,'#ffd166','10px '+F,'right'); txt(ctx,'brown',X-6,Y+4,'#c48a4a','10px '+F,'right');
+  line(ctx,X,Y+H/2,X+Wd,Y+H/2,'rgba(255,209,102,.35)',1);
+  const ey=e=>Y+H-clamp(Math.log10(e/0.01)/3,0,1)*H; // log scale 0.01 to 10 ppm
+  ctx.strokeStyle='#7ee0c0'; ctx.lineWidth=2.5; ctx.beginPath(); E.hist.forEach((p,i)=>i?ctx.lineTo(gx(p[0]),ey(p[1])):ctx.moveTo(gx(p[0]),ey(p[1]))); ctx.stroke();
+  ctx.strokeStyle='#ffd166'; ctx.lineWidth=3; ctx.beginPath(); E.hist.forEach((p,i)=>i?ctx.lineTo(gx(p[0]),Y+H-p[2]*H):ctx.moveTo(gx(p[0]),Y+H-p[2]*H)); ctx.stroke();
+  for(const [v,l] of [[0.01,'0.01'],[0.1,'0.1'],[1,'1'],[10,'10']]) txt(ctx,l,X+Wd+6,ey(v)+4,'#7ee0c0','10px '+F,'left');
+  txt(ctx,'ethylene / ppm',X+Wd+24,Y-6,'#7ee0c0','700 11px '+F,'right'); txt(ctx,'average ripeness',X,Y-6,'#ffd166','700 11px '+F,'left');
+  // feedback loop diagram
+  const fx=150, fy=440;
+  ctx.fillStyle='#141e15'; rr(ctx,30,385,470,160,12); ctx.fill();
+  txt(ctx,'Positive feedback',265,408,'#e7f3e2','800 15px '+FD);
+  const act=E.E>0.3&&!E.block;
+  ctx.fillStyle=act?'rgba(126,224,192,.25)':'rgba(126,224,192,.08)'; rr(ctx,60,428,170,50,10); ctx.fill(); txt(ctx,'ethylene in the air',145,458,'#bff5e2','700 13px '+F);
+  ctx.fillStyle=act?'rgba(255,209,102,.25)':'rgba(255,209,102,.08)'; rr(ctx,300,428,170,50,10); ctx.fill(); txt(ctx,'fruit ripens and',385,450,'#ffe7a8','700 13px '+F); txt(ctx,'makes more ethylene',385,467,'#ffe7a8','700 13px '+F);
+  ctx.strokeStyle=act?'#e7f3e2':'#55615a'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(232,440); ctx.quadraticCurveTo(265,418,298,440); ctx.stroke(); ctx.beginPath(); ctx.moveTo(298,470); ctx.quadraticCurveTo(265,494,232,470); ctx.stroke();
+  txt(ctx,'triggers',265,420,act?'#e7f3e2':'#66726b','11px '+F); txt(ctx,'adds to',265,505,act?'#e7f3e2':'#66726b','11px '+F);
+  txt(ctx,E.block?'loop broken: the fruit cannot respond':act?'loop running':'loop not started yet',265,530,E.block?'#ffb3b3':act?'#b9f18c':'#9aa89a','700 12px '+F);
+  txt(ctx,'day '+E.day.toFixed(1),880,385,'#e7f3e2','800 20px '+FD,'right');
+  // text
+  const main=E.f.filter(f=>!f.extra); const nr=main.filter(f=>f.r>=0.5).length;
+  let s;
+  if(E.day<0.05) s='Twelve green bananas. Unripe fruit makes only a trace of <b>ethylene</b> gas. Choose where to keep them and run the experiment.';
+  else if(E.block) s='The blocker sits on the ethylene receptors, so the fruit cannot respond to the gas. Ripening hardly starts, which shows that ethylene acts through receptors in the fruit cells.';
+  else if(E.temp===4) s='In the fridge the enzymes of ripening work very slowly, so the bananas stay green for longer. (Real bananas kept this cold get brown skins from chilling damage without ripening properly.)';
+  else if(nr===0) s='Ethylene is building up slowly. Once a fruit starts ripening, it makes much more ethylene, which reaches the others.';
+  else if(nr<12) s='Ripening is spreading. Each ripening banana releases ethylene, which makes its neighbours ripen and release more: a self-reinforcing loop called <b>positive feedback</b>. Ripening turns starch to sugars, softens the fruit and changes its colour.';
+  else s='All the bananas are ripe. Positive feedback makes fruit on the same plant or in the same box ripen together, which helps attract animals that eat the fruit and spread the seeds.';
+  if(E.box==='bag'&&E.day>0.05) s+=' The bag keeps more ethylene near the fruit.';
+  if(E.box==='sealed'&&E.day>0.05) s+=' In the sealed box the gas cannot escape at all.';
+  $('e-say').innerHTML=s; $('e-day').textContent=E.day.toFixed(1); $('e-E').textContent=E.E<0.1?E.E.toFixed(3)+' ppm':E.E.toFixed(2)+' ppm'; $('e-n').textContent=nr+' of 12'; $('e-half').textContent=E.half===null?'not yet':E.half.toFixed(1);
+}
+document.querySelectorAll('[data-box]').forEach(b=>b.onclick=()=>{ E.box=b.dataset.box; document.querySelectorAll('[data-box]').forEach(x=>x.setAttribute('aria-pressed',x===b)); eReset(); });
+document.querySelectorAll('[data-temp]').forEach(b=>b.onclick=()=>{ E.temp=+b.dataset.temp; document.querySelectorAll('[data-temp]').forEach(x=>x.setAttribute('aria-pressed',x===b)); eReset(); });
+$('e-ripe').onchange=e=>{ E.ripe=e.target.checked; eReset(); }; $('e-block').onchange=e=>{ E.block=e.target.checked; eReset(); };
+$('e-run').onclick=()=>{ if(E.day>=12||E.day>0) eReset(); E.run=true; $('e-run').disabled=true; }; $('e-reset').onclick=eReset;
+
+/* ================= LOOP AND TABS ================= */
+function draw(){ if(tab==='photo') drawPhoto(); else if(tab==='cell') drawCell(); else if(tab==='root') drawRoot(); else drawEth(); }
+function stepN(n){ const dt=1/60; for(let i=0;i<n;i++) tickAll(dt); draw(); }
+function tickAll(dt){
+  if(tab==='photo'&&P.running) pStep(dt*0.7);
+  if(tab==='cell') cTick(dt);
+  if(tab==='root') rTick(dt);
+  if(tab==='eth'&&E.run){ eStep(dt*1.3); for(const m of E.mol){ m.x+=m.vx*0.004; m.y+=m.vy*0.004; if(m.x<0||m.x>1) m.vx*=-1; if(m.y<0||m.y>1) m.vy*=-1; m.x=clamp(m.x,0,1); m.y=clamp(m.y,0,1); } }
+}
+let last=0; function loop(t){ const dt=Math.min(0.05,(t-last)/1000||0.016); last=t; if(!$('lab').hidden){ tickAll(dt); draw(); } requestAnimationFrame(loop); }
+const TABS=['photo','cell','root','eth'];
+function showTab(t){ tab=t; for(const k of TABS){ $('p-'+k).hidden=k!==t; $('t-'+k).setAttribute('aria-pressed',k===t); } draw(); }
+for(const k of TABS) $('t-'+k).onclick=()=>showTab(k);
+function start(){ $('intro').hidden=true; $('lab').hidden=false; draw(); }
+$('b-start').onclick=start;
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ start(); showTab(h); } }
+eReset(); fromHash(); window.addEventListener('hashchange',fromHash);
+requestAnimationFrame(loop);
+window.tropDebug={P,C,R,A,E,step:stepN,showTab,setMode,flows,outcome,pRun,eStep,eReset,start};
+})();
+</script>
+
+</body>
+</html>

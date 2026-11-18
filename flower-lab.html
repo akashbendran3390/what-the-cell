@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Flower and Seed Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/flower-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Flower and Seed Lab">
+<meta property="og:description" content="Flower and Seed Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/flower-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Flower and Seed Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#110c14; --ink:#f7f1f8; --dim:#c7b9cc; --panel:#1a131e; --panel2:#251b2b; --line:rgba(235,210,245,.18);
+  --accent:#ffb84d;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2a1700}
+.grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:12px}
+canvas{display:block;width:100%;height:auto;border-radius:12px;background:#0c0810}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2a1700;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+button:disabled{opacity:.45;cursor:default}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:820px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:72px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.slider{display:flex;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}.slider label{min-width:150px}.slider input{flex:1;min-width:140px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chk{display:flex;gap:6px;align-items:center;font-size:14px;margin:3px 0}
+.lab-l{font-size:13px;color:var(--dim);min-width:92px}
+select{font:700 14px var(--body);background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;max-width:100%}
+table.cmp{width:100%;border-collapse:collapse;font-size:13px}table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:5px 4px;text-align:left;vertical-align:top}table.cmp th{color:var(--accent)}
+.quizmsg{font-weight:700;min-height:22px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Flower and Seed Lab</h1><div class="sub">DP Biology D3.1 &middot; sexual reproduction in flowering plants</div></div>
+    <div class="seg" role="group" aria-label="Choose a part of the lab">
+      <button type="button" id="t-flow" aria-pressed="true">Pollination to seed</button>
+      <button type="button" id="t-cross" aria-pressed="false">Cross-pollination</button>
+      <button type="button" id="t-seed" aria-pressed="false">Seeds: dispersal and germination</button>
+    </div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>From flower to seedling</h2>
+    <p>Follow pollen from one flower to another, grow a pollen tube down to an ovule and watch the flower turn into a fruit. Then find out why plants go to so much trouble to avoid pollinating themselves, scatter seeds as far as they can, and test what a seed needs before it will germinate.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+
+  <!-- POLLINATION TO SEED -->
+  <div id="p-flow"><div class="grid">
+    <div><div class="card">
+      <div class="row"><div class="seg" role="group" aria-label="Type of flower"><button type="button" id="f-ins" aria-pressed="true">Insect-pollinated</button><button type="button" id="f-wind" aria-pressed="false">Wind-pollinated</button></div></div>
+      <canvas id="c-flow" width="900" height="560" aria-label="Two flowers, one cut in half, with a pollinator carrying pollen between them"></canvas>
+      <div class="row"><button type="button" class="btn" id="f-back">&larr; Back</button><button type="button" class="go" id="f-next">Next step &rarr;</button><button type="button" class="btn" id="f-play">Play all</button><button type="button" class="btn" id="f-reset">Start again</button><button type="button" class="btn" id="f-quiz">Label quiz</button></div>
+      <p class="quizmsg" id="f-qmsg" aria-live="polite"></p>
+    </div></div>
+    <div>
+      <div class="card"><h2 id="f-h"></h2><div class="explain"><p id="f-say"></p></div>
+        <div class="stat" style="margin-top:10px"><span>Step</span><b id="f-n"></b><span>Pollen grains on the stigma</span><b id="f-pol"></b></div>
+        <p class="note">Syllabus: D3.1.8, D3.1.9</p></div>
+      <div class="card"><h2>Compare the two flowers</h2>
+        <table class="cmp"><tr><th>Feature</th><th>Insect-pollinated</th><th>Wind-pollinated</th></tr>
+          <tr><td>Petals</td><td>large, coloured, often scented, with guide lines</td><td>small, green or absent</td></tr>
+          <tr><td>Nectar</td><td>made in nectaries as a reward</td><td>none</td></tr>
+          <tr><td>Anthers</td><td>inside the flower, where the insect brushes them</td><td>hang outside on long filaments</td></tr>
+          <tr><td>Stigma</td><td>sticky, inside the flower</td><td>large and feathery, outside the flower</td></tr>
+          <tr><td>Pollen</td><td>less of it, larger, sticky or spiky grains</td><td>huge amounts, small, light and smooth</td></tr></table></div>
+    </div>
+  </div></div>
+
+  <!-- CROSS-POLLINATION -->
+  <div id="p-cross" hidden><div class="grid">
+    <div><div class="card">
+      <div class="row"><div class="seg" role="group" aria-label="Choose an experiment"><button type="button" id="x-si" aria-pressed="true">Self-incompatibility test</button><button type="button" id="x-mead" aria-pressed="false">A meadow over generations</button></div></div>
+      <canvas id="c-cross" width="900" height="560" aria-label="Cross-pollination experiment"></canvas>
+      <div id="x-si-ctl">
+        <div class="row"><span class="lab-l">Stigma of plant</span><select id="x-stig" aria-label="Genotype of the plant receiving pollen"><option value="1,2">S1 S2</option><option value="2,3">S2 S3</option><option value="3,4">S3 S4</option></select>
+          <span class="lab-l">Pollen from</span><select id="x-don" aria-label="Plant the pollen comes from"><option value="self">the same plant</option><option value="1,3">a plant that is S1 S3</option><option value="3,4">a plant that is S3 S4</option><option value="5,6">a plant that is S5 S6</option></select></div>
+        <div class="row"><button type="button" class="go" id="x-pol">Pollinate</button></div>
+      </div>
+      <div id="x-mead-ctl" hidden>
+        <div class="row"><label class="chk"><input type="checkbox" id="m-si"> Self-incompatibility</label><label class="chk"><input type="checkbox" id="m-dich"> Stamens and stigma ripen at different times</label><label class="chk"><input type="checkbox" id="m-dio"> Separate male and female plants</label></div>
+        <div class="row"><button type="button" class="go" id="m-run">Run 15 generations</button><button type="button" class="btn" id="m-one">One generation</button><button type="button" class="btn" id="m-reset">New meadow</button><button type="button" class="btn" id="m-clear">Clear graph</button></div>
+      </div>
+    </div></div>
+    <div>
+      <div class="card"><h2 id="x-h"></h2><div class="explain"><p id="x-say"></p></div>
+        <div class="stat" style="margin-top:10px" id="x-stat"></div>
+        <p class="note">Syllabus: D3.1.10, D3.1.11</p></div>
+      <div class="card"><h2>Check yourself</h2><ol class="tasks">
+        <li>Why can a plant never fertilize itself if it has self-incompatibility?</li>
+        <li>Pollen from an S1 S3 plant lands on an S1 S2 stigma. What fraction of the grains can grow a tube?</li>
+        <li>In the meadow, what happens to the share of plants with two different alleles when most seeds come from selfing?</li>
+        <li>Why is genetic variation useful to a population of plants?</li>
+      </ol></div>
+    </div>
+  </div></div>
+
+  <!-- SEEDS -->
+  <div id="p-seed" hidden><div class="grid">
+    <div><div class="card">
+      <div class="row"><div class="seg" role="group" aria-label="Choose an experiment"><button type="button" id="s-disp" aria-pressed="true">Seed dispersal</button><button type="button" id="s-germ" aria-pressed="false">Germination</button></div></div>
+      <canvas id="c-seed" width="900" height="560" aria-label="Seed experiment"></canvas>
+      <div id="s-disp-ctl">
+        <div class="row"><span class="lab-l">Plant</span><select id="d-plant" aria-label="Plant">
+          <option value="dand">Dandelion: parachute (wind)</option><option value="maple">Maple: winged fruit (wind)</option><option value="burd">Burdock: hooks (animal fur)</option><option value="cherry">Cherry: fleshy fruit (eaten by birds)</option><option value="gorse">Gorse: pod that bursts (explosive)</option><option value="coco">Coconut: floats (water)</option></select></div>
+        <div class="slider" id="d-windrow"><label for="d-wind">Wind speed</label><input type="range" id="d-wind" min="1" max="12" step="1" value="5"><b id="d-windv"></b></div>
+        <div class="row"><button type="button" class="go" id="d-go">Release 40 seeds</button></div>
+      </div>
+      <div id="s-germ-ctl" hidden>
+        <div class="row"><span class="lab-l">Water</span><button type="button" class="btn" data-water="dry" aria-pressed="false">Dry cotton wool</button><button type="button" class="btn" data-water="moist" aria-pressed="true">Moist</button><button type="button" class="btn" data-water="flood" aria-pressed="false">Under water</button></div>
+        <div class="row"><span class="lab-l">Air</span><button type="button" class="btn" data-air="air" aria-pressed="true">Normal air</button><button type="button" class="btn" data-air="no" aria-pressed="false">No oxygen</button></div>
+        <div class="slider"><label for="g-temp">Temperature</label><input type="range" id="g-temp" min="0" max="45" step="1" value="22"><b id="g-tempv"></b></div>
+        <div class="row"><button type="button" class="go" id="g-run">Run 10 days</button><button type="button" class="btn" id="g-reset">New seeds</button></div>
+      </div>
+    </div></div>
+    <div>
+      <div class="card"><h2 id="s-h"></h2><div class="explain"><p id="s-say"></p></div>
+        <div class="stat" style="margin-top:10px" id="s-stat"></div>
+        <p class="note">Syllabus: D3.1.12. Distances and germination times are typical values.</p></div>
+      <div class="card"><h2>Check yourself</h2><ol class="tasks">
+        <li>Why is it an advantage for seeds to land far from the parent plant?</li>
+        <li>Which method spread seeds furthest? Which kept most of them within a few metres?</li>
+        <li>What three conditions do seeds need to germinate? Use your germination runs as evidence.</li>
+        <li>Why do seeds need oxygen to germinate? Link it to respiration.</li>
+      </ol></div>
+    </div>
+  </div></div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const F='Atkinson Hyperlegible, sans-serif', FD='Bricolage Grotesque, sans-serif';
+function txt(ctx,s,x,y,col,font,al){ ctx.fillStyle=col||'#f7f1f8'; ctx.font=font||'700 14px '+F; ctx.textAlign=al||'center'; ctx.fillText(s,x,y); }
+function rr(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function line(ctx,x1,y1,x2,y2,col,w){ ctx.strokeStyle=col; ctx.lineWidth=w||1; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); }
+function hsh(k){ return ((Math.sin(k*91.7+3.1)*43758.5)%1+1)%1; }
+let seed=5; const rnd=()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; };
+const gauss=()=>{ let u=0,v=0; while(!u) u=rnd(); v=rnd(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); };
+let tab='flow';
+
+/* ================= POLLINATION TO SEED ================= */
+const FS={ins:[
+ {h:'The parts of a flower',s:'The flower on the right is cut in half. The male parts are the <b>stamens</b>: an <b>anther</b> that makes pollen on a stalk called the <b>filament</b>. The female part is the <b>carpel</b>: a sticky <b>stigma</b>, a <b>style</b> and an <b>ovary</b> holding <b>ovules</b>. Each ovule contains a female gamete (egg cell). Try the label quiz.'},
+ {h:'A bee visits the first flower',s:'Bright petals, scent and guide lines lead the bee to the <b>nectar</b>, a sugary reward made by the nectaries. As it pushes in, the anthers brush pollen onto its hairy body.'},
+ {h:'Carrying pollen to another plant',s:'The bee flies to a flower on a <b>different plant</b> of the same species. Pollen carries the male gametes, so the bee is transferring them between plants.'},
+ {h:'Pollination',s:'Inside the second flower, pollen rubs off onto the sticky stigma. The transfer of pollen from an anther to a stigma is <b>pollination</b>. Because the pollen came from another plant, this is <b>cross-pollination</b>.'},
+ {h:'A pollen tube grows',s:'A pollen grain absorbs sugar and water from the stigma and grows a <b>pollen tube</b>. The tube grows down through the style towards an ovule, carrying the male gamete nuclei.'},
+ {h:'Fertilization',s:'The tube enters the ovule through a small gap (the micropyle). A male gamete nucleus fuses with the egg cell nucleus: this is <b>fertilization</b>. The result is a diploid <b>zygote</b>, which grows into the embryo.'},
+ {h:'Seed and fruit',s:'The fertilized ovule develops into a <b>seed</b>, with the embryo and a food store inside a tough coat. The ovary wall grows into the <b>fruit</b> around the seeds. Petals and stamens wither and fall off.'}
+],wind:[
+ {h:'The parts of a wind-pollinated flower',s:'Grasses have small green flowers with no petals or nectar. The <b>anthers</b> dangle outside the flower on long filaments, and the <b>stigmas</b> are large and feathery, like a net for catching pollen from the air.'},
+ {h:'Anthers release pollen',s:'When the anthers open, wind shakes out huge numbers of small, light, smooth pollen grains. One grass flower can release many thousands.'},
+ {h:'Pollen travels on the wind',s:'Pollen drifts in all directions. Most of it lands on the ground, on leaves or on the wrong species and is wasted, which is why wind-pollinated plants make so much.'},
+ {h:'Pollination',s:'A few grains are caught by the feathery stigma of a flower on another plant. This is <b>pollination</b>; as the pollen came from another plant, it is cross-pollination.'},
+ {h:'A pollen tube grows',s:'As in insect-pollinated flowers, a pollen tube grows from the grain down to the ovule, carrying the male gamete nuclei.'},
+ {h:'Fertilization',s:'A male gamete nucleus fuses with the egg cell nucleus in the ovule, forming a zygote.'},
+ {h:'Seed and fruit',s:'The ovule becomes a seed. In grasses the fruit wall and the seed coat join together to make a grain, such as a grain of wheat or rice.'}
+]};
+const FL={type:'ins',step:0,u:1,play:false,t:0,quiz:null,qScore:0,qDone:0};
+// flower B geometry (cut open)
+const B={x:640,rec:430,ovY:384,stY:236};
+const PARTS=[
+ {k:'stigma',n:'stigma',x:640,y:232,r:16},{k:'style',n:'style',x:640,y:300,r:11},{k:'ovule',n:'ovule',x:640,y:384,r:9},{k:'ovary',n:'ovary',x:612,y:392,r:16},
+ {k:'anther',n:'anther',x:578,y:262,r:15},{k:'filament',n:'filament',x:592,y:330,r:10},{k:'petal',n:'petal',x:520,y:236,r:30},{k:'sepal',n:'sepal',x:584,y:444,r:14},{k:'nectary',n:'nectary',x:665,y:428,r:10}
+];
+function petalPath(ctx,cx,cy,ang,len,wid){ ctx.save(); ctx.translate(cx,cy); ctx.rotate(ang); ctx.beginPath(); ctx.moveTo(0,0); ctx.bezierCurveTo(-wid,-len*0.35,-wid*0.8,-len,0,-len); ctx.bezierCurveTo(wid*0.8,-len,wid,-len*0.35,0,0); ctx.restore(); }
+function drawWholeInsect(ctx,x,y,s,wilt){ // side view flower A
+  line(ctx,x,y+150*s,x,y+12,'#4f8f3a',7*s);
+  ctx.fillStyle='#4f8f3a'; ctx.beginPath(); ctx.ellipse(x-36*s,y+100*s,34*s,11*s,0.5,0,7); ctx.fill();
+  const cols=['#ff7eb6','#ff8fc0'];
+  for(let k=0;k<7;k++){ const a=-1.35+k*0.45; ctx.fillStyle=cols[k%2]; petalPath(ctx,x,y,a,92*s*(1-wilt*0.4),34*s); ctx.fill(); ctx.strokeStyle='rgba(120,20,70,.35)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.strokeStyle='rgba(150,30,90,.45)'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+Math.sin(a)*48*s,y-Math.cos(a)*48*s); ctx.stroke(); }
+  ctx.fillStyle='#3f7d2f'; ctx.beginPath(); ctx.ellipse(x,y+6,26*s,10*s,0,0,7); ctx.fill();
+  for(let k=0;k<5;k++){ const a=-0.6+k*0.3; const ex=x+Math.sin(a)*58*s, ey=y-Math.cos(a)*58*s; line(ctx,x,y,ex,ey,'#f3e3a6',2); ctx.fillStyle='#ffcc33'; ctx.beginPath(); ctx.ellipse(ex,ey,6*s,4*s,a,0,7); ctx.fill(); }
+  line(ctx,x,y,x,y-64*s,'#bde08a',3); ctx.fillStyle='#d9f29a'; ctx.beginPath(); ctx.arc(x,y-66*s,6*s,0,7); ctx.fill();
+}
+function drawSection(ctx,st,u){ // insect flower B cut open
+  const {x,rec,ovY,stY}=B; const fruit=st>=6?u:0, wilt=fruit;
+  line(ctx,x,548,x,rec+4,'#4f8f3a',9);
+  ctx.fillStyle='#4f8f3a'; ctx.beginPath(); ctx.ellipse(x+44,500,40,12,-0.5,0,7); ctx.fill();
+  // receptacle
+  ctx.fillStyle='#5fa043'; ctx.beginPath(); ctx.moveTo(x-46,rec); ctx.quadraticCurveTo(x,rec+30,x+46,rec); ctx.lineTo(x+30,rec-14); ctx.lineTo(x-30,rec-14); ctx.closePath(); ctx.fill();
+  // sepals
+  ctx.fillStyle='#3f7d2f'; for(const sd of [-1,1]){ ctx.beginPath(); ctx.moveTo(x+sd*30,rec-4); ctx.quadraticCurveTo(x+sd*70,rec+4,x+sd*84,rec-26); ctx.quadraticCurveTo(x+sd*58,rec-12,x+sd*30,rec-14); ctx.closePath(); ctx.fill(); }
+  // petals in section (falling away as fruit forms)
+  if(wilt<1){ ctx.save(); ctx.globalAlpha=1-wilt; for(const sd of [-1,1]){ ctx.save(); ctx.translate(0,wilt*80); ctx.fillStyle='#ff7eb6'; ctx.beginPath(); ctx.moveTo(x+sd*34,rec-12); ctx.bezierCurveTo(x+sd*90,rec-6,x+sd*185,stY+60,x+sd*150,stY-40); ctx.bezierCurveTo(x+sd*112,stY+4,x+sd*56,rec-80,x+sd*44,rec-14); ctx.closePath(); ctx.fill(); ctx.strokeStyle='rgba(150,30,90,.5)'; ctx.lineWidth=1.3; ctx.beginPath(); ctx.moveTo(x+sd*44,rec-20); ctx.bezierCurveTo(x+sd*80,rec-70,x+sd*110,stY+20,x+sd*138,stY-26); ctx.stroke(); ctx.restore(); } ctx.restore(); }
+  // nectaries
+  ctx.fillStyle='#ffe066'; for(const sd of [-1,1]){ ctx.beginPath(); ctx.ellipse(x+sd*25,rec-12,7,4,0,0,7); ctx.fill(); }
+  // stamens
+  if(wilt<1){ ctx.save(); ctx.globalAlpha=1-wilt; for(const sd of [-1,1]){ ctx.strokeStyle='#f3e3a6'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x+sd*36,rec-14); ctx.quadraticCurveTo(x+sd*58,330,x+sd*62,272); ctx.stroke(); ctx.fillStyle='#ffcc33'; ctx.beginPath(); ctx.ellipse(x+sd*62,262,9,15,sd*0.2,0,7); ctx.fill(); ctx.fillStyle='#ffe58a'; for(let k=0;k<6;k++){ ctx.beginPath(); ctx.arc(x+sd*62+(hsh(k+sd)*10-5),258+hsh(k*3)*14,1.8,0,7); ctx.fill(); } } ctx.restore(); }
+  // carpel: ovary -> fruit
+  const ow=34+fruit*46, oh=36+fruit*44;
+  ctx.fillStyle=fruit>0.3?'rgb('+Math.round(120+120*fruit)+','+Math.round(160-60*fruit)+',60)':'#8cc152'; ctx.beginPath(); ctx.ellipse(x,ovY-fruit*20,ow,oh,0,0,7); ctx.fill(); ctx.strokeStyle='#4a7a2a'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle='rgba(20,40,10,.35)'; ctx.beginPath(); ctx.ellipse(x,ovY-fruit*20,ow-8,oh-8,0,0,7); ctx.fill();
+  if(wilt<1){ ctx.save(); ctx.globalAlpha=1-wilt; ctx.fillStyle='#a8d672'; ctx.beginPath(); ctx.moveTo(x-6,ovY-34); ctx.lineTo(x-5,stY+8); ctx.lineTo(x+5,stY+8); ctx.lineTo(x+6,ovY-34); ctx.closePath(); ctx.fill(); ctx.fillStyle='#d9f29a'; ctx.beginPath(); ctx.ellipse(x,stY,17,9,0,0,7); ctx.fill(); for(let k=0;k<7;k++){ ctx.fillStyle='#c4e57a'; ctx.beginPath(); ctx.arc(x-13+k*4.3,stY-5,2.4,0,7); ctx.fill(); } ctx.restore(); }
+  // ovules -> seeds
+  for(let k=-1;k<=1;k++){ const ox=x+k*18*(1+fruit*0.8), oy=ovY-fruit*20+(k?8:0); const fert=(st>5||(st===5&&u>0.7))&&k===0; const rs=fert?7+fruit*9:7;
+    ctx.fillStyle=fert&&fruit>0.2?'#8b5a2b':'#f4f1d0'; ctx.beginPath(); ctx.ellipse(ox,oy,rs*0.9,rs*1.15,0,0,7); ctx.fill(); ctx.strokeStyle='#cfc79a'; ctx.lineWidth=1; ctx.stroke();
+    if(k===0&&!(fruit>0.2)){ ctx.fillStyle=fert?'#ff5d8f':'#c9a0ff'; ctx.beginPath(); ctx.arc(ox,oy+2,3,0,7); ctx.fill(); }
+    if(k!==0&&fruit>0.5){ ctx.fillStyle='rgba(244,241,208,.5)'; ctx.beginPath(); ctx.ellipse(ox,oy,6,8,0,0,7); ctx.fill(); } }
+  if(fruit>0.6) txt(ctx,'fruit (ovary wall)',x+ow+12,ovY-30,'#ffd6a0','700 13px '+F,'left');
+  if(fruit>0.6) txt(ctx,'seed',x,ovY-fruit*20+36,'#f4e3c0','700 12px '+F);
+}
+function drawGrass(ctx,x,y,s,feather){ // wind-pollinated flower
+  line(ctx,x,548,x,y+20,'#7fa64a',5);
+  ctx.fillStyle='#6f9a3f'; ctx.beginPath(); ctx.ellipse(x-30,470,34,6,0.4,0,7); ctx.fill();
+  // bracts
+  ctx.fillStyle='#9cc25a'; ctx.beginPath(); ctx.moveTo(x,y+30); ctx.quadraticCurveTo(x-28*s,y,x-8*s,y-40*s); ctx.quadraticCurveTo(x-4,y,x,y+30); ctx.fill(); ctx.beginPath(); ctx.moveTo(x,y+30); ctx.quadraticCurveTo(x+28*s,y,x+8*s,y-40*s); ctx.quadraticCurveTo(x+4,y,x,y+30); ctx.fill();
+  // ovary
+  ctx.fillStyle='#c8e08a'; ctx.beginPath(); ctx.ellipse(x,y-6,9*s,13*s,0,0,7); ctx.fill();
+  // feathery stigmas
+  for(const sd of [-1,1]){ const bx=x+sd*4, by=y-18*s; const ex=bx+sd*46*s, ey=by-56*s; line(ctx,bx,by,ex,ey,'#f2f0e0',2); for(let k=1;k<12;k++){ const px=bx+(ex-bx)*k/12, py=by+(ey-by)*k/12; line(ctx,px,py,px-10*s,py-6*s,'rgba(242,240,224,.85)',1); line(ctx,px,py,px+10*s,py-6*s,'rgba(242,240,224,.85)',1); } if(feather) txt(ctx,'',ex,ey); }
+  // dangling anthers
+  for(let k=-1;k<=1;k++){ const ax=x+k*44*s, ay=y+70*s; ctx.strokeStyle='#e8e2b0'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(x+k*4,y+6); ctx.quadraticCurveTo(x+k*30*s,y-6,ax,ay-22*s); ctx.stroke(); ctx.fillStyle='#e6c84a'; ctx.beginPath(); ctx.ellipse(ax,ay-8*s,5*s,14*s,0.1*k,0,7); ctx.fill(); }
+}
+function bee(ctx,x,y,a,load){
+  ctx.save(); ctx.translate(x,y); ctx.rotate(a);
+  ctx.fillStyle='rgba(220,240,255,.55)'; ctx.beginPath(); ctx.ellipse(-4,-14,13,7,-0.5,0,7); ctx.ellipse(6,-14,13,7,0.5,0,7); ctx.fill();
+  ctx.fillStyle='#f4c430'; ctx.beginPath(); ctx.ellipse(0,0,20,12,0,0,7); ctx.fill();
+  ctx.fillStyle='#2a1c0a'; for(const sx of [-8,0,8]) { ctx.fillRect(sx-2,-11,4,22); }
+  ctx.beginPath(); ctx.arc(20,0,8,0,7); ctx.fill();
+  ctx.strokeStyle='#2a1c0a'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(25,-5); ctx.lineTo(32,-12); ctx.moveTo(25,-3); ctx.lineTo(34,-6); ctx.stroke();
+  for(let k=0;k<load;k++){ ctx.fillStyle='#ffe066'; ctx.beginPath(); ctx.arc(-14+hsh(k)*28,-6+hsh(k+9)*14,2.4,0,7); ctx.fill(); }
+  ctx.restore();
+}
+const lerp=(a,b,t)=>a+(b-a)*t, ease=t=>t<0.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+function drawFlow(){
+  const c=$('c-flow'), ctx=c.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,0,560); bg.addColorStop(0,'#16101c'); bg.addColorStop(1,'#0f0b12'); ctx.fillStyle=bg; ctx.fillRect(0,0,900,560);
+  ctx.fillStyle='#1d2a17'; ctx.fillRect(0,532,900,28);
+  const st=FL.step, u=FL.u, ins=FL.type==='ins';
+  txt(ctx,'Plant 1',200,120,'#c7b9cc','700 14px '+F); txt(ctx,ins?'Plant 2 (cut in half)':'Plant 2',ins?B.x-150:B.x,120,'#c7b9cc','700 14px '+F);
+  let onStig=0;
+  if(ins){
+    drawWholeInsect(ctx,200,250,1,0);
+    drawSection(ctx,st,u);
+    // bee path
+    let bx=-60,by=120,ba=0.2,load=0;
+    if(st===1){ const t=ease(u); bx=lerp(-60,200,t); by=lerp(120,214,t); ba=0.5*(1-t); load=u>0.85?10:0; }
+    else if(st===2){ const t=ease(u); bx=lerp(200,B.x-6,t); by=lerp(214,250,t)-Math.sin(t*Math.PI)*120; ba=0.1; load=10; }
+    else if(st===3){ bx=B.x-6; by=250-Math.sin(u*Math.PI)*14; ba=0.1; load=10-Math.round(6*u); }
+    else if(st>=4){ const t=Math.min(1,(st-4+u)/1.5); bx=lerp(B.x-6,960,t); by=lerp(240,80,t); load=4; }
+    if(st>=1&&bx<930) bee(ctx,bx,by,ba,load);
+    onStig=st>=3?(st===3?Math.round(6*u):6):0;
+    for(let k=0;k<onStig;k++){ ctx.fillStyle='#ffe066'; ctx.beginPath(); ctx.arc(B.x-12+k*5,B.stY-10,3,0,7); ctx.fill(); }
+  } else {
+    drawGrass(ctx,200,300,1.1,true);
+    drawGrass(ctx,B.x,300,1.1,true);
+    // pollen cloud
+    if(st>=1&&st<=3){ const n=st===1?Math.round(160*u):160; for(let k=0;k<n;k++){ const t=st===1?u*0.4:st===2?0.4+u*0.6:1; const sx=200+(k%3-1)*48, sy=372; const dx=sx+(hsh(k)*1.1)*680*t+Math.sin(k+t*6)*16, dy=sy-90*Math.sin(t*Math.PI)+(hsh(k+77)-0.5)*300*t+t*120*hsh(k+5); ctx.fillStyle='rgba(255,224,102,'+(0.9-0.5*t)+')'; ctx.beginPath(); ctx.arc(dx,Math.min(dy,532),2,0,7); ctx.fill(); } }
+    if(st>=1) for(let k=0;k<6;k++){ const x=60+k*150, y=150+(k%2)*40; ctx.strokeStyle='rgba(200,220,255,.25)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x,y); ctx.bezierCurveTo(x+40,y-20,x+80,y+20,x+120,y); ctx.stroke(); }
+    if(st===2||st===1) txt(ctx,'wind',820,140,'#cfe0ff','700 13px '+F);
+    onStig=st>=3?(st===3?Math.round(4*u):4):0;
+    for(let k=0;k<onStig;k++){ ctx.fillStyle='#ffe066'; ctx.beginPath(); ctx.arc(B.x-30+k*20,300-50-k*8,2.6,0,7); ctx.fill(); }
+    if(st>=4){ ctx.fillStyle='rgba(12,8,16,.82)'; rr(ctx,B.x-150,90,300,200,14); ctx.fill(); txt(ctx,st>=6?'grain = fruit + seed':st===5?'fertilization in the ovule':'pollen tube grows to the ovule',B.x,120,'#ffe7a8','700 14px '+F);
+      ctx.fillStyle='#c8e08a'; ctx.beginPath(); ctx.ellipse(B.x,210,st>=6?40+20*u:40,st>=6?60+10*u:60,0,0,7); ctx.fill(); ctx.fillStyle=st>=6?'#d8b36a':'#f4f1d0'; ctx.beginPath(); ctx.ellipse(B.x,220,22,30,0,0,7); ctx.fill();
+      if(st===4||st===5){ const t=st===4?u:1; ctx.strokeStyle='#ffe066'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(B.x-30,140); ctx.quadraticCurveTo(B.x-50,180,lerp(B.x-30,B.x,t),lerp(140,196,t)); ctx.stroke(); }
+      if(st>=5){ ctx.fillStyle=st===5&&u<0.6?'#c9a0ff':'#ff5d8f'; ctx.beginPath(); ctx.arc(B.x,214,5,0,7); ctx.fill(); } }
+  }
+  // pollen tube and fertilization (insect section)
+  if(ins&&(st===4||st===5)){
+    const t=st===4?ease(u):1; const pts=[[B.x-6,B.stY-6],[B.x-2,B.stY+40],[B.x+1,ovY0()-60],[B.x-4,ovY0()-24],[B.x,ovY0()-8]];
+    const L=Math.floor(t*(pts.length-1)*20); ctx.strokeStyle='#ff9f1c'; ctx.lineWidth=3.5; ctx.beginPath(); for(let i=0;i<=L;i++){ const f=i/20, j=Math.min(pts.length-2,Math.floor(f)), r=f-j; const x=lerp(pts[j][0],pts[j+1][0],r), y=lerp(pts[j][1],pts[j+1][1],r); i?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke();
+    // male gamete nuclei
+    const g=st===4?t*0.9:0.9+0.1*u; const f=g*(pts.length-1), j=Math.min(pts.length-2,Math.floor(f)), r=f-j; const nx=lerp(pts[j][0],pts[j+1][0],r), ny=lerp(pts[j][1],pts[j+1][1],r);
+    if(!(st===5&&u>0.7)){ ctx.fillStyle='#7cc6fe'; ctx.beginPath(); ctx.arc(nx+3,ny-4,3.5,0,7); ctx.fill(); }
+    if(st===5&&u>0.7){ ctx.strokeStyle='rgba(255,93,143,.8)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(B.x,B.ovY+2,12+6*Math.sin(FL.t*6),0,7); ctx.stroke(); txt(ctx,'zygote',B.x+60,B.ovY+40,'#ff9ab8','700 13px '+F,'left'); line(ctx,B.x+10,B.ovY+6,B.x+56,B.ovY+36,'rgba(255,154,184,.7)',1); }
+    // zoom box
+    ctx.fillStyle='rgba(12,8,16,.86)'; rr(ctx,30,380,176,150,12); ctx.fill(); ctx.strokeStyle='rgba(235,210,245,.3)'; ctx.lineWidth=1; ctx.stroke();
+    txt(ctx,'inside the ovule',118,400,'#e9dcf0','700 12px '+F);
+    ctx.fillStyle='#f4f1d0'; ctx.beginPath(); ctx.ellipse(118,462,46,52,0,0,7); ctx.fill(); ctx.fillStyle='#0c0810'; ctx.fillRect(112,408,12,10);
+    ctx.fillStyle=(st===5&&u>0.7)?'#ff5d8f':'#c9a0ff'; ctx.beginPath(); ctx.arc(118,434,8,0,7); ctx.fill(); txt(ctx,(st===5&&u>0.7)?'zygote (2n)':'egg cell (n)',118,486,'#5a3a6a','700 12px '+F);
+    if(st===5&&u<=0.7){ const yy=lerp(402,428,u/0.7); ctx.fillStyle='#7cc6fe'; ctx.beginPath(); ctx.arc(118,yy,5,0,7); ctx.fill(); txt(ctx,'male gamete (n)',118,522,'#9ed5ff','11px '+F); }
+    else if(st===4){ txt(ctx,'micropyle',118,522,'#c7b9cc','11px '+F); }
+  }
+  // labels
+  const showLab=st===0&&!FL.quiz;
+  if(showLab&&ins){ const L=[['stigma',640,232,770,190],['style',646,300,770,240],['anther',702,262,790,290],['filament',697,330,790,330],['ovule',652,388,790,372],['ovary',670,392,790,410],['nectary',665,420,790,448],['petal',760,200,812,160],['sepal',716,412,800,486]];
+    for(const l of L){ line(ctx,l[1],l[2],l[3]-4,l[4]-4,'rgba(255,255,255,.55)',1); txt(ctx,l[0],l[3],l[4],'#fff','700 13px '+F,'left'); } }
+  if(showLab&&!ins){ const L=[['feathery stigma',B.x+40,236,B.x+80,190],['anther on a long filament',B.x+48,368,B.x+70,420],['ovary',B.x+8,295,B.x+90,300],['small green bracts, no petals',B.x-14,292,B.x-70,470]];
+    for(const l of L){ line(ctx,l[1],l[2],l[3],l[4]-4,'rgba(255,255,255,.55)',1); txt(ctx,l[0],l[3],l[4],'#fff','700 13px '+F,l[3]>l[1]?'left':'right'); } }
+  if(FL.quiz) txt(ctx,'Click the '+FL.quiz.cur.n,B.x,40,'#ffe7a8','800 20px '+FD);
+  else txt(ctx,'Step '+(st+1)+' of 7',20,34,'#f7f1f8','800 18px '+FD,'left');
+  const S=FS[FL.type][st]; $('f-h').textContent=S.h; $('f-say').innerHTML=S.s; $('f-n').textContent=(st+1)+' of 7'; $('f-pol').textContent=onStig;
+  $('f-back').disabled=st===0; $('f-next').disabled=st===6; $('f-quiz').disabled=!ins;
+}
+function ovY0(){ return B.ovY; }
+function fGo(i){ FL.quiz=null; $('f-qmsg').textContent=''; FL.step=clamp(i,0,6); FL.u=0; drawFlow(); }
+function fTick(dt){ FL.t+=dt; if(FL.u<1) FL.u=Math.min(1,FL.u+dt/2.4); else if(FL.play){ if(FL.step<6){ FL.step++; FL.u=0; } else FL.play=false; } }
+$('f-next').onclick=()=>{ FL.play=false; fGo(FL.step+1); }; $('f-back').onclick=()=>{ FL.play=false; FL.quiz=null; FL.step=Math.max(0,FL.step-1); FL.u=1; drawFlow(); };
+$('f-play').onclick=()=>{ FL.quiz=null; FL.step=0; FL.u=0; FL.play=true; }; $('f-reset').onclick=()=>{ FL.play=false; FL.quiz=null; FL.step=0; FL.u=1; $('f-qmsg').textContent=''; drawFlow(); };
+function setType(t){ FL.type=t; $('f-ins').setAttribute('aria-pressed',t==='ins'); $('f-wind').setAttribute('aria-pressed',t==='wind'); FL.quiz=null; $('f-qmsg').textContent=''; FL.step=0; FL.u=1; FL.play=false; drawFlow(); }
+$('f-ins').onclick=()=>setType('ins'); $('f-wind').onclick=()=>setType('wind');
+function nextQ(){ const left=FL.quiz.order; if(!left.length){ $('f-qmsg').textContent='Quiz finished: '+FL.qScore+' of '+PARTS.length+' right first time.'; FL.quiz=null; drawFlow(); return; } FL.quiz.cur=left.shift(); FL.quiz.first=true; drawFlow(); }
+$('f-quiz').onclick=()=>{ FL.play=false; FL.step=0; FL.u=1; const order=PARTS.slice().sort((a,b)=>hsh(a.x+FL.t)-hsh(b.x+FL.t)); FL.quiz={order}; FL.qScore=0; $('f-qmsg').textContent=''; nextQ(); };
+function hitPart(x,y){ for(const ox of [622,658]) if(Math.hypot(x-ox,y-392)<=9) return PARTS.find(p=>p.k==='ovule'); for(const p of PARTS){ if(Math.hypot(x-p.x,y-p.y)<=p.r) return p; } for(const p of PARTS){ if(['anther','filament','petal','sepal','nectary'].includes(p.k)&&Math.hypot(1280-x-p.x,y-p.y)<=p.r) return p; } if(x<640&&x>500&&y>200&&y<300) return PARTS.find(p=>p.k==='petal'); return null; }
+$('c-flow').addEventListener('click',e=>{ if(!FL.quiz) return; const r=e.target.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width*900, y=(e.clientY-r.top)/r.height*560; quizClick(x,y); });
+function quizClick(x,y){ const h=hitPart(x,y), cur=FL.quiz.cur; if(h&&h.k===cur.k){ if(FL.quiz.first) FL.qScore++; $('f-qmsg').innerHTML='<span style="color:#b9f18c">Yes, that is the '+cur.n+'.</span>'; nextQ(); } else { FL.quiz.first=false; $('f-qmsg').innerHTML='<span style="color:#ffb36b">'+(h?'That is the '+h.n+'.':'Not quite.')+' Try again.</span>'; } }
+
+/* ================= CROSS-POLLINATION ================= */
+const XC={mode:'si',stig:[1,2],don:'self',grains:[],t:0,done:false};
+const SCOL=['#000','#ff6b6b','#ffd166','#7cc6fe','#b9f18c','#c9a0ff','#ff9f1c','#7ee0c0','#ff8fc0'];
+function xPol(){ const d=XC.don==='self'?XC.stig.slice():XC.don.split(',').map(Number); XC.grains=[]; for(let k=0;k<6;k++){ const al=d[k%2]; XC.grains.push({al,x:470+k*16-40+hsh(k)*6,blocked:XC.stig.includes(al),stop:0.12+hsh(k*7)*0.08}); } XC.t=0; XC.done=false; }
+function drawSI(){
+  const c=$('c-cross'), ctx=c.getContext('2d'); ctx.fillStyle='#0c0810'; ctx.fillRect(0,0,900,560);
+  const x=450; // big carpel section
+  ctx.fillStyle='#d9f29a'; ctx.beginPath(); ctx.ellipse(x,96,80,26,0,0,7); ctx.fill();
+  ctx.fillStyle='#a8d672'; ctx.beginPath(); ctx.moveTo(x-30,110); ctx.lineTo(x-26,360); ctx.lineTo(x+26,360); ctx.lineTo(x+30,110); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#8cc152'; ctx.beginPath(); ctx.ellipse(x,430,120,90,0,0,7); ctx.fill(); ctx.fillStyle='rgba(20,40,10,.35)'; ctx.beginPath(); ctx.ellipse(x,430,108,78,0,0,7); ctx.fill();
+  const ov=[[x-60,420],[x-20,452],[x+20,452],[x+60,420],[x-40,395],[x+40,395]];
+  ov.forEach((o,i)=>{ ctx.fillStyle='#f4f1d0'; ctx.beginPath(); ctx.ellipse(o[0],o[1],12,15,0,0,7); ctx.fill(); });
+  txt(ctx,'stigma',x+96,90,'#e9f7c8','700 13px '+F,'left'); txt(ctx,'style',x+40,240,'#d6efb0','700 13px '+F,'left'); txt(ctx,'ovary with ovules',x+130,440,'#d6efb0','700 13px '+F,'left');
+  // stigma genotype badge
+  ctx.fillStyle='#1a131e'; rr(ctx,40,40,220,74,12); ctx.fill(); txt(ctx,'This plant is',150,64,'#c7b9cc','700 13px '+F);
+  XC.stig.forEach((a,i)=>{ ctx.fillStyle=SCOL[a]; rr(ctx,82+i*74,74,62,28,8); ctx.fill(); txt(ctx,'S'+a,113+i*74,94,'#120c14','800 15px '+F); });
+  txt(ctx,'Its stigma rejects pollen carrying S'+XC.stig[0]+' or S'+XC.stig[1],150,136,'#c7b9cc','12px '+F);
+  // grains and tubes
+  let fert=0, blocked=0; const t=XC.t;
+  XC.grains.forEach((g,i)=>{ const land=clamp(t/0.15,0,1); const gx=g.x, gy=lerp(-10,82,land);
+    if(land>=1){ const grow=clamp((t-0.15)/0.85,0,1); const reach=g.blocked?Math.min(grow,g.stop):grow; const tgt=ov[i];
+      const path=s=>{ if(s<0.55){ const r=s/0.55; return [lerp(gx,x-14+i*5.5,r),lerp(gy,350,r)]; } const r=(s-0.55)/0.45; return [lerp(x-14+i*5.5,tgt[0],r),lerp(350,tgt[1]-14,r)]; };
+      ctx.strokeStyle=g.blocked?'rgba(200,200,200,.8)':SCOL[g.al]; ctx.lineWidth=3; ctx.beginPath(); for(let s=0;s<=reach+1e-6;s+=0.02){ const p=path(Math.min(s,reach)); s?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]); } ctx.stroke();
+      if(g.blocked&&grow>=g.stop){ const p=path(g.stop); line(ctx,p[0]-6,p[1]-6,p[0]+6,p[1]+6,'#ff6b6b',3); line(ctx,p[0]+6,p[1]-6,p[0]-6,p[1]+6,'#ff6b6b',3); blocked++; }
+      if(!g.blocked&&grow>=1){ fert++; ctx.strokeStyle='#ff5d8f'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(tgt[0],tgt[1],17,0,7); ctx.stroke(); } }
+    ctx.fillStyle=SCOL[g.al]; ctx.beginPath(); ctx.arc(gx,gy,8,0,7); ctx.fill(); ctx.strokeStyle='#120c14'; ctx.lineWidth=1; ctx.stroke(); txt(ctx,String(g.al),gx,gy+4,'#120c14','800 10px '+F); });
+  // donor badge
+  ctx.fillStyle='#1a131e'; rr(ctx,640,40,230,74,12); ctx.fill(); txt(ctx,XC.don==='self'?'Pollen from the same plant':'Pollen from another plant',755,64,'#c7b9cc','700 13px '+F);
+  const d=XC.don==='self'?XC.stig:XC.don.split(',').map(Number); d.forEach((a,i)=>{ ctx.fillStyle=SCOL[a]; rr(ctx,682+i*74,74,62,28,8); ctx.fill(); txt(ctx,'S'+a,713+i*74,94,'#120c14','800 15px '+F); });
+  txt(ctx,'each pollen grain carries one S allele',755,136,'#c7b9cc','12px '+F);
+  // legend
+  line(ctx,600,500,630,500,'rgba(200,200,200,.8)',3); txt(ctx,'tube stopped: allele matches the stigma',638,504,'#ddd','12px '+F,'left');
+  ctx.strokeStyle='#ff5d8f'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(615,526,8,0,7); ctx.stroke(); txt(ctx,'ovule fertilized',638,530,'#ffb3c8','12px '+F,'left');
+  const total=XC.grains.length;
+  $('x-h').textContent='Self-incompatibility';
+  let s='Many plants have a <b>self-incompatibility</b> system controlled by one gene with many alleles (S1, S2, S3 ...). A pollen grain is haploid, so it carries one S allele. If that allele matches either allele in the stigma\'s own cells, the pollen tube is stopped in the style. Choose a donor and pollinate.';
+  if(total&&XC.t>=1){ if(XC.don==='self') s='Every grain from the same plant carries S'+XC.stig[0]+' or S'+XC.stig[1]+', which the stigma also has, so all the tubes stop. Self-fertilization is impossible, so every seed must come from another plant: this keeps genetic variation high.'; else if(blocked===0) s='None of these grains share an allele with the stigma, so every tube reaches an ovule. Plants that are unrelated are likely to have different S alleles.'; else s='Grains that share an allele with the stigma are stopped; the others grow. A plant that is partly related can still fertilize some ovules.'; }
+  $('x-say').innerHTML=s;
+  $('x-stat').innerHTML='<span>Pollen grains</span><b>'+total+'</b><span>Tubes stopped in the style</span><b>'+(XC.t>=1?blocked:'-')+'</b><span>Ovules fertilized</span><b>'+(XC.t>=1?fert:'-')+'</b>';
+}
+// meadow
+const M={pl:[],gen:0,hist:[],runs:[],cur:null,todo:0,acc:0};
+const NP=48;
+function mInit(){ seed=13; M.pl=[]; for(let i=0;i<NP;i++){ M.pl.push({a:1+Math.floor(rnd()*8),b:1+Math.floor(rnd()*8),sex:i%2?'m':'f'}); } M.gen=0; M.cur={col:['#ffb84d','#7cc6fe','#ff8fab','#b9f18c','#c9a0ff'][M.runs.length%5],label:mLabel(),pts:[[0,het()]]}; M.runs.push(M.cur); if(M.runs.length>5) M.runs.shift(); M.todo=0; }
+function het(){ return M.pl.filter(p=>p.a!==p.b).length/M.pl.length; }
+function mLabel(){ const o=[]; if($('m-si').checked) o.push('SI'); if($('m-dich').checked) o.push('timing'); if($('m-dio').checked) o.push('male/female'); return o.length?o.join(' + '):'no barriers'; }
+function selfRate(){ if($('m-si').checked||$('m-dio').checked) return 0; if($('m-dich').checked) return 0.15; return 0.6; }
+function mGen(){ const s=selfRate(), dio=$('m-dio').checked; const moms=dio?M.pl.filter(p=>p.sex==='f'):M.pl, dads=dio?M.pl.filter(p=>p.sex==='m'):M.pl; const nx=[];
+  for(let i=0;i<NP;i++){ const m=moms[Math.floor(rnd()*moms.length)]; let d=m; if(rnd()>=s){ do{ d=dads[Math.floor(rnd()*dads.length)]; }while(d===m&&dads.length>1); }
+    const g1=rnd()<0.5?m.a:m.b, g2=rnd()<0.5?d.a:d.b; nx.push({a:g1,b:g2,sex:rnd()<0.5?'m':'f'}); }
+  M.pl=nx; M.gen++; M.cur.pts.push([M.gen,het()]); }
+function drawMead(){
+  const c=$('c-cross'), ctx=c.getContext('2d'); ctx.fillStyle='#0c0810'; ctx.fillRect(0,0,900,560);
+  ctx.fillStyle='#16241a'; rr(ctx,16,16,470,420,14); ctx.fill();
+  const dio=$('m-dio').checked;
+  M.pl.forEach((p,i)=>{ const col=i%8, row=Math.floor(i/8); const x=50+col*57, y=60+row*68;
+    line(ctx,x,y+8,x,y+34,'#4f8f3a',3);
+    for(let k=0;k<5;k++){ const a=k/5*Math.PI*2-Math.PI/2; ctx.fillStyle=SCOL[k%2?p.b:p.a]; ctx.beginPath(); ctx.ellipse(x+Math.cos(a)*9,y+Math.sin(a)*9,8,5,a,0,7); ctx.fill(); }
+    ctx.fillStyle=dio?(p.sex==='m'?'#7cc6fe':'#ff8fc0'):'#ffe066'; ctx.beginPath(); ctx.arc(x,y,4.5,0,7); ctx.fill();
+    if(p.a===p.b){ ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(x,y,18,0,7); ctx.stroke(); } });
+  txt(ctx,'Generation '+M.gen,250,458,'#f7f1f8','800 18px '+FD);
+  txt(ctx,'petal colours = the plant\'s two alleles of one gene; white ring = both alleles the same',250,480,'#c7b9cc','12px '+F);
+  if(dio) txt(ctx,'centre blue = male plant, pink = female plant',250,500,'#c7b9cc','12px '+F);
+  // graph
+  const X=540,Y=40,Wd=330,H=330, gx=g=>X+g/15*Wd, gy=v=>Y+H-v*H;
+  ctx.fillStyle='#160f1a'; rr(ctx,X-44,Y-24,Wd+64,H+80,10); ctx.fill();
+  for(let g=0;g<=15;g+=3){ line(ctx,gx(g),Y,gx(g),Y+H,'rgba(235,210,245,.1)'); txt(ctx,String(g),gx(g),Y+H+16,'#c7b9cc','11px '+F); }
+  for(let v=0;v<=1;v+=0.25){ line(ctx,X,gy(v),X+Wd,gy(v),'rgba(235,210,245,.1)'); txt(ctx,(v*100)+'%',X-6,gy(v)+4,'#c7b9cc','11px '+F,'right'); }
+  txt(ctx,'generations',X+Wd/2,Y+H+34,'#c7b9cc','700 11px '+F); txt(ctx,'plants with two different alleles',X+Wd/2,Y-8,'#c7b9cc','700 12px '+F);
+  M.runs.forEach(r=>{ ctx.strokeStyle=r.col; ctx.lineWidth=2.5; ctx.beginPath(); r.pts.forEach((p,i)=>i?ctx.lineTo(gx(p[0]),gy(p[1])):ctx.moveTo(gx(p[0]),gy(p[1]))); ctx.stroke(); });
+  let ly=Y+H+56; M.runs.forEach((r,i)=>{ const lx=X-30+(i%3)*120, yy=ly+Math.floor(i/3)*18; ctx.fillStyle=r.col; ctx.fillRect(lx,yy-8,10,10); txt(ctx,r.label,lx+14,yy+1,'#f7f1f8','11px '+F,'left'); });
+  const h=het(), s=selfRate();
+  $('x-h').textContent='A meadow of 48 plants';
+  let say='Each plant makes seeds for the next generation. Without any barrier, '+Math.round(s*100)+'% of seeds come from <b>self-pollination</b>. Selfing makes offspring that have the same allele twice (homozygous), so variation falls. Tick ways of promoting <b>cross-pollination</b> and compare the lines.';
+  if(M.gen>0){ if(s===0) say='Every seed now comes from cross-pollination, so alleles keep being mixed between plants and most plants stay heterozygous. '+($('m-dio').checked?'Separate male and female plants guarantee this, but only half the plants make seeds.':$('m-si').checked?'Self-incompatibility does this without wasting any plants.':''); else if(s<0.3) say='Stamens and stigma ripening at different times stop most, but not all, self-pollination. Heterozygosity stays fairly high.'; else say='With lots of selfing, the share of heterozygous plants drops within a few generations and then stays low. Less variation means less raw material for natural selection.'; }
+  $('x-say').innerHTML=say;
+  $('x-stat').innerHTML='<span>Seeds from self-pollination</span><b>'+Math.round(s*100)+'%</b><span>Plants with two different alleles</span><b>'+Math.round(h*100)+'%</b><span>Plants with both alleles the same</span><b>'+Math.round((1-h)*100)+'%</b>';
+}
+function drawCross(){ if(XC.mode==='si') drawSI(); else drawMead(); }
+function xTick(dt){ if(XC.mode==='si'&&XC.grains.length&&XC.t<1) XC.t=Math.min(1,XC.t+dt/3.5); if(XC.mode==='mead'&&M.todo>0){ M.acc+=dt; if(M.acc>0.25){ M.acc=0; mGen(); M.todo--; } } }
+function setX(m){ XC.mode=m; $('x-si').setAttribute('aria-pressed',m==='si'); $('x-mead').setAttribute('aria-pressed',m==='mead'); $('x-si-ctl').hidden=m!=='si'; $('x-mead-ctl').hidden=m!=='mead'; drawCross(); }
+$('x-si').onclick=()=>setX('si'); $('x-mead').onclick=()=>setX('mead');
+$('x-stig').onchange=e=>{ XC.stig=e.target.value.split(',').map(Number); XC.grains=[]; drawCross(); };
+$('x-don').onchange=e=>{ XC.don=e.target.value; XC.grains=[]; drawCross(); };
+$('x-pol').onclick=()=>{ xPol(); };
+for(const id of ['m-si','m-dich','m-dio']) $(id).onchange=()=>{ mInit(); drawCross(); };
+$('m-run').onclick=()=>{ if(M.gen>=15) mInit(); M.todo=15-M.gen; };
+$('m-one').onclick=()=>{ if(M.gen>=15) mInit(); mGen(); drawCross(); };
+$('m-reset').onclick=()=>{ mInit(); drawCross(); };
+$('m-clear').onclick=()=>{ M.runs=[]; mInit(); drawCross(); };
+
+/* ================= SEEDS ================= */
+const SD={mode:'disp',plant:'dand',wind:5,seeds:[],t:0,runs:{}};
+const PL={dand:{n:'Dandelion',how:'wind',med:w=>1.6*w/5,sg:1.25,col:'#f2f0e0'},maple:{n:'Maple',how:'wind',med:w=>12*w/5,sg:0.6,col:'#c98b4a'},burd:{n:'Burdock',how:'animal fur',med:()=>60,sg:1.1,col:'#a37b4c'},cherry:{n:'Cherry',how:'eaten by birds',med:()=>220,sg:1.0,col:'#d1344c'},gorse:{n:'Gorse',how:'explosive pod',med:()=>1.8,sg:0.45,col:'#5d4a2a'},coco:{n:'Coconut',how:'floating in the sea',med:()=>3000,sg:1.4,col:'#8a5a2b'}};
+function dGo(){ seed=21+Math.floor(SD.wind)+Object.keys(PL).indexOf(SD.plant)*7; const p=PL[SD.plant]; SD.seeds=[]; for(let i=0;i<40;i++){ let d=p.med(SD.wind)*Math.exp(gauss()*p.sg); if(SD.plant==='gorse') d=Math.min(d,6); d=clamp(d,0.12,90000); SD.seeds.push({d,dl:hsh(i)*0.25,lift:0.4+hsh(i+3)}); } SD.t=0; const ds=SD.seeds.map(s=>s.d).sort((a,b)=>a-b); SD.runs[SD.plant]={med:ds[20],near:ds.filter(d=>d<1).length,far:ds[39]}; }
+const lx=d=>60+(Math.log10(d)+1)/6*800; // 0.1 m to 100 km
+function fmtD(d){ return d<1?(d*100).toFixed(0)+' cm':d<1000?(d<10?d.toFixed(1):d.toFixed(0))+' m':(d/1000).toFixed(d<10000?1:0)+' km'; }
+function drawDisp(){
+  const c=$('c-seed'), ctx=c.getContext('2d'); const p=PL[SD.plant];
+  const sky=ctx.createLinearGradient(0,0,0,560); sky.addColorStop(0,'#141a2a'); sky.addColorStop(1,'#101418'); ctx.fillStyle=sky; ctx.fillRect(0,0,900,560);
+  const gY=360;
+  if(SD.plant==='coco'){ ctx.fillStyle='#e0cf9a'; ctx.fillRect(0,gY,lx(30),40); ctx.fillStyle='#1d4f73'; ctx.fillRect(lx(30),gY+6,900,34); for(let k=0;k<20;k++){ ctx.strokeStyle='rgba(180,220,255,.3)'; ctx.beginPath(); ctx.arc(lx(30)+k*40,gY+10,10,Math.PI,0); ctx.stroke(); } }
+  else { ctx.fillStyle='#24361d'; ctx.fillRect(0,gY,900,40); }
+  // parent plant
+  const px=lx(0.12)+6;
+  if(SD.plant==='dand'){ line(ctx,px,gY,px,gY-110,'#6f9a3f',3); ctx.strokeStyle='rgba(242,240,224,.7)'; for(let k=0;k<28;k++){ const a=k/28*Math.PI*2; line(ctx,px,gY-110,px+Math.cos(a)*22,gY-110+Math.sin(a)*22,'rgba(242,240,224,.6)',1); } }
+  else if(SD.plant==='maple'||SD.plant==='cherry'||SD.plant==='coco'){ line(ctx,px+6,gY,px+6,gY-150,'#6b4a2b',10); ctx.fillStyle=SD.plant==='coco'?'#3f7d2f':'#2f6b2f'; if(SD.plant==='coco'){ for(let k=0;k<6;k++){ const a=-2.6+k*0.45; ctx.beginPath(); ctx.ellipse(px+6+Math.cos(a)*40,gY-150+Math.sin(a)*24,44,7,a,0,7); ctx.fill(); } } else { ctx.beginPath(); ctx.arc(px+6,gY-180,52,0,7); ctx.fill(); } }
+  else { ctx.fillStyle=SD.plant==='gorse'?'#3d6b2a':'#4f7d36'; ctx.beginPath(); ctx.arc(px+4,gY-30,34,Math.PI,0); ctx.fill(); if(SD.plant==='gorse') for(let k=0;k<8;k++){ ctx.fillStyle='#ffd23f'; ctx.beginPath(); ctx.arc(px-24+k*7,gY-46+((k*13)%14),3,0,7); ctx.fill(); } }
+  txt(ctx,'parent plant',px+8,gY+60,'#c7b9cc','700 12px '+F,'left');
+  // axis
+  line(ctx,60,gY+46,860,gY+46,'rgba(235,210,245,.4)',1);
+  for(const [d,l] of [[0.1,'10 cm'],[1,'1 m'],[10,'10 m'],[100,'100 m'],[1000,'1 km'],[10000,'10 km'],[100000,'100 km']]){ line(ctx,lx(d),gY+40,lx(d),gY+52,'rgba(235,210,245,.5)',1); txt(ctx,l,lx(d),gY+68,'#c7b9cc','11px '+F); }
+  txt(ctx,'distance from the parent plant (each step is ten times further)',460,gY+88,'#c7b9cc','700 12px '+F);
+  // competition zone
+  ctx.fillStyle='rgba(255,107,107,.08)'; ctx.fillRect(60,40,lx(1)-60,gY-40); txt(ctx,'shaded by the parent,',lx(0.32),58,'#ffb3b3','11px '+F); txt(ctx,'competing for light, water',lx(0.32),72,'#ffb3b3','11px '+F);
+  // animal for burdock/cherry
+  if(SD.seeds.length&&(SD.plant==='burd'||SD.plant==='cherry')&&SD.t<1){ const ax=lerp(px,lx(SD.runs[SD.plant].med),clamp(SD.t*1.3,0,1)); if(SD.plant==='burd'){ ctx.fillStyle='#8a6a4a'; ctx.beginPath(); ctx.ellipse(ax,gY-24,34,18,0,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(ax+34,gY-34,12,0,7); ctx.fill(); for(const lg of [-20,-6,10,22]) line(ctx,ax+lg,gY-10,ax+lg,gY,'#8a6a4a',4); txt(ctx,'fox',ax,gY-52,'#e6d2bc','700 12px '+F); }
+    else { const by=gY-160-Math.sin(SD.t*9)*10; ctx.fillStyle='#3a3a4a'; ctx.beginPath(); ctx.ellipse(ax,by,16,9,0,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(ax-4,by); ctx.lineTo(ax-20,by-14-Math.sin(SD.t*30)*8); ctx.lineTo(ax+8,by-2); ctx.fill(); txt(ctx,'bird',ax,by-22,'#d6d6e6','700 12px '+F); } }
+  // seeds
+  const t=SD.t;
+  SD.seeds.forEach((s,i)=>{ const tt=clamp((t-s.dl)/0.75,0,1); const x=lerp(px+6,lx(s.d),ease(tt)); const top=p.how==='wind'?gY-120-s.lift*120:p.how==='explosive pod'?gY-40-s.lift*30:p.how==='floating in the sea'?gY-150:p.how==='eaten by birds'?gY-160:gY-28; const y=tt<1?(top+(gY-top)*Math.pow(2*tt-1,2))+(i%5)*0-0:gY-4-((i*7)%4)*4;
+    const yy=SD.plant==='coco'&&tt>0.25&&s.d>30?Math.min(y,gY+8):y;
+    ctx.fillStyle=p.col; ctx.beginPath(); ctx.arc(x,yy,SD.plant==='coco'?6:3.5,0,7); ctx.fill();
+    if(SD.plant==='dand'&&tt<1){ line(ctx,x,yy,x,yy-8,'rgba(242,240,224,.7)',1); for(let k=-2;k<=2;k++) line(ctx,x,yy-8,x+k*3,yy-13,'rgba(242,240,224,.7)',1); }
+    if(SD.plant==='maple'){ ctx.fillStyle='rgba(201,139,74,.7)'; ctx.beginPath(); ctx.ellipse(x+6,yy-3,9,3,-0.4+(tt<1?t*20:0),0,7); ctx.fill(); } });
+  // stats
+  const r=SD.runs[SD.plant];
+  if(r&&t>=1){ line(ctx,lx(r.med),gY-200,lx(r.med),gY+40,'rgba(255,184,77,.8)',2); txt(ctx,'median '+fmtD(r.med),lx(r.med),gY-206,'#ffd08a','700 13px '+F); }
+  if(p.how==='wind') txt(ctx,'wind '+SD.wind+' m/s →',860,30,'#cfe0ff','700 14px '+F,'right');
+  // table of runs
+  const keys=Object.keys(SD.runs); let ty=130; txt(ctx,'Your releases',860,ty-24,'#f7f1f8','700 12px '+F,'right');
+  keys.forEach(k=>{ const q=SD.runs[k]; txt(ctx,PL[k].n+': median '+fmtD(q.med)+', '+q.near+' of 40 within 1 m',860,ty,'#c7b9cc','11px '+F,'right'); ty+=16; });
+  const says={dand:'Each fruit has a parachute of fine hairs, so it falls slowly and drifts. Most land within a few metres, but in strong wind a few travel kilometres.',maple:'The winged fruit spins as it falls, like a helicopter, which slows its fall so wind carries it further from the tree.',burd:'Hooked burs catch in the fur of passing animals and drop off later, often tens or hundreds of metres away.',cherry:'Birds eat the fleshy fruit and the seeds pass out in their droppings, often far away and with a little fertiliser.',gorse:'As the pod dries it twists and bursts, flinging the seeds. They rarely land more than a few metres away, but the plant needs no helper.',coco:'The fibrous husk traps air, so the fruit floats. Sea currents can carry coconuts to beaches far across the ocean.'};
+  $('s-h').textContent=p.n+': '+p.how; $('s-say').innerHTML=says[SD.plant]+' Spreading seeds out reduces <b>competition</b> with the parent and with each other, and lets the species reach new places.';
+  $('s-stat').innerHTML=r?'<span>Median distance</span><b>'+fmtD(r.med)+'</b><span>Seeds within 1 m</span><b>'+r.near+' of 40</b><span>Furthest seed</span><b>'+fmtD(r.far)+'</b>':'<span>Release the seeds to measure them.</span><b></b>';
+  $('d-windrow').hidden=p.how!=='wind'; $('d-windv').textContent=SD.wind+' m/s';
+}
+// germination
+const G={water:'moist',air:'air',temp:22,day:0,run:false,s:[],hist:[]};
+function gReset(){ seed=31; G.s=[]; for(let i=0;i<20;i++) G.s.push({p:0,k:0.75+0.5*rnd(),dead:false}); G.day=0; G.hist=[[0,0]]; G.run=false; $('g-run').disabled=false; }
+function tempF(T){ if(T<=5||T>=40) return 0; if(T<=25) return (T-5)/20; return (40-T)/15; }
+function gStep(dt){ const sub=Math.max(1,Math.round(dt/0.02)), h=dt/sub; const ox=G.air==='air'&&G.water!=='flood'; const wet=G.water!=='dry';
+  for(let k=0;k<sub;k++){ for(const s of G.s){ if(!wet) continue; s.imb=Math.min(1,(s.imb||0)+h*1.5); if(s.imb<1) continue; if(!ox) continue; s.p+=h*tempF(G.temp)*s.k/3.2; } G.day+=h; }
+  const n=G.s.filter(s=>s.p>=1).length; if(G.day-G.hist[G.hist.length-1][0]>=0.1) G.hist.push([G.day,n/20]); if(G.day>=10){ G.run=false; $('g-run').disabled=false; } }
+function bean(ctx,x,y,s){ const sw=1+0.25*(s.imb||0); ctx.fillStyle='#e8d6a8'; ctx.beginPath(); ctx.ellipse(x,y,11*sw,8*sw,0.3,0,7); ctx.fill(); ctx.strokeStyle='#b89a60'; ctx.lineWidth=1; ctx.stroke(); ctx.fillStyle='#8a6a3a'; ctx.beginPath(); ctx.ellipse(x+2,y-2,3,1.4,0.3,0,7); ctx.fill();
+  if(s.p>=1){ const r=Math.min(1,(s.p-1)/1.2); ctx.strokeStyle='#f7f3e3'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(x+4,y+5); ctx.quadraticCurveTo(x+6,y+5+20*r,x+2,y+8+34*r); ctx.stroke(); if(s.p>1.6){ const q=Math.min(1,(s.p-1.6)/1.2); ctx.strokeStyle='#8fd16a'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x-2,y-6); ctx.quadraticCurveTo(x-4,y-20*q,x+2,y-34*q); ctx.stroke(); if(q>0.5){ ctx.fillStyle='#8fd16a'; ctx.beginPath(); ctx.ellipse(x-4,y-34*q,6,3,-0.6,0,7); ctx.ellipse(x+8,y-34*q,6,3,0.6,0,7); ctx.fill(); } } } }
+function drawGerm(){
+  const c=$('c-seed'), ctx=c.getContext('2d'); ctx.fillStyle='#0c0810'; ctx.fillRect(0,0,900,560);
+  // tray
+  ctx.fillStyle='rgba(200,230,255,.07)'; rr(ctx,30,70,470,340,18); ctx.fill(); ctx.strokeStyle='rgba(200,230,255,.4)'; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle=G.water==='dry'?'#e9e4d6':'#d7e2e8'; rr(ctx,46,300,438,94,10); ctx.fill();
+  if(G.water==='flood'){ ctx.fillStyle='rgba(80,150,230,.35)'; rr(ctx,40,150,450,252,12); ctx.fill(); txt(ctx,'seeds under water',265,170,'#cfe8ff','700 13px '+F); }
+  if(G.air==='no'){ txt(ctx,'container filled with nitrogen: no oxygen',265,96,'#ffb3b3','700 13px '+F); }
+  txt(ctx,G.water==='dry'?'dry cotton wool':'wet cotton wool',265,420,'#c7b9cc','12px '+F);
+  G.s.forEach((s,i)=>{ const x=72+(i%10)*43+(Math.floor(i/10))*20, y=G.water==='flood'?(250+Math.floor(i/10)*46):(316+Math.floor(i/10)*40); bean(ctx,x,y,s); });
+  // thermometer
+  ctx.fillStyle='#1a131e'; rr(ctx,30,430,470,110,12); ctx.fill();
+  const tx=70; ctx.fillStyle='#ddd'; rr(ctx,tx-6,446,12,72,6); ctx.fill(); ctx.fillStyle='#ff6b6b'; const lev=clamp(G.temp/45,0,1); rr(ctx,tx-4,446+70*(1-lev),8,70*lev+2,4); ctx.fill(); ctx.beginPath(); ctx.arc(tx,522,10,0,7); ctx.fill();
+  txt(ctx,G.temp+' °C',tx+24,488,'#fff','800 18px '+FD,'left');
+  txt(ctx,'water: '+(G.water==='dry'?'none':G.water==='moist'?'yes':'too much'),200,470,'#cfe8ff','700 13px '+F,'left');
+  txt(ctx,'oxygen: '+(G.air==='air'&&G.water!=='flood'?'yes':'no'),200,494,'#cfe8ff','700 13px '+F,'left');
+  txt(ctx,'enzymes: '+(tempF(G.temp)>0.7?'fast':tempF(G.temp)>0.2?'slow':'too cold or too hot'),200,518,'#cfe8ff','700 13px '+F,'left');
+  // graph
+  const X=560,Y=60,Wd=310,H=300, gx=d=>X+d/10*Wd, gy=v=>Y+H-v*H;
+  ctx.fillStyle='#160f1a'; rr(ctx,X-44,Y-30,Wd+64,H+80,10); ctx.fill();
+  for(let d=0;d<=10;d+=2){ line(ctx,gx(d),Y,gx(d),Y+H,'rgba(235,210,245,.1)'); txt(ctx,String(d),gx(d),Y+H+16,'#c7b9cc','11px '+F); }
+  for(let v=0;v<=1;v+=0.25){ line(ctx,X,gy(v),X+Wd,gy(v),'rgba(235,210,245,.1)'); txt(ctx,(v*100)+'%',X-6,gy(v)+4,'#c7b9cc','11px '+F,'right'); }
+  txt(ctx,'days',X+Wd/2,Y+H+34,'#c7b9cc','700 11px '+F); txt(ctx,'seeds germinated (root showing)',X+Wd/2,Y-12,'#c7b9cc','700 12px '+F);
+  ctx.strokeStyle='#ffb84d'; ctx.lineWidth=3; ctx.beginPath(); G.hist.forEach((p,i)=>i?ctx.lineTo(gx(p[0]),gy(p[1])):ctx.moveTo(gx(p[0]),gy(p[1]))); ctx.stroke();
+  txt(ctx,'day '+G.day.toFixed(1),870,430,'#f7f1f8','800 20px '+FD,'right');
+  const n=G.s.filter(s=>s.p>=1).length; const ox=G.air==='air'&&G.water!=='flood';
+  let s;
+  if(G.day<0.05) s='Twenty bean seeds on cotton wool. A dry seed is <b>dormant</b>: it has a very low metabolic rate. Set the conditions and run for ten days.';
+  else if(G.water==='dry') s='Without water nothing happens. Germination starts when the seed <b>absorbs water</b>: it swells, the seed coat splits, and enzymes become active.';
+  else if(!ox) s='The seeds swell with water, but without oxygen they cannot carry out <b>aerobic respiration</b>, so they cannot release enough energy to grow.'+(G.water==='flood'?' Seeds under water are short of oxygen, which is why waterlogged soil is bad for sowing.':'');
+  else if(tempF(G.temp)===0) s=G.temp<=5?'It is too cold: the enzymes that break down the food store work too slowly for growth.':'It is too hot: the enzymes are denatured, so the seeds cannot germinate.';
+  else s='Water activates the seed. A plant hormone (gibberellin) switches on <b>amylase</b>, which breaks down stored starch into sugar. Aerobic respiration of the sugar releases energy for the root (radicle) and then the shoot to grow. '+(tempF(G.temp)<0.6?'At this temperature the enzymes work slowly, so germination takes longer.':'This is close to the best temperature for beans.');
+  $('s-h').textContent='Germination'; $('s-say').innerHTML=s;
+  $('s-stat').innerHTML='<span>Seeds germinated</span><b>'+n+' of 20</b><span>Seeds with shoots</span><b>'+G.s.filter(q=>q.p>1.6).length+'</b><span>Day</span><b>'+G.day.toFixed(1)+'</b>';
+  $('g-tempv').textContent=G.temp+' °C';
+}
+function drawSeed(){ if(SD.mode==='disp') drawDisp(); else drawGerm(); }
+function sTick(dt){ if(SD.mode==='disp'&&SD.seeds.length&&SD.t<1) SD.t=Math.min(1,SD.t+dt/3); if(SD.mode==='germ'&&G.run) gStep(dt*1.4); }
+function setS(m){ SD.mode=m; $('s-disp').setAttribute('aria-pressed',m==='disp'); $('s-germ').setAttribute('aria-pressed',m==='germ'); $('s-disp-ctl').hidden=m!=='disp'; $('s-germ-ctl').hidden=m!=='germ'; drawSeed(); }
+$('s-disp').onclick=()=>setS('disp'); $('s-germ').onclick=()=>setS('germ');
+$('d-plant').onchange=e=>{ SD.plant=e.target.value; SD.seeds=[]; drawSeed(); };
+$('d-wind').oninput=e=>{ SD.wind=+e.target.value; SD.seeds=[]; drawSeed(); };
+$('d-go').onclick=dGo;
+document.querySelectorAll('[data-water]').forEach(b=>b.onclick=()=>{ G.water=b.dataset.water; document.querySelectorAll('[data-water]').forEach(x=>x.setAttribute('aria-pressed',x===b)); gReset(); drawSeed(); });
+document.querySelectorAll('[data-air]').forEach(b=>b.onclick=()=>{ G.air=b.dataset.air; document.querySelectorAll('[data-air]').forEach(x=>x.setAttribute('aria-pressed',x===b)); gReset(); drawSeed(); });
+$('g-temp').oninput=e=>{ G.temp=+e.target.value; gReset(); drawSeed(); };
+$('g-run').onclick=()=>{ gReset(); G.run=true; $('g-run').disabled=true; }; $('g-reset').onclick=()=>{ gReset(); drawSeed(); };
+
+/* ================= LOOP AND TABS ================= */
+function draw(){ if(tab==='flow') drawFlow(); else if(tab==='cross') drawCross(); else drawSeed(); }
+function tickAll(dt){ if(tab==='flow') fTick(dt); if(tab==='cross') xTick(dt); if(tab==='seed') sTick(dt); }
+function stepN(n){ for(let i=0;i<n;i++) tickAll(1/60); draw(); }
+let last=0; function loop(t){ const dt=Math.min(0.05,(t-last)/1000||0.016); last=t; if(!$('lab').hidden){ tickAll(dt); draw(); } requestAnimationFrame(loop); }
+const TABS=['flow','cross','seed'];
+function showTab(t){ tab=t; for(const k of TABS){ $('p-'+k).hidden=k!==t; $('t-'+k).setAttribute('aria-pressed',k===t); } draw(); }
+for(const k of TABS) $('t-'+k).onclick=()=>showTab(k);
+function start(){ $('intro').hidden=true; $('lab').hidden=false; draw(); }
+$('b-start').onclick=start;
+const SUB={quiz:['flow'],si:['cross','si'],meadow:['cross','mead'],dispersal:['seed','disp'],germination:['seed','germ']};
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ start(); showTab(h); } else if(SUB[h]){ start(); const s=SUB[h]; showTab(s[0]); if(s[0]==='cross') setX(s[1]); if(s[0]==='seed') setS(s[1]); if(h==='quiz') $('f-quiz').click(); } }
+mInit(); M.runs=[M.cur]; gReset(); fromHash(); window.addEventListener('hashchange',fromHash);
+requestAnimationFrame(loop);
+window.flowerDebug={FL,XC,M,SD,G,step:stepN,showTab,setType,setX,setS,quizClick,dGo,mGen,mInit,gStep,gReset,xPol,start};
+})();
+</script>
+
+</body>
+</html>

@@ -236,7 +236,7 @@ function showPz(){ const P=PUZ[pz]; $('pz-text').textContent=P.t; $('pz-fb').tex
 $('pz-next').onclick=()=>{ pz=(pz+1)%PUZ.length; showPz(); }; showPz();
 // ---------------- loop ----------------
 resetTile(); markPt(); let last=performance.now();
-function frame(now){ const dt=Math.min(0.05,(now-last)/1000); last=now; if(!$('p-test').hidden) drawTile(dt); if(!$('p-tx').hidden) drawTx(dt); requestAnimationFrame(frame); }
+function frame(now){ const dt=Math.max(0,Math.min(0.05,(now-last)/1000)); last=now; if(!$('p-test').hidden) drawTile(dt); if(!$('p-tx').hidden) drawTx(dt); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
 window.bloodDebug={step:n=>{ for(let i=0;i<n;i++){ drawTile(0.033); drawTx(0.033); } }};
 })();

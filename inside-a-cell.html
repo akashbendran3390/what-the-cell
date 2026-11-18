@@ -73,6 +73,10 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
 .note{font-size:12px;color:var(--dim)}
 @media (hover:hover) and (pointer:fine){#pad{display:none}}
 @media (max-width:640px){.brand p{display:none}.brand h1{font-size:20px}#info h2{font-size:18px}#info p{font-size:14px}}
+body.textmode #labels,body.textmode #pad,body.textmode #b-find{display:none!important}
+body.textmode #info{left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 96px);bottom:auto;max-width:min(680px,calc(100% - 32px));width:100%;max-height:calc(100% - 210px);overflow-y:auto}
+.tlist{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px}.tlist .tl-h{width:100%;font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
+.tlist button{background:rgba(255,255,255,.09);border-radius:999px;padding:6px 12px;font-size:13.5px}.tlist button[aria-pressed="true"]{background:var(--teal);color:#1d1400}
 .back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
 </style>
 
@@ -129,11 +133,18 @@ kbd{font:700 12px ui-monospace,monospace;background:rgba(255,255,255,.12);border
   </div>
 </div>
 
-<script>/* Show any loading error on screen so it can be reported (2026-11-17) */
-(function(){ var shown=false; function show(msg){ if(shown) return; shown=true; var d=document.createElement('div'); d.setAttribute('role','alert'); d.style.cssText='position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#3a1218;color:#ffe3e0;border:2px solid #ef476f;border-radius:10px;padding:12px 16px;font:15px/1.4 sans-serif';
-  d.textContent='The 3D picture could not load. '+(/webgl/i.test(msg)?'This browser could not start 3D graphics (WebGL): turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.':'Error: '+msg); (document.body||document.documentElement).appendChild(d); }
-  window.addEventListener('error',function(e){ show(String(e.message||e.error||'unknown error')); });
-  window.addEventListener('load',function(){ if(typeof THREE==='undefined') show('the 3D library did not load (it may be blocked on this network)'); });
+<script>/* Notice box (2026-11-18): shows only errors from this page's own scripts, names the cause, and can be closed. */
+(function(){ var shown=false;
+  window.wtcNotice=function(title,msg){ if(shown) return; shown=true; var d=document.createElement('div'); d.setAttribute('role','alert'); d.id='wtc-notice';
+    d.style.cssText='position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#3a1218;color:#ffe3e0;border:2px solid #ef476f;border-radius:10px;padding:12px 16px;font:15px/1.45 sans-serif;max-width:760px;margin:0 auto';
+    var b=document.createElement('b'), s=document.createElement('span'), x=document.createElement('button'); b.textContent=title+' '; s.textContent=msg; x.type='button'; x.textContent='Close';
+    x.style.cssText='margin-left:10px;background:#ef476f;color:#fff;border:0;border-radius:999px;padding:4px 12px;font:700 13px sans-serif;cursor:pointer'; x.onclick=function(){ d.remove(); };
+    d.appendChild(b); d.appendChild(s); d.appendChild(x); (document.body||document.documentElement).appendChild(d); };
+  function ours(e){ var m=String(e.message||''), f=String(e.filename||'');
+    if(!m||/^Script error\.?$/i.test(m)||/ResizeObserver loop/i.test(m)) return false;
+    if(f&&f.indexOf(location.origin)!==0) return false; return true; }
+  window.addEventListener('error',function(e){ if(e.target&&e.target!==window){ var src=e.target.src||''; if(/three/.test(src)) wtcNotice('The 3D library did not load.','It may be blocked on this network. Try again later, or on another network.'); return; }
+    if(!ours(e)) return; wtcNotice('Something went wrong on this page.','Details for your teacher: '+e.message+' ('+String(e.filename||'').split('/').pop()+' line '+e.lineno+').'); },true);
 })();</script>
 <script src="assets/vendor/three.r128.min.js?v=eb854986"></script>
 <script>
@@ -172,7 +183,12 @@ function textOf(k){ const i=INFO[k]; return i.s+(level==='hl'&&i.h?' '+i.h:''); 
 function codesOf(k){ const i=INFO[k]; return i.cs+(level==='hl'&&i.ch?', '+i.ch:''); }
 // ---------- three.js setup ----------
 const canvas = document.getElementById('c');
-let renderer; try{ renderer = new THREE.WebGLRenderer({canvas, antialias:true}); }catch(e){ const p=document.createElement('p'); p.style.cssText='position:fixed;top:40%;left:0;right:0;text-align:center;color:#ffb4a2;font:600 18px sans-serif;padding:0 20px;z-index:99'; p.textContent='This browser could not start 3D graphics (WebGL). Turn on hardware acceleration in the browser settings, update the browser, or try Chrome, Edge or Firefox.'; document.body.appendChild(p); throw e; }
+// 3D start-up (2026-11-18): safer settings one by one, then a text version if 3D graphics are switched off (managed school laptops).
+let renderer=null, textMode=false;
+if(!/[?&]nogl\b/.test(location.search)) [{antialias:true},{antialias:false},{antialias:false,powerPreference:'low-power',precision:'mediump',failIfMajorPerformanceCaveat:false}].some(o=>{ try{ renderer=new THREE.WebGLRenderer(Object.assign({canvas},o)); return true; }catch(e){ return false; } });
+if(!renderer){ textMode=true; document.body.classList.add('textmode'); const nop=()=>{}; renderer={render:nop,setPixelRatio:nop,setSize:nop,setClearColor:nop,info:{render:{calls:0,triangles:0}}};
+  window.addEventListener('load',()=>{ if(window.wtcNotice) wtcNotice('3D graphics are switched off on this computer, so this is the text version.','Pick any structure from the list, switch cell type or SL/HL, or take the tour. To see the 3D cell, turn on "Use graphics acceleration when available" in the browser settings (on a school laptop IT may have to do this), or use another device.'); }); }
+canvas.addEventListener('webglcontextlost',e=>{ e.preventDefault(); if(window.wtcNotice) wtcNotice('The 3D picture stopped.','The graphics chip on this computer ran out of memory. Close other tabs and reload the page.'); });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 const scene = new THREE.Scene(); scene.fog=new THREE.FogExp2(0x0b2238, 0.011);
 const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 600);
@@ -414,7 +430,11 @@ const info=document.getElementById('info');
 // Go inside (2026-11-17): organelles that have their own close-up walk-through
 const INSIDE={nucleus:['nucleus.html','Go inside the nucleus'],pore:['nucleus.html','Go inside the nucleus'],nucleolus:['nucleus.html','Go inside the nucleus'],mito:['mitochondrion.html','Go inside the mitochondrion'],chloro:['chloroplast.html','Go inside the chloroplast'],rer:['translation.html','Watch a ribosome make a protein'],ribosome:['translation.html','Watch a ribosome make a protein'],membrane:['membrane-journey.html','Go into the membrane'],nucleoid:['dna-replication.html','Watch DNA being copied']};
 function goIn(k){ const g=INSIDE[k]; return g?'<div class="tourbtns"><a class="inside" href="'+g[0]+'">'+g[1]+' &rarr;</a></div>':''; }
-function showInfo(e,h,p,c,extra){ info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p>'+(c?'<div class="codes"></div>':'')+(extra||''); info.querySelector('.eyebrow').textContent=e; info.querySelector('h2').textContent=h; info.querySelector('p').textContent=p; if(c) info.querySelector('.codes').textContent='Syllabus: '+c; }
+function showInfo(e,h,p,c,extra){ info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p>'+(c?'<div class="codes"></div>':'')+(extra||'')+(textMode&&!inTour()?textList():''); info.querySelector('.eyebrow').textContent=e; info.querySelector('h2').textContent=h; info.querySelector('p').textContent=p; if(c) info.querySelector('.codes').textContent='Syllabus: '+c;
+  info.querySelectorAll('.tlist button').forEach(b=>{ b.onclick=()=>{ const k=b.dataset.k; current=k; showInfo('Structure',INFO[k].n,textOf(k),codesOf(k),goIn(k)); info.scrollTop=0; }; }); }
+function inTour(){ try{ return mode==='tour'; }catch(e){ return false; } }
+// Text version: every structure in the current cell as a button.
+function textList(){ const ks=[]; labels.forEach(l=>{ if(INFO[l.key]&&ks.indexOf(l.key)<0) ks.push(l.key); }); return '<div class="tlist"><div class="tl-h">Structures in this cell</div>'+ks.map(k=>'<button type="button" data-k="'+k+'"'+(k===current?' aria-pressed="true"':'')+'>'+INFO[k].n+'</button>').join('')+'</div>'; }
 // ---------- modes: explore, tour, find ----------
 let mode='explore', tourAt=0, findList=[], findAt=0, found=0, current=null;
 const findBox=document.getElementById('find');
@@ -450,9 +470,11 @@ function resize(){ const w=canvas.clientWidth, h=canvas.clientHeight; if(!w||!h)
 window.addEventListener('resize', resize);
 renderer.setClearColor(0x0b2238);
 const v=new THREE.Vector3(); let last=performance.now(), clock=0;
-function frame(now){
+let loopErrs=0; function loopErr(e){ loopErrs++; if(loopErrs<4) console.error(e); if(loopErrs===60&&window.wtcNotice) wtcNotice("Something keeps going wrong in the animation.","Details for your teacher: "+e.message); }
+function frame(now){ try{ frame0(now); }catch(e){ loopErr(e); requestAnimationFrame(frame); } }
+function frame0(now){
   if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) resize();
-  const dt=Math.min(0.05,(now-last)/1000); last=now; clock+=dt;
+  const dt=Math.max(0,Math.min(0.05,(now-last)/1000)); last=now; clock+=dt;
   const fast=keys.ShiftLeft||keys.ShiftRight; const sp=(fast?36:16)*dt;
   const turn=(keys.ArrowLeft||keys['pad-tl']?1:0)-(keys.ArrowRight||keys['pad-tr']?1:0); if(turn){ yaw+=turn*1.6*dt; fly=null; }
   const f=(keys.KeyW||keys.ArrowUp||keys['pad-fw']?1:0)-(keys.KeyS||keys.ArrowDown||keys['pad-bk']?1:0);
@@ -470,7 +492,7 @@ function frame(now){
     v.copy(l.pos).project(camera); const vis=v.z<1 && Math.abs(v.x)<1.1 && Math.abs(v.y)<1.1 && d<70 && mode!=='find';
     if(vis){ l.el.style.left=((v.x+1)/2*w)+'px'; l.el.style.top=((1-v.y)/2*h)+'px'; l.el.style.opacity=Math.max(0.25,Math.min(1,1.2-d/70)); l.el.style.display=''; } else l.el.style.display='none';
     l.el.classList.toggle('on', l===best && bestD<12); });
-  if(best && bestD<12 && mode!=='tour'){
+  if(!textMode && best && bestD<12 && mode!=='tour'){
     if(mode==='find'){ if(best.key===findList[findAt]){ found++; findAt++; findBox.textContent='Found it: '+INFO[best.key].n+'!'; const k=best.key; showInfo('Found it',INFO[k].n,textOf(k),codesOf(k),goIn(k)); setTimeout(()=>{ if(mode==='find') nextFind(); },1600); } }
     else if(current!==best.key){ current=best.key; showInfo('You are next to',INFO[best.key].n,textOf(best.key),codesOf(best.key),goIn(best.key)); }
   }

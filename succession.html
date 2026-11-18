@@ -215,6 +215,43 @@ window.JOURNEY = {
   }
 };
 
+// Extras for succession (2026-11-18): HL check questions, and an HL close-up graphing the changes during primary succession and
+// showing cyclical and arrested succession (D4.2.11-14).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  const D_CH = { n: 'How a community changes', hl: true, bg: '#0f1a12', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'Trends in primary succession', s: 'As succession goes on from bare rock, several things increase together:', hpts: ['**Soil depth** and organic matter, as pioneers weather rock and dead organisms decompose.', '**Biomass** and the **height** of the vegetation.', '**Species diversity** and the complexity of food webs.', 'The amount of nutrients held in the ecosystem, and its stability.'], ch: 'D4.2.12' },
+      { n: 'What drives it', s: 'Each community changes the abiotic conditions (soil, shade, moisture), making the area more suitable for new species, which then outcompete the earlier ones.', ch: 'D4.2.11' },
+      { n: 'Cyclical succession', s: 'Some communities go through a repeating cycle rather than one direction. For example, in heathland, heather grows old and dies back, bare patches are colonised by lichens and grasses, then heather returns.', ch: 'D4.2.13' },
+      { n: 'Arrested succession', s: 'A **climax community** is the stable end point, set by climate (for example temperate forest). Succession can be **arrested** before this by grazing, mowing, burning or flooding: chalk grassland stays grassland only because sheep keep eating the tree seedlings.', hq: { q: 'A meadow stops being mown and turns into scrub, then woodland. What does this show?', o: ['Cyclical succession', 'Mowing had arrested succession; without it succession continues towards the climax', 'Primary succession on bare rock'], a: 1, why: 'Regular mowing held the community at the grassland stage; removing it lets succession proceed.' }, ch: 'D4.2.14' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv); D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      const T = (s, x, y, col, size) => { c.fillStyle = col || '#222'; c.font = 'bold ' + (size || 22) + 'px sans-serif'; c.fillText(s, x, y); };
+      function draw(step, k) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640);
+        if (step <= 1) { c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 60); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke(); T('Time (hundreds of years)', 400, 610); T('Relative amount', 20, 40);
+          const X = x => 110 + x * 870, Y = v => 560 - v * 470; const s = (x, m, r) => 1 / (1 + Math.exp(-(x - m) * r));
+          [['Soil depth', '#6d4c41', x => s(x, 0.45, 8) * 0.8], ['Biomass', '#2d6a4f', x => s(x, 0.55, 9)], ['Species diversity', '#1d4ed8', x => s(x, 0.35, 10) * 0.9 - 0.15 * s(x, 0.85, 20)], ['Height of plants', '#e76f51', x => s(x, 0.6, 9) * 0.95]].forEach(([n, col, f], i) => { c.strokeStyle = col; c.lineWidth = 5; c.beginPath(); for (let x = 0; x <= k; x += 0.005) { x ? c.lineTo(X(x), Y(f(x))) : c.moveTo(X(x), Y(f(x))); } c.stroke(); T(n, 130 + i * 210, 90, col); });
+          ['Bare rock', 'Pioneers', 'Grasses', 'Shrubs', 'Forest'].forEach((n, i) => T(n, 120 + i * 175, 590, '#555', 18)); return; }
+        if (step === 2) { const cx = 512, cy = 330, R = 190; c.strokeStyle = '#7b2cbf'; c.lineWidth = 8; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke(); const st = ['Young heather', 'Mature heather', 'Old heather dies back', 'Bare patch: lichens, grasses']; st.forEach((n, i) => { const a = -Math.PI / 2 + i * Math.PI / 2; const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R; c.fillStyle = '#7b2cbf'; c.beginPath(); c.arc(x, y, 22, 0, 7); c.fill(); T(n, x + (i === 3 ? -310 : 30), y + 8, '#222', 22); });
+          const a = -Math.PI / 2 + k * Math.PI * 2; c.fillStyle = '#ffb703'; c.beginPath(); c.arc(cx + Math.cos(a) * R, cy + Math.sin(a) * R, 14, 0, 7); c.fill(); return; }
+        const stages = ['Bare', 'Grassland', 'Scrub', 'Woodland (climax)']; stages.forEach((n, i) => { const x = 90 + i * 230; c.fillStyle = ['#adb5bd', '#95d5b2', '#52b788', '#2d6a4f'][i]; c.fillRect(x, 260, 190, 90); T(n, x + 10, 395, '#222', 20); if (i < 3) { c.strokeStyle = '#333'; c.lineWidth = 4; c.beginPath(); c.moveTo(x + 192, 305); c.lineTo(x + 228, 305); c.stroke(); } });
+        c.strokeStyle = '#e63946'; c.lineWidth = 6; c.beginPath(); c.moveTo(560, 230); c.lineTo(600, 380); c.moveTo(600, 230); c.lineTo(560, 380); c.stroke(); T('Grazing, mowing or burning stops it here: arrested succession', 120, 470, '#e63946', 24); tex.needsUpdate = true; tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = ''; return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const k = Math.min(1, (tt - t0) / 4); const kk = step + ':' + Math.round(k * 40); if (kk !== key) { key = kk; draw(step, k); tex.needsUpdate = true; } } };
+    } };
+  return {
+    dives: [D_CH],
+    stops: {
+      'Bare rock': { hq: { q: 'What is the difference between primary and secondary succession?', o: ['Primary is faster', 'Primary starts on bare ground with no soil; secondary starts where soil remains after a disturbance', 'Secondary has no plants'], a: 1, why: 'Primary succession must build soil from scratch, so it is much slower.' }, dives: ['How a community changes'] },
+      'Pioneer species': { hq: { q: 'How do lichens prepare bare rock for other plants?', o: ['They shade the rock', 'They break down rock and add organic matter as they die, starting soil formation', 'They fix carbon dioxide only'], a: 1, why: 'Weathering and decomposition of pioneers form the first thin soil.' } },
+      'Grasses and small plants': { hq: { q: 'Why do grasses replace the pioneer species?', o: ['Pioneers prefer shade', 'The deeper soil lets grasses grow, and they outcompete the pioneers', 'Grasses eat lichens'], a: 1, why: 'Each stage changes the conditions so that new, more competitive species can establish.' } },
+      'Shrubs': { hq: { q: 'Which abiotic factor changes most as shrubs and trees grow taller?', o: ['Light at ground level falls', 'Rainfall increases', 'Day length changes'], a: 0, why: 'Taller plants shade the ground, so shade-tolerant species take over the lower layers.' } },
+      'Climax community': { hq: { q: 'What decides which climax community develops in an area?', o: ['The first pioneer species', 'Mainly climate: temperature and rainfall', 'The number of animals'], a: 1, why: 'Climate sets the stable end point, for example temperate forest or grassland.' }, dives: ['How a community changes'] },
+      'What has changed?': { dives: ['How a community changes'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

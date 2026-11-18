@@ -193,6 +193,124 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the xylem walk-through (2026-11-18): check questions, close-ups on cohesion-tension (B3.2.7-8) and stem and root
+// sections (B3.2.9-10), and HL close-ups on root pressure (B3.2.17) and phloem translocation (B3.2.18).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+  const D_COH = { n: 'Cohesion and tension', bg: '#0d1a14', dist: 46, target: V(0, 2, 0), yaw: 0.25, pitch: 0.1,
+    steps: [
+      { n: 'A column of water', s: 'The xylem vessel holds an unbroken column of water from root to leaf. Water molecules are **polar**, and **hydrogen bonds** (dashes) hold them to each other: **cohesion**.', cs: 'B3.2.7' },
+      { n: 'Evaporation pulls from the top', s: 'In the leaf, water evaporates from cell walls and leaves through the stomata. Each molecule that leaves pulls the next one up behind it, putting the whole column under **tension**.', cs: 'B3.2.7' },
+      { n: 'Adhesion to the walls', s: 'Water molecules also stick to the hydrophilic walls of the vessel (**adhesion**), which helps the column climb and stops it breaking.', cs: 'B3.2.7' },
+      { n: 'Built to resist tension', s: 'The pull is so strong that the vessel walls would collapse inwards. **Lignin** rings and spirals stiffen them. Xylem vessels are dead, hollow and have **no end walls**, so water flows freely.', pts: ['Pits in the walls let water move sideways between vessels.'], q: { q: 'Why do xylem vessel walls need lignin?', o: ['To make sugar', 'To stop them collapsing inward under tension', 'To let water through'], a: 1, why: 'Transpiration pull puts the water column under tension, which would pull the walls inward.' }, cs: 'B3.2.8' },
+      { n: 'No energy from the plant', s: 'The energy for transpiration comes from the **sun** (evaporation), not from the plant\'s ATP. So water can rise more than 100 m in the tallest trees.', q: { q: 'What drives the movement of water up the xylem?', o: ['Active transport by xylem cells', 'Evaporation at the leaves pulling a cohesive water column', 'Gravity'], a: 1, why: 'Transpiration creates tension; cohesion transmits the pull down to the roots.' }, cs: 'B3.2.7' }
+    ],
+    build(D) { const g = D.scene; const tube = new THREE.Mesh(new THREE.CylinderGeometry(4, 4, 34, 28, 1, true), T(0x95d5b2, 0.25)); g.add(tube);
+      for (let y = -16; y <= 16; y += 2.2) { const r = new THREE.Mesh(new THREE.TorusGeometry(4.05, 0.28, 8, 30), M(0x7f5539)); r.rotation.x = Math.PI / 2; r.position.y = y; g.add(r); }
+      const mols = []; const geo = new THREE.SphereGeometry(0.75, 12, 8), h = new THREE.SphereGeometry(0.4, 8, 6);
+      for (let i = 0; i < 26; i++) { const grp = new THREE.Group(); grp.add(new THREE.Mesh(geo, M(0xe63946))); [-1, 1].forEach(s => { const hh = new THREE.Mesh(h, M(0xffffff)); hh.position.set(s * 0.7, 0.5, 0); grp.add(hh); }); g.add(grp); mols.push({ grp, x: (i % 3 - 1) * 2, y0: -16 + i * 1.3, z: ((i * 7) % 3 - 1) * 1.2 }); }
+      const bonds = []; for (let i = 0; i < 24; i++) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1, 6), M(0xffd166)); g.add(b); bonds.push(b); }
+      const leaf = new THREE.Mesh(new THREE.BoxGeometry(14, 2, 10), T(0x52b788, 0.4)); leaf.position.y = 20; g.add(leaf);
+      const vap = []; for (let i = 0; i < 6; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), M(0x90e0ef)); g.add(m); vap.push({ m, ph: i / 6 }); }
+      D.label('Xylem vessel', V(-7, -14, 0)); const lc = D.label('Hydrogen bonds: cohesion', V(6.5, 4, 0)), lt = D.label('Tension: pulled up', V(-8, 10, 0)), la = D.label('Adhesion to the wall', V(6.5, -6, 0)), ll = D.label('Lignin rings', V(-6.5, -2, 2)), lv = D.label('Evaporation through stomata', V(6, 24, 0));
+      let step = 0, tt = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { if (!A.paused) tt += dt; const sp = step >= 1 ? 1.4 : 0;
+          mols.forEach((m, i) => { let y = m.y0 + tt * sp; y = ((y + 16) % 34) - 16; const wob = step === 2 ? 0.8 : 0; m.grp.position.set(m.x * (1 + wob * 0.6), y, m.z); m.grp.rotation.y = i + tt * 0.3; });
+          bonds.forEach((b, i) => { const a = mols[i].grp.position, c = mols[i + 1].grp.position; const d = c.clone().sub(a); b.visible = d.length() < 4 && step !== 3; b.position.copy(a).add(c).multiplyScalar(0.5); b.scale.y = d.length(); b.quaternion.setFromUnitVectors(V(0, 1, 0), d.normalize()); });
+          vap.forEach(v => { v.m.visible = step >= 1; const f = (tt * 0.4 + v.ph) % 1; v.m.position.set(-3 + v.ph * 6, 21 + f * 6, 2); });
+          hideL(lc, !(step === 0 || step === 2)); hideL(lt, step < 1); hideL(la, step !== 2); hideL(ll, step !== 3); hideL(lv, step < 1); } };
+    } };
+
+  const D_SECT = { n: 'Stem and root sections', bg: '#0d1a14', dist: 52, target: V(0, 0, 0), yaw: 0, pitch: 1.0,
+    steps: [
+      { n: 'A dicot stem', s: 'In a stem cut across, the **vascular bundles** are arranged in a **ring** near the outside.', pts: ['In each bundle: **xylem** towards the centre, **phloem** towards the outside, with cambium between.', 'Outside: epidermis and cortex. Centre: pith.', 'A ring of bundles near the edge resists bending in the wind.'], cs: 'B3.2.9' },
+      { n: 'A dicot root', s: 'In a root the vascular tissue is in the **centre**: xylem forms a star (often with 3 or 4 arms) and phloem lies between the arms.', pts: ['Around it: the **endodermis**, then a wide cortex, then the epidermis with **root hairs**.', 'A central core resists pulling forces as the plant sways.'], cs: 'B3.2.10' },
+      { n: 'Compare them', s: 'Both carry water up in xylem and sugars in phloem, but the arrangement differs.', q: { q: 'Where is the xylem in a dicot root?', o: ['In a ring of bundles near the edge', 'In the centre, as a star shape', 'Just under the epidermis'], a: 1, why: 'Root vascular tissue is central, with xylem in a star and phloem between its arms.' }, hq: { q: 'In a stem vascular bundle, which way round are xylem and phloem?', o: ['Xylem outside, phloem inside', 'Xylem inside (towards the centre), phloem outside', 'They are mixed together'], a: 1, why: 'In stems the xylem faces the pith and the phloem faces the cortex.' }, cs: 'B3.2.9, B3.2.10' }
+    ],
+    build(D) { const g = D.scene; const disc = (r, col, y, op) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.6, 64), op ? T(col, op) : M(col)); m.position.y = y; g.add(m); return m; };
+      const stem = new THREE.Group(); g.add(stem); const root = new THREE.Group(); g.add(root);
+      [[18, 0x95d5b2, 0], [17.4, 0xd8f3dc, 0.1], [9, 0xf1faee, 0.2]].forEach(([r, c, y]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.6, 64), M(c)); m.position.y = y; stem.add(m); });
+      for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; const b = new THREE.Group(); b.position.set(Math.cos(a) * 12.5, 0.6, Math.sin(a) * 12.5); b.rotation.y = -a;
+        const x = new THREE.Mesh(new THREE.SphereGeometry(1.8, 16, 10), M(0xc1121f)); x.scale.set(1, 0.4, 1.2); x.position.x = -1.6; const p = new THREE.Mesh(new THREE.SphereGeometry(1.6, 16, 10), M(0x4361ee)); p.scale.set(1, 0.4, 1.2); p.position.x = 1.8; b.add(x, p); stem.add(b); }
+      [[18, 0xe9edc9, 0], [6.5, 0xccd5ae, 0.15], [5.8, 0xfefae0, 0.25]].forEach(([r, c, y]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.6, 64), M(c)); m.position.y = y; root.add(m); });
+      for (let i = 0; i < 4; i++) { const a = i / 4 * Math.PI * 2 + 0.4; const arm = new THREE.Mesh(new THREE.BoxGeometry(9, 0.5, 1.8), M(0xc1121f)); arm.position.set(Math.cos(a) * 2.2, 0.7, Math.sin(a) * 2.2); arm.rotation.y = -a; root.add(arm);
+        const ph = new THREE.Mesh(new THREE.SphereGeometry(1.2, 14, 10), M(0x4361ee)); ph.scale.set(1, 0.4, 1); const b2 = a + Math.PI / 4; ph.position.set(Math.cos(b2) * 3.6, 0.7, Math.sin(b2) * 3.6); root.add(ph); }
+      for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2; const h = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 4, 6), M(0xe9edc9)); h.rotation.z = Math.PI / 2; h.position.set(Math.cos(a) * 20, 0, Math.sin(a) * 20); h.rotation.y = -a; root.add(h); }
+      const S = [D.label('Epidermis', V(17, 1, 4)), D.label('Cortex', V(10, 1, -8)), D.label('Pith', V(0, 1, 0)), D.label('Xylem (inside)', V(-12.5, 1.5, 3)), D.label('Phloem (outside)', V(-14, 1.5, -6))];
+      const R = [D.label('Root hairs', V(20, 1, 6)), D.label('Cortex', V(-11, 1, -6)), D.label('Endodermis', V(6.5, 1, -2)), D.label('Xylem (star)', V(0, 1.6, 0)), D.label('Phloem', V(-3.5, 1.6, 2.5))];
+      let step = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { const showRoot = step === 1; stem.visible = step === 0 || step === 2; root.visible = step >= 1; stem.position.x = step === 2 ? -21 : 0; root.position.x = step === 2 ? 21 : 0;
+          S.forEach(l => hideL(l, step === 1 || step === 2)); R.forEach(l => hideL(l, step !== 1)); } };
+    } };
+
+  const D_ROOTP = { n: 'Root pressure', hl: true, bg: '#0d1a14', dist: 44, target: V(0, 0, 0), yaw: 0, pitch: 0.4,
+    steps: [
+      { n: 'When transpiration is low', s: 'At night, or in early spring before leaves open, there is little transpiration to pull water up. Plants can still push water up by **root pressure**.', cs: '', ch: 'B3.2.17' },
+      { n: 'Pumping ions into the xylem', s: 'Root cells **actively transport mineral ions** (purple) into the xylem, using ATP. This lowers the water potential of the xylem sap.', ch: 'B3.2.17' },
+      { n: 'Water follows by osmosis', s: 'Water (blue) moves into the xylem by osmosis from the surrounding root cells. With the endodermis sealing the centre, pressure builds up and **pushes** the sap upwards.', ch: 'B3.2.17' },
+      { n: 'Evidence: guttation', s: 'On a still morning, droplets appear at the edges of leaves of some plants: water forced out by root pressure. Cut stems can also ooze sap.', hq: { q: 'Why does root pressure need energy, while transpiration pull does not?', o: ['Water is heavy', 'Mineral ions are pumped into the xylem by active transport, which uses ATP', 'Osmosis uses ATP'], a: 1, why: 'Root pressure relies on active transport of ions; transpiration pull is powered by evaporation.' }, ch: 'B3.2.17' }
+    ],
+    build(D) { const g = D.scene; const ring = (r, col, op) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 24, 40, 1, true), T(col, op)); g.add(m); return m; };
+      ring(14, 0xe9edc9, 0.12); ring(6, 0xccd5ae, 0.3); const xyl = new THREE.Mesh(new THREE.CylinderGeometry(3, 3, 24, 24), T(0xc1121f, 0.25)); g.add(xyl);
+      const ions = [], wat = []; for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 8), M(0x9d4edd, { emissive: 0x2a0a44 })); g.add(m); ions.push({ m, a: i / 14 * 6.28, ph: Math.random() }); }
+      for (let i = 0; i < 20; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.38, 10, 8), M(0x4fb3ff)); g.add(m); wat.push({ m, a: Math.random() * 6.28, ph: Math.random(), y: A.rnd(-8, 4) }); }
+      const up = []; for (let i = 0; i < 10; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(0.4, 10, 8), M(0x4fb3ff)); g.add(m); up.push({ m, ph: i / 10, x: A.rnd(-1.5, 1.5) }); }
+      D.label('Xylem', V(0, 13.5, 0)); D.label('Endodermis', V(7, 9, 0)); D.label('Root cortex', V(14, 9, 0)); const li = D.label('Ions pumped in (ATP)', V(-9, -2, 4)), lw = D.label('Water by osmosis', V(9, -4, 4)), lu = D.label('Pushed up', V(4, 14, 0));
+      let step = 0, tt = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { if (!A.paused) tt += dt;
+          ions.forEach(o => { o.m.visible = step >= 1; const f = (tt * 0.35 + o.ph) % 1; const r = 9 - f * 7; o.m.position.set(Math.cos(o.a) * r, -2 + Math.sin(o.a * 3), Math.sin(o.a) * r); });
+          wat.forEach(o => { o.m.visible = step >= 2; const f = (tt * 0.3 + o.ph) % 1; const r = 13 - f * 11; o.m.position.set(Math.cos(o.a) * r, o.y, Math.sin(o.a) * r); });
+          up.forEach(o => { o.m.visible = step >= 2; const f = (tt * 0.35 + o.ph) % 1; o.m.position.set(o.x, -10 + f * 22, 0); });
+          hideL(li, step < 1); hideL(lw, step < 2); hideL(lu, step < 2); } };
+    } };
+
+  const D_PHL = { n: 'Phloem translocation', hl: true, bg: '#0d1a14', dist: 54, target: V(0, 0, 0), yaw: 0.15, pitch: 0.15,
+    steps: [
+      { n: 'Sieve tubes and companion cells', s: 'Phloem carries sap (mainly **sucrose** and amino acids) from **sources** to **sinks**.', hpts: ['**Sieve tube elements**: living cells joined end to end, with few organelles and no nucleus, separated by **sieve plates** with pores.', '**Companion cells**: next to each sieve tube element, with a nucleus and many mitochondria; they keep the sieve tube alive and do its active transport.', 'Plasmodesmata connect the two.'], ch: 'B3.2.18' },
+      { n: 'Loading at the source', s: 'In a leaf (source), companion cells **actively load sucrose** (yellow) into the sieve tubes, using ATP.', h: 'Protons are pumped out of the companion cell, then flow back in with sucrose through a cotransporter protein.', ch: 'B3.2.18' },
+      { n: 'High pressure at the source', s: 'The high sucrose concentration lowers the water potential, so **water enters by osmosis** from the xylem nearby. This raises the **hydrostatic pressure** at the source end.', ch: 'B3.2.18' },
+      { n: 'Unloading at the sink', s: 'At a sink (a root, fruit or growing tip), sucrose is unloaded and used or stored as starch. Water leaves, so pressure there is low.', ch: 'B3.2.18' },
+      { n: 'Mass flow', s: 'Sap flows from high pressure to low pressure along the sieve tube: **mass flow**. Unlike the xylem, phloem can carry sap **up or down**, depending on where the sinks are.', hq: { q: 'Why do companion cells have many mitochondria?', o: ['To make sucrose by photosynthesis', 'To supply ATP for actively loading sucrose into sieve tubes', 'To store starch'], a: 1, why: 'Loading sucrose against its concentration gradient is active transport.' }, ch: 'B3.2.18' }
+    ],
+    build(D) { const g = D.scene; const st = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 48, 24, 1, true), T(0x4361ee, 0.25)); st.rotation.z = Math.PI / 2; g.add(st);
+      for (let x = -18; x <= 18; x += 12) { const p = new THREE.Mesh(new THREE.CylinderGeometry(2.55, 2.55, 0.35, 24), M(0x7b2cbf)); p.rotation.z = Math.PI / 2; p.position.x = x; g.add(p); }
+      for (let x = -21; x <= 21; x += 12) { const cc = new THREE.Mesh(new THREE.BoxGeometry(9, 3, 3), T(0xf4a261, 0.4)); cc.position.set(x, -4.8, 0); g.add(cc); const nuc = new THREE.Mesh(new THREE.SphereGeometry(0.8, 12, 8), M(0x6d4c9f)); nuc.position.set(x - 2, -4.8, 0.5); g.add(nuc);
+        for (let k = 0; k < 3; k++) { const mi = new THREE.Mesh(new THREE.SphereGeometry(0.4, 10, 8), M(0xf08a3c)); mi.scale.x = 2; mi.position.set(x + k * 1.6, -4.4, 1); g.add(mi); } }
+      const xy = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 48, 18, 1, true), T(0xc1121f, 0.2)); xy.rotation.z = Math.PI / 2; xy.position.y = 6; g.add(xy);
+      const leaf = new THREE.Mesh(new THREE.BoxGeometry(6, 10, 6), T(0x52b788, 0.35)); leaf.position.set(-28, 2, 0); g.add(leaf); const sink = new THREE.Mesh(new THREE.SphereGeometry(4.5, 20, 14), T(0xe76f51, 0.35)); sink.position.set(28, 1, 0); g.add(sink);
+      const suc = []; for (let i = 0; i < 18; i++) { const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.5), M(0xffd166, { emissive: 0x443300 })); g.add(m); suc.push({ m, ph: i / 18, y: A.rnd(-1.5, 1.5), z: A.rnd(-1.5, 1.5) }); }
+      const wIn = [], wOut = []; for (let i = 0; i < 5; i++) { [wIn, wOut].forEach((arr, j) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.38, 8, 6), M(0x4fb3ff)); g.add(m); arr.push({ m, ph: i / 5 }); }); }
+      const bar = [-1, 1].map(s => { const b = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 2), M(0xffd166)); b.position.set(s * 18, 9, 0); g.add(b); return b; });
+      D.label('Sieve tube', V(-6, 3.4, 2)); D.label('Sieve plate', V(-6, -2.8, 3)); D.label('Companion cells', V(10, -7.4, 2)); D.label('Xylem', V(0, 8.2, 0)); D.label('Source: leaf', V(-28, 8.5, 0)); D.label('Sink: root or fruit', V(28, 7, 0)); const lp = D.label('High pressure', V(-18, 13, 0)), lq = D.label('Low pressure', V(18, 13, 0));
+      let step = 0, tt = 0;
+      return { onStep(i) { step = i; },
+        update(dt) { if (!A.paused) tt += dt; const flow = step >= 4 ? 1 : step >= 2 ? 0.4 : 0;
+          suc.forEach(o => { o.m.visible = step >= 1; const f = (tt * 0.08 * (flow + 0.15) + o.ph) % 1; let x = step === 1 ? -24 + (o.ph * 6) : -24 + f * 48; o.m.position.set(x, o.y, o.z); o.m.rotation.y += dt; });
+          wIn.forEach(o => { o.m.visible = step >= 2; const f = (tt * 0.5 + o.ph) % 1; o.m.position.set(-19 + o.ph * 4, 6 - f * 5, 0); });
+          wOut.forEach(o => { o.m.visible = step >= 3; const f = (tt * 0.5 + o.ph) % 1; o.m.position.set(17 + o.ph * 4, 1 + f * 5, 0); });
+          const hp = step >= 2 ? 6 : 0.2, lpH = step >= 3 ? 1.2 : 0.2; bar[0].scale.y = hp; bar[0].position.y = 9 + hp / 2; bar[1].scale.y = lpH; bar[1].position.y = 9 + lpH / 2; bar.forEach(b => b.visible = step >= 2);
+          hideL(lp, step < 2); hideL(lq, step < 3); } };
+    } };
+
+  return {
+    dives: [D_COH, D_SECT, D_ROOTP, D_PHL],
+    stops: {
+      'Transport in a plant': { q: { q: 'Which tissue carries sugars from the leaves to the rest of the plant?', o: ['Xylem', 'Phloem', 'Epidermis'], a: 1, why: 'Phloem translocates sugars; xylem carries water and mineral ions upwards.' }, dives: ['Stem and root sections'] },
+      'Root hairs': { pts: ['Root hairs are long, thin extensions of epidermis cells: a huge surface area for absorbing water and mineral ions.', 'Mineral ions are taken up by active transport, which lowers the water potential of the root cells.'], q: { q: 'Why does water enter root hair cells?', o: ['Active transport of water', 'Osmosis: the root cells have a lower water potential than the soil water', 'Root pressure'], a: 1, why: 'Dissolved ions in the root cells lower their water potential, so water moves in by osmosis.' }, dives: ['Root pressure'] },
+      'Into the xylem': { q: { q: 'Where is the xylem in a dicot root?', o: ['In the centre', 'Just under the root hairs', 'In a ring near the edge'], a: 0, why: 'In roots the vascular tissue forms a central core.' }, dives: ['Stem and root sections', 'Root pressure'] },
+      'Up the xylem vessel': { dives: ['Cohesion and tension'] },
+      'Phloem alongside': { dives: ['Phloem translocation'] },
+      'Transpiration': { pts: ['Transpiration is faster when it is **warm**, **windy**, **dry** and **bright** (stomata open).', 'A **potometer** measures water uptake by a cut shoot, which is close to the rate of transpiration.'], q: { q: 'Which change would slow transpiration?', o: ['Higher temperature', 'Higher humidity', 'More wind'], a: 1, why: 'Humid air reduces the water vapour gradient between the leaf and the air, so less water evaporates.' }, dives: ['Cohesion and tension'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

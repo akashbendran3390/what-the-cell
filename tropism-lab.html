@@ -676,5 +676,104 @@ window.tropDebug={P,C,R,A,E,step:stepN,showTab,setMode,flows,outcome,pRun,eStep,
 })();
 </script>
 
+<script>
+(function () {
+  var treat = function (v, light) { return function () { var b = document.getElementById('b-start'), lab = document.getElementById('lab'); if (lab && lab.hidden && b) b.click(); var t = document.getElementById('t-photo'); if (t) t.click();
+    var l = document.querySelector('[data-light="' + (light || 'left') + '"]'); if (l) l.click(); var r = document.getElementById('p-reset'); if (r) r.click();
+    var s = document.getElementById('p-tr'); if (s) { s.value = v; s.dispatchEvent(new Event('change')); } setTimeout(function () { var run = document.getElementById('p-run'); if (run) run.click(); }, 150); }; };
+  window.LAB_GUIDE = { title: 'Plant Hormone Lab: step by step', sections: {
+    photo: { n: 'Phototropism', tab: '#t-photo', steps: [
+      { n: 'A tropism', s: 'A **tropism** is a growth response towards or away from a directional stimulus. Shoots grow **towards light** from one side: **positive phototropism**.', pts: ['You can observe tropisms in seedlings grown in a box with a slit on one side, measuring the angle of bending each day.'], ch: 'C3.1.17, C3.1.18' },
+      { n: 'Light from one side', s: 'Run an untreated seedling with light from the left. It bends towards the light by about 40 degrees in 6 hours.', go: treat('none', 'left'), ch: 'C3.1.18' },
+      { n: 'The tip senses light', s: 'Cover the tip with foil: no bending, although the seedling still grows. Cut the tip off: hardly any growth. So the **tip detects light** and controls growth further down.', go: treat('foil', 'left'), q: { q: 'A seedling with a foil cap over its tip grows straight up when lit from one side. What does this show?', o: ['Light is not needed for growth', 'The tip is where light is detected', 'Foil releases auxin'], a: 1, why: 'Blocking light to the tip stops bending, so the tip senses the direction of light.' }, ch: 'C3.1.17, C3.1.18' },
+      { n: 'A chemical messenger: auxin', s: 'Put the tip on an agar block, then put the block on one side of a cut stem, in darkness. The stem bends away from the block: a chemical from the tip (**auxin**) moved into the agar and made cells on that side grow faster.', go: treat('agar', 'none'), ch: 'C3.1.19' },
+      { n: 'Auxin moves to the shaded side', s: 'In light from one side, **auxin efflux carriers** (PIN proteins) in the tip cells move auxin towards the **shaded side**. Cells there elongate more, so the shoot bends towards the light. A mica barrier on the shaded side stops it.', go: treat('micaShade', 'left'), q: { q: 'Why does a shoot bend towards light?', o: ['Cells on the lit side grow faster', 'Auxin collects on the shaded side, where cells elongate more', 'Light kills cells on the shaded side'], a: 1, why: 'More auxin on the shaded side means more elongation there, so the shoot curves towards the light.' }, ch: 'C3.1.18, C3.1.20' }
+    ] },
+    cell: { n: 'Acid growth', tab: '#t-cell', steps: [
+      { n: 'How auxin makes cells longer', s: 'Use Next step in the lab to follow the **acid growth** sequence.', pts: ['Auxin binds a receptor and switches on **proton pumps** in the membrane.', 'H+ ions are pumped into the cell wall, lowering its pH.', 'Low pH activates proteins (expansins) that loosen the bonds between cellulose fibres.', 'The cell takes in water by osmosis, and the loosened wall stretches: the cell elongates.'], go: ['#c-reset', '#c-play'], q: { q: 'What does auxin cause to be pumped into the cell wall?', o: ['Water', 'Hydrogen ions (protons)', 'Cellulose'], a: 1, why: 'Protons lower the pH of the wall, which loosens it so the cell can elongate.' }, ch: 'C3.1.21' }
+    ] },
+    root: { n: 'Auxin and cytokinin', tab: '#t-root', steps: [
+      { n: 'Two hormones together', s: 'Auxin is made mainly in **shoot tips**; **cytokinin** mainly in **root tips**. Their **ratio** controls whether tissue makes roots or shoots.', go: ['#r-tc'], ch: 'C3.1.22' },
+      { n: 'Tissue culture', s: 'Try the three mixes on a piece of plant tissue: mostly auxin gives **roots**, mostly cytokinin gives **shoots**, a balance gives an undifferentiated lump (**callus**).', go: ['#r-tc', '#r-tcreset', '[data-mix="2,0.2"]', '#r-grow'], ch: 'C3.1.22' },
+      { n: 'Apical dominance', s: 'With the shoot tip in place, auxin from it stops the side buds growing. **Cut off the tip** and side buds grow out, making a bushier plant.', go: ['#r-ad', '#a-reset', '#a-cut', '#a-grow'], ch: 'C3.1.22' },
+      { n: 'Proving it is auxin', s: 'Cut the tip and replace it with **auxin paste**: side buds stay dormant again. Cytokinin on a bud does the opposite: it makes the bud grow.', go: ['#r-ad', '#a-reset', '#a-cut', '#a-paste', '#a-grow'], q: { q: 'A gardener pinches out the shoot tip of a plant. Why does it become bushier?', o: ['More cytokinin is made in the leaves', 'The source of auxin is removed, so side buds are no longer inhibited', 'The plant photosynthesises more'], a: 1, why: 'Auxin from the shoot tip suppresses side buds; removing it releases them.' }, ch: 'C3.1.22' }
+    ] },
+    eth: { n: 'Ripening and ethylene', tab: '#t-eth', steps: [
+      { n: 'A gas hormone', s: '**Ethylene** is a gas that triggers fruit ripening: starch turns to sugar, the fruit softens and changes colour.', go: ['#e-reset', '[data-box="open"]', '#e-run'], ch: 'C3.1.23' },
+      { n: 'Positive feedback', s: 'Ripening fruit makes **more ethylene**, which speeds ripening further, which makes more ethylene. Put the bananas in a **paper bag**: the gas builds up and they ripen faster.', go: ['#e-reset', '[data-box="bag"]', '#e-run'], ch: 'C3.1.23' },
+      { n: 'One ripe banana', s: 'Add one ripe banana to the bag: its ethylene starts the loop sooner. Or try a cold fridge, or an ethylene blocker, to slow ripening down.', go: function () { var c = document.getElementById('e-ripe'); if (c && !c.checked) c.click(); var b = document.querySelector('[data-box="bag"]'); if (b) b.click(); var r = document.getElementById('e-run'); if (r) r.click(); }, q: { q: 'Why is ripening an example of positive feedback?', o: ['Ethylene slows its own production', 'Ethylene triggers ripening, which releases more ethylene', 'Cold makes fruit ripen'], a: 1, why: 'The product (ethylene) increases its own production, so the change speeds up until ripening is complete.' }, ch: 'C3.1.23' }
+    ] }
+  } };
+})();
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
 </body>
 </html>

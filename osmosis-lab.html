@@ -240,5 +240,98 @@ td:first-child,th:first-child{text-align:left}
 })();
 </script>
 
+<script>
+window.LAB_GUIDE = { title: 'Osmosis Lab: step by step', sections: {
+  mol: { n: 'What is osmosis?', tab: '#t-mol', steps: [
+    { n: 'Water as a solvent', s: 'Sugar dissolves because polar water molecules cluster around it and hydrogen bond to it. Water molecules held round a solute are less free to move.', cs: 'D2.3.1' },
+    { n: 'Equal on both sides', s: 'With the same solution on both sides of the partially permeable membrane, water crosses equally in both directions: no net movement.', go: ['[data-pre="15,15"]'], cs: 'D2.3.2' },
+    { n: 'More sugar on the right', s: 'Water molecules cross the membrane in both directions, but more move into the side with **more solute**, where fewer water molecules are free. The level rises on the right.', pts: ['**Osmosis**: the net movement of water across a partially permeable membrane from a less concentrated solution (lower solute concentration) to a more concentrated one.', 'Sugar molecules are too big to cross.'], go: ['[data-pre="8,30"]'], q: { q: 'In which direction is the net movement of water?', o: ['From the side with more sugar to the side with less', 'From the side with less sugar to the side with more', 'No net movement'], a: 1, why: 'More free water molecules on the dilute side, so more cross from there.' }, cs: 'D2.3.2' },
+    { n: 'Pure water vs a strong solution', s: 'The biggest difference in solute concentration gives the fastest osmosis.', go: ['[data-pre="0,38"]'], h: 'In water potential terms: pure water has the highest water potential (0 kPa); adding solute makes it negative. Water moves from higher (less negative) to lower (more negative) water potential.', cs: 'D2.3.2', ch: 'D2.3.8, D2.3.9' }
+  ] },
+  pot: { n: 'Potato practical', tab: '#t-pot', steps: [
+    { n: 'The method', s: 'Cut equal cylinders of potato, weigh them, and soak each in a different sucrose concentration for 24 hours. Blot dry and weigh again.', pts: ['Calculate the **percentage change in mass** so cylinders of different starting mass can be compared.', 'Control: same size, temperature and time for all.'], cs: 'D2.3.4' },
+    { n: 'Run the experiment', s: 'Soak the cylinders. In dilute solutions they gain mass (water in); in concentrated solutions they lose mass (water out).', go: ['#b-clear', '#b-run'], cs: 'D2.3.4' },
+    { n: 'Repeats and the graph', s: 'Add repeats to see variation and calculate a mean. Where the line crosses **zero change** is the concentration with the same solute concentration (isotonic) as the potato cells.', go: ['#b-repeat', '#b-repeat'], q: { q: 'A potato cylinder gains 8% mass in 0.1 mol/dm3 and loses 6% in 0.4 mol/dm3. Where is the isotonic point most likely?', o: ['Below 0.1 mol/dm3', 'Between 0.1 and 0.4 mol/dm3', 'Above 0.4 mol/dm3'], a: 1, why: 'Mass change goes from positive to negative between the two, so zero change lies between them.' }, cs: 'D2.3.4' },
+    { hl: true, n: 'Using water potential', s: 'At the isotonic point, water potential of the solution equals that of the potato cells, so there is no net water movement.', hpts: ['Solute potential of a sucrose solution can be read from a table, so the crossing point estimates the potato cells\' water potential.'], hq: { q: 'Why does a potato cylinder lose mass in a concentrated sucrose solution?', o: ['The solution has a lower (more negative) water potential than the cells, so water leaves', 'Sucrose enters the cells', 'The cells burst'], a: 0, why: 'Water moves from higher to lower water potential, out of the cells into the solution.' }, ch: 'D2.3.9, D2.3.11' }
+  ] },
+  cell: { n: 'Cells in solutions', tab: '#t-cell', steps: [
+    { n: 'Animal cells: no wall', s: 'Choose a red blood cell and put it in pure water (hypotonic). Water enters by osmosis and, with no wall to resist, the cell swells and **bursts** (lysis).', go: ['#ct-rbc', '[data-s="hypo"]'], cs: 'D2.3.5' },
+    { n: 'Too concentrated', s: 'In a concentrated salt solution (hypertonic), water leaves and the red blood cell **shrinks and crenates**.', go: ['#ct-rbc', '[data-s="hyper"]'], cs: 'D2.3.5' },
+    { n: 'Isotonic: no change', s: 'In an isotonic solution there is no net movement of water. This is why **isotonic saline** is used for drips, to rinse wounds and eyes, and to store donor organs for transplants.', go: ['#ct-rbc', '[data-s="iso"]'], q: { q: 'Why is a kidney for transplant packed in isotonic solution?', o: ['To kill bacteria', 'So its cells neither gain nor lose water by osmosis', 'To keep it frozen'], a: 1, why: 'An isotonic solution prevents cells swelling or shrinking.' }, cs: 'D2.3.7' },
+    { n: 'Plant cells: a wall', s: 'Choose a plant cell in pure water. Water enters, the vacuole swells and pushes the membrane against the **cell wall**, which resists: the cell becomes **turgid** but does not burst.', go: ['#ct-plant', '[data-s="hypo"]'], cs: 'D2.3.6' },
+    { n: 'Plasmolysis', s: 'In a hypertonic solution the plant cell loses water, the cytoplasm shrinks and pulls away from the wall: **plasmolysis**. The plant wilts.', go: ['#ct-plant', '[data-s="hyper"]'], cs: 'D2.3.6' },
+    { hl: true, n: 'Solute and pressure potential', s: 'In a plant cell, water potential = solute potential + pressure potential.', hpts: ['**Solute potential** is always negative; more solutes make it more negative.', '**Pressure potential** is the push of the wall back on the contents; it is positive in a turgid cell and zero in a plasmolysed one.', 'A turgid cell in pure water reaches equilibrium when the pressure potential cancels the solute potential: water potential 0.'], hq: { q: 'A cell has solute potential -700 kPa and pressure potential +300 kPa. What is its water potential?', o: ['-1000 kPa', '-400 kPa', '+400 kPa'], a: 1, why: 'Water potential = -700 + 300 = -400 kPa.' }, ch: 'D2.3.10, D2.3.11' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
 </body>
 </html>

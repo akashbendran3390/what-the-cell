@@ -202,6 +202,66 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the mitochondrion (2026-11-18): check questions, SL close-ups on ATP and aerobic vs anaerobic respiration
+// (C1.2.1-5) and measuring respiration (C1.2.6), and an HL close-up on anaerobic pathways and fuels (C1.2.9-10, C1.2.17).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  function cvDive(o) { return Object.assign({ bg: '#1a120c', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex }))); let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step + ':' + Math.round(Math.min(t, o.anim || 4) * 20); if (k !== key) { key = k; c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); o.draw(c, step, Math.min(1, t / (o.anim || 4))); tex.needsUpdate = true; } } }; } }, o); }
+  const T = (c, s, x, y, col, size) => { c.fillStyle = col || '#222'; c.font = 'bold ' + (size || 24) + 'px sans-serif'; c.fillText(s, x, y); };
+  const table = (c, rows, x0, y0, cw, rh) => rows.forEach((r, i) => r.forEach((s, j) => T(c, s, x0 + j * cw, y0 + i * rh, i === 0 || j === 0 ? '#9c4221' : '#222', i === 0 ? 26 : 22)));
+
+  const D_ATP = cvDive({ n: 'ATP and respiration', anim: 3,
+    steps: [
+      { n: 'ATP: the energy currency', s: '**ATP** (adenosine triphosphate) carries energy to where it is needed in a cell. Removing the last phosphate (hydrolysis) gives **ADP** and releases energy for cell work.', pts: ['Uses: active transport, muscle contraction, building macromolecules (anabolism), moving vesicles.'], cs: 'C1.2.1, C1.2.2' },
+      { n: 'The ATP cycle', s: 'ATP is not stored in large amounts. It is remade all the time: **respiration** releases energy from glucose and other carbon compounds, which is used to join ADP and phosphate back into ATP.', q: { q: 'Which reaction releases energy for cell processes?', o: ['ADP + phosphate -> ATP', 'ATP -> ADP + phosphate', 'Glucose -> starch'], a: 1, why: 'Hydrolysis of ATP to ADP releases energy; making ATP needs energy from respiration.' }, cs: 'C1.2.3, C1.2.4' },
+      { n: 'Aerobic and anaerobic respiration', s: 'Compare the two in humans:', pts: ['**Aerobic**: needs oxygen; glucose is fully broken down to CO2 and water in the cytoplasm and mitochondria; a large yield of ATP.', '**Anaerobic**: no oxygen; glucose is broken down to **lactate** in the cytoplasm only; a small yield of ATP but fast, useful in a sprint.'], q: { q: 'Where does anaerobic respiration happen in a human cell?', o: ['In the mitochondria', 'In the cytoplasm', 'In the nucleus'], a: 1, why: 'Only glycolysis and the conversion to lactate happen, both in the cytoplasm.' }, cs: 'C1.2.5' }
+    ],
+    draw(c, step, k) { if (step <= 1) { const r = 180, cx = 512, cy = 330; c.strokeStyle = '#9c4221'; c.lineWidth = 8; c.beginPath(); c.arc(cx, cy, r, 0.2, Math.PI - 0.2); c.stroke(); c.beginPath(); c.arc(cx, cy, r, Math.PI + 0.2, -0.2); c.stroke();
+        T(c, 'ATP', cx - 290, cy + 10, '#c1121f', 40); T(c, 'ADP + Pi', cx + 200, cy + 10, '#1d4ed8', 36); T(c, 'Energy released for cell work', cx - 200, cy - r - 30, '#c1121f', 24); if (step === 1) T(c, 'Energy from respiration', cx - 150, cy + r + 50, '#2d6a4f', 26);
+        const a = -Math.PI / 2 + k * Math.PI * (step === 1 ? 2 : 1); c.fillStyle = '#ffb703'; c.beginPath(); c.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 16, 0, 7); c.fill(); return; }
+      table(c, [['', 'Aerobic', 'Anaerobic'], ['Oxygen', 'Needed', 'Not needed'], ['Products', 'CO2 + water', 'Lactate'], ['Where', 'Cytoplasm + mitochondria', 'Cytoplasm'], ['ATP per glucose', 'About 30', '2']], 80, 140, 300, 100); } });
+
+  const D_RESPR = cvDive({ n: 'Measuring respiration rate', anim: 5,
+    steps: [
+      { n: 'A respirometer', s: 'Small organisms (germinating seeds or woodlice) are placed in a sealed tube with **soda lime or potassium hydroxide**, which absorbs the CO2 they produce. As they use **oxygen**, the gas volume falls and a drop of coloured liquid moves along a capillary tube.', pts: ['A control tube with glass beads instead of organisms corrects for changes in temperature and pressure.'], cs: 'C1.2.6' },
+      { n: 'Rate and temperature', s: 'Measure how far the drop moves per minute at different temperatures. The rate rises with temperature (enzymes work faster) up to an optimum.', pts: ['Other factors: type of organism, its activity, oxygen supply, the respiratory substrate.'], q: { q: 'Why is potassium hydroxide put in a respirometer?', o: ['To supply oxygen', 'To absorb carbon dioxide, so the volume change shows oxygen uptake', 'To kill bacteria'], a: 1, why: 'With CO2 absorbed, the only change in gas volume is oxygen being used.' }, cs: 'C1.2.6' }
+    ],
+    draw(c, step, k) { if (step === 0) { c.strokeStyle = '#555'; c.lineWidth = 4; c.strokeRect(120, 220, 200, 260); c.fillStyle = '#e9edc9'; c.fillRect(124, 300, 192, 80); for (let i = 0; i < 8; i++) { c.fillStyle = '#b5838d'; c.beginPath(); c.ellipse(150 + i * 22, 340, 10, 7, 0, 0, 7); c.fill(); } T(c, 'Seeds on gauze', 140, 290, '#6d4c41', 20);
+        c.fillStyle = '#cdeac0'; c.fillRect(124, 400, 192, 76); T(c, 'KOH (absorbs CO2)', 128, 450, '#2d6a4f', 20); c.fillRect(320, 260, 640, 16); c.fillStyle = '#e63946'; c.fillRect(820 - 380 * k, 258, 36, 20); T(c, 'Coloured drop moves towards the seeds', 440, 240, '#e63946', 22); T(c, 'Scale / mm', 640, 310, '#555', 20); return; }
+      c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 60); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke(); T(c, 'Temperature / degrees C', 400, 610, '#222', 22); c.save(); c.translate(50, 460); c.rotate(-Math.PI / 2); T(c, 'Oxygen used / mm3 per min', 0, 0, '#222', 22); c.restore();
+      const pts = [[10, 4], [15, 6.5], [20, 10], [25, 15], [30, 20], [35, 23], [40, 18]]; const X = t => 110 + (t - 5) / 40 * 860, Y = v => 560 - v * 20;
+      pts.forEach(([t, v], i) => { if (i / pts.length > k + 0.05) return; c.fillStyle = '#9c4221'; c.beginPath(); c.arc(X(t), Y(v), 9, 0, 7); c.fill(); T(c, t, X(t) - 10, 590, '#222', 18); }); c.strokeStyle = '#9c4221'; c.lineWidth = 3; c.beginPath(); pts.forEach(([t, v], i) => i ? c.lineTo(X(t), Y(v)) : c.moveTo(X(t), Y(v))); c.stroke(); } });
+
+  const D_ANA = cvDive({ n: 'Without oxygen, and other fuels', hl: true, anim: 3,
+    steps: [
+      { n: 'Why NAD must be regenerated', s: 'Glycolysis makes reduced NAD. Without oxygen the electron transport chain stops, so NAD is not regenerated there. Glycolysis would stop when NAD runs out.', ch: 'C1.2.9' },
+      { n: 'In muscle: lactate', s: 'In human muscle, **pyruvate is reduced to lactate**, which regenerates NAD so glycolysis can continue making 2 ATP per glucose. Lactate is later carried to the liver and converted back.', ch: 'C1.2.9' },
+      { n: 'In yeast: ethanol and CO2', s: 'Yeast converts pyruvate to **ethanol and carbon dioxide**, also regenerating NAD.', hpts: ['**Bakers** use the CO2 to make dough rise (the ethanol evaporates in the oven).', '**Brewers** use the ethanol in beer and wine.'], ch: 'C1.2.10' },
+      { n: 'Lipids vs carbohydrates', s: 'Fats release about **twice as much energy per gram** as carbohydrates (about 39 kJ per g against 17 kJ per g), because they contain more hydrogen and less oxygen.', hpts: ['Carbohydrates can be respired anaerobically and broken down faster; fats only aerobically.', 'Fats are a compact long-term store; glycogen and glucose are a quick supply.'], hq: { q: 'Why does a gram of fat release more energy than a gram of glucose?', o: ['Fat contains more oxygen', 'Fat has more hydrogen and fewer oxygen atoms per carbon, so more can be oxidised', 'Fat is respired anaerobically'], a: 1, why: 'More hydrogen means more reduced NAD and FAD, and more ATP from the electron transport chain.' }, ch: 'C1.2.17' }
+    ],
+    draw(c, step, k) { const box = (s, x, y, col) => { c.fillStyle = col; c.fillRect(x, y, 230, 70); T(c, s, x + 14, y + 44, '#fff', 24); }; const arr = (x1, y1, x2, y2) => { c.strokeStyle = '#333'; c.lineWidth = 4; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); };
+      if (step <= 2) { box('Glucose', 60, 120, '#9c4221'); arr(290, 155, 390, 155); box('2 Pyruvate', 390, 120, '#f77f00'); T(c, 'Glycolysis: 2 ATP, NAD -> reduced NAD', 140, 240, '#333', 22);
+        if (step >= 1) { arr(620, 155, 720, 155); box(step === 2 ? 'Ethanol + CO2' : 'Lactate', 720, 120, step === 2 ? '#7b2cbf' : '#c1121f'); c.strokeStyle = '#2d6a4f'; c.setLineDash([10, 8]); c.lineWidth = 4; c.beginPath(); c.moveTo(830, 200); c.bezierCurveTo(830, 360, 300, 360, 300, 260); c.stroke(); c.setLineDash([]); T(c, 'reduced NAD -> NAD regenerated', 360, 400, '#2d6a4f', 24); }
+        T(c, step === 2 ? 'Yeast: bread and brewing' : step === 1 ? 'Human muscle, short of oxygen' : 'No oxygen: the electron transport chain stops', 120, 520, '#222', 28); return; }
+      [['Fat', 39, '#ffb703'], ['Carbohydrate', 17, '#9c4221'], ['Protein', 17, '#52b788']].forEach(([n, v, col], i) => { const w = v * 18 * k; c.fillStyle = col; c.fillRect(260, 150 + i * 130, w, 70); T(c, n, 60, 195 + i * 130, '#222', 26); T(c, v + ' kJ per g', 270 + w, 195 + i * 130, '#222', 24); }); } });
+
+  return {
+    dives: [D_ATP, D_RESPR, D_ANA],
+    outside: { q: { q: 'Which part of the mitochondrion has a large surface for the electron transport chain?', o: ['The matrix', 'The cristae (folds of the inner membrane)', 'The outer membrane'], a: 1, why: 'Folding the inner membrane into cristae gives space for many electron transport chains and ATP synthase molecules.' } },
+    stops: {
+      'Glycolysis': { q: { q: 'Where does glycolysis happen?', o: ['In the matrix', 'In the cytoplasm', 'On the cristae'], a: 1, why: 'Glycolysis happens in the cytoplasm and needs no oxygen.' }, dives: ['ATP and respiration', 'Without oxygen, and other fuels'] },
+      'Into the mitochondrion': { dives: ['ATP and respiration'] },
+      'The Krebs cycle': { q: { q: 'Which waste gas is released in the Krebs cycle?', o: ['Oxygen', 'Carbon dioxide', 'Hydrogen'], a: 1, why: 'Carbon atoms from the acetyl groups are released as CO2 (decarboxylation).' } },
+      'The electron transport chain': { hq: { q: 'What does the energy from moving electrons do in the electron transport chain?', o: ['Makes glucose', 'Pumps protons into the intermembrane space, building a gradient', 'Splits water'], a: 1, why: 'The proton gradient is then used by ATP synthase (chemiosmosis).' } },
+      'ATP synthase': { q: { q: 'Most ATP in aerobic respiration is made by...', o: ['Glycolysis', 'ATP synthase on the inner membrane', 'The Krebs cycle'], a: 1, why: 'Chemiosmosis through ATP synthase makes most of the roughly 30 ATP per glucose.' } },
+      'Oxygen, the final acceptor': { q: { q: 'What happens to respiration if oxygen runs out?', o: ['It continues as normal', 'The electron transport chain stops; only glycolysis continues, with lactate made', 'Glucose is stored'], a: 1, why: 'Without oxygen to accept electrons, the chain backs up and mitochondria stop making ATP.' }, dives: ['Measuring respiration rate', 'Without oxygen, and other fuels'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

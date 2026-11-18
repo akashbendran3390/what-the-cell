@@ -212,6 +212,84 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the enzyme walk-through (2026-11-18): check questions, SL close-ups on activation energy (C1.1.10) and measuring
+// enzyme activity (C1.1.9), and HL close-ups on inhibition (C1.1.14, C1.1.15, C1.1.17) and feedback inhibition (C1.1.16).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  // A close-up drawn on a canvas: draw(c, step, t) is called whenever the picture should change.
+  function cvDive(o) { return Object.assign({ bg: '#0f1622', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex }))); let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step + ':' + Math.round(Math.min(t, o.anim || 4) * 20); if (k !== key) { key = k; c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); o.draw(c, step, Math.min(1, t / (o.anim || 4))); tex.needsUpdate = true; } } }; } }, o); }
+  const axes = (c, xl, yl) => { c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 50); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke(); c.fillStyle = '#222'; c.font = '24px sans-serif'; c.fillText(xl, 460, 610); c.save(); c.translate(50, 420); c.rotate(-Math.PI / 2); c.fillText(yl, 0, 0); c.restore(); };
+  const line = (c, f, col, w, k, x0, x1) => { c.strokeStyle = col; c.lineWidth = w || 5; c.beginPath(); const end = x0 + (x1 - x0) * (k == null ? 1 : k); for (let x = x0; x <= end; x += 2) { const y = f(x); x === x0 ? c.moveTo(x, y) : c.lineTo(x, y); } c.stroke(); };
+  const txt = (c, s, x, y, col, size) => { c.fillStyle = col || '#222'; c.font = 'bold ' + (size || 22) + 'px sans-serif'; c.fillText(s, x, y); };
+
+  const D_AE = cvDive({ n: 'Lowering activation energy', anim: 3,
+    steps: [
+      { n: 'Activation energy', s: 'Even reactions that release energy need a push to start: the **activation energy**, enough to stretch and break bonds in the substrate.', cs: 'C1.1.10' },
+      { n: 'With an enzyme', s: 'An enzyme provides a different route with a **lower activation energy**: binding in the active site strains the substrate\'s bonds. So many more molecules react at body temperature.', pts: ['The overall energy change of the reaction is the same with or without the enzyme.'], q: { q: 'How does an enzyme speed up a reaction?', o: ['It adds energy to the substrate', 'It lowers the activation energy', 'It changes the products'], a: 1, why: 'The enzyme provides a pathway with a lower energy barrier; the start and end energies do not change.' }, cs: 'C1.1.10' }
+    ],
+    draw(c, step, k) { axes(c, 'Progress of reaction', 'Energy');
+      const prof = (h) => x => { const u = (x - 110) / 870; const base = 260 + u * 220; return base - h * Math.exp(-Math.pow((u - 0.45) / 0.13, 2)); };
+      line(c, prof(220), '#e63946', 6, step === 0 ? k : 1, 110, 980); txt(c, 'Without enzyme', 470, 70, '#e63946');
+      txt(c, 'Substrate', 130, 245); txt(c, 'Products', 820, 465);
+      c.strokeStyle = '#e63946'; c.setLineDash([8, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(150, 260); c.lineTo(500, 260); c.stroke(); c.setLineDash([]);
+      c.beginPath(); c.moveTo(510, 260); c.lineTo(510, 92); c.stroke(); txt(c, 'Activation energy', 520, 180, '#e63946', 20);
+      if (step >= 1) { line(c, prof(90), '#1d4ed8', 6, k, 110, 980); txt(c, 'With enzyme', 600, 250, '#1d4ed8'); c.strokeStyle = '#1d4ed8'; c.beginPath(); c.moveTo(470, 260); c.lineTo(470, 222); c.stroke(); } } });
+
+  const D_MEAS = cvDive({ n: 'Measuring enzyme activity', anim: 5,
+    steps: [
+      { n: 'Catalase and hydrogen peroxide', s: '**Catalase**, from liver or potato, breaks down hydrogen peroxide into water and **oxygen**. Collect the oxygen in an upturned measuring cylinder or gas syringe and record the volume every 30 seconds.', pts: ['Other methods: the disappearance of starch with amylase (iodine test), or the colour change of a pH indicator.'], cs: 'C1.1.9' },
+      { n: 'Volume against time', s: 'Plot the oxygen volume against time. The curve is steepest at the start, then levels off as the substrate is used up.', cs: 'C1.1.9' },
+      { n: 'Initial rate', s: 'The **initial rate** is the gradient of the curve at the start: draw a tangent and divide its rise by its run. Compare initial rates at different temperatures.', q: { q: 'A tangent at the start of the curve rises 12 cm3 in 30 s. What is the initial rate?', o: ['0.4 cm3 per s', '2.5 cm3 per s', '360 cm3 per s'], a: 0, why: '12 / 30 = 0.4 cm3 of oxygen per second.' }, cs: 'C1.1.9' }
+    ],
+    draw(c, step, k) { axes(c, 'Time / s', 'Volume of oxygen / cm3'); c.font = '20px sans-serif'; c.fillStyle = '#222'; for (let i = 0; i <= 6; i++) c.fillText(i * 30, 100 + i * 140, 590); for (let v = 0; v <= 40; v += 10) c.fillText(v, 70, 565 - v * 12);
+      const X = s => 110 + s / 30 * 140, Y = v => 560 - v * 12;
+      const runs = [['35 degrees C', '#e63946', 36, 0.025], ['25 degrees C', '#f77f00', 36, 0.013], ['15 degrees C', '#1d4ed8', 36, 0.007]];
+      if (step === 0) { txt(c, 'H2O2  ->  water + oxygen', 330, 140, '#2d6a4f', 30); return; }
+      runs.forEach(([n, col, max, r], i) => { line(c, x => Y(max * (1 - Math.exp(-r * ((x - 110) / 140 * 30)))), col, 5, k, 110, 950); txt(c, n, 780, Y(max * (1 - Math.exp(-r * 160))) + (i - 1) * 26 - 10, col, 20); });
+      if (step >= 2) { c.strokeStyle = '#111'; c.lineWidth = 3; c.setLineDash([10, 6]); c.beginPath(); c.moveTo(X(0), Y(0)); c.lineTo(X(30), Y(36 * 0.025 * 30)); c.stroke(); c.setLineDash([]); txt(c, 'Tangent: gradient = initial rate', X(20), Y(28), '#111', 20); } } });
+
+  const D_INH = cvDive({ n: 'Inhibitors', hl: true, anim: 3,
+    steps: [
+      { n: 'Competitive inhibition', s: 'A **competitive inhibitor** has a shape similar to the substrate and binds **reversibly to the active site**, so substrate cannot bind there.', hpts: ['Adding lots more substrate out-competes the inhibitor, so the **maximum rate can still be reached**.', 'Example: statins compete with the substrate of an enzyme that makes cholesterol.'], ch: 'C1.1.15' },
+      { n: 'Non-competitive inhibition', s: 'A **non-competitive inhibitor** binds to an **allosteric site** away from the active site and changes the shape of the active site, so it works less well whatever the substrate concentration.', hpts: ['The maximum rate is **lowered**: more substrate does not help.'], hq: { q: 'Adding more substrate restores the maximum rate. What kind of inhibitor is present?', o: ['Non-competitive', 'Competitive', 'Mechanism-based'], a: 1, why: 'Only a competitive inhibitor can be out-competed by high substrate concentration.' }, ch: 'C1.1.14' },
+      { n: 'Mechanism-based inhibition', s: 'Some inhibitors bind **permanently** (covalently) and chemically change the active site.', hpts: ['**Penicillin** binds irreversibly to transpeptidase, the bacterial enzyme that cross-links peptidoglycan in the cell wall. The wall is weakened and the bacterium bursts.', 'Resistant bacteria have a changed transpeptidase that penicillin cannot bind, or an enzyme that breaks penicillin down.'], ch: 'C1.1.17' }
+    ],
+    draw(c, step, k) { axes(c, 'Substrate concentration', 'Rate of reaction'); const X0 = 110, W = 870, Y = r => 560 - r * 440;
+      const mm = (vmax, km) => x => Y(vmax * ((x - X0) / W * 10) / (km + (x - X0) / W * 10)); line(c, mm(1, 1), '#2d6a4f', 5, 1, X0, 980); txt(c, 'No inhibitor', 800, Y(0.93) - 10, '#2d6a4f', 20);
+      if (step === 0 || step === 2) { line(c, mm(1, 4), '#1d4ed8', 5, k, X0, 980); txt(c, 'Competitive', 800, Y(0.73) + 30, '#1d4ed8', 20); }
+      if (step === 1 || step === 2) { line(c, mm(0.55, 1), '#e63946', 5, k, X0, 980); txt(c, 'Non-competitive', 760, Y(0.51) - 12, '#e63946', 20); }
+      if (step === 2) { txt(c, 'Penicillin: binds permanently, the enzyme never recovers', 150, 90, '#7b2cbf', 22); } } });
+
+  const D_FB = cvDive({ n: 'Feedback inhibition', hl: true, anim: 6,
+    steps: [
+      { n: 'A metabolic pathway', s: 'Many reactions happen in a chain, each step with its own enzyme. In bacteria and plants, **threonine** is converted to **isoleucine** in five steps.', hpts: ['Pathways can be **linear** (a chain like this) or **cyclical** (like the Krebs and Calvin cycles, where the last product regenerates the first substrate).'], ch: 'C1.1.13, C1.1.16' },
+      { n: 'The end product switches off the first enzyme', s: 'When isoleucine builds up, it binds to an **allosteric site** on the **first enzyme** (threonine deaminase), inhibiting it. The whole pathway slows.', ch: 'C1.1.16' },
+      { n: 'Self-regulating', s: 'When isoleucine is used up, it leaves the allosteric site and the pathway starts again. So the amount made matches the cell\'s needs: **negative feedback**.', hq: { q: 'Why is it the first enzyme of the pathway that is inhibited?', o: ['It is the slowest', 'So no intermediates are made and wasted', 'It has no active site'], a: 1, why: 'Inhibiting the first step stops the whole pathway early, saving resources.' }, ch: 'C1.1.16' }
+    ],
+    draw(c, step, k) { const xs = [90, 270, 450, 630, 810]; const names = ['Threonine', 'B', 'C', 'D', 'Isoleucine'];
+      const iso = step === 0 ? 0.2 + 0.6 * k : step === 1 ? 0.8 : 0.8 - 0.6 * k; const on = step === 0 ? 1 : step === 1 ? 0.15 : 0.15 + 0.85 * k;
+      names.forEach((n, i) => { c.fillStyle = i === 4 ? '#7b2cbf' : '#2d6a4f'; c.beginPath(); c.arc(xs[i] + 60, 300, 52, 0, 7); c.fill(); txt(c, n, xs[i] + 60 - c.measureText(n).width / 2 - (i === 4 ? 20 : 0), 300 + 8, '#fff', i === 0 || i === 4 ? 20 : 26);
+        if (i < 4) { c.strokeStyle = '#222'; c.lineWidth = 4; c.beginPath(); c.moveTo(xs[i] + 116, 300); c.lineTo(xs[i + 1] + 4, 300); c.stroke(); c.fillStyle = i === 0 ? (on > 0.5 ? '#f77f00' : '#adb5bd') : '#f77f00'; c.fillRect(xs[i] + 130, 245, 40, 30); txt(c, 'E' + (i + 1), xs[i] + 133, 268, '#fff', 18); } });
+      if (step >= 1) { c.strokeStyle = '#7b2cbf'; c.lineWidth = 4; c.setLineDash([10, 8]); c.beginPath(); c.moveTo(870, 360); c.bezierCurveTo(860, 520, 230, 520, 240, 285); c.stroke(); c.setLineDash([]); txt(c, 'Isoleucine binds the allosteric site of enzyme 1', 260, 520, '#7b2cbf', 22); }
+      c.fillStyle = '#ddd'; c.fillRect(110, 80, 400, 30); c.fillStyle = '#7b2cbf'; c.fillRect(110, 80, 400 * iso, 30); txt(c, 'Isoleucine level', 110, 70, '#222', 20);
+      c.fillStyle = '#ddd'; c.fillRect(580, 80, 400, 30); c.fillStyle = '#f77f00'; c.fillRect(580, 80, 400 * on, 30); txt(c, 'Pathway activity', 580, 70, '#222', 20); } });
+
+  return {
+    dives: [D_AE, D_MEAS, D_INH, D_FB],
+    stops: {
+      'Enzyme and active site': { pts: ['Enzymes are **globular proteins** that act as biological **catalysts**: they speed up reactions without being used up.', 'Metabolism is all the enzyme-catalysed reactions in a cell: **anabolic** (building larger molecules, such as protein synthesis) and **catabolic** (breaking them down, such as digestion).'], h: 'Some enzymes act inside cells (respiration enzymes in mitochondria); others are secreted to act outside them (digestive enzymes in the gut). Reactions release some energy as heat, which helps endotherms keep warm.', q: { q: 'Which of these is an anabolic reaction?', o: ['Digestion of starch', 'Joining amino acids to make a protein', 'Breaking down glucose in respiration'], a: 1, why: 'Anabolic reactions build larger molecules from smaller ones.' }, cs: 'C1.1.1, C1.1.2, C1.1.3, C1.1.4', ch: 'C1.1.11, C1.1.12', dives: ['Lowering activation energy'] },
+      'Collisions and induced fit': { q: { q: 'What is induced fit?', o: ['The substrate changes shape to fit a rigid active site', 'The active site changes shape slightly as the substrate binds, fitting more closely', 'The enzyme is denatured'], a: 1, why: 'Binding makes the active site mould around the substrate, straining its bonds.' }, dives: ['Lowering activation energy'] },
+      'Temperature': { q: { q: 'Why does the rate fall sharply above the optimum temperature?', o: ['Molecules move more slowly', 'The enzyme is denatured: its active site changes shape and no longer fits the substrate', 'The substrate is used up'], a: 1, why: 'High temperatures break the bonds holding the enzyme\'s shape.' }, dives: ['Measuring enzyme activity'] },
+      'pH': { q: { q: 'Pepsin works best at pH 2. Where in the body does it work?', o: ['Mouth', 'Stomach', 'Small intestine'], a: 1, why: 'The stomach contains hydrochloric acid, so its pH is around 2.' } },
+      'Substrate concentration': { q: { q: 'Why does the rate level off at high substrate concentration?', o: ['The enzyme is denatured', 'All the active sites are occupied, so the enzyme concentration limits the rate', 'The product inhibits it'], a: 1, why: 'Once every active site is busy, extra substrate cannot be processed any faster.' }, dives: ['Measuring enzyme activity'] },
+      'Inhibitors (HL)': { hl: true, dives: ['Inhibitors', 'Feedback inhibition'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

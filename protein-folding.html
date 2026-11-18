@@ -218,6 +218,56 @@ window.JOURNEY = {
   }
 };
 
+// Extras for protein folding (2026-11-18): HL-only stops for B1.2.8-12, check questions, an SL close-up on amino acids and
+// peptide bonds (B1.2.1-4) and an HL close-up on the bonds holding tertiary structure (B1.2.9-10).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  function cvDive(o) { return Object.assign({ bg: '#140f1e', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex }))); let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step + ':' + Math.round(Math.min(t, o.anim || 4) * 20); if (k !== key) { key = k; c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); o.draw(c, step, Math.min(1, t / (o.anim || 4))); tex.needsUpdate = true; } } }; } }, o); }
+  const T = (c, s, x, y, col, size, bold) => { c.fillStyle = col || '#222'; c.font = (bold === false ? '' : 'bold ') + (size || 26) + 'px sans-serif'; c.fillText(s, x, y); };
+  function aa(c, x, y, R, col) { c.lineWidth = 3; c.strokeStyle = '#333'; const b = (x1, y1, x2, y2) => { c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); };
+    T(c, 'H', x - 120, y + 10, '#1d4ed8'); T(c, 'N', x - 80, y + 10, '#1d4ed8'); T(c, 'H', x - 80, y - 40, '#1d4ed8'); b(x - 95, y, x - 82, y); b(x - 70, y - 30, x - 70, y - 12); b(x - 50, y, x - 18, y);
+    T(c, 'C', x - 10, y + 10); T(c, 'H', x - 10, y + 70); b(x, y + 18, x, y + 46); b(x, y - 18, x, y - 46); c.fillStyle = col || '#f77f00'; c.beginPath(); c.arc(x + 2, y - 72, 28, 0, 7); c.fill(); T(c, R || 'R', x - 8, y - 63, '#fff');
+    b(x + 22, y, x + 54, y); T(c, 'C', x + 58, y + 10, '#e63946'); T(c, 'O', x + 58, y - 52, '#e63946'); b(x + 64, y - 16, x + 64, y - 38); b(x + 74, y - 16, x + 74, y - 38); b(x + 84, y, x + 112, y); T(c, 'O', x + 116, y + 10, '#e63946'); T(c, 'H', x + 150, y + 10, '#e63946'); b(x + 140, y, x + 150, y); }
+
+  const D_PEP = cvDive({ n: 'Amino acids and peptide bonds', anim: 3,
+    steps: [
+      { n: 'One amino acid', s: 'Every amino acid has the same core: a central carbon with an **amine group** (blue), a **carboxyl group** (red), a hydrogen and an **R group** (orange). Only the R group differs between the 20 amino acids.', cs: 'B1.2.1' },
+      { n: 'Condensation', s: 'Two amino acids join by **condensation**: the OH from one carboxyl group and an H from the next amine group form a molecule of **water**, and a **peptide bond** links C to N.', cs: 'B1.2.2' },
+      { n: 'Chains of any length', s: 'Ribosomes add amino acid after amino acid. With 20 different amino acids, a chain of n amino acids can have 20^n sequences: for just 100 amino acids that is far more than the number of atoms in the universe.', pts: ['**Essential amino acids** (9 in adults) cannot be made by the body and must come from the diet.'], q: { q: 'How many water molecules are released when a polypeptide of 50 amino acids is made?', o: ['50', '49', '100'], a: 1, why: 'Each peptide bond releases one water, and 50 amino acids are joined by 49 bonds.' }, cs: 'B1.2.3, B1.2.4' }
+    ],
+    draw(c, step, k) { if (step === 0) { aa(c, 420, 330); T(c, 'Amine group', 180, 450, '#1d4ed8', 22); T(c, 'Carboxyl group', 520, 450, '#e63946', 22); T(c, 'R group (side chain)', 470, 230, '#f77f00', 22); return; }
+      if (step === 1) { const gap = 60 * (1 - k); aa(c, 280 - gap, 330, 'R1', '#f77f00'); aa(c, 640 + gap, 330, 'R2', '#2d6a4f');
+        if (k > 0.6) { c.fillStyle = 'rgba(29,78,216,.15)'; c.fillRect(380, 300, 160, 50); T(c, 'peptide bond', 380, 400, '#7b2cbf', 22); T(c, '+ H2O released', 760, 520, '#1d4ed8', 26); } return; }
+      const cols = ['#f77f00', '#2d6a4f', '#1d4ed8', '#e63946', '#7b2cbf', '#ffb703', '#52b788', '#9d0208']; for (let i = 0; i < Math.round(8 * k); i++) { c.fillStyle = cols[i]; c.beginPath(); c.arc(140 + i * 105, 320, 40, 0, 7); c.fill(); if (i) { c.strokeStyle = '#333'; c.lineWidth = 5; c.beginPath(); c.moveTo(140 + i * 105 - 65, 320); c.lineTo(140 + i * 105 - 40, 320); c.stroke(); } }
+      T(c, 'A polypeptide: amino acids joined by peptide bonds', 150, 460, '#222', 26); } });
+
+  const D_BONDS = cvDive({ n: 'What holds a protein in shape', hl: true, anim: 2,
+    steps: [
+      { n: 'Tertiary structure', s: 'The polypeptide folds into a precise 3D shape held by bonds between **R groups**:', hpts: ['**Hydrogen bonds** between polar R groups.', '**Ionic bonds** between positively and negatively charged R groups.', '**Disulfide bonds**: strong covalent bonds between two cysteines.', '**Hydrophobic interactions**: non-polar R groups cluster in the centre, away from water.'], ch: 'B1.2.9' },
+      { n: 'Polar outside, non-polar inside', s: 'In a water-soluble globular protein, **non-polar (hydrophobic)** amino acids are buried inside and **polar (hydrophilic)** ones face the water. In membrane proteins, non-polar amino acids face the lipid tails.', hq: { q: 'Which bond in tertiary structure is covalent?', o: ['Hydrogen bond', 'Disulfide bond', 'Ionic bond'], a: 1, why: 'Disulfide bonds are covalent bonds between the sulfur atoms of two cysteines.' }, ch: 'B1.2.10' }
+    ],
+    draw(c, step, k) { c.strokeStyle = '#555'; c.lineWidth = 10; c.beginPath(); const pts = [[180, 300], [260, 160], [420, 130], [560, 200], [520, 340], [380, 400], [300, 520], [480, 560], [680, 470], [760, 300], [860, 180]]; pts.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.stroke();
+      const link = (a, b, col, dash, label, lx, ly) => { c.strokeStyle = col; c.lineWidth = 5; c.setLineDash(dash || []); c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); c.setLineDash([]); T(c, label, lx, ly, col, 22); };
+      link([420, 130], [380, 400], '#1d4ed8', [6, 8], 'Hydrogen bond', 250, 280); link([560, 200], [760, 300], '#e63946', [], 'Ionic bond (+ / -)', 600, 240); link([300, 520], [480, 560], '#f2a541', [], 'Disulfide bond (S-S)', 280, 610);
+      c.fillStyle = 'rgba(123,44,191,.18)'; c.beginPath(); c.arc(560, 400, 90, 0, 7); c.fill(); T(c, 'Hydrophobic core', 470, 410, '#7b2cbf', 22);
+      if (step >= 1) { c.fillStyle = 'rgba(29,78,216,.12)'; c.fillRect(0, 0, 1024, 60); T(c, 'Water outside: polar R groups face outwards', 220, 42, '#1d4ed8', 24); } } });
+
+  return {
+    dives: [D_PEP, D_BONDS],
+    stops: {
+      'Amino acids join into a chain': { q: { q: 'What type of reaction joins amino acids?', o: ['Hydrolysis', 'Condensation', 'Oxidation'], a: 1, why: 'A condensation reaction forms a peptide bond and releases water.' }, dives: ['Amino acids and peptide bonds'] },
+      'Helices and pleated sheets': { hl: true, hq: { q: 'Which bonds hold alpha helices and beta-pleated sheets?', o: ['Peptide bonds between R groups', 'Hydrogen bonds between atoms of the polypeptide backbone', 'Disulfide bonds'], a: 1, why: 'Secondary structure is held by hydrogen bonds between C=O and N-H groups of the backbone.' } },
+      'Folding into a 3D shape': { hl: true, dives: ['What holds a protein in shape'] },
+      'Haemoglobin: four chains': { hl: true },
+      'Collagen: a fibrous protein': { hl: true },
+      'Denaturation': { q: { q: 'Why does a denatured enzyme stop working?', o: ['Its peptide bonds break', 'Its 3D shape, and so its active site, is changed', 'It is digested'], a: 1, why: 'Heat or extreme pH break the weaker bonds of tertiary structure, so the active site loses its shape.' } }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

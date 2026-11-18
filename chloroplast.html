@@ -229,6 +229,79 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the chloroplast (2026-11-18): check questions, SL close-ups on pigments and chromatography (C1.3.4-6) and limiting
+// factors (C1.3.7-8), and an HL close-up on the Calvin cycle (C1.3.15-19).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  function cvDive(o) { return Object.assign({ bg: '#0e1a10', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex }))); let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step + ':' + Math.round(Math.min(t, o.anim || 4) * 20); if (k !== key) { key = k; c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); o.draw(c, step, Math.min(1, t / (o.anim || 4))); tex.needsUpdate = true; } } }; } }, o); }
+  const T = (c, s, x, y, col, size) => { c.fillStyle = col || '#222'; c.font = 'bold ' + (size || 24) + 'px sans-serif'; c.fillText(s, x, y); };
+  const axes = (c, xl, yl) => { c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(110, 50); c.lineTo(110, 560); c.lineTo(980, 560); c.stroke(); T(c, xl, 420, 612, '#222', 22); c.save(); c.translate(50, 470); c.rotate(-Math.PI / 2); T(c, yl, 0, 0, '#222', 22); c.restore(); };
+
+  const D_PIG = cvDive({ n: 'Pigments and spectra', anim: 4,
+    steps: [
+      { n: 'Separating pigments', s: 'Grind a leaf with a solvent, put a spot of the extract near the bottom of chromatography paper and stand it in solvent. The pigments travel different distances, depending on how soluble they are.', pts: ['**Rf value** = distance moved by the pigment / distance moved by the solvent front.'], cs: 'C1.3.4' },
+      { n: 'Absorption spectrum', s: 'Each pigment absorbs some wavelengths more than others. **Chlorophyll** absorbs **blue and red** light strongly and reflects green, which is why leaves look green. Carotenoids absorb blue-green.', cs: 'C1.3.5, C1.3.6' },
+      { n: 'Action spectrum', s: 'The **action spectrum** shows the rate of photosynthesis at each wavelength. It closely follows the absorption spectrum of the pigments, showing they absorb the light used for photosynthesis.', q: { q: 'Why is the rate of photosynthesis low in green light?', o: ['Green light has no energy', 'Chlorophyll absorbs little green light; most is reflected', 'Green light damages chloroplasts'], a: 1, why: 'Light must be absorbed to be used; chlorophyll reflects most green wavelengths.' }, cs: 'C1.3.6' }
+    ],
+    draw(c, step, k) { if (step === 0) { c.fillStyle = '#f5f0e1'; c.fillRect(400, 60, 220, 520); c.strokeStyle = '#999'; c.strokeRect(400, 60, 220, 520); c.fillStyle = 'rgba(79,179,255,.2)'; c.fillRect(400, 520, 220, 60);
+        const front = 520 - 430 * k; c.strokeStyle = '#1d4ed8'; c.setLineDash([8, 6]); c.beginPath(); c.moveTo(400, front); c.lineTo(620, front); c.stroke(); c.setLineDash([]); T(c, 'Solvent front', 640, front + 8, '#1d4ed8', 20);
+        [['Carotene', 0.95, '#f4a261'], ['Xanthophyll', 0.72, '#e9c46a'], ['Chlorophyll a', 0.48, '#2a9d8f'], ['Chlorophyll b', 0.36, '#76c893']].forEach(([n, rf, col], i) => { const y = 500 - (500 - front) * rf; c.fillStyle = col; c.beginPath(); c.ellipse(510, y, 50, 12, 0, 0, 7); c.fill(); if (k > 0.9) T(c, n + '  Rf ' + rf.toFixed(2), 640, y + 8 + (i === 0 ? 20 : 0), '#333', 20); });
+        T(c, 'Start line', 250, 508, '#555', 20); return; }
+      axes(c, 'Wavelength / nm', step === 2 ? 'Absorbance / rate' : 'Absorbance'); const X = w => 110 + (w - 400) / 300 * 870, Y = v => 560 - v * 470;
+      const g = (w, m, s) => Math.exp(-Math.pow((w - m) / s, 2)); const chlA = w => 0.95 * g(w, 430, 18) + 0.75 * g(w, 662, 14) + 0.1; const chlB = w => 0.9 * g(w, 455, 18) + 0.5 * g(w, 642, 14) + 0.06; const car = w => 0.8 * g(w, 470, 30) + 0.05;
+      const grad = c.createLinearGradient(X(400), 0, X(700), 0); ['#6a00f4', '#1d4ed8', '#00b4d8', '#2d6a4f', '#ffd60a', '#f77f00', '#d00000'].forEach((col, i) => grad.addColorStop(i / 6, col)); c.fillStyle = grad; c.fillRect(X(400), 565, X(700) - X(400), 14);
+      [[chlA, '#2a9d8f', 'Chlorophyll a'], [chlB, '#76c893', 'Chlorophyll b'], [car, '#f4a261', 'Carotenoids']].forEach(([f, col, n], i) => { c.strokeStyle = col; c.lineWidth = 4; c.beginPath(); for (let w = 400; w <= 400 + 300 * k; w += 2) { w === 400 ? c.moveTo(X(w), Y(f(w))) : c.lineTo(X(w), Y(f(w))); } c.stroke(); T(c, n, 800, 90 + i * 30, col, 20); });
+      for (let w = 400; w <= 700; w += 100) T(c, w, X(w) - 20, 600, '#222', 18);
+      if (step === 2) { const act = w => Math.min(1, 0.55 * (chlA(w) + chlB(w) + 0.6 * car(w))); c.strokeStyle = '#111'; c.lineWidth = 5; c.setLineDash([12, 8]); c.beginPath(); for (let w = 400; w <= 700; w += 2) { w === 400 ? c.moveTo(X(w), Y(act(w))) : c.lineTo(X(w), Y(act(w))); } c.stroke(); c.setLineDash([]); T(c, 'Action spectrum (rate)', 800, 180, '#111', 20); } } });
+
+  const D_LIM = cvDive({ n: 'Limiting factors', anim: 4,
+    steps: [
+      { n: 'Light intensity', s: 'As light intensity rises, the rate of photosynthesis rises, then levels off. On the rising part, **light is the limiting factor**.', pts: ['Measure the rate by counting oxygen bubbles from pondweed, or the volume of oxygen collected, with a lamp at different distances.'], cs: 'C1.3.7' },
+      { n: 'Carbon dioxide', s: 'Where the curve levels off, something else is limiting. Raising the CO2 concentration raises the plateau: CO2 was the limiting factor there.', cs: 'C1.3.7' },
+      { n: 'Temperature', s: 'Temperature affects the enzymes (such as rubisco), so a warmer plant (up to the optimum) reaches a higher plateau too.', cs: 'C1.3.7' },
+      { n: 'CO2 enrichment', s: 'Growers add CO2 to greenhouses to raise yields. **Free-air CO2 enrichment (FACE)** experiments in fields test how crops and forests may grow as atmospheric CO2 rises: growth often increases, but less than expected, and it can be limited by water, nitrogen or temperature.', q: { q: 'On the flat part of the light curve, which change would increase the rate?', o: ['More light', 'More carbon dioxide', 'Less temperature'], a: 1, why: 'Light is no longer limiting there; another factor such as CO2 is.' }, cs: 'C1.3.8' }
+    ],
+    draw(c, step, k) { axes(c, 'Light intensity', 'Rate of photosynthesis'); const X = x => 110 + x * 870, Y = v => 560 - v * 470;
+      const curve = p => x => Y(p * (1 - Math.exp(-x * 5 / p)));
+      const set = [[0.45, '#2d6a4f', 'Low CO2, 20 degrees C', 0], [0.8, '#1d4ed8', 'High CO2, 20 degrees C', 1], [0.95, '#e63946', 'High CO2, 30 degrees C', 2]];
+      set.forEach(([p, col, n, s]) => { if (s > step && !(step === 3)) return; const kk = s === step ? k : 1; c.strokeStyle = col; c.lineWidth = 5; c.beginPath(); for (let x = 0; x <= kk; x += 0.005) { x ? c.lineTo(X(x), curve(p)(x)) : c.moveTo(X(x), curve(p)(x)); } c.stroke(); T(c, n, X(0.62), Y(p) - 14, col, 22); });
+      if (step === 0) { c.fillStyle = 'rgba(45,106,79,.12)'; c.fillRect(X(0), 50, X(0.2) - X(0), 510); T(c, 'Light limiting', X(0.02), 90, '#2d6a4f', 22); } } });
+
+  const D_CALV = cvDive({ n: 'The Calvin cycle', hl: true, anim: 6,
+    steps: [
+      { n: 'Carbon fixation by rubisco', s: 'In the stroma, the enzyme **rubisco** joins CO2 to a 5-carbon sugar, **RuBP**. The 6-carbon product immediately splits into two molecules of **glycerate 3-phosphate (GP)**.', hpts: ['Rubisco is slow, so chloroplasts contain huge amounts of it: it may be the most abundant protein on Earth.'], ch: 'C1.3.15' },
+      { n: 'Reduction to triose phosphate', s: 'Using **ATP** and **reduced NADP** from the light-dependent reactions, GP is reduced to **triose phosphate (TP)**, a 3-carbon sugar.', ch: 'C1.3.16' },
+      { n: 'Regenerating RuBP', s: 'For every 6 TP made, 5 are used (with more ATP) to regenerate 3 RuBP, so the cycle continues. Only 1 TP leaves the cycle.', ch: 'C1.3.17' },
+      { n: 'What triose phosphate becomes', s: 'TP is used to make glucose, sucrose, starch and cellulose; with nitrogen and other minerals it is used to make amino acids, fatty acids and nucleotides.', hpts: ['The light-dependent reactions need NADP and ADP from the Calvin cycle; the Calvin cycle needs their ATP and reduced NADP. Neither can run for long without the other.'], hq: { q: 'If the light is switched off, what happens to GP and RuBP levels at first?', o: ['GP falls, RuBP rises', 'GP rises, RuBP falls', 'Both stay the same'], a: 1, why: 'Without ATP and reduced NADP, GP cannot be reduced so it builds up, while RuBP is still used but not regenerated.' }, ch: 'C1.3.18, C1.3.19' }
+    ],
+    draw(c, step, k) { const cx = 512, cy = 330, R = 200; c.strokeStyle = '#2d6a4f'; c.lineWidth = 10; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke();
+      const node = (a, s, col, sub) => { const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R; c.fillStyle = col; c.beginPath(); c.arc(x, y, 62, 0, 7); c.fill(); T(c, s, x - c.measureText(s).width / 2 - 4, y + 4, '#fff', 24); if (sub) T(c, sub, x - 40, y + 30, '#fff', 18); };
+      node(-Math.PI / 2, '3 RuBP', '#2d6a4f', '5C'); node(Math.PI / 6, '6 GP', '#1d4ed8', '3C'); node(Math.PI * 5 / 6, '6 TP', '#f77f00', '3C');
+      T(c, '3 CO2', cx + 120, 70, '#555', 28); T(c, 'rubisco', cx + 160, 140, '#9c4221', 22);
+      if (step >= 1) { T(c, '6 ATP, 6 reduced NADP', cx + 150, cy + 220, '#c1121f', 22); }
+      if (step >= 2) { T(c, '3 ATP', cx - 330, cy - 120, '#c1121f', 22); T(c, '5 TP regenerate RuBP', cx - 380, cy - 160, '#2d6a4f', 22); }
+      if (step >= 3 || step === 2) { T(c, '1 TP leaves', cx - 330, cy + 250, '#f77f00', 26); T(c, '-> glucose, sucrose, starch, amino acids...', cx - 250, cy + 290, '#333', 20); }
+      const a = -Math.PI / 2 + k * Math.PI * 2 * (step === 0 ? 0.33 : step === 1 ? 0.66 : 1); c.fillStyle = '#ffb703'; c.beginPath(); c.arc(cx + Math.cos(a) * R, cy + Math.sin(a) * R, 14, 0, 7); c.fill(); } });
+
+  return {
+    dives: [D_PIG, D_LIM, D_CALV],
+    outside: { pts: ['Overall: carbon dioxide + water -> glucose + oxygen, using light energy.', 'The oxygen comes from splitting **water** (photolysis), not from CO2.'], cs: 'C1.3.1, C1.3.2, C1.3.3' },
+    stops: {
+      'A chloroplast': { q: { q: 'Where does the oxygen released in photosynthesis come from?', o: ['Carbon dioxide', 'Water', 'Glucose'], a: 1, why: 'Water is split in the light-dependent reactions, releasing oxygen as a by-product.' }, dives: ['Pigments and spectra', 'Limiting factors'] },
+      'Absorbing light': { q: { q: 'Which colours of light does chlorophyll absorb most strongly?', o: ['Green and yellow', 'Blue and red', 'Only red'], a: 1, why: 'Chlorophyll absorbs blue and red light and reflects green.' }, dives: ['Pigments and spectra'] },
+      'Grana and thylakoids': { q: { q: 'Why are thylakoid membranes stacked into grana?', o: ['To store starch', 'To give a large surface for pigments and light-dependent reactions', 'To hold DNA'], a: 1, why: 'More membrane area holds more photosystems and electron carriers.' } },
+      'Photosystems': { hl: true },
+      'Water is split': { q: { q: 'Which gas is released when water is split?', o: ['Carbon dioxide', 'Oxygen', 'Hydrogen'], a: 1, why: 'Splitting water (photolysis) releases oxygen; the hydrogen is used to make sugar.' }, cs: 'C1.3.2, C1.3.3' },
+      'ATP by chemiosmosis': { hl: true },
+      'NADP is reduced': { hl: true },
+      'Fixing carbon dioxide': { dives: ['The Calvin cycle', 'Limiting factors'], q: { q: 'Which gas is fixed into sugar in the stroma?', o: ['Oxygen', 'Carbon dioxide', 'Nitrogen'], a: 1, why: 'CO2 is fixed into organic molecules in the light-independent reactions.' } }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

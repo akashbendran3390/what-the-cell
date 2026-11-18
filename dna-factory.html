@@ -218,6 +218,74 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the DNA factory (2026-11-18): check questions, an SL close-up on nucleotides, DNA and RNA (A1.2.2-7), and HL
+// close-ups on DNA structure details (A1.2.11-13) and the evidence (Hershey and Chase, Chargaff: A1.2.14-15).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  function cvDive(o) { return Object.assign({ bg: '#0f1426', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex }))); let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step + ':' + Math.round(Math.min(t, o.anim || 4) * 20); if (k !== key) { key = k; c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); o.draw(c, step, Math.min(1, t / (o.anim || 4))); tex.needsUpdate = true; } } }; } }, o); }
+  const T = (c, s, x, y, col, size) => { c.fillStyle = col || '#222'; c.font = 'bold ' + (size || 24) + 'px sans-serif'; c.fillText(s, x, y); };
+  const pent = (c, x, y, r, col) => { c.fillStyle = col; c.beginPath(); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; c.lineTo(x + r * Math.cos(a), y + r * Math.sin(a)); } c.fill(); };
+  const BASE = { A: '#e63946', T: '#2d6a4f', G: '#1d4ed8', C: '#f2a541', U: '#7b2cbf' };
+  function nucleotide(c, x, y, b, lab) { c.fillStyle = '#ffd166'; c.beginPath(); c.arc(x - 60, y, 26, 0, 7); c.fill(); T(c, 'P', x - 68, y + 8, '#222'); c.strokeStyle = '#333'; c.lineWidth = 4; c.beginPath(); c.moveTo(x - 34, y); c.lineTo(x - 22, y); c.stroke();
+    pent(c, x, y, 30, '#8ecae6'); c.beginPath(); c.moveTo(x + 28, y); c.lineTo(x + 50, y); c.stroke(); c.fillStyle = BASE[b]; c.fillRect(x + 50, y - 24, 70, 48); T(c, b, x + 76, y + 9, '#fff', 26);
+    if (lab) { T(c, 'Phosphate', x - 110, y + 60, '#b8860b', 18); T(c, 'Sugar', x - 22, y + 60, '#2a7da1', 18); T(c, 'Base', x + 62, y + 60, BASE[b], 18); } }
+
+  const D_NUC = cvDive({ n: 'Nucleotides, DNA and RNA', anim: 3,
+    steps: [
+      { n: 'A nucleotide', s: 'DNA and RNA are polymers of **nucleotides**. Each nucleotide has three parts: a **phosphate**, a **pentose sugar** and a nitrogenous **base**.', cs: 'A1.2.2' },
+      { n: 'The sugar-phosphate backbone', s: 'Nucleotides join by **condensation**: the phosphate of one bonds covalently to the sugar of the next. This forms a strong **sugar-phosphate backbone** with the bases sticking out.', cs: 'A1.2.3, A1.2.5' },
+      { n: 'Four bases make a code', s: 'DNA uses the bases **A, T, G and C**. The order of bases carries the information. Two strands pair up: A with T, G with C, held by **hydrogen bonds**, and twist into a double helix.', pts: ['With four bases, a sequence of n bases has 4^n possibilities: almost unlimited information.'], cs: 'A1.2.4, A1.2.6, A1.2.9' },
+      { n: 'DNA and RNA compared', s: 'Compare the two nucleic acids:', pts: ['Sugar: **deoxyribose** in DNA, **ribose** in RNA.', 'Bases: DNA has **thymine**; RNA has **uracil** instead.', 'Strands: DNA is **double-stranded**; RNA is usually **single-stranded**.'], q: { q: 'Which base is found in RNA but not in DNA?', o: ['Thymine', 'Uracil', 'Guanine'], a: 1, why: 'RNA uses uracil where DNA uses thymine.' }, cs: 'A1.2.7' }
+    ],
+    draw(c, step, k) { if (step === 0) { nucleotide(c, 440, 320, 'A', true); return; }
+      if (step === 1) { const n = 1 + Math.round(3 * k); for (let i = 0; i < n; i++) nucleotide(c, 300, 140 + i * 115, 'AGCT'[i]); c.strokeStyle = '#333'; c.lineWidth = 5; for (let i = 1; i < n; i++) { c.beginPath(); c.moveTo(300, 140 + (i - 1) * 115 + 30); c.lineTo(240, 140 + i * 115 - 2); c.stroke(); } T(c, 'Sugar-phosphate backbone', 560, 300, '#222', 26); return; }
+      if (step === 2) { const s1 = 'ATGCGTA', s2 = 'TACGCAT'; for (let i = 0; i < 7; i++) { const y = 70 + i * 74; c.fillStyle = '#8ecae6'; c.fillRect(200, y, 30, 50); c.fillRect(794, y, 30, 50); c.fillStyle = BASE[s1[i]]; c.fillRect(230, y + 8, 220, 34); c.fillStyle = BASE[s2[i]]; c.fillRect(574, y + 8, 220, 34); T(c, s1[i], 330, y + 34, '#fff'); T(c, s2[i], 676, y + 34, '#fff'); c.strokeStyle = '#555'; c.setLineDash([6, 6]); c.lineWidth = 3; c.beginPath(); c.moveTo(450, y + 25); c.lineTo(574, y + 25); c.stroke(); c.setLineDash([]); } T(c, 'hydrogen bonds', 440, 615, '#555', 20); return; }
+      const rows = [['', 'DNA', 'RNA'], ['Sugar', 'Deoxyribose', 'Ribose'], ['Bases', 'A, T, G, C', 'A, U, G, C'], ['Strands', 'Two (double helix)', 'Usually one']]; rows.forEach((r, i) => r.forEach((s, j) => T(c, s, 130 + j * 290, 150 + i * 110, i === 0 || j === 0 ? '#1d4ed8' : '#222', i === 0 ? 32 : 26))); } });
+
+  const D_STR = cvDive({ n: 'DNA structure in detail', hl: true, anim: 3,
+    steps: [
+      { n: 'Antiparallel strands', s: 'Each strand has a direction: the **5\' end** has a free phosphate and the **3\' end** a free OH on the sugar. The two strands run in **opposite directions** (antiparallel).', ch: 'A1.2.11' },
+      { n: 'Purine with pyrimidine', s: '**Purines** (A, G) have two rings; **pyrimidines** (C, T) have one. Each base pair joins one purine to one pyrimidine, so every rung is the same width and the helix is regular. A-T pairs have 2 hydrogen bonds, G-C pairs have 3.', ch: 'A1.2.12' },
+      { n: 'Nucleosomes', s: 'In eukaryotes DNA is wrapped about 1.7 times round a core of **eight histone proteins** to form a **nucleosome**, held by an extra histone (H1). Linker DNA joins one nucleosome to the next, like beads on a string.', hq: { q: 'Why does every base pair have the same width?', o: ['All bases are the same size', 'Each pair has one two-ring purine and one single-ring pyrimidine', 'Hydrogen bonds stretch'], a: 1, why: 'Purine plus pyrimidine always gives three rings across the helix.' }, ch: 'A1.2.13' }
+    ],
+    draw(c, step, k) { if (step === 0) { c.strokeStyle = '#1d4ed8'; c.lineWidth = 8; c.beginPath(); c.moveTo(300, 120); c.lineTo(300, 520); c.stroke(); c.strokeStyle = '#e63946'; c.beginPath(); c.moveTo(720, 120); c.lineTo(720, 520); c.stroke();
+        c.fillStyle = '#1d4ed8'; c.beginPath(); c.moveTo(285, 500); c.lineTo(315, 500); c.lineTo(300, 540); c.fill(); c.fillStyle = '#e63946'; c.beginPath(); c.moveTo(705, 140); c.lineTo(735, 140); c.lineTo(720, 100); c.fill();
+        T(c, "5'", 285, 100, '#1d4ed8', 30); T(c, "3'", 285, 580, '#1d4ed8', 30); T(c, "3'", 705, 100, '#e63946', 30); T(c, "5'", 705, 580, '#e63946', 30); for (let i = 0; i < 6; i++) { c.fillStyle = '#ccc'; c.fillRect(300, 150 + i * 65, 420, 14); } return; }
+      if (step === 1) { [['A', 'T', 2, 160], ['G', 'C', 3, 330]].forEach(([p, q, nb, y]) => { c.fillStyle = BASE[p]; c.fillRect(200, y, 260, 80); T(c, p + ' (purine: 2 rings)', 215, y + 50, '#fff', 24); c.fillStyle = BASE[q]; c.fillRect(560, y, 200, 80); T(c, q + ' (pyrimidine)', 570, y + 50, '#fff', 22);
+          c.strokeStyle = '#555'; c.lineWidth = 3; c.setLineDash([6, 6]); for (let b = 0; b < nb; b++) { c.beginPath(); c.moveTo(460, y + 20 + b * 20); c.lineTo(560, y + 20 + b * 20); c.stroke(); } c.setLineDash([]); T(c, nb + ' H bonds', 470, y - 10, '#555', 20); }); T(c, 'Same width every time', 330, 530, '#222', 30); return; }
+      for (let i = 0; i < 5; i++) { const x = 140 + i * 190; c.fillStyle = '#4895ef'; c.beginPath(); c.arc(x, 320, 60, 0, 7); c.fill(); c.strokeStyle = '#222'; c.lineWidth = 8; c.beginPath(); c.ellipse(x, 320, 72, 30, 0.4, 0, 7); c.stroke(); if (i < 4) { c.beginPath(); c.moveTo(x + 70, 340); c.lineTo(x + 120, 300); c.stroke(); } }
+      T(c, 'Histone core (8 proteins)', 60, 450, '#4895ef', 22); T(c, 'DNA wrapped round', 330, 220, '#222', 22); T(c, 'Linker DNA', 620, 450, '#222', 22); } });
+
+  const D_EVID = cvDive({ n: 'Evidence: what genes are made of', hl: true, anim: 3,
+    steps: [
+      { n: 'Protein or DNA?', s: 'In the 1940s many scientists thought genes were made of protein, which seemed more varied than DNA. Viruses called **bacteriophages** are just protein coats with DNA inside, so they were ideal for testing this.', ch: 'A1.2.14' },
+      { n: 'Hershey and Chase (1952)', s: 'They labelled one batch of phages with radioactive **sulfur-35** (only in protein) and another with radioactive **phosphorus-32** (only in DNA), let them infect bacteria, then shook off the phage coats in a blender and spun the mixture.', ch: 'A1.2.14' },
+      { n: 'The result', s: 'The **phosphorus-32** went into the bacteria (in the pellet) and was passed to new phages; the **sulfur-35** stayed outside with the empty coats. So **DNA**, not protein, is the genetic material.', ch: 'A1.2.14' },
+      { n: 'Chargaff\'s rules', s: 'Chargaff measured base proportions in many species. In every species **A = T and G = C** (so purines = pyrimidines), but the ratio of (A + T) to (G + C) varies between species. This supported base pairing and showed DNA is varied enough to carry information.', hq: { q: 'In a sample of DNA, 30% of the bases are adenine. What percentage are guanine?', o: ['30%', '20%', '40%'], a: 1, why: 'A = T = 30%, so G + C = 40%, and G = C = 20%.' }, ch: 'A1.2.15' }
+    ],
+    draw(c, step, k) { if (step <= 2) { [['S-35 in protein coat', '#f2a541', 250], ['P-32 in DNA', '#7b2cbf', 720]].forEach(([n, col, x], i) => { T(c, n, x - 150, 70, col, 26);
+        c.fillStyle = '#ddd'; c.fillRect(x - 60, 120, 120, 330); c.strokeStyle = '#555'; c.strokeRect(x - 60, 120, 120, 330); c.fillStyle = '#c8b6a6'; c.beginPath(); c.ellipse(x, 430, 50, 16, 0, 0, 7); c.fill(); T(c, 'pellet: bacteria', x - 85, 480, '#555', 18); T(c, 'liquid: phage coats', x - 95, 110, '#555', 18);
+        if (step >= 1) { const glow = i === 0 ? [x, 200] : [x, 430]; const a = step === 2 ? 1 : k; c.globalAlpha = a; c.fillStyle = col; c.beginPath(); c.arc(glow[0], glow[1], 34, 0, 7); c.fill(); c.globalAlpha = 1; }
+        if (step === 2) T(c, i === 0 ? 'Radioactivity stays outside' : 'Radioactivity enters the bacteria', x - 170, 540, col, 22); });
+        if (step === 0) { c.fillStyle = '#ffd166'; c.beginPath(); c.moveTo(490, 300); c.lineTo(540, 330); c.lineTo(540, 390); c.lineTo(490, 420); c.lineTo(440, 390); c.lineTo(440, 330); c.fill(); T(c, 'phage', 455, 450, '#222', 20); } return; }
+      const sp = [['Human', 30.9, 29.4, 19.9, 19.8], ['Wheat', 27.3, 27.1, 22.7, 22.8], ['E. coli', 24.7, 23.6, 26.0, 25.7], ['Yeast', 31.3, 32.9, 18.7, 17.1]];
+      T(c, 'Base composition / %', 360, 70, '#222', 28); ['A', 'T', 'G', 'C'].forEach((b, j) => T(c, b, 380 + j * 140, 140, BASE[b], 30)); sp.forEach((r, i) => { T(c, r[0], 100, 220 + i * 90, '#222', 28); r.slice(1).forEach((v, j) => T(c, v.toFixed(1), 360 + j * 140, 220 + i * 90, '#444', 28)); });
+      T(c, 'A = T and G = C in every species', 260, 600, '#2d6a4f', 28); } });
+
+  return {
+    dives: [D_NUC, D_STR, D_EVID],
+    stops: {
+      'The double helix': { pts: ['DNA is the genetic material of **all** living organisms (some viruses use RNA).', 'The same genetic code is used by almost all organisms, evidence that all life shares a **common ancestor**.'], q: { q: 'Which bonds hold the two strands of DNA together?', o: ['Covalent bonds between sugars', 'Hydrogen bonds between complementary bases', 'Peptide bonds'], a: 1, why: 'Hydrogen bonds between A-T and G-C pairs hold the strands; covalent bonds hold each backbone.' }, cs: 'A1.2.1, A1.2.10', dives: ['Nucleotides, DNA and RNA', 'DNA structure in detail', 'Evidence: what genes are made of'] },
+      'DNA polymerase builds new strands': { q: { q: 'Why is complementary base pairing important in copying DNA?', o: ['It makes DNA stronger', 'Each strand determines the sequence of the new strand, so copies are exact', 'It speeds up transcription'], a: 1, why: 'A only pairs with T and G with C, so a template strand fixes the sequence of the new strand.' }, cs: 'A1.2.8' },
+      'Transcription': { q: { q: 'Which molecule carries the code from DNA to a ribosome?', o: ['tRNA', 'mRNA', 'rRNA'], a: 1, why: 'Messenger RNA is transcribed from DNA and translated at ribosomes.' } },
+      'Translation at the ribosome': { q: { q: 'How many bases code for one amino acid?', o: ['1', '2', '3'], a: 2, why: 'The genetic code is a triplet code: each codon has three bases.' } }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

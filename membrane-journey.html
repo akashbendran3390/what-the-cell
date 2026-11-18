@@ -213,6 +213,58 @@ window.JOURNEY = {
   }
 };
 
+// Extras for the membrane walk-through (2026-11-18): check questions, HL-only stops (B2.1.13, B2.1.16), an SL close-up on why
+// bilayers form (B2.1.1-2, B2.1.8, B2.1.10) and an HL close-up on fluidity and adhesion (B2.1.11-12, B2.1.17).
+JOURNEY.extra = function (A, W) {
+  const { V, THREE } = A;
+  function cvDive(o) { return Object.assign({ bg: '#0e1a22', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex }))); let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step + ':' + Math.round(Math.min(t, o.anim || 4) * 20) + ':' + Math.round(tt * 6) % 12; if (k !== key) { key = k; c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); o.draw(c, step, Math.min(1, t / (o.anim || 4)), tt); tex.needsUpdate = true; } } }; } }, o); }
+  const T = (c, s, x, y, col, size) => { c.fillStyle = col || '#222'; c.font = 'bold ' + (size || 24) + 'px sans-serif'; c.fillText(s, x, y); };
+  function lipid(c, x, y, up, kink, col) { const d = up ? -1 : 1; c.fillStyle = col || '#4895ef'; c.beginPath(); c.arc(x, y, 13, 0, 7); c.fill(); c.strokeStyle = '#f2a541'; c.lineWidth = 4;
+    [-5, 5].forEach((dx, i) => { c.beginPath(); c.moveTo(x + dx, y - d * 12); if (kink && i) { c.lineTo(x + dx, y - d * 34); c.lineTo(x + dx + 10, y - d * 58); } else c.lineTo(x + dx, y - d * 60); c.stroke(); }); }
+
+  const D_BI = cvDive({ n: 'Why a bilayer forms', anim: 3,
+    steps: [
+      { n: 'Amphipathic phospholipids', s: 'A phospholipid has a **hydrophilic** (water-loving) phosphate head and two **hydrophobic** (water-fearing) fatty acid tails. A molecule with both parts is **amphipathic**.', cs: 'B2.1.1' },
+      { n: 'In water they form a bilayer', s: 'In water, heads face outwards to the water on both sides and tails face each other inside, away from water. This **bilayer** forms by itself.', cs: 'B2.1.1' },
+      { n: 'A barrier', s: 'The hydrophobic core stops **ions and polar molecules** (such as glucose) crossing easily. Small non-polar molecules (O2, CO2) and, slowly, water can pass between the phospholipids by **simple diffusion**.', q: { q: 'Which can cross a phospholipid bilayer most easily by simple diffusion?', o: ['Sodium ions', 'Glucose', 'Oxygen'], a: 2, why: 'Small non-polar molecules dissolve in the hydrophobic core; ions and large polar molecules need proteins.' }, cs: 'B2.1.2, B2.1.3, B2.1.8' },
+      { n: 'The fluid mosaic model', s: 'Proteins float in the bilayer like tiles in a moving mosaic. **Integral proteins** span or sit in the bilayer; **peripheral proteins** are attached to the surface. Phospholipids and many proteins move sideways: the membrane is **fluid**.', cs: 'B2.1.4, B2.1.10' }
+    ],
+    draw(c, step, k, tt) { if (step === 0) { lipid(c, 500, 200, true); T(c, 'Hydrophilic head', 540, 205, '#4895ef', 26); T(c, 'Hydrophobic tails', 540, 260, '#f2a541', 26); return; }
+      c.fillStyle = 'rgba(79,179,255,.15)'; c.fillRect(0, 0, 1024, 170); c.fillRect(0, 470, 1024, 170); T(c, 'Water', 40, 60, '#1d4ed8', 26); T(c, 'Water', 40, 620, '#1d4ed8', 26);
+      const n = step === 1 ? Math.round(17 * k) : 17; for (let i = 0; i < n; i++) { const x = 100 + i * 50 + Math.sin(tt * 2 + i) * (step === 3 ? 4 : 1); lipid(c, x, 200, false); lipid(c, x, 440, true); }
+      T(c, 'Hydrophobic core', 400, 330, '#b8860b', 26);
+      if (step === 2) { [['O2', 300, '#e63946', true], ['CO2', 520, '#555', true], ['Na+', 720, '#7b2cbf', false], ['glucose', 860, '#f2a541', false]].forEach(([s, x, col, ok]) => { const y = ok ? 120 + k * 420 : 130 + Math.sin(tt * 3) * 6; T(c, s, x, y, col, 24); }); }
+      if (step === 3) { c.fillStyle = '#2d6a4f'; c.beginPath(); c.ellipse(420 + Math.sin(tt) * 20, 320, 48, 150, 0, 0, 7); c.fill(); T(c, 'Integral protein', 330, 160, '#2d6a4f', 22); c.fillStyle = '#f77f00'; c.beginPath(); c.ellipse(700 + Math.sin(tt * 1.3) * 20, 150, 60, 30, 0, 0, 7); c.fill(); T(c, 'Peripheral protein', 640, 110, '#f77f00', 22); } } });
+
+  const D_FLU = cvDive({ n: 'Membrane fluidity', hl: true, anim: 3,
+    steps: [
+      { n: 'Saturated and unsaturated tails', s: '**Saturated** fatty acid tails are straight and pack tightly, making a membrane more rigid. **Unsaturated** tails have kinks (C=C double bonds) that keep them apart, making it more fluid.', hpts: ['Organisms in cold places have more unsaturated fatty acids in their membranes, which stay fluid at low temperatures.'], ch: 'B2.1.11' },
+      { n: 'Cholesterol', s: 'In animal cells **cholesterol** (yellow) sits between phospholipids. It restricts their movement, so membranes are not too fluid at high temperatures, and it stops them packing too tightly when cold.', hq: { q: 'What does cholesterol do to animal cell membranes?', o: ['Makes them fully rigid', 'Keeps fluidity within limits across a range of temperatures', 'Lets ions cross freely'], a: 1, why: 'It restrains phospholipid movement when warm and prevents tight packing when cold.' }, ch: 'B2.1.12' },
+      { n: 'Fluidity allows vesicles', s: 'Because membranes are fluid, they can bend and pinch off as **vesicles** (endocytosis) and vesicles can **fuse** with them (exocytosis).', ch: 'B2.1.13' },
+      { n: 'Cell adhesion', s: 'Cells in tissues are held together by **cell adhesion molecules** (CAMs): membrane proteins that bind to matching molecules on neighbouring cells.', ch: 'B2.1.17' }
+    ],
+    draw(c, step, k, tt) { if (step <= 1) { [['Saturated: tightly packed', 80, false], ['Unsaturated: kinks, more fluid', 560, true]].forEach(([n, x0, kink]) => { T(c, n, x0, 70, '#222', 24); for (let i = 0; i < 8; i++) { const x = x0 + 30 + i * (kink ? 52 : 40); lipid(c, x, 180, false, kink); lipid(c, x, 420, true, kink); } });
+        if (step === 1) { c.fillStyle = '#ffd166'; for (let i = 0; i < 4; i++) { c.fillRect(620 + i * 104, 205, 14, 70); c.fillRect(620 + i * 104, 330, 14, 70); } T(c, 'Cholesterol', 640, 560, '#b8860b', 26); } return; }
+      if (step === 2) { for (let i = 0; i < 16; i++) { const x = 100 + i * 52; const dip = Math.max(0, 1 - Math.abs(x - 512) / 180) * 130 * k; lipid(c, x, 200 + dip, false); lipid(c, x, 440 + dip, true); } c.strokeStyle = '#7b2cbf'; c.lineWidth = 6; c.beginPath(); c.arc(512, 520 + 60 * k, 60 * k + 1, 0, 7); c.stroke(); T(c, 'Vesicle pinching off', 600, 590, '#7b2cbf', 24); return; }
+      [[200, '#4895ef'], [620, '#52b788']].forEach(([x, col]) => { c.fillStyle = col; c.globalAlpha = 0.35; c.fillRect(x, 100, 300, 440); c.globalAlpha = 1; }); for (let i = 0; i < 5; i++) { const y = 150 + i * 85; c.fillStyle = '#e63946'; c.fillRect(500, y, 60 + 0 * k, 14); c.fillStyle = '#f77f00'; c.fillRect(560, y, 60, 14); } T(c, 'Cell 1', 300, 90, '#1d4ed8', 26); T(c, 'Cell 2', 720, 90, '#2d6a4f', 26); T(c, 'Adhesion molecules binding', 380, 600, '#e63946', 24); } });
+
+  return {
+    dives: [D_BI, D_FLU],
+    stops: {
+      'The phospholipid bilayer and simple diffusion': { q: { q: 'Why do phospholipids form a bilayer in water?', o: ['Their heads are hydrophobic', 'Hydrophilic heads face water and hydrophobic tails face each other, away from water', 'They are held by covalent bonds'], a: 1, why: 'The arrangement keeps the tails away from water: it forms spontaneously.' }, dives: ['Why a bilayer forms', 'Membrane fluidity'] },
+      'Osmosis through aquaporins': { q: { q: 'What are aquaporins?', o: ['Pumps for ions', 'Channel proteins that let water molecules through quickly', 'Lipids'], a: 1, why: 'Aquaporins are integral channel proteins specific for water.' } },
+      'Facilitated diffusion through a channel': { q: { q: 'How does facilitated diffusion differ from active transport?', o: ['It uses ATP', 'It moves substances down their concentration gradient, through proteins, without ATP', 'It only moves water'], a: 1, why: 'Facilitated diffusion is passive; active transport uses energy to move substances against a gradient.' } },
+      'Active transport by a pump': { q: { q: 'Which is needed for active transport?', o: ['A concentration gradient', 'ATP and a pump protein', 'Aquaporins'], a: 1, why: 'Pump proteins use energy from ATP to move substances against their gradient.' } },
+      'Glycoproteins': { pts: ['Glycoproteins and glycolipids have carbohydrate chains on the outside of the membrane.', 'They act in **cell recognition** (for example ABO blood group antigens) and as receptors.'], cs: 'B2.1.9' },
+      'Cotransport': { hl: true },
+      'A vesicle forming': { hl: true, dives: ['Membrane fluidity'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

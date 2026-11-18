@@ -45,6 +45,23 @@ button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 #info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
 #info p{margin:0;font-size:15px;line-height:1.45}
 #info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+#info{max-height:calc(100% - 120px);overflow-y:auto;max-width:min(470px,calc(100% - 32px))}
+#info .body p+p{margin-top:6px}
+#info ul{margin:6px 0 0;padding-left:18px;font-size:14.5px;line-height:1.42}
+#info li{margin:2px 0}
+#info b{color:var(--accent)}
+.hlx{margin-top:9px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}
+.hlx p{font-size:14.5px!important}
+.hltag{display:inline-block;font:800 10.5px var(--body);letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px;margin-bottom:4px}
+.hlhint{margin-top:8px;font-size:12.5px;color:var(--dim);font-style:italic}
+.chk{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.chk>b{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+.chk .cq{font-size:14.5px;margin:3px 0 4px;line-height:1.4}
+.chk button{display:block;width:100%;text-align:left;border-radius:10px;background:rgba(255,255,255,.07);margin-top:5px;font-weight:600;font-size:13.5px;padding:6px 11px}
+.chk button.ok{background:rgba(80,200,120,.38)}
+.chk button.no{background:rgba(230,80,80,.32)}
+.chk .why{margin-top:6px;font-size:13.5px;line-height:1.4}
+.nav button.zoom.hlz{border-color:#ffd166;color:#ffd166}
 .nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .nav button{background:rgba(255,255,255,.1)}
 .nav button.go{background:var(--accent);color:#1d1400}
@@ -221,10 +238,26 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
+// h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
+const forLevel=o=>!o.hl||level==='hl';
+let VIS=STOPS.filter(forLevel);
+const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const ul=a=>a&&a.length?'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'';
+function bodyHTML(o){ let h=(o.s?'<p>'+esc(o.s)+'</p>':'')+ul(o.pts);
+  if(o.h||o.hpts){ if(level==='hl') h+='<div class="hlx"><span class="hltag">HL</span>'+(o.h?'<p>'+esc(o.h)+'</p>':'')+ul(o.hpts)+'</div>'; else if(o.hpts) h+='<div class="hlhint">HL: more detail on this stop. Switch to HL at the top.</div>'; }
+  const q=level==='hl'&&o.hq?o.hq:o.q;
+  if(q) h+='<div class="chk"><b>Check yourself'+(q===o.hq?' (HL)':'')+'</b><div class="cq">'+esc(q.q)+'</div>'+q.o.map((x,i)=>'<button type="button" data-i="'+i+'">'+esc(x)+'</button>').join('')+'<div class="why" hidden></div></div>';
+  return h; }
+function fillBody(info,o){ const b=info.querySelector('.body'); b.innerHTML=bodyHTML(o); const c=b.querySelector('.chk'); if(!c) return;
+  const q=level==='hl'&&o.hq?o.hq:o.q;
+  c.querySelectorAll('button').forEach(bt=>{ bt.onclick=()=>{ const i=+bt.dataset.i; c.querySelectorAll('button').forEach(x=>{ x.classList.remove('ok','no'); });
+    bt.classList.add(i===q.a?'ok':'no'); if(i!==q.a) c.querySelectorAll('button')[q.a].classList.add('ok');
+    const w=c.querySelector('.why'); w.hidden=false; w.innerHTML=(i===q.a?'<b>Yes.</b> ':'<b>Not quite.</b> ')+esc(q.why||''); }; }); }
 const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
 const camOff=W.camOffset||api.V(0,3,5);
-let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=out.yaw!=null?out.yaw:0, op=out.pitch!=null?out.pitch:0.08, od=out.dist;
+let view='ride', stop=0, u=VIS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=out.yaw!=null?out.yaw:0, op=out.pitch!=null?out.pitch:0.08, od=out.dist;
 api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
 // ---------- close-ups ----------
 const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
@@ -245,31 +278,32 @@ function openDive(d){
 function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
 function closeDive(){ leaveDive(); showStop(); }
 api.openDive=openDive;
-function showDive(){ const info=$('info'), st=dive.steps[dStep];
-  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
-  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
-  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
-  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
-  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+function DS(){ return dive.steps.filter(forLevel); }
+function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.length-1); const st=all[dStep]; info.scrollTop=0;
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><div class="body"></div><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+all.length+(st.hl?' · HL step':''); info.querySelector('h2').textContent=st.n;
+  fillBody(info,st);
+  const cd=info.querySelector('.codes'); if(st.cs||(level==='hl'&&st.ch)) cd.textContent='Syllabus: '+[st.cs,level==='hl'?st.ch:''].filter(Boolean).join(', '); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
-function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
-function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
   if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
-    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
-    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    info.scrollTop=0; info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><div class="body"></div>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; fillBody(info,o); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
     $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
-  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
-  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
-  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
-  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
-  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
-function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); stop=Math.max(0,Math.min(STOPS.length-1,i)); uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+  const s=VIS[stop]; info.scrollTop=0; info.innerHTML='<div class="eyebrow"></div><h2></h2><div class="body"></div><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+VIS.length+(s.hl?' · HL stop':''); info.querySelector('h2').textContent=s.n;
+  fillBody(info,s); info.querySelector('.codes').textContent='Syllabus: '+[s.cs,level==='hl'?s.ch:''].filter(Boolean).join(', ');
+  const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
+  if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
-function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
 $('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
 $('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
@@ -280,9 +314,13 @@ canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-
   if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
   else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
-canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=DS()[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
 let sizeW=0,sizeH=0;
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; dCam.aspect=w/h; shiftView(); }
+// On wide screens, centre the picture in the space right of the text panel (2026-11-18).
+let shiftPx=-1;
+function shiftView(){ const w=canvas.clientWidth; if(!w) return; const px=w>=900?243:0; shiftPx=px;
+  [camera,dCam].forEach(c=>{ c.filmOffset=-(px/w)*c.getFilmWidth()*2*Math.tan(c.fov*Math.PI/360)*c.aspect; c.updateProjectionMatrix(); }); }
 window.addEventListener('resize',resize);
 const v=new THREE.Vector3(); let last=performance.now();
 function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) resize(); const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
@@ -297,7 +335,7 @@ function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) 
   if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
   if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
     camera.position.copy(behind); if(W.settle){ const nr=Math.max(0,1-Math.abs(uTarget-u)/0.05); camera.position.lerp(route.getPointAt(Math.min(0.999,Math.max(0,u))),nr); } camera.position.add(camOff); let d=ahead.clone().sub(camera.position).normalize();
-    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0.7,1-Math.abs(uTarget-u)/0.03); d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    const lk=VIS[stop].look; if(lk){ const near=Math.max(0.7,1-Math.abs(uTarget-u)/0.03); d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
   else { camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;

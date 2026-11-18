@@ -45,6 +45,23 @@ button[aria-pressed="true"]{background:var(--accent);color:#1d1400}
 #info h2{margin:2px 0 6px;font:800 21px/1.15 var(--display)}
 #info p{margin:0;font-size:15px;line-height:1.45}
 #info .codes{margin-top:8px;font-size:12px;color:var(--dim)}
+#info{max-height:calc(100% - 120px);overflow-y:auto;max-width:min(470px,calc(100% - 32px))}
+#info .body p+p{margin-top:6px}
+#info ul{margin:6px 0 0;padding-left:18px;font-size:14.5px;line-height:1.42}
+#info li{margin:2px 0}
+#info b{color:var(--accent)}
+.hlx{margin-top:9px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}
+.hlx p{font-size:14.5px!important}
+.hltag{display:inline-block;font:800 10.5px var(--body);letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px;margin-bottom:4px}
+.hlhint{margin-top:8px;font-size:12.5px;color:var(--dim);font-style:italic}
+.chk{margin-top:10px;padding-top:8px;border-top:1px dashed var(--line)}
+.chk>b{display:block;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+.chk .cq{font-size:14.5px;margin:3px 0 4px;line-height:1.4}
+.chk button{display:block;width:100%;text-align:left;border-radius:10px;background:rgba(255,255,255,.07);margin-top:5px;font-weight:600;font-size:13.5px;padding:6px 11px}
+.chk button.ok{background:rgba(80,200,120,.38)}
+.chk button.no{background:rgba(230,80,80,.32)}
+.chk .why{margin-top:6px;font-size:13.5px;line-height:1.4}
+.nav button.zoom.hlz{border-color:#ffd166;color:#ffd166}
 .nav{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .nav button{background:rgba(255,255,255,.1)}
 .nav button.go{background:var(--accent);color:#1d1400}
@@ -191,20 +208,181 @@ window.JOURNEY = {
     pose(0); window.meiosisPhase = v => { auto = false; target = p = v; };
     const hero = new THREE.Mesh(new THREE.SphereGeometry(0.5, 8, 6), M(0xffffff)); hero.visible = false; scene.add(hero);
     const orbit = a => V(Math.sin(a) * 40, 10, Math.cos(a) * 40);
-    const PH = [0, 1, 2, 3, 4, 5, 6, 7, 7];
+    // ---------- close-ups (2026-11-18): crossing over, non-disjunction, and (HL) independent assortment and linkage ----------
+    const RED = 0xe63946, PINK = 0xff8fab, BLUE = 0x1d4ed8, LBLUE = 0x7ab8ff, GOLD = 0xffd166, GREEN = 0x52b788;
+    const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+    function piece(g, y0, y1, r, c) { const grp = new THREE.Group(), mat = M(c, { roughness: 0.45 });
+      const cy = new THREE.Mesh(new THREE.CylinderGeometry(r, r, y1 - y0, 18), mat); cy.position.y = (y0 + y1) / 2; grp.add(cy);
+      [y0, y1].forEach(y => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 18, 12), mat); s.position.y = y; grp.add(s); });
+      g.add(grp); return grp; }
+    function band(grp, y, r) { const b = new THREE.Mesh(new THREE.CylinderGeometry(r * 1.12, r * 1.12, 0.55, 18), M(GOLD, { emissive: 0x332200 })); b.position.y = y; grp.add(b); return b; }
+    function ball(g, r, c) { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 14, 10), M(c || 0xffffff)); g.add(s); return s; }
+    function hide(el, off) { el.dataset.off = off ? '1' : ''; }
+
+    // A bivalent: 4 chromatids, the two inner (non-sister) ones split at yX into an upper part and a tip that can swap.
+    function bivalent(D, o) { const g = D.scene, L = o.L, r = o.r || 0.9, yX = o.yX;
+      const cols = [RED, RED, BLUE, BLUE], up = [], tip = [];
+      for (let i = 0; i < 4; i++) { up.push(piece(g, yX, L / 2, r, cols[i])); tip.push(piece(g, -L / 2, yX, r, cols[i])); }
+      const cen = [ball(g, r * 1.25), ball(g, r * 1.25)];
+      return { up, tip, cen, r, L, yX,
+        place(gap, e, lift) { const X = [-3 - gap, -1 - gap, 1 + gap, 3 + gap]; lift = lift || 1.8;
+          for (let i = 0; i < 4; i++) up[i].position.set(X[i], 0, 0);
+          tip[0].position.set(X[0], 0, 0); tip[3].position.set(X[3], 0, 0);
+          tip[1].position.set(X[1] + (X[2] - X[1]) * e, 0, Math.sin(Math.PI * e) * lift);
+          tip[2].position.set(X[2] + (X[1] - X[2]) * e, 0, -Math.sin(Math.PI * e) * lift);
+          cen[0].position.set((X[0] + X[1]) / 2, o.yC, 0); cen[1].position.set((X[2] + X[3]) / 2, o.yC, 0); return X; } }; }
+
+    const D_CROSS = { n: 'Crossing over', bg: '#120f1a', dist: 44, target: V(0, 0, 0), yaw: 0, pitch: 0.12,
+      steps: [
+        { n: 'Homologues pair up', s: 'Early in prophase I, the two chromosomes of a homologous pair find each other and line up side by side, gene for gene. This pairing is called **synapsis**.', pts: ['Red: the chromosome inherited from the mother. Blue: the one from the father.', 'Each chromosome was copied in interphase, so it has two identical **sister chromatids** joined at the centromere.'], h: 'The paired homologues are called a **bivalent** (or tetrad): 2 chromosomes, 4 chromatids. A protein zipper, the synaptonemal complex, holds them closely together.', cs: 'D2.1.6, D2.1.11' },
+        { n: 'A bivalent: four chromatids', s: 'Now the pair lies tightly together. The two outer chromatids are sisters of each other; so are the two on each side. The **inner two are non-sister chromatids**: one from each parent.', q: { q: 'Which chromatids can cross over with each other?', o: ['Sister chromatids of the same chromosome', 'Non-sister chromatids of a homologous pair', 'Any two chromosomes in the nucleus'], a: 1, why: 'Crossing over happens between non-sister chromatids of a homologous pair. Swapping between identical sisters would change nothing.' }, cs: 'D2.1.11' },
+        { n: 'A chiasma forms', s: 'At a random point, the two non-sister chromatids break at exactly the same place. The gold ring marks the spot. Where they cross and rejoin is called a **chiasma** (plural chiasmata).', h: 'Every bivalent forms at least one chiasma, and long chromosomes often have two or three. Chiasmata also hold the homologues together until anaphase I, which helps them separate correctly.', cs: 'D2.1.11' },
+        { n: 'Sections are exchanged', s: 'The broken ends join up with the other chromatid, so matching sections of DNA swap places. Watch the red and blue tips change sides.', pts: ['The break is at the same point on both, so no genes are lost or gained.', 'Each chromatid now carries a mixture of maternal and paternal DNA.'], cs: 'D2.1.11' },
+        { n: 'Parental and recombinant chromatids', s: 'When the homologues pull apart, look at the four chromatids. Two are unchanged (**parental**). Two are new mixtures of the mother\'s and father\'s DNA (**recombinant**).', q: { q: 'After one crossover in a bivalent, how many of the four chromatids are recombinant?', o: ['None', 'One', 'Two', 'All four'], a: 2, why: 'Only the two non-sister chromatids that took part are changed; the outer two are parental.' }, cs: 'D2.1.11' },
+        { n: 'New combinations of alleles', s: 'Now follow two genes. Gene A sits on the part that was swapped; gene B is on the other arm. Before crossing over the chromatids were A B and a b. Afterwards two of them are **A b** and **a B**: combinations neither parent passed on.', h: 'Genes on the same chromosome are linked. Crossing over between them is the only way to make recombinant gametes for linked genes, and the further apart two loci are, the more often a chiasma forms between them.', hpts: ['Recombinants for linked genes appear in smaller numbers than parental types in a test cross.', 'Open the HL close-up "Linked genes and recombinants" for the numbers.'], cs: 'D2.1.11', ch: 'D3.2.19' }
+      ],
+      build(D) { const B = bivalent(D, { L: 20, yX: -2, yC: 4 });
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.28, 10, 32), M(GOLD, { emissive: 0x886600 })); D.scene.add(ring);
+        const bA = B.tip.map(t => band(t, -6, B.r)), bB = B.up.map(u => band(u, 7, B.r));
+        const P = k => V(0, 0, 0); const pos = { mo: V(-2, 12, 0), fa: V(2, 12, 0), sis: V(-2, -11.8, 0), cen: V(-2, 4, 1.4), chi: V(0, -2, 2), biv: V(0, -12.8, 0) };
+        const L1 = { mo: D.label('From mother', pos.mo), fa: D.label('From father', pos.fa), sis: D.label('Sister chromatids', pos.sis), cen: D.label('Centromere', pos.cen), chi: D.label('Chiasma', pos.chi), biv: D.label('Bivalent: 4 chromatids', pos.biv) };
+        const tags = [0, 1, 2, 3].map(i => ({ p: V(0, -13, 0), el: null })); tags.forEach((t, i) => { t.el = D.label(i === 0 || i === 3 ? 'Parental' : 'Recombinant', t.p); });
+        const al = [0, 1, 2, 3].map(i => { const pa = V(0, -6, 1.6), pb = V(0, 7, 1.6); return { pa, pb, a: D.label(i < 2 ? 'A' : 'a', pa), b: D.label(i < 2 ? 'B' : 'b', pb) }; });
+        let step = 0, t0 = 0, tt = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0;
+            const gap = step === 0 ? 6 * (1 - ease(t / 2.5)) : step < 4 ? 0 : step === 4 ? 4 * ease(t / 2) : 4;
+            const e = step < 3 ? 0 : step === 3 ? ease((t - 0.4) / 2.6) : 1;
+            const X = B.place(gap, e);
+            ring.visible = step === 2 || (step === 3 && e < 0.6); ring.position.set((X[1] + X[2]) / 2, -2, 0.4); ring.rotation.x = Math.PI / 2 * 0; ring.scale.setScalar(1 + 0.12 * Math.sin(tt * 5));
+            pos.mo.x = (X[0] + X[1]) / 2; pos.fa.x = (X[2] + X[3]) / 2; pos.sis.x = (X[0] + X[1]) / 2; pos.cen.x = (X[0] + X[1]) / 2; pos.chi.x = (X[1] + X[2]) / 2;
+            hide(L1.sis, step > 1); hide(L1.cen, step > 1); hide(L1.chi, !(step === 2 || step === 3)); hide(L1.biv, !(step >= 1 && step <= 3)); hide(L1.mo, step === 5); hide(L1.fa, step === 5);
+            const tipX = [B.tip[0].position.x, B.tip[1].position.x, B.tip[2].position.x, B.tip[3].position.x];
+            // tags follow the columns; the alleles on the tips move with the tips
+            tags.forEach((g2, i) => { g2.p.x = X[i]; g2.p.y = i === 1 || i === 2 ? -15.2 : -12.8; hide(g2.el, step < 4); });
+            al.forEach((q, i) => { q.pa.set(tipX[i], -6, 1.6 + B.tip[i].position.z); q.pb.set(X[i], 7, 1.6); hide(q.a, step < 5); hide(q.b, step < 5); });
+            bA.forEach(b => b.visible = step === 5); bB.forEach(b => b.visible = step === 5); } };
+      } };
+
+    const D_NDJ = { n: 'Non-disjunction', bg: '#120f1a', dist: 72, target: V(0, -3, 0), yaw: 0, pitch: 0.05,
+      steps: [
+        { n: 'Normal meiosis: one copy in each gamete', s: 'Here we follow just one pair: chromosome 21. In meiosis I the two homologues go to different cells; in meiosis II the sister chromatids separate. Every gamete gets **exactly one copy**.', pts: ['Top: the parent cell (2n), with the replicated pair.', 'Middle: the two cells after meiosis I.', 'Bottom: four gametes, each with one chromosome 21.'], cs: 'D2.1.9, D2.1.10' },
+        { n: 'Non-disjunction in meiosis I', s: 'This time the homologous pair **fails to separate** in anaphase I, so both chromosomes go into the same cell. The other cell gets none.', pts: ['Result: two gametes with 2 copies (n + 1) and two with none (n - 1).', 'All four gametes are abnormal.'], q: { q: 'If non-disjunction happens in meiosis I, how many of the four gametes have the normal number of chromosome 21?', o: ['0', '1', '2', '4'], a: 0, why: 'Both homologues went into one cell, so its two gametes have 2 copies and the other two have none.' }, cs: 'D2.1.10' },
+        { n: 'Non-disjunction in meiosis II', s: 'Meiosis I is normal, but in one cell the **sister chromatids fail to separate** in anaphase II.', pts: ['Result: two normal gametes (n), one with 2 copies (n + 1) and one with none (n - 1).'], h: 'So an error in meiosis I gives four abnormal gametes, but an error in meiosis II gives only two. Most trisomy 21 cases trace back to meiosis I in the mother, and the risk rises steeply with maternal age.', cs: 'D2.1.10' },
+        { n: 'Fertilisation: trisomy 21', s: 'If a gamete with 2 copies of chromosome 21 is fertilised by a normal gamete (green), the zygote has **3 copies**. Every cell of the person that grows from it has 47 chromosomes. This is **Down syndrome**.', pts: ['A gamete with no chromosome 21 gives a zygote with one copy, which does not survive.', 'A karyogram of the baby\'s cells shows the extra chromosome.'], q: { q: 'How many chromosomes are in a body cell of a person with trisomy 21?', o: ['45', '46', '47', '69'], a: 2, why: '46 plus one extra copy of chromosome 21 makes 47.' }, cs: 'D2.1.10' }
+      ],
+      build(D) { const g = D.scene; const cellM = () => T(0xc3a6ff, 0.13);
+        const sph = (x, y, r) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 28, 18), cellM()); m.position.set(x, y, 0); g.add(m); return m; };
+        const PC = V(0, 14, 0), M1 = [V(-11, 1, 0), V(11, 1, 0)], G = [V(-16.5, -12, 0), V(-5.5, -12, 0), V(5.5, -12, 0), V(16.5, -12, 0)], Z = V(0, -25, 0);
+        sph(0, 14, 5.2); M1.forEach(c => sph(c.x, c.y, 4.6)); G.forEach(c => sph(c.x, c.y, 3.6)); const zyg = sph(0, -25, 4.2);
+        const mk = c => piece(g, -1.7, 1.7, 0.45, c); const cs = [mk(RED), mk(RED), mk(BLUE), mk(BLUE)], sperm = mk(GREEN);
+        const cen = [ball(g, 0.55), ball(g, 0.55)];
+        D.label('Parent cell (2n)', V(0, 20.5, 0)); D.label('After meiosis I', V(0, 6.5, 0)); D.label('Gametes', V(0, -17, 0));
+        const cnt = G.map(c => D.label('1', V(c.x, -16.6, 0))); const zl = D.label('Zygote: 3 copies (trisomy 21)', V(0, -30.5, 0));
+        // where each chromatid goes: [phase A (parent), B (after meiosis I), C (gametes)]
+        const off = (c, dx) => V(c.x + dx, c.y, 0);
+        const plans = {
+          normal: [[off(PC, -2), off(M1[0], -0.5), off(G[0], 0)], [off(PC, -1), off(M1[0], 0.5), off(G[1], 0)], [off(PC, 1), off(M1[1], -0.5), off(G[2], 0)], [off(PC, 2), off(M1[1], 0.5), off(G[3], 0)]],
+          ndj1: [[off(PC, -2), off(M1[0], -1.6), off(G[0], -0.6)], [off(PC, -1), off(M1[0], -0.6), off(G[1], -0.6)], [off(PC, 1), off(M1[0], 0.6), off(G[0], 0.6)], [off(PC, 2), off(M1[0], 1.6), off(G[1], 0.6)]],
+          ndj2: [[off(PC, -2), off(M1[0], -0.5), off(G[0], 0)], [off(PC, -1), off(M1[0], 0.5), off(G[1], 0)], [off(PC, 1), off(M1[1], -0.5), off(G[2], -0.5)], [off(PC, 2), off(M1[1], 0.5), off(G[2], 0.5)]] };
+        const counts = { normal: [1, 1, 1, 1], ndj1: [2, 2, 0, 0], ndj2: [1, 1, 2, 0] };
+        const lerpV = (a, b, f) => V(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f, 0);
+        let step = 0, t0 = 0, tt = 0;
+        return { onStep(i) { step = i; t0 = tt; },
+          update(dt) { if (!A.paused) tt += dt; const mode = step === 0 ? 'normal' : step === 2 ? 'ndj2' : 'ndj1', plan = plans[mode];
+            const cyc = step === 3 ? Math.min(tt - t0 + 5, 9) : (tt - t0) % 8;
+            const fB = ease((cyc - 1) / 1.5), fC = ease((cyc - 3.5) / 1.5), fZ = step === 3 ? ease((tt - t0 - 0.5) / 2) : 0;
+            cs.forEach((c, i) => { const P = plan[i]; let p = fC > 0 ? lerpV(P[1], P[2], fC) : lerpV(P[0], P[1], fB);
+              if (step === 3 && (i === 0 || i === 2)) p = lerpV(P[2], off(Z, i === 0 ? -1 : 0), fZ);
+              c.position.copy(p); });
+            sperm.visible = step === 3; sperm.position.copy(lerpV(V(32, -25, 0), off(Z, 1), fZ));
+            zyg.visible = step === 3; hide(zl, !(step === 3 && fZ > 0.95));
+            // centromeres join sisters until they separate (stay joined where non-disjunction in meiosis II happens)
+            const sepRed = fC > 0.05, sepBlue = fC > 0.05 && mode !== 'ndj2';
+            cen[0].visible = !sepRed; cen[0].position.copy(lerpV(cs[0].position, cs[1].position, 0.5)).add(V(0, 0.7, 0.3));
+            cen[1].visible = !sepBlue || (step === 3 && false); cen[1].position.copy(lerpV(cs[2].position, cs[3].position, 0.5)).add(V(0, 0.7, 0.3));
+            cnt.forEach((el, k) => { const n = counts[mode][k] - (step === 3 && k === 0 && fZ > 0.05 ? 2 : 0); const txt = fC < 0.9 ? '' : (n === 1 ? 'n: 1 copy' : n === 2 ? 'n + 1: 2 copies' : 'n - 1: none');
+              if (step === 3 && k === 0 && fZ > 0.05) { el.textContent = 'fertilised'; hide(el, false); } else { el.textContent = txt; hide(el, !txt); } }); } };
+      } };
+
+    const D_ASSORT = { n: 'Independent assortment', hl: true, bg: '#120f1a', dist: 48, target: V(0, -1, 0), yaw: 0, pitch: 0.08,
+      steps: [
+        { n: 'Two genes on two different chromosomes', s: 'This cell is heterozygous for two genes, **AaBb**. Gene A is on the long pair of chromosomes and gene B on the short pair, so the genes are **unlinked**.', pts: ['Red (A) and pink (a): one homologous pair.', 'Blue (B) and light blue (b): another pair.', 'At metaphase I each pair lines up on the equator, one homologue on each side.'], cs: 'D2.1.9', ch: 'D3.2.16' },
+        { n: 'One way to line up', s: 'If A and B face the same pole, then after both divisions the cell makes gametes **AB** and **ab**, two of each.', cs: 'D2.1.11', ch: 'D3.2.16' },
+        { n: 'The other way to line up', s: 'The short pair can just as easily face the other way. Then A goes with b, and the gametes are **Ab** and **aB**.', q: { q: 'Why can a cell make Ab gametes even though A and b came from different parents?', o: ['Crossing over between the two chromosome pairs', 'The orientation of one pair does not affect the other', 'Mutation during meiosis'], a: 1, why: 'Each pair turns independently at metaphase I, so the maternal A chromosome can end up with the paternal b chromosome.' }, cs: 'D2.1.11', ch: 'D3.2.16' },
+        { n: 'Many cells: 1 : 1 : 1 : 1', s: 'Each orientation is equally likely. Watch many cells divide, each choosing at random: the tally of gametes settles near **25% of each type**.', pts: ['This is why a dihybrid cross AaBb x AaBb uses a 4 x 4 Punnett grid with AB, Ab, aB and ab along each side.', 'With unlinked genes, the offspring ratio is 9 : 3 : 3 : 1, and a test cross with aabb gives 1 : 1 : 1 : 1.'], hq: { q: 'An AaBb plant is crossed with aabb. The genes are unlinked. What ratio of offspring phenotypes do you expect?', o: ['9 : 3 : 3 : 1', '3 : 1', '1 : 1 : 1 : 1', 'All the same'], a: 2, why: 'AaBb makes four gamete types equally often, and aabb only makes ab, so each gamete type shows directly in the offspring.' }, cs: 'D2.1.11', ch: 'D3.2.16, D3.2.17' },
+        { n: 'Combinations multiply', s: 'Each extra pair doubles the number of possible combinations: 2 pairs give 2^2 = 4, 3 pairs give 2^3 = 8.', h: 'Humans have 23 pairs, so random orientation alone gives 2^23, about 8.4 million, combinations of chromosomes in a gamete, before crossing over is even counted. Random fertilisation then multiplies this again.', q: { q: 'A species has 2n = 8. How many combinations of chromosomes can its gametes have from random orientation alone?', o: ['8', '16', '64', '256'], a: 1, why: '2n = 8 means n = 4 pairs, so 2^4 = 16.' }, cs: 'D2.1.11', ch: 'D3.2.16' }
+      ],
+      build(D) { const g = D.scene; const chrom = (L, c, al) => { const grp = new THREE.Group(); g.add(grp);
+          const a = piece(grp, -L / 2, L / 2, 0.55, c), b = piece(grp, -L / 2, L / 2, 0.55, c); a.position.x = -0.6; b.position.x = 0.6;
+          const cen = ball(grp, 0.7); cen.position.y = L * 0.15; band(a, -L * 0.28, 0.55); band(b, -L * 0.28, 0.55);
+          const lp = V(0, 0, 0); const el = D.label(al, lp); return { grp, lp, el, L }; };
+        const Ach = chrom(9, RED, 'A'), ach = chrom(9, PINK, 'a'), Bch = chrom(5.5, BLUE, 'B'), bch = chrom(5.5, LBLUE, 'b');
+        const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 26), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.25 })); g.add(plate);
+        const poles = [ball(g, 0.8, GOLD), ball(g, 0.8, GOLD)]; poles[0].position.set(-17, 0, 0); poles[1].position.set(17, 0, 0);
+        const spG = new THREE.BufferGeometry(), sp = new Float32Array(8 * 3); spG.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+        const spl = new THREE.LineSegments(spG, new THREE.LineBasicMaterial({ color: 0x80ed99, transparent: true, opacity: 0.7 })); spl.frustumCulled = false; g.add(spl);
+        const gl = [D.label('', V(-12, -11, 0)), D.label('', V(12, -11, 0))]; const tally = D.label('', V(0, 13.5, 0));
+        D.label('Equator', V(0, -13.5, 0));
+        let step = 0, t0 = 0, tt = 0, flip = false, cycle = -1, T4 = { AB: 0, Ab: 0, aB: 0, ab: 0 }, n = 0;
+        return { onStep(i) { step = i; t0 = tt; cycle = -1; if (i >= 3) { T4 = { AB: 0, Ab: 0, aB: 0, ab: 0 }; n = 0; } },
+          update(dt) { if (!A.paused) tt += dt; const per = step >= 3 ? 2.6 : 6, t = tt - t0, c = Math.floor(t / per), f = (t % per) / per;
+            if (c !== cycle) { cycle = c; flip = step === 2 ? true : step >= 3 ? Math.random() < 0.5 : false;
+              if (step >= 3 && c > 0) { if (flip) { T4.Ab += 2; T4.aB += 2; } else { T4.AB += 2; T4.ab += 2; } n++; } }
+            const m = step === 0 ? 0 : ease((f - 0.3) / 0.4);
+            const put = (o, side, y) => { const x = side * (1.6 + m * 9.4); o.grp.position.set(x, y, 0); o.lp.set(x + side * 1.8, y - o.L * 0.28, 0.8); };
+            put(Ach, -1, 5.5); put(ach, 1, 5.5); put(Bch, flip ? 1 : -1, -5); put(bch, flip ? -1 : 1, -5);
+            let k = 0; [Ach, ach, Bch, bch].forEach(o => { const s = o.grp.position.x < 0 ? 0 : 1, P = poles[s].position; sp.set([P.x, P.y, P.z, o.grp.position.x, o.grp.position.y + o.L * 0.15, 0], k); k += 6; });
+            spG.attributes.position.needsUpdate = true;
+            const L = flip ? 'Ab' : 'AB', R = flip ? 'aB' : 'ab', show = step > 0 && m > 0.95;
+            gl[0].textContent = 'Gametes: ' + L + ', ' + L; gl[1].textContent = 'Gametes: ' + R + ', ' + R; hide(gl[0], !show); hide(gl[1], !show);
+            if (step >= 3) { const tot = Math.max(1, n * 4), p = k2 => Math.round(100 * T4[k2] / tot) + '%';
+              tally.textContent = n ? 'Cells: ' + n + '   AB ' + p('AB') + '   Ab ' + p('Ab') + '   aB ' + p('aB') + '   ab ' + p('ab') : 'Counting gametes...'; hide(tally, false); } else hide(tally, true); } };
+      } };
+
+    const D_LINK = { n: 'Linked genes and recombinants', hl: true, bg: '#120f1a', dist: 46, target: V(0, 0, 0), yaw: 0, pitch: 0.12,
+      steps: [
+        { n: 'Two genes on one chromosome', s: 'Genes A and B are on the **same chromosome**, so they are **linked**. One parent gave a chromosome carrying A and B (red), the other a chromosome carrying a and b (blue).', pts: ['Without crossing over, the alleles stay together: the gametes can only be **AB** or **ab**.', 'These are the **parental** combinations.'], cs: 'D2.1.11', ch: 'D3.2.19' },
+        { n: 'A crossover between the loci', s: 'If a chiasma forms **between** the two genes, the tips carrying A and a are swapped. Two chromatids become **Ab** and **aB**: these are **recombinants**.', q: { q: 'A crossover happens outside the region between genes A and B. Are recombinants for A and B formed?', o: ['Yes, always', 'No: A and B stay on the same chromatid', 'Only in meiosis II'], a: 1, why: 'Both loci end up on the same side of the break, so they are swapped together and the combination does not change.' }, cs: 'D2.1.11', ch: 'D3.2.19' },
+        { n: 'Genes far apart: many recombinants', s: 'Each flash is the chiasma in one cell, at a random point. Green flashes fall between the loci and make recombinants; grey ones do not. With the genes far apart, many cells make recombinants.', pts: ['Each green chiasma makes 2 recombinant chromatids out of 4.', 'So the recombinant frequency is at most 50%, even for genes far apart on a chromosome.'], cs: 'D3.2.19' },
+        { n: 'Genes close together: few recombinants', s: 'Now gene B has been moved close to gene A. A chiasma rarely falls in the small gap between them, so recombinants are **rare** and the two alleles are nearly always inherited together.', h: 'Recombinant frequency is used to map genes: the closer two loci are, the lower the percentage of recombinant offspring.', cs: 'D3.2.19' },
+        { n: 'Spotting linkage in a test cross', s: 'Cross the double heterozygote (AB on one chromosome, ab on the other) with aabb. Unlinked genes would give 1 : 1 : 1 : 1. Linked genes give **mostly parental types** and a few recombinants.', pts: ['Example (invented data): AB 41%, ab 42%, Ab 9%, aB 8%.', 'A chi-squared test against 1 : 1 : 1 : 1 shows whether the difference is significant.'], hq: { q: 'In a test cross the offspring are AB 41%, ab 42%, Ab 9%, aB 8%. What does this show?', o: ['The genes are unlinked', 'The genes are linked, and crossing over sometimes separates them', 'The genes are on the X chromosome'], a: 1, why: 'Parental types far outnumber recombinants (17% here), which means the genes travel together on one chromosome, with occasional crossovers between them.' }, cs: 'D3.2.19', ch: 'D3.2.17' }
+      ],
+      build(D) { const B = bivalent(D, { L: 22, yX: 0, yC: 5 });
+        const bA = B.tip.map(t => band(t, -7, B.r)); const bB = [0, 1, 2, 3].map(() => { const b = new THREE.Mesh(new THREE.CylinderGeometry(B.r * 1.12, B.r * 1.12, 0.55, 18), M(GOLD, { emissive: 0x332200 })); D.scene.add(b); return b; });
+        const al = [0, 1, 2, 3].map(i => { const pa = V(0, -7, 1.6), pb = V(0, 7, 1.6); return { pa, pb, a: D.label(i < 2 ? 'A' : 'a', pa), b: D.label(i < 2 ? 'B' : 'b', pb) }; });
+        const tags = [0, 1, 2, 3].map(i => { const p = V(0, -13.5, 0); return { p, el: D.label('', p) }; });
+        const flash = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.3, 10, 32), new THREE.MeshBasicMaterial({ color: 0x52b788, transparent: true })); D.scene.add(flash);
+        const stat = D.label('', V(0, 14.5, 0));
+        let step = 0, t0 = 0, tt = 0, next = 0, fy = 0, fT = -9, cells = 0, rec = 0;
+        return { onStep(i) { step = i; t0 = tt; cells = 0; rec = 0; next = tt + 0.4; },
+          update(dt) { if (!A.paused) tt += dt; const t = tt - t0, yB = step === 3 ? -4.2 : 7;
+            const e = step === 1 ? ease((t - 0.6) / 2.4) : 0, X = B.place(step === 1 ? 2.5 * ease((t - 3.4) / 1.5) : 0, e);
+            bB.forEach((b, i) => b.position.set(X[i], yB, 0));
+            al.forEach((q, i) => { q.pa.set(B.tip[i].position.x, -7, 1.6 + B.tip[i].position.z); q.pb.set(X[i], yB + (step === 3 ? 0.9 : 0), 1.6); });
+            const recTag = step === 1 && t > 4.5; tags.forEach((g2, i) => { g2.p.x = X[i]; g2.p.y = i === 1 || i === 2 ? -15.7 : -13.3; g2.el.textContent = i === 0 || i === 3 ? 'Parental' : 'Recombinant'; hide(g2.el, !recTag); });
+            if ((step === 2 || step === 3) && tt > next && !A.paused) { fy = -10.5 + Math.random() * 21; fT = tt; next = tt + 0.7; cells++; const lo = Math.min(-7, yB), hi = Math.max(-7, yB); if (fy > lo && fy < hi) rec++; }
+            const fa = tt - fT; flash.visible = (step === 2 || step === 3) && fa < 0.6; if (flash.visible) { const lo = Math.min(-7, yB), hi = Math.max(-7, yB), between = fy > lo && fy < hi;
+              flash.material.color.setHex(between ? 0x52b788 : 0x8d99ae); flash.material.opacity = 1 - fa / 0.6; flash.position.set(0, fy, 0.5); flash.scale.setScalar(1 + fa); }
+            if (step === 2 || step === 3) { stat.textContent = cells ? 'Cells: ' + cells + '   recombinant gametes: ' + Math.round(50 * rec / cells) + '%' : 'Watching chiasmata...'; hide(stat, false); } else hide(stat, true); } };
+      } };
+
+    const PH = [0, 1, 2, 3, 4, 5, 6, 7, 7, 7];
     return {
-      route: [V(0, 30, 75), orbit(0.15), orbit(0.4), orbit(0.65), orbit(0.9), orbit(1.15), orbit(0.9), orbit(0.6), orbit(0.3), V(0, 30, 44)], hero, camOffset: V(0, 0, 0), outside: { target: V(0, 0, 0), dist: 62 },
-      outsideInfo: { n: 'Meiosis on a loop', s: 'In this view the cell runs through both divisions of meiosis over and over. Drag to turn it.', h: 'Meiosis halves the chromosome number, from diploid (2n) to haploid (n), and makes genetically different cells that can become gametes.', cs: 'D2.1.4, D2.1.9', ch: 'D2.1.11' },
+      route: [V(0, 30, 75), orbit(0.15), orbit(0.4), orbit(0.65), orbit(0.9), orbit(1.15), orbit(0.9), orbit(0.6), orbit(0.3), V(0, 30, 44), V(0, 22, 52)], hero, camOffset: V(0, 0, 0), outside: { target: V(0, 0, 0), dist: 62 },
+      outsideInfo: { n: 'Meiosis on a loop', s: 'In this view the cell runs through both divisions of meiosis over and over. Drag to turn it, or open a close-up below.', pts: ['Meiosis halves the chromosome number, from diploid (2n) to haploid (n).', 'It makes four cells that are genetically different from each other and from the parent cell.'], h: 'At HL, meiosis also explains the patterns of inheritance you meet in genetics: independent assortment of unlinked genes and recombinants for linked genes. Both have their own close-ups.', cs: 'D2.1.4, D2.1.9', ch: 'D3.2.16, D3.2.19' },
+      dives: [D_CROSS, D_NDJ, D_ASSORT, D_LINK],
       stops: [
-        { at: orbit(0.15), look: V(0, 0, 0), n: 'Interphase', s: 'DNA is replicated, so every chromosome is made of two identical sister chromatids. This cell has 4 chromosomes in 2 homologous pairs: it is diploid (2n = 4).', h: 'Homologous chromosomes carry the same genes in the same order, but may have different alleles: one came from each parent.', cs: 'D2.1.5', ch: '' },
-        { at: orbit(0.4), look: V(0, 0, 0), n: 'Prophase I', s: 'Chromosomes condense and homologous chromosomes pair up side by side. Non-sister chromatids can cross over, swapping matching sections.', h: 'Crossing over makes new combinations of alleles on a chromosome. Here the inner chromatids swapped their tips, so each now carries a mix from both parents.', cs: 'D2.1.6, D2.1.11', ch: '' },
-        { at: orbit(0.65), look: V(0, 0, 0), n: 'Metaphase I', s: 'Pairs of homologous chromosomes line up on the equator, one on each side.', h: 'Which way each pair faces is random and independent of the other pairs. With n pairs there are 2^n possible combinations: this is random orientation.', cs: 'D2.1.9', ch: 'D2.1.11' },
-        { at: orbit(0.9), look: V(0, 0, 0), n: 'Anaphase I', s: 'Homologous chromosomes are pulled to opposite poles. The sister chromatids stay together.', h: 'This is the reduction step: each pole gets one chromosome of each pair, so the chromosome number is halved.', cs: 'D2.1.9', ch: '' },
-        { at: orbit(1.15), look: V(0, 0, 0), n: 'Telophase I and cytokinesis', s: 'The cell divides into two. Each cell now has 2 chromosomes, one from each pair, but each chromosome still has two chromatids.', h: 'If a pair fails to separate in anaphase I (non-disjunction), one cell gets an extra chromosome: this is how trisomy 21 (Down syndrome) can arise.', cs: 'D2.1.9', ch: 'D2.1.10' },
-        { at: orbit(0.9), look: V(0, 0, 0), n: 'Metaphase II', s: 'In each cell, a new spindle forms at right angles to the first and the chromosomes line up on the equator.', h: 'There is no DNA replication between the two divisions of meiosis.', cs: 'D2.1.9', ch: '' },
-        { at: orbit(0.6), look: V(0, 0, 0), n: 'Anaphase II', s: 'Sister chromatids are separated and pulled to opposite poles, as in mitosis.', h: 'Because of crossing over the sister chromatids are no longer identical, so the cells they end up in differ too.', cs: 'D2.1.9', ch: 'D2.1.11' },
-        { at: orbit(0.3), look: V(0, 0, 0), n: 'Telophase II: four haploid cells', s: 'Four cells form, each with 2 chromosomes: one of each type. They are haploid (n = 2) and genetically different from each other.', h: 'In animals these cells develop into gametes. Fertilisation joins two haploid gametes, restoring the diploid number.', cs: 'D2.1.9, D2.1.11', ch: '' },
-        { at: V(0, 30, 44), look: V(0, 0, 0), n: 'Compare with mitosis', s: 'Mitosis: one division, two identical diploid cells. Meiosis: two divisions, four different haploid cells.', h: 'Variation from meiosis comes from crossing over, random orientation of pairs, and later from random fertilisation.', cs: 'D2.1.4', ch: 'D2.1.11' }
+        { at: orbit(0.15), look: V(0, 0, 0), n: 'Interphase', s: 'Before meiosis starts, the cell copies all its DNA. Every chromosome is now two identical **sister chromatids** held together at the centromere.', pts: ['This cell has 4 chromosomes in 2 homologous pairs, so it is diploid: 2n = 4.', 'Homologous chromosomes carry the same genes in the same order, but may carry different alleles: one of each pair came from each parent.'], h: 'Replication must happen first so that, after two divisions, each of the four cells still gets one complete copy of every gene it receives. There is no second round of replication between meiosis I and meiosis II.', q: { q: 'A cell has 2n = 4. How many chromatids does it have at the end of interphase?', o: ['4', '8', '2', '16'], a: 1, why: '4 chromosomes, each now made of 2 sister chromatids, gives 8.' }, cs: 'D2.1.5', ch: '' },
+        { at: orbit(0.4), look: V(0, 0, 0), n: 'Prophase I', s: 'The chromosomes **condense** (coil up), so they are short and thick enough to move without tangling. Homologous chromosomes pair up side by side, and non-sister chromatids **cross over**, swapping matching sections.', pts: ['Each pair is a bivalent: 2 chromosomes, 4 chromatids.', 'The nuclear envelope breaks down and spindle microtubules start to form.'], h: 'Condensation happens by supercoiling: DNA wound round histones is folded again and again. Crossing over starts at chiasmata, at least one per bivalent.', cs: 'D2.1.6, D2.1.11', ch: '', dive: D_CROSS },
+        { at: orbit(0.65), look: V(0, 0, 0), n: 'Metaphase I', s: 'The **pairs** of homologous chromosomes line up on the equator, one homologue on each side. Spindle microtubules from opposite poles attach to the two homologues of each pair.', pts: ['Compare with mitosis: there, single chromosomes line up, not pairs.'], h: 'Which way each pair faces is random, and independent of every other pair. This **random orientation** is the basis of independent assortment of unlinked genes: with n pairs, 2^n combinations are possible.', hq: { q: 'Why does random orientation in metaphase I cause variation?', o: ['It changes the alleles on a chromosome', 'Each pair faces either way, so gametes get different mixes of maternal and paternal chromosomes', 'It doubles the chromosome number'], a: 1, why: 'Each homologous pair lines up independently, so the chromosomes from the mother and father are shuffled into new combinations.' }, cs: 'D2.1.9', ch: 'D2.1.11, D3.2.16', dives: [D_ASSORT] },
+        { at: orbit(0.9), look: V(0, 0, 0), n: 'Anaphase I', s: 'The spindle pulls the homologous chromosomes of each pair to **opposite poles**. The sister chromatids stay joined at their centromeres.', pts: ['This is the **reduction division**: each pole gets one chromosome of each pair, so the number is halved.'], h: 'If a pair fails to separate here, both homologues go to one pole. This non-disjunction in meiosis I makes four abnormal gametes.', q: { q: 'What separates in anaphase I?', o: ['Sister chromatids', 'Homologous chromosomes', 'Bivalents from the spindle'], a: 1, why: 'In anaphase I whole homologues separate; sister chromatids separate later, in anaphase II.' }, cs: 'D2.1.9', ch: 'D2.1.10', dive: D_NDJ },
+        { at: orbit(1.15), look: V(0, 0, 0), n: 'Telophase I and cytokinesis', s: 'The cell divides into two. Each new cell has **2 chromosomes**, one from each pair, so it is already haploid (n = 2), but each chromosome still has two chromatids.', h: 'If a pair failed to separate, one of these cells has an extra chromosome and the other is missing one. This is how trisomy 21 (Down syndrome) can arise.', cs: 'D2.1.9', ch: 'D2.1.10', dive: D_NDJ },
+        { at: orbit(0.9), look: V(0, 0, 0), n: 'Metaphase II', s: 'There is **no DNA replication** before meiosis II. In each cell a new spindle forms at right angles to the first, and the chromosomes line up singly on the equator.', pts: ['Spindle fibres from opposite poles attach to the two sister chromatids of each chromosome.'], cs: 'D2.1.9', ch: '' },
+        { at: orbit(0.6), look: V(0, 0, 0), n: 'Anaphase II', s: 'The centromeres split and the **sister chromatids** are pulled to opposite poles, as in mitosis.', h: 'Because of crossing over the sister chromatids are no longer identical, so the cells they end up in differ too. A failure to separate here is non-disjunction in meiosis II, which makes two abnormal gametes and two normal ones.', cs: 'D2.1.9', ch: 'D2.1.10, D2.1.11', dive: D_NDJ },
+        { at: orbit(0.3), look: V(0, 0, 0), n: 'Telophase II: four haploid cells', s: 'Four cells form, each with **2 chromosomes**: one of each type. They are haploid (n = 2) and genetically different from each other and from the parent cell.', pts: ['In animals these cells develop into gametes (sperm or eggs).', 'Fertilisation joins two haploid gametes and restores the diploid number.'], q: { q: 'A human cell (2n = 46) completes meiosis. How many chromosomes does each of the four cells have?', o: ['46', '23', '92', '12'], a: 1, why: 'Meiosis halves the number: 46 / 2 = 23, one of each pair.' }, cs: 'D2.1.9, D2.1.11', ch: '', dive: D_CROSS },
+        { at: V(0, 30, 44), look: V(0, 0, 0), n: 'Compare with mitosis', s: 'Mitosis: **one** division, **two** diploid cells, identical to the parent. Meiosis: **two** divisions, **four** haploid cells, all different.', pts: ['Variation from meiosis: crossing over (prophase I) and random orientation of pairs (metaphase I).', 'Random fertilisation adds more: any sperm can fuse with any egg.'], q: { q: 'Which of these happens in meiosis but not in mitosis?', o: ['DNA replication before division', 'Sister chromatids separating', 'Homologous chromosomes pairing up'], a: 2, why: 'Both divisions replicate DNA first and separate sister chromatids at some point, but only meiosis pairs homologues.' }, cs: 'D2.1.4', ch: 'D2.1.11' },
+        { hl: true, at: V(0, 22, 52), look: V(0, 0, 0), n: 'From meiosis to inheritance', s: 'Everything in Mendelian genetics comes from what chromosomes do in meiosis.', hpts: ['**Segregation**: the two alleles of a gene are on homologous chromosomes, which separate in anaphase I, so each gamete gets one allele.', '**Independent assortment**: unlinked genes are on different pairs, which orient independently, so AaBb makes AB, Ab, aB and ab equally often.', '**Linkage**: genes on the same chromosome stay together unless a crossover falls between them, so recombinants are less common than parental types.', 'The chi-squared test compares observed offspring numbers with the expected ratio to decide whether genes are linked.'], hq: { q: 'In a dihybrid test cross, all four phenotypes appear in roughly equal numbers. What does this suggest?', o: ['The genes are linked', 'The genes are unlinked and assort independently', 'Crossing over did not happen'], a: 1, why: 'A 1 : 1 : 1 : 1 ratio is what independent assortment of unlinked genes predicts.' }, cs: '', ch: 'D3.2.16, D3.2.17, D3.2.19', dives: [D_ASSORT, D_LINK] }
       ],
       side: '<div style="font-size:12px;opacity:.75">Phase now</div><div id="mx-phase" style="font-size:20px;font-weight:700">Interphase</div><div id="mx-bar" style="display:flex;gap:3px;margin-top:6px"></div>',
       onStop(i) { auto = false; target = PH[i]; },
@@ -262,10 +440,26 @@ const api={THREE, scene, camera, reduceMotion, paused:false, t:0,
 const W=J.build(api);
 const route=new THREE.CatmullRomCurve3(W.route,false,'catmullrom',0.3);
 function nearestU(p){ let best=0,bd=1e9; for(let i=0;i<=800;i++){ const u=i/800, d=route.getPointAt(u).distanceTo(p); if(d<bd){ bd=d; best=u; } } return best; }
-const STOPS=W.stops.map(s=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at)}));
+const STOPS=W.stops.map((s,i)=>Object.assign(s,{u:s.u!=null?s.u:nearestU(s.at),_i:i}));
+// Levels (2026-11-18): any stop, close-up or close-up step with hl:true shows only at HL. Text: s (all), pts (bullets, all),
+// h / hpts (HL box), q / hq ({q, o:[options], a:index, why}: a quick check; hq replaces q at HL). **bold** works in all text.
+const forLevel=o=>!o.hl||level==='hl';
+let VIS=STOPS.filter(forLevel);
+const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+const ul=a=>a&&a.length?'<ul>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>':'';
+function bodyHTML(o){ let h=(o.s?'<p>'+esc(o.s)+'</p>':'')+ul(o.pts);
+  if(o.h||o.hpts){ if(level==='hl') h+='<div class="hlx"><span class="hltag">HL</span>'+(o.h?'<p>'+esc(o.h)+'</p>':'')+ul(o.hpts)+'</div>'; else if(o.hpts) h+='<div class="hlhint">HL: more detail on this stop. Switch to HL at the top.</div>'; }
+  const q=level==='hl'&&o.hq?o.hq:o.q;
+  if(q) h+='<div class="chk"><b>Check yourself'+(q===o.hq?' (HL)':'')+'</b><div class="cq">'+esc(q.q)+'</div>'+q.o.map((x,i)=>'<button type="button" data-i="'+i+'">'+esc(x)+'</button>').join('')+'<div class="why" hidden></div></div>';
+  return h; }
+function fillBody(info,o){ const b=info.querySelector('.body'); b.innerHTML=bodyHTML(o); const c=b.querySelector('.chk'); if(!c) return;
+  const q=level==='hl'&&o.hq?o.hq:o.q;
+  c.querySelectorAll('button').forEach(bt=>{ bt.onclick=()=>{ const i=+bt.dataset.i; c.querySelectorAll('button').forEach(x=>{ x.classList.remove('ok','no'); });
+    bt.classList.add(i===q.a?'ok':'no'); if(i!==q.a) c.querySelectorAll('button')[q.a].classList.add('ok');
+    const w=c.querySelector('.why'); w.hidden=false; w.innerHTML=(i===q.a?'<b>Yes.</b> ':'<b>Not quite.</b> ')+esc(q.why||''); }; }); }
 const hero=W.hero||new THREE.Mesh(new THREE.SphereGeometry(1,16,12),api.M(0xffd166,{emissive:0x442200})); if(!W.hero) scene.add(hero);
 const camOff=W.camOffset||api.V(0,3,5);
-let view='ride', stop=0, u=STOPS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=out.yaw!=null?out.yaw:0, op=out.pitch!=null?out.pitch:0.08, od=out.dist;
+let view='ride', stop=0, u=VIS[0].u, uTarget=u, yawOff=0, pitchOff=0; const out=W.outside||{target:api.V(0,0,0),dist:150}; let oy=out.yaw!=null?out.yaw:0, op=out.pitch!=null?out.pitch:0.08, od=out.dist;
 api.u=()=>u; api.route=route; api.stop=()=>stop; api.view=()=>view;
 // ---------- close-ups ----------
 const diveScene=new THREE.Scene(); diveScene.add(new THREE.HemisphereLight(0xf2f6ff,0x2a2a33,0.95));
@@ -286,31 +480,32 @@ function openDive(d){
 function leaveDive(){ dive=null; renderer.setClearColor(bg); if(sideBefore) api.side(sideBefore); else $('side').hidden=true; }
 function closeDive(){ leaveDive(); showStop(); }
 api.openDive=openDive;
-function showDive(){ const info=$('info'), st=dive.steps[dStep];
-  info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
-  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+dive.steps.length; info.querySelector('h2').textContent=st.n;
-  info.querySelector('p').textContent=st.s+(level==='hl'&&st.h?' '+st.h:'');
-  const cd=info.querySelector('.codes'); if(st.cs) cd.textContent='Syllabus: '+st.cs+(level==='hl'&&st.ch?', '+st.ch:''); else cd.remove();
-  const nx=$('d-next'); const lastStep=dStep===dive.steps.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
+function DS(){ return dive.steps.filter(forLevel); }
+function showDive(){ const info=$('info'), all=DS(); dStep=Math.min(dStep,all.length-1); const st=all[dStep]; info.scrollTop=0;
+  info.innerHTML='<div class="eyebrow"></div><h2></h2><div class="body"></div><div class="codes"></div><div class="nav"><button type="button" id="d-prev">Back</button><button type="button" class="go" id="d-next"></button><button type="button" id="d-exit">Leave close-up</button></div>';
+  info.querySelector('.eyebrow').textContent='Close-up: '+dive.n+' · step '+(dStep+1)+' of '+all.length+(st.hl?' · HL step':''); info.querySelector('h2').textContent=st.n;
+  fillBody(info,st);
+  const cd=info.querySelector('.codes'); if(st.cs||(level==='hl'&&st.ch)) cd.textContent='Syllabus: '+[st.cs,level==='hl'?st.ch:''].filter(Boolean).join(', '); else cd.remove();
+  const nx=$('d-next'); const lastStep=dStep===all.length-1; nx.textContent=lastStep?'Leave close-up':'Next step';
   $('d-prev').onclick=()=>dGo(-1); nx.onclick=()=>{ if(lastStep) closeDive(); else dGo(1); }; if(lastStep) $('d-exit').remove(); else $('d-exit').onclick=closeDive;
   dTargetGoal.copy(st.at||dive.target||api.V(0,0,0)); dDistGoal=st.dist||dive.dist||60;
-  if(dive.ctl.onStep) dive.ctl.onStep(dStep,st); }
-function dGo(k){ dStep=Math.max(0,Math.min(dive.steps.length-1,dStep+k)); showDive(); }
-function diveButtons(list,nav){ list.forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'; b.textContent='⌕ Zoom in: '+d.n; b.onclick=()=>openDive(d); nav.appendChild(b); }); }
+  if(dive.ctl.onStep) dive.ctl.onStep(dive.steps.indexOf(st),st); }
+function dGo(k){ dStep=Math.max(0,Math.min(DS().length-1,dStep+k)); showDive(); }
+function diveButtons(list,nav){ list.filter(forLevel).forEach(d=>{ const b=document.createElement('button'); b.type='button'; b.className='zoom'+(d.hl?' hlz':''); b.textContent='⌕ Zoom in: '+d.n+(d.hl?' (HL)':''); b.onclick=()=>openDive(d); nav.appendChild(b); }); }
 function showStop(){ if(dive) return showDive(); const info=$('info');
   if(view==='out'){ const o=W.outsideInfo||{n:'Outside view',s:'Drag to turn the model and scroll to zoom.'};
-    info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><p></p>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
-    info.querySelector('h2').textContent=o.n; info.querySelector('p').textContent=o.s+(level==='hl'&&o.h?' '+o.h:''); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
+    info.scrollTop=0; info.innerHTML='<div class="eyebrow">Outside view</div><h2></h2><div class="body"></div>'+(o.cs?'<div class="codes"></div>':'')+'<div class="nav"><button type="button" class="go" id="n-ride"></button></div>';
+    info.querySelector('h2').textContent=o.n; fillBody(info,o); if(o.cs) info.querySelector('.codes').textContent='Syllabus: '+o.cs+(level==='hl'&&o.ch?', '+o.ch:'');
     $('n-ride').textContent=J.rideLabel||'Ride'; $('n-ride').onclick=()=>setView('ride'); diveButtons(W.dives||[],info.querySelector('.nav')); if(W.onView) W.onView('out'); return; }
-  const s=STOPS[stop]; info.innerHTML='<div class="eyebrow"></div><h2></h2><p></p><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
-  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+STOPS.length; info.querySelector('h2').textContent=s.n;
-  info.querySelector('p').textContent=s.s+(level==='hl'&&s.h?' '+s.h:''); info.querySelector('.codes').textContent='Syllabus: '+s.cs+(level==='hl'&&s.ch?', '+s.ch:'');
-  const nx=$('n-next'); nx.textContent=stop===STOPS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
-  if(W.onStop) W.onStop(stop, s); if(W.onView) W.onView('ride'); }
-function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=STOPS.length){ stop=0; u=STOPS[0].u; } if(stop<0) stop=0; uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); }
-api.goStop=i=>{ setView('ride'); stop=Math.max(0,Math.min(STOPS.length-1,i)); uTarget=STOPS[stop].u; yawOff=0; pitchOff=0; showStop(); };
+  const s=VIS[stop]; info.scrollTop=0; info.innerHTML='<div class="eyebrow"></div><h2></h2><div class="body"></div><div class="codes"></div><div class="nav"><button type="button" id="n-prev">Back</button><button type="button" class="go" id="n-next"></button></div>';
+  info.querySelector('.eyebrow').textContent='Stop '+(stop+1)+' of '+VIS.length+(s.hl?' · HL stop':''); info.querySelector('h2').textContent=s.n;
+  fillBody(info,s); info.querySelector('.codes').textContent='Syllabus: '+[s.cs,level==='hl'?s.ch:''].filter(Boolean).join(', ');
+  const nx=$('n-next'); nx.textContent=stop===VIS.length-1?'Start again':'Next stop'; $('n-prev').onclick=()=>go(-1); nx.onclick=()=>go(1); diveButtons(dives(s),info.querySelector('.nav'));
+  if(W.onStop) W.onStop(s._i, s); if(W.onView) W.onView('ride'); }
+function go(d){ if(dive){ dGo(d); return; } if(view!=='ride') return; stop+=d; if(stop>=VIS.length){ stop=0; u=VIS[0].u; } if(stop<0) stop=0; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); }
+api.goStop=i=>{ setView('ride'); const t=STOPS[Math.max(0,Math.min(STOPS.length-1,i))]; let k=VIS.indexOf(t); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<t._i).length-1); stop=k; uTarget=VIS[stop].u; yawOff=0; pitchOff=0; showStop(); };
 function setView(v){ if(dive) leaveDive(); view=v; $('v-ride').setAttribute('aria-pressed',v==='ride'); $('v-out').setAttribute('aria-pressed',v==='out'); scene.fog.density=v==='out'?(J.fog||0.006)*0.3:(J.fog||0.006); showStop(); }
-function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
+function setLevel(l){ const cur=VIS[stop]; level=l; VIS=STOPS.filter(forLevel); let k=VIS.indexOf(cur); if(k<0) k=Math.max(0,VIS.filter(x=>x._i<cur._i).length-1); stop=k; uTarget=VIS[stop].u; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} $('l-sl').setAttribute('aria-pressed',l==='sl'); $('l-hl').setAttribute('aria-pressed',l==='hl'); showStop(); }
 function togglePause(){ api.paused=!api.paused; $('b-pause').setAttribute('aria-pressed',api.paused); $('b-pause').textContent=api.paused?'Play':'Pause'; }
 $('v-ride').onclick=()=>setView('ride'); $('v-out').onclick=()=>setView('out'); $('l-sl').onclick=()=>setLevel('sl'); $('l-hl').onclick=()=>setLevel('hl');
 $('b-pause').onclick=togglePause; $('b-help').onclick=()=>{ $('start').hidden=false; }; $('b-start').onclick=()=>{ $('start').hidden=true; canvas.focus(); };
@@ -321,9 +516,13 @@ canvas.addEventListener('pointermove',e=>{ if(!drag) return; const dx=e.clientX-
   if(dive){ dYaw-=dx*0.006; dPitch=Math.max(-1.35,Math.min(1.35,dPitch+dy*0.006)); }
   else if(view==='ride'){ yawOff-=dx*0.004; pitchOff=Math.max(-1.2,Math.min(1.2,pitchOff-dy*0.004)); } else { oy-=dx*0.006; op=Math.max(-1.3,Math.min(1.3,op+dy*0.006)); } });
 canvas.addEventListener('pointerup',()=>{ drag=null; });
-canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=dive.steps[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
+canvas.addEventListener('wheel',e=>{ if(dive){ e.preventDefault(); const base=DS()[dStep].dist||dive.dist||60; dDistGoal=Math.max(base*0.3,Math.min(base*2.5,dDistGoal+e.deltaY*0.05)); return; } if(view==='out'){ e.preventDefault(); od=Math.max(out.dist*0.4,Math.min(out.dist*2,od+e.deltaY*0.1)); } },{passive:false});
 let sizeW=0,sizeH=0;
-function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); dCam.aspect=w/h; dCam.updateProjectionMatrix(); }
+function resize(){ const w=canvas.clientWidth,h=canvas.clientHeight; if(!w||!h) return; sizeW=w; sizeH=h; renderer.setSize(w,h,false); camera.aspect=w/h; dCam.aspect=w/h; shiftView(); }
+// On wide screens, centre the picture in the space right of the text panel (2026-11-18).
+let shiftPx=-1;
+function shiftView(){ const w=canvas.clientWidth; if(!w) return; const px=w>=900?243:0; shiftPx=px;
+  [camera,dCam].forEach(c=>{ c.filmOffset=-(px/w)*c.getFilmWidth()*2*Math.tan(c.fov*Math.PI/360)*c.aspect; c.updateProjectionMatrix(); }); }
 window.addEventListener('resize',resize);
 const v=new THREE.Vector3(); let last=performance.now();
 function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) resize(); const dt=Math.min(0.05,(now-last)/1000); last=now; if(!api.paused) api.t+=dt;
@@ -338,7 +537,7 @@ function step(now){ if(canvas.clientWidth!==sizeW||canvas.clientHeight!==sizeH) 
   if(W.update) W.update(dt,api); anims.forEach(f=>f(dt,api));
   if(view==='ride'){ const ahead=route.getPointAt(Math.min(0.999,u+0.02)), behind=route.getPointAt(Math.max(0,u-0.03));
     camera.position.copy(behind); if(W.settle){ const nr=Math.max(0,1-Math.abs(uTarget-u)/0.05); camera.position.lerp(route.getPointAt(Math.min(0.999,Math.max(0,u))),nr); } camera.position.add(camOff); let d=ahead.clone().sub(camera.position).normalize();
-    const lk=STOPS[stop].look; if(lk){ const near=Math.max(0.7,1-Math.abs(uTarget-u)/0.03); d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
+    const lk=VIS[stop].look; if(lk){ const near=Math.max(0.7,1-Math.abs(uTarget-u)/0.03); d.lerp(lk.clone().sub(camera.position).normalize(),near).normalize(); }
     camera.rotation.set(Math.asin(Math.max(-1,Math.min(1,d.y)))+pitchOff, Math.atan2(-d.x,-d.z)+yawOff, 0); }
   else { camera.position.set(out.target.x+Math.sin(oy)*Math.cos(op)*od, out.target.y+Math.sin(op)*od, out.target.z+Math.cos(oy)*Math.cos(op)*od); camera.lookAt(out.target); }
   const w=canvas.clientWidth,h=canvas.clientHeight;

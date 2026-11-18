@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Water Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/water-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Water Lab">
+<meta property="og:description" content="Water Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/water-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Water Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0b141c; --ink:#eef6fb; --dim:#b3c7d4; --panel:#122130; --panel2:#18303f; --line:rgba(190,225,245,.2);
+  --accent:#5bc0eb; --O:#e63946; --H:#f1faee;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#04202e}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#07101a}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#04202e;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:10px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.big{font:800 30px var(--display)}
+table.t{border-collapse:collapse;width:100%;font-size:14px}table.t td,table.t th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}table.t th{color:var(--accent)}
+.hl-only{display:none} body.hl .hl-only{display:block}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Water Lab</h1><div class="sub">DP Biology A1.1 &middot; models; physical values are real</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>The medium of life</h2>
+    <p>Every cell is mostly water, and the chemistry of life happens dissolved in it. In this lab you watch hydrogen bonds form and break, see water climb up narrow tubes, dissolve different substances, and compare life in water with life in air.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-hb" aria-pressed="true">1. Hydrogen bonds</button><button type="button" id="t-coh" aria-pressed="false">2. Cohesion and adhesion</button><button type="button" id="t-sol" aria-pressed="false">3. A solvent</button><button type="button" id="t-aq" aria-pressed="false">4. Living in water</button></div>
+
+    <div class="grid" id="p-hb">
+      <div class="card"><canvas class="plot" id="c-hb" width="900" height="540" aria-label="Water molecules moving, with hydrogen bonds shown as dashed lines"></canvas>
+        <label class="sl">Temperature <b id="o-t">20 &deg;C</b><input type="range" id="s-t" min="-20" max="110" value="20"></label>
+        <div class="row"><button type="button" class="btn" id="h-zoom" aria-pressed="false">Show partial charges</button><button type="button" class="btn" data-pt="-10">Ice</button><button type="button" class="btn" data-pt="20">Room temperature</button><button type="button" class="btn" data-pt="105">Steam</button></div></div>
+      <div><div class="card"><h2>What is happening?</h2><div class="stat"><span>State</span><b id="o-state">Liquid</b><span>Hydrogen bonds per molecule (typical)</span><b id="o-hb">-</b></div><div class="explain" style="margin-top:8px"><p id="h-say"></p></div><p class="note">Syllabus: A1.1.1, A1.1.2</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks"><li>Turn on the partial charges. Which atom is slightly negative, and why?</li><li>Cool the water to ice. What happens to the hydrogen bonds and the spacing of the molecules? Why does ice float?</li><li>Heat it to steam. Why does water need so much energy to boil compared with other small molecules?</li></ol></div></div>
+    </div>
+
+    <div class="grid" id="p-coh" hidden>
+      <div class="card"><canvas class="plot" id="c-coh" width="900" height="520" aria-label="Capillary tubes in a dish of water and a pond skater on the surface"></canvas>
+        <label class="sl">Radius of the narrowest tube <b id="o-r">0.50 mm</b><input type="range" id="s-r" min="2" max="100" value="50"></label>
+        <div class="row"><span class="note" style="min-width:80px">Tube surface</span><div class="seg" id="c-mat"><button type="button" data-m="glass" aria-pressed="true">Glass (hydrophilic)</button><button type="button" data-m="wax" aria-pressed="false">Wax (hydrophobic)</button></div><button type="button" class="btn" id="c-soap" aria-pressed="false">Add a drop of soap</button></div></div>
+      <div><div class="card"><h2>Measurements</h2><div class="stat"><span>Height of water in the narrow tube</span><b id="o-h">-</b><span>The same in a xylem vessel (radius 40 um)</span><b id="o-x">-</b></div><div class="explain" style="margin-top:8px"><p id="c-say"></p></div><p class="note">Syllabus: A1.1.3, A1.1.4</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks"><li>Make the tube narrower. How does the height of water change?</li><li>Change the tube to wax. Explain the difference using adhesion.</li><li>How high would water rise in a xylem vessel by capillary action alone? Is that enough for a 30 m tree?</li><li>Add soap near the pond skater. What happens, and why?</li></ol></div></div>
+    </div>
+
+    <div class="grid" id="p-sol" hidden>
+      <div class="card"><canvas class="plot" id="c-sol" width="900" height="460" aria-label="A beaker of water with a substance added"></canvas>
+        <div class="row" id="s-pick"><button type="button" class="btn" data-s="salt" aria-pressed="true">Sodium chloride</button><button type="button" class="btn" data-s="glucose" aria-pressed="false">Glucose</button><button type="button" class="btn" data-s="aa" aria-pressed="false">Amino acids</button><button type="button" class="btn" data-s="o2" aria-pressed="false">Oxygen</button><button type="button" class="btn" data-s="oil" aria-pressed="false">Fat (oil)</button><button type="button" class="btn" data-s="chol" aria-pressed="false">Cholesterol</button></div></div>
+      <div><div class="card"><h2>Does it dissolve?</h2><div class="big" id="o-sol">-</div><div class="explain"><p id="s-say"></p></div><table class="t" style="margin-top:8px"><tr><th>Substance</th><th>How it travels in blood</th></tr><tbody id="s-tab"></tbody></table><p class="note">Syllabus: A1.1.5</p></div></div>
+    </div>
+
+    <div class="grid" id="p-aq" hidden>
+      <div class="card"><canvas class="plot" id="c-aq" width="900" height="480" aria-label="Bars comparing water and air"></canvas>
+        <label class="sl">Blubber thickness of a ringed seal <b id="o-bl">4 cm</b><input type="range" id="s-bl" min="0" max="8" value="4" step="0.5"></label>
+        <div class="row"><span class="note" style="min-width:80px">Animal is in</span><div class="seg" id="a-med"><button type="button" data-m="water" aria-pressed="true">Water at 0 &deg;C</button><button type="button" data-m="air" aria-pressed="false">Air at 0 &deg;C</button></div></div></div>
+      <div><div class="card"><h2>Heat loss of the seal</h2><div class="big" id="o-loss">-</div><div class="explain"><p id="a-say"></p></div>
+        <table class="t" style="margin-top:8px"><tr><th>Property</th><th>Water</th><th>Air</th></tr><tr><td>Specific heat capacity (J/g/&deg;C)</td><td>4.18</td><td>1.0</td></tr><tr><td>Thermal conductivity (W/m/K)</td><td>0.60</td><td>0.025</td></tr><tr><td>Density (kg/m3)</td><td>1000</td><td>1.2</td></tr><tr><td>Viscosity (relative)</td><td>55</td><td>1</td></tr></table><p class="note">Syllabus: A1.1.6</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+let tab='hb', last=0;
+// 1 HYDROGEN BONDS -------------------------------------------------------
+const N=46, mol=[]; for(let i=0;i<N;i++) mol.push({x:Math.random()*840+30,y:Math.random()*480+30,vx:0,vy:0,a:Math.random()*6.28,va:0});
+const lattice=[]; for(let r=0;r<6;r++) for(let c=0;c<8;c++){ if(lattice.length<N) lattice.push({x:120+c*92+(r%2)*46,y:80+r*80}); } while(lattice.length<N) lattice.push({x:450,y:500});
+let T=20, charges=false;
+function hbTick(dt){ const solid=T<0, gas=T>100, sp=gas?260:solid?8:40+T*1.2;
+  mol.forEach((m,i)=>{ if(solid){ m.x+=(lattice[i].x-m.x)*Math.min(1,dt*3); m.y+=(lattice[i].y-m.y)*Math.min(1,dt*3); m.a+=Math.sin(last*3+i)*0.002; }
+    else { m.vx+=(Math.random()-0.5)*sp*dt*6; m.vy+=(Math.random()-0.5)*sp*dt*6; const v=Math.hypot(m.vx,m.vy), mx=sp; if(v>mx){ m.vx*=mx/v; m.vy*=mx/v; } m.x+=m.vx*dt; m.y+=m.vy*dt; m.a+=(Math.random()-0.5)*dt*4;
+      if(!gas){ m.vy+=dt*10; } if(m.x<20||m.x>880) m.vx*=-1; if(m.y<20||m.y>520) m.vy*=-1; m.x=Math.max(20,Math.min(880,m.x)); m.y=Math.max(gas?20:(T>60?60:110),Math.min(520,m.y)); } }); }
+function hAt(m,k){ const a=m.a+(k?0.91:-0.91); return [m.x+Math.cos(a)*16,m.y+Math.sin(a)*16]; }
+function drawHb(){ const c=$('c-hb'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); let bonds=0;
+  // Bonds are drawn between neighbouring molecules (O to O distance): a fixed lattice of up to 4 in ice, flickering in the liquid, none in steam.
+  const lim=T<0?96:T>100?0:80, cnt=new Array(N).fill(0);
+  for(let i=0;i<N;i++) for(let j=i+1;j<N;j++){ const a=mol[i], b=mol[j], d=Math.hypot(a.x-b.x,a.y-b.y); if(d>=lim||cnt[i]>=4||cnt[j]>=4) continue; if(T>=0&&(Math.sin(last*7+i*3.1+j*1.7)<-0.2+T/120)) continue;
+    cnt[i]++; cnt[j]++; bonds++; const h=[hAt(a,0),hAt(a,1)].sort((p,q)=>Math.hypot(p[0]-b.x,p[1]-b.y)-Math.hypot(q[0]-b.x,q[1]-b.y))[0];
+    x.strokeStyle='rgba(91,192,235,.8)'; x.setLineDash([4,4]); x.lineWidth=2; x.beginPath(); x.moveTo(h[0],h[1]); x.lineTo(b.x,b.y); x.stroke(); x.setLineDash([]); }
+  mol.forEach(m=>{ for(let k=0;k<2;k++){ const h=hAt(m,k); x.strokeStyle='#ccd'; x.lineWidth=4; x.beginPath(); x.moveTo(m.x,m.y); x.lineTo(h[0],h[1]); x.stroke(); x.fillStyle='#f1faee'; x.beginPath(); x.arc(h[0],h[1],6,0,7); x.fill(); if(charges){ x.fillStyle='#7ab8ff'; x.font='bold 13px sans-serif'; x.fillText('d+',h[0]+4,h[1]-4); } }
+    x.fillStyle="#e63946"; x.beginPath(); x.arc(m.x,m.y,11,0,7); x.fill(); if(charges){ x.fillStyle='#ffb4a2'; x.font='bold 13px sans-serif'; x.fillText('d-',m.x-22,m.y-10); } });
+  window.__wb=bonds; $('o-hb').textContent=T<0?'4, in a fixed lattice':T>100?'about 0':'about 3.4 on average, breaking and re-forming'; $('o-state').textContent=T<0?'Ice (solid)':T>100?'Steam (gas)':'Liquid';
+  $('h-say').textContent=charges?'Oxygen pulls the shared electrons in each O-H bond more strongly than hydrogen does (it is more electronegative). So oxygen carries a slight negative charge (d-) and each hydrogen a slight positive charge (d+): water is polar. The d+ hydrogen of one molecule is attracted to the d- oxygen of another: a hydrogen bond (dashed).':
+    T<0?'In ice each molecule is held by four hydrogen bonds in an open lattice, so the molecules are further apart than in liquid water. Ice is less dense than water and floats, insulating the water below so aquatic life survives winter.':
+    T>100?'At 100 degrees C the molecules have enough energy to break all their hydrogen bonds and escape as a gas. Because so many hydrogen bonds must be broken, water has an unusually high boiling point and needs a lot of energy to evaporate, which is why sweating cools you.':
+    'In liquid water hydrogen bonds constantly form and break as the molecules move. Each bond is weak, but there are so many that together they hold water together strongly, giving it a high specific heat capacity: it warms and cools slowly, keeping habitats and bodies stable.'; }
+$('s-t').oninput=()=>{ T=+$('s-t').value; $('o-t').innerHTML=T+' &deg;C'; };
+document.querySelectorAll('[data-pt]').forEach(b=>b.onclick=()=>{ $('s-t').value=b.dataset.pt; $('s-t').oninput(); });
+$('h-zoom').onclick=()=>{ charges=!charges; $('h-zoom').setAttribute('aria-pressed',charges); };
+// 2 COHESION AND ADHESION -------------------------------------------------
+let rad=0.5, mat='glass', soap=false;
+function capH(r){ const cos=mat==='glass'?1:Math.cos(105*Math.PI/180); return 14.9*cos/r; } // mm, water at 20 C
+function drawCoh(){ const c=$('c-coh'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif';
+  const base=400; x.fillStyle='rgba(91,192,235,.45)'; x.fillRect(20,base,560,90); x.strokeStyle='#b3c7d4'; x.strokeRect(20,base-10,560,110);
+  const radii=[2,1,rad], xs=[110,250,410]; radii.forEach((r,i)=>{ const h=capH(r), px=Math.max(-60,Math.min(360,h*2.4)), w=Math.max(6,r*28); x.fillStyle='rgba(91,192,235,.85)'; x.fillRect(xs[i]-w/2,base-px,w,px+40); x.strokeStyle=mat==='glass'?'#e0f2fe':'#e9c46a'; x.lineWidth=3; x.strokeRect(xs[i]-w/2-3,base-370,w+6,410);
+    x.fillStyle='#fff'; x.fillText('r = '+r.toFixed(2)+' mm',xs[i]-44,base+120-8); x.fillText((h>0?'+':'')+h.toFixed(0)+' mm',xs[i]+w/2+6,base-px+5); });
+  // pond skater
+  const sx=720, sy=base; x.fillStyle='rgba(91,192,235,.45)'; x.fillRect(620,sy,260,90); x.strokeStyle='#5bc0eb'; x.lineWidth=2; x.beginPath(); x.moveTo(620,sy); x.lineTo(880,sy); x.stroke();
+  const sink=soap?30:0; x.fillStyle='#3d2b1f'; x.beginPath(); x.ellipse(sx,sy-18+sink,32,8,0,0,7); x.fill(); x.strokeStyle='#3d2b1f'; x.lineWidth=2; [-1,1].forEach(s=>{ [[-26,-40],[0,-50],[26,-40]].forEach(([dx,l])=>{ x.beginPath(); x.moveTo(sx+dx*0.4,sy-18+sink); x.lineTo(sx+dx,sy-6+sink); x.lineTo(sx+dx*1.8,sy+sink); x.stroke(); if(!soap){ x.strokeStyle='rgba(255,255,255,.5)'; x.beginPath(); x.arc(sx+dx*1.8,sy+3,6,Math.PI,0,true); x.stroke(); x.strokeStyle='#3d2b1f'; } }); });
+  x.fillStyle='#fff'; x.fillText(soap?'Soap breaks the surface: it sinks':'Pond skater on the surface',640,sy-60);
+  const h=capH(rad); $('o-r').textContent=rad.toFixed(2)+' mm'; $('o-h').textContent=(h>0?'+':'')+h.toFixed(0)+' mm'; $('o-x').textContent=(capH(0.04)/10).toFixed(0)+' cm';
+  $('c-say').textContent=mat==='glass'?'Water molecules are attracted to the polar surface of the glass (adhesion) and pull the water up the wall. Cohesion between water molecules (hydrogen bonds) pulls the rest of the column up behind. The narrower the tube, the higher the water rises. In a xylem vessel this capillary action lifts water only tens of centimetres; the main force in tall trees is the tension created by transpiration, transmitted down the cohesive water column.':
+    'Wax is non-polar, so water is not attracted to it: there is no adhesion. Water molecules stick to each other more than to the wall, so the water surface curves down and the level in the tube falls below the outside level.';
+  if(soap) $('c-say').textContent+=' Cohesion also makes surface tension: the water surface acts like a stretched skin that supports the pond skater. Soap disrupts the hydrogen bonding at the surface, so the insect sinks.'; }
+$('s-r').oninput=()=>{ rad=+$('s-r').value/100; drawCoh(); };
+document.querySelectorAll('#c-mat button').forEach(b=>b.onclick=()=>{ mat=b.dataset.m; document.querySelectorAll('#c-mat button').forEach(o=>o.setAttribute('aria-pressed',o===b)); drawCoh(); });
+$('c-soap').onclick=()=>{ soap=!soap; $('c-soap').setAttribute('aria-pressed',soap); drawCoh(); };
+// 3 SOLVENT -----------------------------------------------------------------
+const SUB={salt:{n:'Sodium chloride',sol:'Dissolves',col:['#9d4edd','#52b788'],say:'Na+ and Cl- ions separate, and each becomes surrounded by water molecules (a hydration shell): the d- oxygens face Na+, the d+ hydrogens face Cl-. Ions dissolve readily in water.',blood:'Dissolved as ions in plasma'},
+  glucose:{n:'Glucose',sol:'Dissolves',col:['#ffd166'],say:'Glucose has many polar -OH groups that form hydrogen bonds with water, so it dissolves easily. Polar molecules are hydrophilic.',blood:'Dissolved in plasma'},
+  aa:{n:'Amino acids',sol:'Dissolves',col:['#f77f00'],say:'Amino acids carry charged amine and carboxyl groups, so they dissolve. Some R groups are non-polar, which affects how proteins fold.',blood:'Dissolved in plasma'},
+  o2:{n:'Oxygen',sol:'Only slightly',col:['#ff6b6b'],say:'Oxygen is non-polar, so only a little dissolves in water, and less as the water warms. That is why blood carries most of its oxygen bound to haemoglobin in red blood cells.',blood:'Mostly bound to haemoglobin'},
+  oil:{n:'Fat (oil)',sol:'Does not dissolve',col:['#e9c46a'],say:'Fats are non-polar, so they cannot form hydrogen bonds with water. Water molecules stick to each other instead and push the fat out: it forms a separate layer (hydrophobic).',blood:'In lipoprotein particles'},
+  chol:{n:'Cholesterol',sol:'Does not dissolve',col:['#e5989b'],say:'Cholesterol is almost entirely non-polar, so it is insoluble. In blood it is packed into lipoproteins (LDL, HDL) with a coat of phospholipids and proteins whose hydrophilic parts face the water.',blood:'In lipoprotein particles'}};
+let sub='salt', t0s=0;
+function drawSol(){ const c=$('c-sol'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const S=SUB[sub], tt=last-t0s, k=Math.min(1,tt/3);
+  x.strokeStyle='#b3c7d4'; x.lineWidth=4; x.beginPath(); x.moveTo(200,40); x.lineTo(200,430); x.lineTo(700,430); x.lineTo(700,40); x.stroke(); x.fillStyle='rgba(91,192,235,.25)'; x.fillRect(202,120,496,308);
+  const n=sub==='o2'?6:22; for(let i=0;i<n;i++){ const sx=320+(i%6)*50, sy=150+Math.floor(i/6)*28; const dis=S.sol!=='Does not dissolve'; let px,py;
+    if(dis){ const tx=230+((i*97)%440), ty=150+((i*61)%260); px=sx+(tx-sx)*k+Math.sin(last*2+i)*4; py=sy+(ty-sy)*k+Math.cos(last*2+i)*4; }
+    else { px=230+(i%11)*40+Math.sin(last+i)*2; py=sub==='chol'?410-Math.floor(i/11)*14:130+Math.floor(i/11)*14; }
+    x.fillStyle=S.col[i%S.col.length]; x.beginPath(); x.arc(px,py,9,0,7); x.fill();
+    if(dis&&k>0.6&&sub!=='o2'){ for(let w=0;w<5;w++){ const a=w/5*6.28+last; x.fillStyle='rgba(230,57,70,.85)'; x.beginPath(); x.arc(px+Math.cos(a)*17,py+Math.sin(a)*17,3.5,0,7); x.fill(); } } }
+  x.fillStyle='#fff'; x.font='17px Atkinson Hyperlegible, sans-serif'; x.fillText(S.n+' added to water',230,95); if(S.sol==='Dissolves'&&k>0.6) x.fillText('red dots: water molecules forming a hydration shell',230,460-10); }
+function saySol(){ const S=SUB[sub]; $('o-sol').textContent=S.sol; $('s-say').textContent=S.say; $('s-tab').innerHTML=Object.values(SUB).map(v=>'<tr><td>'+v.n+'</td><td>'+v.blood+'</td></tr>').join(''); }
+document.querySelectorAll('#s-pick button').forEach(b=>b.onclick=()=>{ sub=b.dataset.s; t0s=last; document.querySelectorAll('#s-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); saySol(); });
+// 4 AQUATIC ------------------------------------------------------------------
+let bl=4, med='water';
+function lossW(){ const k=med==='water'?0.60:0.025; const fur=med==='air'?0.06:0; const area=1.6, dT=37; const Rb=(bl/100)/0.2; const Rext=med==='water'?1/(k*120):1/(k*60)+fur; return dT*area/(Rb+Rext); }
+function drawAq(){ const c=$('c-aq'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  const rows=[['Heat capacity',4.18,1.0],['Thermal conductivity',0.60,0.025],['Density (buoyancy)',1000,1.2],['Viscosity (drag)',55,1]];
+  rows.forEach(([n,w,a],i)=>{ const y=40+i*70, mx=Math.log10(w*10+1); const W=Math.log10(w*10+1)/Math.log10(10001)*520, A=Math.log10(a*10+1)/Math.log10(10001)*520; x.fillStyle='#b3c7d4'; x.fillText(n,20,y+18); x.fillStyle='#5bc0eb'; x.fillRect(240,y,W,18); x.fillStyle='#e9c46a'; x.fillRect(240,y+22,A,18); x.fillStyle='#fff'; x.fillText('water '+w,250+W,y+15); x.fillText('air '+a,250+A,y+37); });
+  x.fillStyle='#b3c7d4'; x.fillText('(bars on a log scale)',700,30);
+  const y0=340; x.fillStyle=med==='water'?'rgba(91,192,235,.35)':'rgba(200,220,240,.12)'; x.fillRect(20,y0,860,130); x.fillStyle='#6c757d'; x.beginPath(); x.ellipse(450,y0+65,150,42,0,0,7); x.fill(); x.fillStyle='#e9c46a'; x.globalAlpha=0.6; x.lineWidth=bl*3; x.strokeStyle='#ffe8a3'; x.beginPath(); x.ellipse(450,y0+65,150-bl*2,42-bl*2,0,0,7); x.stroke(); x.globalAlpha=1;
+  x.fillStyle='#fff'; x.fillText('Ringed seal, body at 37 degrees C, blubber '+bl+' cm',300,y0+120);
+  const L=lossW(); $('o-loss').textContent=Math.round(L)+' W'; $('o-bl').textContent=bl+' cm';
+  $('a-say').textContent=(med==='water'?'Water conducts heat about 24 times better than air and has a high heat capacity, so a warm animal in cold water loses heat fast. ':'Air is a poor conductor, so heat is lost far more slowly in air at the same temperature. ')+'Blubber (fat) is a poor conductor too: a thicker layer cuts heat loss. Water is also dense and viscous: it supports the body (buoyancy) but resists movement (drag), favouring streamlined shapes. Diving birds such as loons and mammals such as seals are adapted to these properties.'; }
+$('s-bl').oninput=()=>{ bl=+$('s-bl').value; drawAq(); };
+document.querySelectorAll('#a-med button').forEach(b=>b.onclick=()=>{ med=b.dataset.m; document.querySelectorAll('#a-med button').forEach(o=>o.setAttribute('aria-pressed',o===b)); drawAq(); });
+// LOOP, TABS -------------------------------------------------------------------
+function frame(now){ const dt=Math.max(0,Math.min(0.05,(now-(last*1000||now))/1000)); last=now/1000; try{ if(!$('lab').hidden){ if(tab==='hb'){ hbTick(dt); drawHb(); } if(tab==='sol') drawSol(); } }catch(e){ console.error(e); } requestAnimationFrame(frame); }
+const TABS=['hb','coh','sol','aq'];
+function showTab(k){ tab=k; TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); if(k==='coh') drawCoh(); if(k==='aq') drawAq(); if(k==='sol'){ t0s=last; saySol(); } }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; showTab(tab); }
+$('b-start').onclick=start; setLevel(level); requestAnimationFrame(frame);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.waterDebug={ step:n=>{ for(let i=0;i<n;i++){ last+=0.033; if(tab==='hb') hbTick(0.033); } if(tab==='hb') drawHb(); if(tab==='sol') drawSol(); }, showTab, start, capH, lossW, setT:v=>{ $('s-t').value=v; $('s-t').oninput(); } };
+})();
+</script>
+
+<script>
+window.LAB_GUIDE = { title: 'Water Lab: step by step', sections: {
+  hb: { n: 'Hydrogen bonds', tab: '#t-hb', steps: [
+    { n: 'A polar molecule', s: 'Turn on the partial charges. Oxygen attracts the shared electrons more than hydrogen, so the O-H bonds are **polar covalent** bonds: oxygen is slightly negative, each hydrogen slightly positive.', go: ['#h-zoom'], cs: 'A1.1.2' },
+    { n: 'Hydrogen bonds', s: 'A slightly positive hydrogen of one molecule is attracted to the slightly negative oxygen of another: a **hydrogen bond** (dashed). Each is weak, but there are huge numbers of them.', go: ['[data-pt="20"]'], cs: 'A1.1.2' },
+    { n: 'Ice floats', s: 'Cool to ice: the molecules lock into an open lattice held by hydrogen bonds, further apart than in the liquid. Ice is less dense, floats, and insulates the water underneath.', go: ['[data-pt="-10"]'], cs: 'A1.1.1' },
+    { n: 'Why life needs water', s: 'Life began in water and every cell is mostly water. The cytoplasm is a watery solution in which metabolism happens, and many organisms live in water.', q: { q: 'Which property explains why water has a high boiling point for such a small molecule?', o: ['It is non-polar', 'Many hydrogen bonds must be broken for molecules to escape', 'It has a low density'], a: 1, why: 'Breaking the network of hydrogen bonds needs a lot of energy.' }, cs: 'A1.1.1' }
+  ] },
+  coh: { n: 'Cohesion and adhesion', tab: '#t-coh', steps: [
+    { n: 'Cohesion', s: 'Hydrogen bonds make water molecules stick to each other: **cohesion**. It gives water surface tension, so a pond skater can stand on it.', cs: 'A1.1.3' },
+    { n: 'Adhesion', s: 'Water also sticks to other polar or charged surfaces: **adhesion**. In a glass tube adhesion pulls water up the walls, and cohesion pulls the rest along: capillary action.', go: ['[data-m="glass"]'], cs: 'A1.1.4' },
+    { n: 'Hydrophobic surfaces', s: 'Switch to wax: no adhesion, so the water is pushed down instead.', go: ['[data-m="wax"]'], q: { q: 'Why does water rise higher in a narrower glass tube?', o: ['There is less water to lift', 'Adhesion to the walls supports a column with less weight per unit of wall', 'Narrow tubes are colder'], a: 1, why: 'The upward pull scales with the circumference while the weight scales with the cross-section, so narrow tubes lift water higher.' }, cs: 'A1.1.4' },
+    { n: 'In plants', s: 'Cohesion lets transpiration pull an unbroken water column up the xylem; adhesion to the xylem walls helps. Adhesion also holds water in soil and in cell walls.', cs: 'A1.1.3, A1.1.4' }
+  ] },
+  sol: { n: 'Solvent', tab: '#t-sol', steps: [
+    { n: 'Hydrophilic substances', s: 'Ions and polar molecules (salt, glucose, amino acids) dissolve: water molecules surround them.', go: ['[data-s="salt"]'], cs: 'A1.1.5' },
+    { n: 'Hydrophobic substances', s: 'Non-polar substances (fats, cholesterol) do not dissolve; oxygen dissolves only a little.', go: ['[data-s="oil"]'], q: { q: 'How is cholesterol carried in blood, given that it does not dissolve in water?', o: ['Dissolved in plasma', 'In lipoprotein particles with a hydrophilic coat', 'Bound to haemoglobin'], a: 1, why: 'Lipoproteins have phospholipids and proteins whose hydrophilic parts face the plasma.' }, cs: 'A1.1.5' }
+  ] },
+  aq: { n: 'Living in water', tab: '#t-aq', steps: [
+    { n: 'Water versus air', s: 'Compare the properties. Water supports animals (buoyancy) but is hard to move through (viscosity), and it conducts heat away fast.', cs: 'A1.1.6' },
+    { n: 'Keeping warm', s: 'Change the blubber thickness and the medium. A seal in cold water loses heat much faster than in air, so a thick layer of blubber is vital.', go: ['[data-m="water"]'], q: { q: 'Why is a high specific heat capacity useful for aquatic organisms?', o: ['Water temperature changes slowly, so the habitat is thermally stable', 'It makes water less dense', 'It increases drag'], a: 0, why: 'A lot of energy is needed to change the temperature of water, so lakes and seas change temperature slowly.' }, cs: 'A1.1.6' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

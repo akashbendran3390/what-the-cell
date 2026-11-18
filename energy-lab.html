@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Energy and Carbon Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/energy-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Energy and Carbon Lab">
+<meta property="og:description" content="Energy and Carbon Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/energy-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Energy and Carbon Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0f1210; --ink:#eef4ef; --dim:#b9c8bd; --panel:#16201a; --panel2:#1e2b22; --line:rgba(190,230,200,.2);
+  --accent:#95d5b2;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#06210f}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#0a0d0b}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#06210f;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:8px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Energy and Carbon Lab</h1><div class="sub">DP Biology C4.2 &middot; carbon cycle values are rounded global estimates; the Keeling curve is a smooth model of the real record</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Energy flows, matter cycles</h2>
+    <p>Energy enters most ecosystems as sunlight, passes along food chains and leaves as heat. Matter, such as carbon, is recycled again and again. Explore a food web, build an energy pyramid, run the global carbon cycle, and read the most famous graph in climate science.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-web" aria-pressed="true">1. Food web</button><button type="button" id="t-pyr" aria-pressed="false">2. Energy pyramid</button><button type="button" id="t-cc" aria-pressed="false">3. Carbon cycle</button><button type="button" id="t-kee" aria-pressed="false">4. Keeling curve</button></div>
+
+    <div class="grid" id="p-web">
+      <div class="card"><canvas class="plot" id="c-web" width="900" height="520" aria-label="A woodland food web; click an organism"></canvas><p class="note">Click an organism. Arrows show the direction energy flows: from the food to the feeder.</p></div>
+      <div><div class="card"><h2 id="w-name">Click an organism</h2><div class="stat"><span>Trophic level(s)</span><b id="w-tl">-</b><span>Gets energy from</span><b id="w-from">-</b></div><div class="explain" style="margin-top:8px"><p id="w-say"></p></div><p class="note">Syllabus: C4.2.1 to C4.2.10</p></div></div>
+    </div>
+
+    <div class="grid" id="p-pyr" hidden>
+      <div class="card"><canvas class="plot" id="c-pyr" width="900" height="500" aria-label="Pyramid of energy with losses at each level"></canvas>
+        <label class="sl">Energy passed on to the next level <b id="y-ev">10%</b><input type="range" id="y-e" min="4" max="20" value="10"></label>
+        <label class="sl">Sunlight converted into plant biomass (net primary production) <b id="y-pv">1.0%</b><input type="range" id="y-p" min="2" max="30" value="10"></label></div>
+      <div><div class="card"><h2>Energy at each level</h2><div class="stat" id="y-stat"></div><div class="explain" style="margin-top:8px"><p id="y-say"></p></div><p class="note">Syllabus: C4.2.11 to C4.2.16</p></div></div>
+    </div>
+
+    <div class="grid" id="p-cc" hidden>
+      <div class="card"><canvas class="plot" id="c-cc" width="900" height="520" aria-label="Global carbon cycle with stores and flows"></canvas>
+        <div class="row"><button type="button" class="btn" id="k-hum" aria-pressed="true">Human activity on</button><button type="button" class="btn" id="k-forest" aria-pressed="false">Burn tropical forest and peat</button><button type="button" class="btn" id="k-plant" aria-pressed="false">Restore forests and peatlands</button></div></div>
+      <div><div class="card"><h2>Atmosphere</h2><div class="stat"><span>Carbon added to the air each year</span><b id="k-net">-</b><span>Forests and peatlands in this model</span><b id="k-land">-</b></div><div class="explain" style="margin-top:8px"><p id="k-say"></p></div><p class="note">Syllabus: C4.2.17, C4.2.18, C4.2.19, C4.2.21, C4.2.22</p></div></div>
+    </div>
+
+    <div class="grid" id="p-kee" hidden>
+      <div class="card"><canvas class="plot" id="c-kee" width="900" height="460" aria-label="Carbon dioxide concentration at Mauna Loa since 1958"></canvas>
+        <label class="sl">Years shown, ending in 2023 <b id="e-yv">all (1958 to 2023)</b><input type="range" id="e-y" min="3" max="65" value="65"></label></div>
+      <div><div class="card"><h2>Reading the curve</h2><div class="stat"><span>1958</span><b>about 315 ppm</b><span>2023</span><b>about 420 ppm</b><span>Seasonal swing</span><b>about 6 ppm</b></div><div class="explain" style="margin-top:8px"><p id="e-say"></p></div><p class="note">Syllabus: C4.2.20</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+// 1 FOOD WEB -----------------------------------------------------------------------
+const NODES={oak:{n:'Oak tree',x:220,y:460,t:'Producer (1)',k:'auto'},grass:{n:'Grass',x:620,y:460,t:'Producer (1)',k:'auto'},cat:{n:'Caterpillar',x:120,y:330,t:'Primary consumer (2)',k:'het'},aphid:{n:'Aphid',x:330,y:330,t:'Primary consumer (2)',k:'het'},rabbit:{n:'Rabbit',x:640,y:330,t:'Primary consumer (2)',k:'het'},
+  tit:{n:'Blue tit',x:160,y:200,t:'Secondary consumer (3)',k:'het'},lady:{n:'Ladybird',x:380,y:200,t:'Secondary consumer (3)',k:'het'},fox:{n:'Fox',x:660,y:180,t:'Secondary and tertiary consumer (3, 4)',k:'het'},hawk:{n:'Sparrowhawk',x:280,y:60,t:'Tertiary consumer (4)',k:'het'},fungi:{n:'Fungi and bacteria',x:820,y:440,t:'Decomposers (saprotrophs)',k:'sap'}};
+const EAT=[['oak','cat'],['oak','aphid'],['grass','rabbit'],['cat','tit'],['aphid','lady'],['aphid','tit'],['lady','tit'],['rabbit','fox'],['tit','hawk'],['tit','fox'],['oak','fungi'],['grass','fungi'],['fox','fungi'],['hawk','fungi'],['rabbit','fungi']];
+let sel=null;
+function drawWeb(){ const c=$('c-web'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.fillStyle='rgba(255,209,102,.12)'; x.fillRect(0,0,900,30); x.fillStyle='#ffd166'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillText('Sunlight: energy enters the ecosystem here',300,20);
+  EAT.forEach(([a,b])=>{ const A=NODES[a], B=NODES[b]; const on=sel&&(a===sel||b===sel); x.strokeStyle=on?'#ffd166':(b==='fungi'?'rgba(185,200,189,.25)':'rgba(149,213,178,.55)'); x.lineWidth=on?4:2; const ang=Math.atan2(B.y-A.y,B.x-A.x), ex=B.x-Math.cos(ang)*34, ey=B.y-Math.sin(ang)*30; x.beginPath(); x.moveTo(A.x,A.y); x.lineTo(ex,ey); x.stroke(); x.fillStyle=x.strokeStyle; x.beginPath(); x.moveTo(ex,ey); x.lineTo(ex-Math.cos(ang-0.4)*12,ey-Math.sin(ang-0.4)*12); x.lineTo(ex-Math.cos(ang+0.4)*12,ey-Math.sin(ang+0.4)*12); x.fill(); });
+  Object.entries(NODES).forEach(([k,o])=>{ x.fillStyle=k===sel?'#ffd166':o.k==='auto'?'#52b788':o.k==='sap'?'#b08968':'#4895ef'; x.beginPath(); x.ellipse(o.x,o.y,62,24,0,0,7); x.fill(); x.fillStyle='#08110b'; x.font='bold 14px sans-serif'; x.fillText(o.n,o.x-x.measureText(o.n).width/2,o.y+5); }); }
+$('c-web').onclick=e=>{ const r=$('c-web').getBoundingClientRect(), sx=(e.clientX-r.left)*900/r.width, sy=(e.clientY-r.top)*520/r.height; let best=null,bd=80; Object.entries(NODES).forEach(([k,o])=>{ const d=Math.hypot(o.x-sx,(o.y-sy)*2); if(d<bd){ bd=d; best=k; } }); if(best) pick(best); };
+function pick(k){ sel=k; const o=NODES[k]; $('w-name').textContent=o.n; $('w-tl').textContent=o.t; const from=EAT.filter(e=>e[1]===k).map(e=>NODES[e[0]].n); $('w-from').textContent=o.k==='auto'?'Sunlight':from.join(', ');
+  $('w-say').textContent=o.k==='auto'?'An autotroph: it uses an external energy source (light, so it is a photoautotroph) to make its own carbon compounds from CO2 and water. Producers make the chemical energy that every other organism here depends on.':o.k==='sap'?'Decomposers get energy from the carbon compounds in dead organisms and waste of every trophic level, and release minerals back into the soil for plants: nutrients are recycled. They are heterotrophs that feed by saprotrophic nutrition.':'A heterotroph: it gets its carbon compounds and energy by eating other organisms. '+(k==='fox'?'The fox feeds at more than one trophic level, because it eats both rabbits (primary consumers) and blue tits (secondary consumers).':'Its trophic level is its position in the food chain.')+' Autotrophs and heterotrophs both release energy from carbon compounds by respiration.'; drawWeb(); }
+// 2 PYRAMID -----------------------------------------------------------------------
+const SUN=4000000; // kJ per m2 per year of sunlight reaching plants (about 4 GJ, typical mid-latitude)
+function drawPyr(){ const eff=+$('y-e').value/100, npp=+$('y-p').value/1000; $('y-ev').textContent=Math.round(eff*100)+'%'; $('y-pv').textContent=(npp*100).toFixed(1)+'%';
+  const lv=[SUN*npp]; while(lv.length<7) lv.push(lv[lv.length-1]*eff); const names=['Producers','Primary consumers','Secondary consumers','Tertiary consumers','Quaternary consumers','Level 6','Level 7']; const MIN=10; const n=lv.filter(v=>v>=MIN).length;
+  const c=$('c-pyr'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif'; const H=60;
+  for(let i=0;i<Math.min(n+1,6);i++){ const w=Math.max(6,Math.log10(lv[i]+1)/Math.log10(SUN*0.03+1)*760), y=460-i*(H+6); const ok=i<n; x.fillStyle=ok?['#52b788','#4895ef','#9d4edd','#ef476f','#f4a261','#ffd166'][i]:'rgba(255,255,255,.12)'; x.fillRect(450-w/2,y-H,w,H);
+    x.fillStyle='#fff'; x.fillText(names[i]+': '+Math.round(lv[i]).toLocaleString()+' kJ per m2 per year'+(ok?'':' (too little to support a population)'),30,y-H/2+5); }
+  x.fillStyle='#b9c8bd'; x.fillText('Bar width on a log scale',700,20);
+  $('y-stat').innerHTML=lv.slice(0,4).map((v,i)=>'<span>'+names[i]+'</span><b>'+Math.round(v).toLocaleString()+'</b>').join('')+'<span>Trophic levels that can be supported</span><b>'+n+'</b>';
+  $('y-say').textContent='Only part of the energy in one level becomes biomass in the next (often about 10%). The rest is lost: most is released as heat by respiration, and some is in parts that are not eaten or not digested (passing to decomposers in faeces and dead remains). Because so much is lost at each step, there is rarely enough energy for more than four or five trophic levels. Plants make carbon compounds that build their biomass (primary production); animals build biomass from what they eat (secondary production). Pyramids of energy are always this shape, never inverted.'; }
+$('y-e').oninput=drawPyr; $('y-p').oninput=drawPyr;
+// 3 CARBON CYCLE -------------------------------------------------------------------
+let hum=true, burn=false, plant=false;
+function drawCC(){ const c=$('c-cc'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif';
+  const box=(bx,by,w,h,col,t,v)=>{ x.fillStyle=col; x.fillRect(bx,by,w,h); x.fillStyle='#08110b'; x.font='bold 15px sans-serif'; x.fillText(t,bx+8,by+22); x.font='14px sans-serif'; x.fillText(v,bx+8,by+42); };
+  box(330,20,240,60,'#8ecae6','Atmosphere','about 870 GtC as CO2'); box(40,220,200,60,'#52b788','Land plants','about 450 GtC'); box(40,400,200,60,'#b08968','Soils and dead matter','about 1700 GtC'); box(650,220,220,60,'#4895ef','Oceans','about 38 000 GtC'); box(360,420,200,60,'#6c757d','Fossil fuels','coal, oil, gas, peat');
+  const arrow=(x1,y1,x2,y2,col,lab,w)=>{ x.strokeStyle=col; x.lineWidth=w||3; x.beginPath(); x.moveTo(x1,y1); x.lineTo(x2,y2); x.stroke(); const a=Math.atan2(y2-y1,x2-x1); x.fillStyle=col; x.beginPath(); x.moveTo(x2,y2); x.lineTo(x2-Math.cos(a-0.4)*12,y2-Math.sin(a-0.4)*12); x.lineTo(x2-Math.cos(a+0.4)*12,y2-Math.sin(a+0.4)*12); x.fill(); x.font='13px sans-serif'; x.fillText(lab,(x1+x2)/2+6,(y1+y2)/2); };
+  arrow(330,70,200,220,'#95d5b2','photosynthesis 123'); arrow(160,220,330,60,'#f4a261','plant respiration 60'); arrow(140,280,140,400,'#b08968','death, leaf fall'); arrow(240,410,360,80,'#f4a261','decomposers respire 60'); arrow(570,60,700,220,'#4895ef','dissolves 80'); arrow(680,220,560,70,'#4895ef','released 78');
+  if(hum) arrow(470,420,470,80,'#ef476f','burning fossil fuels 10',5); if(burn) arrow(120,220,330,40,'#ef476f','burning forest and peat',5); if(plant) arrow(330,50,90,220,'#52b788','extra uptake by new forests',5);
+  const net=(hum?10-2.5-3:0)+(burn?1.5:0)-(plant?1:0); $('k-net').textContent=(net>0?'+':'')+net.toFixed(1)+' GtC'; /* rounded budget: fossil fuels 10, ocean sink 2.5, land sink 3 */
+  $('k-land').textContent=burn&&!plant?'carbon source':plant?'carbon sink':'roughly balanced';
+  $('k-say').textContent='Carbon moves between stores. Photosynthesis takes CO2 from the air into plants; respiration by plants, animals and decomposers returns it. Aerobic respiration needs the oxygen made by photosynthesis, and photosynthesis needs the CO2 released by respiration. '+(hum?'Burning fossil fuels and biomass releases carbon that was locked away for millions of years, so CO2 in the atmosphere rises by about 5 GtC each year even though oceans and land absorb some of the extra. ':'Without human activity, the flows in and out of the atmosphere almost balance. ')+(burn?'Burning forests and draining peat turns them from carbon sinks into carbon sources. ':'')+(plant?'Growing forests and wet peatlands lock carbon away: they act as carbon sinks. ':'')+'Other elements needed by organisms, such as nitrogen and phosphorus, are recycled in the same way by decomposers.'; }
+$('k-hum').onclick=()=>{ hum=!hum; $('k-hum').setAttribute('aria-pressed',hum); $('k-hum').textContent=hum?'Human activity on':'Human activity off'; drawCC(); };
+$('k-forest').onclick=()=>{ burn=!burn; $('k-forest').setAttribute('aria-pressed',burn); drawCC(); }; $('k-plant').onclick=()=>{ plant=!plant; $('k-plant').setAttribute('aria-pressed',plant); drawCC(); };
+// 4 KEELING ---------------------------------------------------------------------------
+const co2=t=>{ const y=t-1958; return 315+0.8*y+0.0125*y*y+3*Math.cos(2*Math.PI*((t%1)-0.37)); };
+function drawKee(){ const span=+$('e-y').value, t0=2023.999-span, c=$('c-kee'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=70,B=410,R=880,T=20;
+  let mn=1e9, mx=-1e9; for(let t=t0;t<2024;t+=0.02){ const v=co2(t); mn=Math.min(mn,v); mx=Math.max(mx,v); } mn=Math.floor(mn-2); mx=Math.ceil(mx+2);
+  const X=t=>L+(R-L)*(t-t0)/(2024-t0), Y=v=>B-(B-T)*(v-mn)/(mx-mn); x.strokeStyle='#b9c8bd'; x.lineWidth=2; x.beginPath(); x.moveTo(L,T); x.lineTo(L,B); x.lineTo(R,B); x.stroke();
+  x.fillStyle='#b9c8bd'; x.font='14px Atkinson Hyperlegible, sans-serif'; const step=span>30?10:span>10?2:1; for(let y=Math.ceil(t0/step)*step;y<=2023;y+=step) x.fillText(y,X(y)-16,B+20); for(let v=Math.ceil(mn/10)*10;v<=mx;v+=10) x.fillText(v,30,Y(v)+5); x.save(); x.translate(14,300); x.rotate(-Math.PI/2); x.fillText('CO2 / ppm',0,0); x.restore();
+  x.strokeStyle='#ef476f'; x.lineWidth=span>20?2:3; x.beginPath(); for(let t=t0;t<2024;t+=0.02){ t===t0?x.moveTo(X(t),Y(co2(t))):x.lineTo(X(t),Y(co2(t))); } x.stroke();
+  $('e-yv').textContent=span>=65?'all (1958 to 2023)':span+' years';
+  $('e-say').textContent=span>10?'Measurements at Mauna Loa, Hawaii, started by Charles Keeling in 1958, show CO2 rising every year, and rising faster over time. The rise is caused mainly by burning fossil fuels, with deforestation adding more. Zoom in to see the yearly zigzag.':'Each year CO2 falls from about May to October and rises from October to May. Most land is in the northern hemisphere: in its summer, photosynthesis by growing plants takes in more CO2 than respiration releases; in winter, respiration and decomposition (and burning fuel for heating) release more than plants take in.'; }
+$('e-y').oninput=drawKee;
+// tabs -----------------------------------------------------------------------------------
+const TABS=['web','pyr','cc','kee'];
+function showTab(k){ TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); if(k==='web') drawWeb(); if(k==='pyr') drawPyr(); if(k==='cc') drawCC(); if(k==='kee') drawKee(); }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; showTab('web'); $('w-say').textContent='Every food chain here starts with a producer. Click any organism to see what it feeds on and its trophic level. Ecosystems are open systems: energy and matter can enter and leave.'; }
+$('b-start').onclick=start; setLevel(level);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.energyDebug={ showTab, start, pick, co2 };
+})();
+</script>
+
+<script>
+(function () {
+  var pk = function (k) { return function () { var b = document.getElementById('b-start'), lab = document.getElementById('lab'); if (lab && lab.hidden && b) b.click(); var t = document.getElementById('t-web'); if (t) t.click(); if (window.energyDebug) energyDebug.pick(k); }; };
+  window.LAB_GUIDE = { title: 'Energy and Carbon Lab: step by step', sections: {
+    web: { n: 'Food web', tab: '#t-web', steps: [
+      { n: 'Energy in, energy out', s: 'Ecosystems are **open systems**: energy enters (mostly as sunlight) and leaves as heat, and matter can move in and out. Sunlight is the main energy source for most ecosystems.', cs: 'C4.2.1, C4.2.2' },
+      { n: 'Producers', s: 'Click the oak tree. Autotrophs make carbon compounds from simple inorganic substances using an external energy source: light (photoautotrophs) or chemical reactions (chemoautotrophs).', go: pk('oak'), cs: 'C4.2.6, C4.2.7' },
+      { n: 'Consumers and trophic levels', s: 'Click the fox. Heterotrophs get carbon compounds by eating others. A trophic level is a position in a food chain; some animals feed at more than one.', go: pk('fox'), q: { q: 'In the chain oak -> caterpillar -> blue tit -> sparrowhawk, what is the blue tit?', o: ['Primary consumer', 'Secondary consumer', 'Tertiary consumer'], a: 1, why: 'It eats a primary consumer (the caterpillar), so it is a secondary consumer on trophic level 3.' }, cs: 'C4.2.3, C4.2.4, C4.2.8, C4.2.10' },
+      { n: 'Decomposers', s: 'Click the fungi and bacteria. They get energy from dead organisms and waste at every level, and return minerals to the soil.', go: pk('fungi'), cs: 'C4.2.5' }
+    ] },
+    pyr: { n: 'Pyramid', tab: '#t-pyr', steps: [
+      { n: 'Energy losses', s: 'Change the transfer percentage. Most energy at each level is released as heat by respiration or is lost in parts not eaten or digested.', cs: 'C4.2.11, C4.2.12, C4.2.13' },
+      { n: 'How many levels?', s: 'With about 10% passed on, energy runs out after four or five levels.', q: { q: 'Producers capture 20 000 kJ per m2 per year. With 10% transfer, how much reaches the secondary consumers?', o: ['2000 kJ', '200 kJ', '20 kJ'], a: 1, why: '20 000 x 0.1 = 2000 for primary consumers; x 0.1 again = 200 for secondary consumers.' }, cs: 'C4.2.14, C4.2.15, C4.2.16' }
+    ] },
+    cc: { n: 'Carbon cycle', tab: '#t-cc', steps: [
+      { n: 'Stores and flows', s: 'Follow the arrows: photosynthesis, respiration, decomposition, ocean exchange, combustion.', cs: 'C4.2.17, C4.2.21' },
+      { n: 'Sinks and sources', s: 'Burn forest and peat, then restore them. A carbon sink stores more carbon than it releases; a source releases more.', go: ['#k-forest'], q: { q: 'Draining and burning a peat bog makes it...', o: ['A carbon sink', 'A carbon source', 'Neither'], a: 1, why: 'Carbon stored over thousands of years is released as CO2.' }, cs: 'C4.2.18, C4.2.19' },
+      { n: 'Recycling elements', s: 'Ecosystems recycle all the chemical elements organisms need: carbon, nitrogen, phosphorus and others, largely through decomposers.', cs: 'C4.2.22' }
+    ] },
+    kee: { n: 'Keeling curve', tab: '#t-kee', steps: [
+      { n: 'The long rise', s: 'CO2 at Mauna Loa has risen from about 315 ppm in 1958 to about 420 ppm, mainly from burning fossil fuels.', cs: 'C4.2.20' },
+      { n: 'The yearly zigzag', s: 'Zoom in to a few years.', go: function () { var s = document.getElementById('e-y'); if (s) { s.value = 4; s.dispatchEvent(new Event('input')); } }, q: { q: 'Why does atmospheric CO2 fall each northern summer?', o: ['Less fuel is burned', 'Photosynthesis in the large northern land masses exceeds respiration', 'The oceans release CO2'], a: 1, why: 'Most land and plants are in the northern hemisphere; their summer growth draws down CO2.' }, cs: 'C4.2.20' }
+    ] }
+  } };
+})();
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

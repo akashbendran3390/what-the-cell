@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Ecosystem Stability Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/stability-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Ecosystem Stability Lab">
+<meta property="og:description" content="Ecosystem Stability Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/stability-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Ecosystem Stability Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0d1311; --ink:#edf5f1; --dim:#b6c8be; --panel:#15201b; --panel2:#1c2b24; --line:rgba(185,230,205,.2);
+  --accent:#4cc9a0;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#02261b}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#090d0b}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#02261b;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:8px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Ecosystem Stability Lab</h1><div class="sub">DP Biology D4.2 &middot; simple models; the DDT values follow a classic 1960s study, other numbers are illustrative</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Keeping ecosystems going</h2>
+    <p>Natural ecosystems can stay much the same for centuries, but push them too far and they can change suddenly. Clear a rainforest, remove a keystone predator, overfish a sea, wash fertiliser into a lake or poison a food chain, and see what happens, then try putting things right.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-tip" aria-pressed="true">1. Tipping point</button><button type="button" id="t-key" aria-pressed="false">2. Keystone species</button><button type="button" id="t-fish" aria-pressed="false">3. Sustainable fishing</button><button type="button" id="t-eut" aria-pressed="false">4. Pollution</button><button type="button" id="t-rew" aria-pressed="false">5. Plastics and rewilding</button></div>
+
+    <div class="grid" id="p-tip">
+      <div class="card"><canvas class="plot" id="c-tip" width="900" height="440" aria-label="Rainforest cover and rainfall as deforestation increases"></canvas>
+        <label class="sl">Area of the Amazon cleared <b id="d-v">0%</b><input type="range" id="d-s" min="0" max="60" value="0"></label></div>
+      <div><div class="card"><h2>The rainforest</h2><div class="stat"><span>Rainfall in the interior</span><b id="d-rain">-</b><span>Remaining forest that stays rainforest</span><b id="d-forest">-</b></div><div class="explain" style="margin-top:8px"><p id="d-say"></p></div><p class="note">Syllabus: D4.2.1, D4.2.2, D4.2.3</p></div></div>
+    </div>
+
+    <div class="grid" id="p-key" hidden>
+      <div class="card"><canvas class="plot" id="c-key" width="900" height="440" aria-label="Sea otters, sea urchins and kelp over 30 years"></canvas>
+        <div class="row"><button type="button" class="btn" id="k-hunt">Hunt the sea otters (year 5)</button><button type="button" class="btn" id="k-back">Protect and reintroduce them (year 18)</button><button type="button" class="btn" id="k-reset">Start again</button></div></div>
+      <div><div class="card"><h2>Kelp forest</h2><div class="explain"><p id="k-say"></p></div><p class="note">Syllabus: D4.2.4</p></div></div>
+    </div>
+
+    <div class="grid" id="p-fish" hidden>
+      <div class="card"><canvas class="plot" id="c-fish" width="900" height="440" aria-label="Fish stock and catch over 50 years"></canvas>
+        <label class="sl">Catch allowed each year (thousand tonnes) <b id="f-v">200</b><input type="range" id="f-s" min="0" max="500" value="200" step="10"></label>
+        <div class="row"><button type="button" class="btn" id="f-run">Fish for 50 years</button></div></div>
+      <div><div class="card"><h2>Results</h2><div class="stat"><span>Stock after 50 years</span><b id="f-stock">-</b><span>Total catch</span><b id="f-total">-</b><span>Maximum sustainable yield</span><b>about 250</b></div><div class="explain" style="margin-top:8px"><p id="f-say"></p></div><p class="note">Syllabus: D4.2.5, D4.2.6</p></div></div>
+    </div>
+
+    <div class="grid" id="p-eut" hidden>
+      <div class="card"><canvas class="plot" id="c-eut" width="900" height="460" aria-label="Lake with algae and oxygen, or a food chain with DDT levels"></canvas>
+        <div class="row" id="e-pick"><button type="button" class="btn" data-e="eut" aria-pressed="true">Fertiliser run-off</button><button type="button" class="btn" data-e="bio" aria-pressed="false">DDT in a food chain</button></div>
+        <label class="sl" id="e-sl">Fertiliser washed in after heavy rain <b id="e-v">none</b><input type="range" id="e-s" min="0" max="10" value="0"></label></div>
+      <div><div class="card"><h2>What is happening</h2><div class="explain"><p id="e-say"></p></div><p class="note">Syllabus: D4.2.7, D4.2.8</p></div></div>
+    </div>
+
+    <div class="grid" id="p-rew" hidden>
+      <div class="card"><canvas class="plot" id="c-rew" width="900" height="440" aria-label="Plastic in the ocean, or Yellowstone over time after wolves return"></canvas>
+        <div class="row" id="r-pick"><button type="button" class="btn" data-r="plastic" aria-pressed="true">Plastics in the ocean</button><button type="button" class="btn" data-r="wolf" aria-pressed="false">Rewilding: wolves in Yellowstone</button></div>
+        <label class="sl" id="r-sl" hidden>Years since wolves returned (1995) <b id="r-v">0</b><input type="range" id="r-s" min="0" max="25" value="0"></label></div>
+      <div><div class="card"><h2>What is happening</h2><div class="explain"><p id="r-say"></p></div><p class="note">Syllabus: D4.2.9, D4.2.10</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+const axes=(x,L,B,R,T,xl,yl)=>{ x.strokeStyle='#b6c8be'; x.lineWidth=2; x.beginPath(); x.moveTo(L,T); x.lineTo(L,B); x.lineTo(R,B); x.stroke(); x.fillStyle='#b6c8be'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillText(xl,(L+R)/2-60,B+34); x.save(); x.translate(L-40,(T+B)/2+60); x.rotate(-Math.PI/2); x.fillText(yl,0,0); x.restore(); };
+// 1 TIPPING POINT ------------------------------------------------------------------
+function forestFor(d){ const rain=100-0.9*d; return { rain, forest: rain>=78?100:Math.max(0,100-(78-rain)*7) }; }
+function drawTip(){ const d=+$('d-s').value; const c=$('c-tip'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=70,B=390,R=880,T=20, X=v=>L+(R-L)*v/60, Y=v=>B-(B-T)*v/100; axes(x,L,B,R,T,'Area cleared (%)','Percent of original');
+  for(let v=0;v<=60;v+=10) x.fillText(v,X(v)-8,B+18); ['rain','forest'].forEach((k,i)=>{ x.strokeStyle=i?'#4cc9a0':'#5bc0eb'; x.lineWidth=4; x.beginPath(); for(let v=0;v<=60;v+=0.5){ const f=forestFor(v)[k]; v?x.lineTo(X(v),Y(f)):x.moveTo(X(v),Y(f)); } x.stroke(); });
+  x.fillStyle='#5bc0eb'; x.fillText('rainfall in the interior',X(42),Y(55)); x.fillStyle='#4cc9a0'; x.fillText('remaining forest that stays rainforest',X(1),Y(96)-8); x.strokeStyle='#ffd166'; x.setLineDash([6,6]); x.beginPath(); x.moveTo(X(d),T); x.lineTo(X(d),B); x.stroke(); x.setLineDash([]);
+  const f=forestFor(d); $('d-v').textContent=d+'%'; $('d-rain').textContent=Math.round(f.rain)+'% of normal'; $('d-forest').textContent=Math.round(f.forest)+'%';
+  $('d-say').textContent=d<20?'A stable ecosystem needs a supply of energy, recycling of nutrients, genetic diversity and conditions that stay within the tolerance of its species. In the Amazon, trees pull up water and transpire it; much of the rain in the interior is this recycled water. Small clearings are absorbed.':
+    f.forest>=100?'Rainfall is falling as fewer trees transpire, but the remaining forest still gets enough rain.':'Past a tipping point (estimates range from about 20% to 40% cleared), rainfall drops so low that the remaining forest dries out, burns more often and turns into savanna, even where no trees were cut. Such a change can be very hard to reverse.'; }
+$('d-s').oninput=drawTip;
+// 2 KEYSTONE -----------------------------------------------------------------------
+let hunt=false, back=false;
+function keySim(){ let o=100,u=100,k=100; const O=[],U=[],K=[]; for(let y=0;y<=30;y+=0.1){ const otterTarget=(hunt&&y>=5&&!(back&&y>=18))?3:(back&&y>=18?100:100); o+=(otterTarget-o)*0.08; u+=((300-2.4*o)*1-u)*0.06; u=Math.max(10,u); k+=((100-0.38*(u-100))-k)*0.08; k=Math.max(3,Math.min(100,k)); O.push(o); U.push(u); K.push(k); } return {O,U,K}; }
+function drawKey(){ const s=keySim(), c=$('c-key'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=70,B=390,R=880,T=20, X=i=>L+(R-L)*i/(s.O.length-1), Y=v=>B-(B-T)*v/330; axes(x,L,B,R,T,'Years','Relative numbers');
+  [[s.O,'#c08552','sea otters'],[s.U,'#9d4edd','sea urchins'],[s.K,'#4cc9a0','kelp']].forEach(([a,col,n],j)=>{ x.strokeStyle=col; x.lineWidth=4; x.beginPath(); a.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v))); x.stroke(); x.fillStyle=col; x.fillText(n,R-120,T+20+j*22); });
+  $('k-say').textContent=!hunt?'Sea otters eat sea urchins, which graze kelp. With otters present, urchins are kept in check and the kelp forest thrives, sheltering hundreds of other species. A keystone species has an effect on its ecosystem far bigger than its numbers suggest.':(back?'When otters were protected and returned, urchin numbers fell and the kelp grew back, along with the fish and invertebrates that live in it.':'Hunting otters for fur (as in the 18th and 19th centuries in the North Pacific) let urchin numbers explode. They grazed the kelp down to bare rock ("urchin barrens") and the whole community collapsed: the ecosystem lost its stability.'); }
+$('k-hunt').onclick=()=>{ hunt=true; drawKey(); }; $('k-back').onclick=()=>{ if(hunt){ back=true; drawKey(); } }; $('k-reset').onclick=()=>{ hunt=false; back=false; drawKey(); };
+// 3 FISHING ---------------------------------------------------------------------------
+let fishData=null;
+$('f-run').onclick=()=>{ const q=+$('f-s').value, K=1000, r=1.0; let N=800, tot=0; const S=[N], C=[0]; for(let y=1;y<=50;y++){ const growth=r*N*(1-N/K); const catchY=Math.min(q,N*0.95); N=Math.max(0,N+growth-catchY); tot+=catchY; S.push(N); C.push(catchY); } fishData={S,C,q}; $('f-stock').textContent=Math.round(N)+' thousand tonnes'; $('f-total').textContent=Math.round(tot).toLocaleString()+' thousand tonnes'; drawFish();
+  $('f-say').textContent=q<=250?'The catch is no more than the stock can replace each year, so the population settles at a steady level and the catch can continue for ever: sustainable harvesting. The greatest catch that can be taken year after year (the maximum sustainable yield) comes when the stock is kept at about half its carrying capacity, where it grows fastest.':'The catch is larger than the stock can replace. The stock shrinks every year until the fishery collapses, as happened to Atlantic cod off Newfoundland in 1992. To judge sustainability, scientists estimate stock size and growth rate and set quotas, net sizes and closed seasons. Similar ideas apply to farming: soil, water and nutrients must not be used up faster than they are replaced.'; };
+$('f-s').oninput=()=>{ $('f-v').textContent=$('f-s').value; };
+function drawFish(){ const c=$('c-fish'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=70,B=390,R=880,T=20, X=y=>L+(R-L)*y/50, Y=v=>B-(B-T)*v/1000; axes(x,L,B,R,T,'Years','Thousand tonnes'); for(let v=0;v<=1000;v+=250) x.fillText(v,24,Y(v)+5);
+  if(!fishData) return; x.strokeStyle='#5bc0eb'; x.lineWidth=4; x.beginPath(); fishData.S.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v))); x.stroke(); x.strokeStyle='#ffd166'; x.beginPath(); fishData.C.forEach((v,i)=>i?x.lineTo(X(i),Y(v)):x.moveTo(X(i),Y(v))); x.stroke(); x.fillStyle='#5bc0eb'; x.fillText('stock',R-80,T+20); x.fillStyle='#ffd166'; x.fillText('catch',R-80,T+42); }
+// 4 POLLUTION ---------------------------------------------------------------------------
+let eMode='eut';
+function drawEut(){ const c=$('c-eut'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif';
+  if(eMode==='eut'){ const f=+$('e-s').value; $('e-v').textContent=f===0?'none':f<4?'a little':f<8?'a lot':'very large'; const L=70,B=410,R=880,T=20, X=d=>L+(R-L)*d/60, Y=v=>B-(B-T)*v/100; axes(x,L,B,R,T,'Days after heavy rain','Relative level');
+    const series={nut:[],alg:[],oxy:[],fish:[]}; let n=5,a=5,o=95,fi=100; for(let d=0;d<=60;d+=0.5){ if(d===2) n+=f*9; n-=a*0.004*n*0.5; a+=0.4*a*(n/(n+10))*(1-a/100)*0.5-(d>14&&n<15?0.06*a:0); o+=((95-a*0.9*(d>10?1.2:0.3))-o)*0.15; o=Math.max(0,Math.min(100,o)); if(o<30) fi-=(30-o)*0.08; fi=Math.max(0,fi); series.nut.push(n); series.alg.push(a); series.oxy.push(o); series.fish.push(fi); }
+    [['nut','#ffd166','nitrate and phosphate'],['alg','#4cc9a0','algae'],['oxy','#5bc0eb','dissolved oxygen'],['fish','#ef476f','fish']].forEach(([k,col,n],j)=>{ x.strokeStyle=col; x.lineWidth=4; x.beginPath(); series[k].forEach((v,i)=>i?x.lineTo(X(i*0.5),Y(Math.min(100,v))):x.moveTo(X(0),Y(Math.min(100,v)))); x.stroke(); x.fillStyle=col; x.fillText(n,R-180,T+20+j*22); });
+    $('e-say').textContent=f===0?'A lake with few nutrients: clear water, plants on the bottom, plenty of oxygen.':'Heavy rain washes (leaches) nitrate and phosphate fertiliser from fields into the lake. Algae multiply rapidly (an algal bloom) and shade plants below, which die. Bacteria decomposing the dead algae and plants use up the oxygen in the water (a high biochemical oxygen demand), so fish and other animals suffocate. This is eutrophication. Sewage has the same effect.'; }
+  else { const chain=[['Water',0.00005],['Plankton',0.04],['Small fish (minnows)',0.5],['Large fish',2.1],['Fish-eating birds (ospreys)',13.8]]; chain.forEach(([n,v],i)=>{ const w=Math.max(4,(Math.log10(v)+5)/6.2*560); x.fillStyle=['#5bc0eb','#4cc9a0','#8ecae6','#219ebc','#ef476f'][i]; x.fillRect(260,30+i*80,w,52); x.fillStyle='#fff'; x.fillText(n,20,62+i*80); x.fillText(v+' ppm',270+w,62+i*80); });
+    x.fillStyle='#b6c8be'; x.fillText('DDT concentration (log scale), Long Island estuary, 1960s',260,440);
+    $('e-say').textContent='DDT, an insecticide, does not break down easily and is stored in fat rather than excreted. Each predator eats many prey and keeps their DDT, so the concentration rises at every trophic level: biomagnification. Ospreys and other birds of prey had concentrations hundreds of thousands of times higher than the water, laid eggs with thin shells, and declined until DDT was banned. Mercury builds up in the same way in large fish such as tuna.'; } }
+$('e-s').oninput=drawEut; document.querySelectorAll('#e-pick button').forEach(b=>b.onclick=()=>{ eMode=b.dataset.e; document.querySelectorAll('#e-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); $('e-sl').hidden=eMode!=='eut'; drawEut(); });
+// 5 PLASTICS AND REWILDING ---------------------------------------------------------------
+let rMode='plastic';
+function drawRew(){ const c=$('c-rew'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif';
+  if(rMode==='plastic'){ const g=x.createLinearGradient(0,0,0,440); g.addColorStop(0,'#1d6a96'); g.addColorStop(1,'#03253a'); x.fillStyle=g; x.fillRect(0,40,900,400); x.fillStyle='#8ecae6'; x.fillRect(0,30,900,10);
+    [[120,70,'#fff',30,'bag'],[300,80,'#f4a261',20,'bottle'],[520,60,'#e9c46a',26,'net'],[700,90,'#ef476f',16,'lid']].forEach(([px,py,col,s,n])=>{ x.fillStyle=col; x.fillRect(px,py,s*1.6,s); x.fillStyle='#fff'; x.fillText(n,px,py+s+18); });
+    for(let i=0;i<220;i++){ x.fillStyle=['#fff','#ffd166','#ef476f','#4cc9a0'][i%4]; x.fillRect((i*97)%900,150+(i*53)%280,3,3); } x.fillStyle='#fff'; x.fillText('Macroplastics (floating debris)',20,26); x.fillText('Microplastics (smaller than 5 mm) spread through the water and sediment',300,420);
+    $('r-say').textContent='Plastics break into smaller and smaller pieces but hardly biodegrade. Macroplastics entangle seals, turtles and seabirds and fill their stomachs. Microplastics are eaten by plankton and filter feeders, absorb toxic chemicals, and pass along food chains, including to people.'; }
+  else { const y=+$('r-s').value; $('r-v').textContent=y; const k=Math.min(1,y/15); x.fillStyle='#4a5d23'; x.fillRect(0,300,900,140); x.fillStyle='#5bc0eb'; x.fillRect(0,360,900,30*(0.4+0.6*k));
+    const trees=Math.round(4+22*k); for(let i=0;i<trees;i++){ const tx=30+i*33, th=40+((i*37)%50)*k; x.fillStyle='#2d6a4f'; x.beginPath(); x.ellipse(tx,300-th,14,th/2,0,0,7); x.fill(); }
+    const elk=Math.round(16-8*k); for(let i=0;i<elk;i++){ x.fillStyle='#b08968'; x.fillRect(600+(i%6)*40,250+Math.floor(i/6)*22,22,12); } const wolves=y>0?Math.min(10,2+y):0; for(let i=0;i<wolves;i++){ x.fillStyle='#adb5bd'; x.fillRect(480+i*14,210,10,8); }
+    const beavers=Math.round(9*Math.max(0,k-0.3)); for(let i=0;i<beavers;i++){ x.fillStyle='#6f4518'; x.fillRect(100+i*60,368,14,8); }
+    x.fillStyle='#fff'; x.fillText('Wolves: '+wolves*10+'   Elk browsing the valleys: '+(k<0.5?'heavy':'less')+'   Willow and aspen: '+(k<0.3?'sparse':k<0.7?'recovering':'regrown')+'   Beaver colonies: '+beavers,20,30);
+    $('r-say').textContent=y===0?'Wolves were wiped out of Yellowstone National Park by the 1920s. Elk grazed the riverside willow and aspen heavily, and beavers almost disappeared.':'Rewilding restores natural processes, often by reintroducing species such as top predators and then leaving nature to manage itself. After wolves returned in 1995, elk numbers fell and they avoided open river valleys. Willow and aspen recovered, beavers came back and built dams, and river banks stabilised: a trophic cascade. Scientists still debate how much of the change is due to wolves alone.'; } }
+document.querySelectorAll('#r-pick button').forEach(b=>b.onclick=()=>{ rMode=b.dataset.r; document.querySelectorAll('#r-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); $('r-sl').hidden=rMode!=='wolf'; drawRew(); }); $('r-s').oninput=drawRew;
+// tabs -----------------------------------------------------------------------------------
+const TABS=['tip','key','fish','eut','rew'];
+function showTab(k){ TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); ({tip:drawTip,key:drawKey,fish:drawFish,eut:drawEut,rew:drawRew})[k](); }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; showTab('tip'); }
+$('b-start').onclick=start; setLevel(level);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.stabDebug={ showTab, start, forestFor, keySim };
+})();
+</script>
+
+<script>
+(function () {
+  var slide = function (id, v) { return function () { var s = document.getElementById(id); if (s) { s.value = v; s.dispatchEvent(new Event('input')); } }; };
+  window.LAB_GUIDE = { title: 'Ecosystem Stability Lab: step by step', sections: {
+    tip: { n: 'Tipping point', tab: '#t-tip', steps: [
+      { n: 'What keeps an ecosystem stable', s: 'Stable ecosystems need an energy supply, recycling of nutrients, genetic diversity, and conditions within the tolerance of their species. Some have stayed much the same for thousands of years.', go: slide('d-s', 0), cs: 'D4.2.1, D4.2.2' },
+      { n: 'The Amazon', s: 'Increase the area cleared. Fewer trees transpire, so less rain falls in the interior. Past a tipping point, the remaining forest changes to savanna.', go: slide('d-s', 35), q: { q: 'Why could clearing part of the Amazon harm forest that has not been cut?', o: ['Seeds stop spreading', 'Less transpiration means less rainfall over the rest of the forest', 'The soil becomes richer'], a: 1, why: 'Much of the interior rainfall is water recycled by the trees themselves.' }, cs: 'D4.2.3' }
+    ] },
+    key: { n: 'Keystone', tab: '#t-key', steps: [
+      { n: 'Remove the otters', s: 'Hunt the sea otters and watch the urchins and kelp.', go: ['#k-reset', '#k-hunt'], cs: 'D4.2.4' },
+      { n: 'Bring them back', s: 'Reintroduce the otters. A keystone species has a disproportionately large effect on its community.', go: ['#k-back'], q: { q: 'Why are sea otters called a keystone species?', o: ['They are the most numerous animal', 'By controlling sea urchins they keep the whole kelp forest community stable', 'They eat kelp'], a: 1, why: 'Their effect on the ecosystem is far larger than their numbers.' }, cs: 'D4.2.4' }
+    ] },
+    fish: { n: 'Fishing', tab: '#t-fish', steps: [
+      { n: 'A sustainable catch', s: 'Set the catch to 200 and fish for 50 years.', go: function () { slide('f-s', 200)(); document.getElementById('f-run').click(); }, cs: 'D4.2.5' },
+      { n: 'Overfishing', s: 'Now try 300. The stock collapses.', go: function () { slide('f-s', 300)(); document.getElementById('f-run').click(); }, q: { q: 'When is harvesting sustainable?', o: ['When the catch is as large as possible', 'When the catch is no more than the population can replace by reproduction and growth', 'When fishing stops completely'], a: 1, why: 'The stock stays stable only if removals match its rate of renewal.' }, cs: 'D4.2.5, D4.2.6' }
+    ] },
+    eut: { n: 'Pollution', tab: '#t-eut', steps: [
+      { n: 'Eutrophication', s: 'Increase the fertiliser washed in: nutrients, algal bloom, decomposition, oxygen crash, fish deaths.', go: function () { document.querySelector('[data-e="eut"]').click(); slide('e-s', 8)(); }, cs: 'D4.2.7' },
+      { n: 'Biomagnification', s: 'Switch to DDT in a food chain: the concentration rises at each trophic level.', go: ['[data-e="bio"]'], q: { q: 'Why are top predators most affected by persistent pollutants such as DDT?', o: ['They drink more water', 'Each eats many prey and stores the pollutant in fat, so concentration increases up the food chain', 'They are more sensitive to pesticides'], a: 1, why: 'Persistent, fat-soluble chemicals are not excreted, so they accumulate at each step.' }, cs: 'D4.2.8' }
+    ] },
+    rew: { n: 'Plastics and rewilding', tab: '#t-rew', steps: [
+      { n: 'Plastics', s: 'Macroplastics harm animals directly; microplastics spread through food webs.', go: ['[data-r="plastic"]'], cs: 'D4.2.9' },
+      { n: 'Rewilding', s: 'Return wolves to Yellowstone and move the slider through 25 years.', go: function () { document.querySelector('[data-r="wolf"]').click(); slide('r-s', 20)(); }, q: { q: 'What is rewilding?', o: ['Planting crops in wild areas', 'Restoring natural processes, for example by reintroducing lost species, and then letting nature manage itself', 'Building zoos'], a: 1, why: 'Rewilding aims to restore self-sustaining ecosystems.' }, cs: 'D4.2.10' }
+    ] }
+  } };
+})();
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

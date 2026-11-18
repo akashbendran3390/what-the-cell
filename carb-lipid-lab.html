@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Carbohydrate and Lipid Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/carb-lipid-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Carbohydrate and Lipid Lab">
+<meta property="og:description" content="Carbohydrate and Lipid Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/carb-lipid-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Carbohydrate and Lipid Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#15120c; --ink:#f8f4ec; --dim:#d1c6b1; --panel:#211c13; --panel2:#2c2519; --line:rgba(240,220,180,.2);
+  --accent:#f2b134; --glc:#ffd166; --fat:#e9c46a; --ph:#4895ef;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2a1a00}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#0e0b06}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2a1a00;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.big{font:800 28px var(--display)}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}table.t td,table.t th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:top}table.t th{color:var(--accent)}
+.lab-l{font-size:13px;color:var(--dim);min-width:96px}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Carbohydrate and Lipid Lab</h1><div class="sub">DP Biology B1.1 &middot; simplified diagrams; melting points are approximate</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Building with carbon</h2>
+    <p>Carbon can form four covalent bonds, so it builds chains, branches and rings: the backbones of all the molecules of life. In this lab you join sugars into polymers and break them apart again, compare starch, glycogen and cellulose, build fats and oils, and see how sugars on the cell surface let cells recognise each other.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-cond" aria-pressed="true">1. Building polymers</button><button type="button" id="t-poly" aria-pressed="false">2. Glucose polymers</button><button type="button" id="t-lip" aria-pressed="false">3. Lipids</button><button type="button" id="t-gp" aria-pressed="false">4. Glycoproteins</button></div>
+
+    <div class="grid" id="p-cond">
+      <div class="card"><canvas class="plot" id="c-cond" width="900" height="460" aria-label="Glucose units joined in a chain, with water molecules"></canvas>
+        <div class="row"><button type="button" class="btn" id="k-add">Add a glucose (condensation)</button><button type="button" class="btn" id="k-hyd">Break one bond (hydrolysis)</button><button type="button" class="btn" id="k-reset">Start again</button><button type="button" class="btn" id="k-carbon" aria-pressed="false">Show carbon skeletons</button></div></div>
+      <div><div class="card"><h2>Count</h2><div class="stat"><span>Glucose units</span><b id="k-n">1</b><span>Glycosidic bonds</span><b id="k-b">0</b><span>Water released (condensation)</span><b id="k-w">0</b><span>Water used (hydrolysis)</span><b id="k-u">0</b></div><div class="explain" style="margin-top:8px"><p id="k-say"></p></div><p class="note">Syllabus: B1.1.1, B1.1.2, B1.1.3, B1.1.4</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks"><li>Join 5 glucose units. How many water molecules were released? Write a rule.</li><li>Digest the chain. How many water molecules are needed to break it all down?</li><li>Show the carbon skeletons. Why can carbon build so many different molecules?</li></ol></div></div>
+    </div>
+
+    <div class="grid" id="p-poly" hidden>
+      <div class="card"><canvas class="plot" id="c-poly" width="900" height="480" aria-label="Structure of a glucose polymer"></canvas>
+        <div class="row" id="y-pick"><button type="button" class="btn" data-y="amylose" aria-pressed="true">Amylose (starch)</button><button type="button" class="btn" data-y="amylopectin" aria-pressed="false">Amylopectin (starch)</button><button type="button" class="btn" data-y="glycogen" aria-pressed="false">Glycogen</button><button type="button" class="btn" data-y="cellulose" aria-pressed="false">Cellulose</button></div></div>
+      <div><div class="card"><h2 id="y-name">Amylose</h2><table class="t" id="y-tab"></table><div class="explain" style="margin-top:8px"><p id="y-say"></p></div><p class="note">Syllabus: B1.1.4, B1.1.5, B1.1.6</p></div></div>
+    </div>
+
+    <div class="grid" id="p-lip" hidden>
+      <div class="card"><canvas class="plot" id="c-lip" width="900" height="480" aria-label="A triglyceride or phospholipid built from glycerol and fatty acids"></canvas>
+        <div class="row"><span class="lab-l">Molecule</span><div class="seg" id="l-mol"><button type="button" data-m="tri" aria-pressed="true">Triglyceride</button><button type="button" data-m="phos" aria-pressed="false">Phospholipid</button><button type="button" data-m="ster" aria-pressed="false">Steroid</button></div></div>
+        <div class="row" id="l-fa"><span class="lab-l">Fatty acids</span></div>
+        <div class="row"><button type="button" class="btn" data-preset="butter">Like butter</button><button type="button" class="btn" data-preset="olive">Like olive oil</button><button type="button" class="btn" data-preset="sunflower">Like sunflower oil</button></div></div>
+      <div><div class="card"><h2>Properties</h2><div class="stat"><span>Approximate melting point</span><b id="l-mp">-</b><span>At room temperature (20 &deg;C)</span><b id="l-state">-</b><span>Water released when it was made</span><b id="l-w">3</b></div><div class="explain" style="margin-top:8px"><p id="l-say"></p></div><p class="note">Syllabus: B1.1.8 to B1.1.13</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks"><li>Build a triglyceride with three saturated fatty acids, then swap in unsaturated ones. What happens to the melting point, and why?</li><li>Why do triglycerides make a good energy store in adipose tissue?</li><li>Switch to a phospholipid. Which part is hydrophilic? Why do phospholipids form a bilayer in water?</li><li>Why can steroid hormones pass straight through a membrane?</li></ol></div></div>
+    </div>
+
+    <div class="grid" id="p-gp" hidden>
+      <div class="card"><canvas class="plot" id="c-gp" width="900" height="460" aria-label="Glycoproteins on the surface of a red blood cell"></canvas>
+        <div class="row" id="g-pick"><button type="button" class="btn" data-g="O" aria-pressed="true">Group O</button><button type="button" class="btn" data-g="A" aria-pressed="false">Group A</button><button type="button" class="btn" data-g="B" aria-pressed="false">Group B</button><button type="button" class="btn" data-g="AB" aria-pressed="false">Group AB</button><button type="button" class="btn" id="g-ab" aria-pressed="false">Add anti-A antibodies</button></div></div>
+      <div><div class="card"><h2>Cell recognition</h2><div class="explain"><p id="g-say"></p></div><p class="note">Syllabus: B1.1.7</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+let tab='cond', last=0;
+function hex(x,c,cx,cy,r,fill,stroke,label){ c.beginPath(); for(let i=0;i<6;i++){ const a=Math.PI/6+i*Math.PI/3; c.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a)); } c.closePath(); c.fillStyle=fill; c.fill(); c.strokeStyle=stroke||'#fff'; c.lineWidth=2; c.stroke(); if(label){ c.fillStyle='#2a1a00'; c.font='bold 14px sans-serif'; c.fillText(label,cx-c.measureText(label).width/2,cy+5); } }
+// 1 CONDENSATION ------------------------------------------------------------
+let chain=1, bonds=0, wOut=0, wIn=0, waters=[], carbon=false;
+function drawCond(){ const c=$('c-cond'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  if(carbon){ x.fillStyle='#d1c6b1'; x.fillText('Carbon forms four covalent bonds: chains, branches and rings',30,30);
+    const C=(cx,cy)=>{ x.fillStyle='#555'; x.beginPath(); x.arc(cx,cy,12,0,7); x.fill(); x.fillStyle='#fff'; x.font='bold 12px sans-serif'; x.fillText('C',cx-4,cy+4); };
+    x.strokeStyle='#aaa'; x.lineWidth=4; const chainP=[[80,120],[140,90],[200,120],[260,90],[320,120],[380,90]]; x.beginPath(); chainP.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])); x.stroke(); chainP.forEach(p=>C(p[0],p[1])); x.fillStyle='#d1c6b1'; x.font='15px sans-serif'; x.fillText('chain (fatty acid)',150,160);
+    const br=[[480,120],[540,90],[600,120],[540,40],[660,90]]; x.beginPath(); x.moveTo(480,120); x.lineTo(540,90); x.lineTo(600,120); x.lineTo(660,90); x.moveTo(540,90); x.lineTo(540,40); x.stroke(); br.forEach(p=>C(p[0],p[1])); x.fillStyle='#d1c6b1'; x.fillText('branch',540,160);
+    hex(x,x,780,105,45,'rgba(255,209,102,.25)','#ffd166'); for(let i=0;i<5;i++){ const a=Math.PI/6+i*Math.PI/3; C(780+45*Math.cos(a),105+45*Math.sin(a)); } x.fillStyle='#d1c6b1'; x.fillText('ring (glucose)',730,175); }
+  const y=carbon?300:220, n=chain, gap=Math.min(120,760/Math.max(1,n)); for(let i=0;i<n;i++){ const cx=80+i*gap; hex(x,x,cx,y,Math.min(42,gap*0.38),'#ffd166','#fff','Glc'); if(i>0){ x.strokeStyle='#f2b134'; x.lineWidth=4; x.beginPath(); x.moveTo(cx-gap+Math.min(42,gap*0.38),y); x.lineTo(cx-Math.min(42,gap*0.38),y); x.stroke(); x.fillStyle='#f2b134'; x.font='bold 13px sans-serif'; x.fillText('O',cx-gap/2-4,y-8); } }
+  waters.forEach(w=>{ const k=Math.min(1,(last-w.t)/1.5); const wx=w.x, wy=w.out?y+60+k*90:y+150-k*90; x.globalAlpha=w.out?1:1-k*0.7; x.fillStyle='#e63946'; x.beginPath(); x.arc(wx,wy,10,0,7); x.fill(); x.fillStyle='#fff'; [[-12,-8],[12,-8]].forEach(([dx,dy])=>{ x.beginPath(); x.arc(wx+dx,wy+dy,6,0,7); x.fill(); }); x.globalAlpha=1; });
+  x.fillStyle='#d1c6b1'; x.font='15px sans-serif'; x.fillText('H2O',30,y+200); }
+function sayCond(){ $('k-n').textContent=chain; $('k-b').textContent=bonds; $('k-w').textContent=wOut; $('k-u').textContent=wIn;
+  $('k-say').textContent=chain===1?'One glucose molecule: a monosaccharide with 6 carbon atoms (C6H12O6). It is soluble and easily transported, and is the main fuel for respiration.':
+    'Each time two units join, an -OH from one and an -H from the other leave as a water molecule, and a glycosidic bond (an oxygen bridge) forms: condensation. A chain of n units has n - 1 bonds, so n - 1 water molecules were released. Hydrolysis is the reverse: water is added to break each bond, as digestive enzymes such as amylase do.'; }
+$('k-add').onclick=()=>{ if(chain>=12) return; chain++; bonds++; wOut++; waters.push({x:80+(chain-1)*Math.min(120,760/chain)-30,t:last,out:true}); sayCond(); };
+$('k-hyd').onclick=()=>{ if(chain<=1) return; chain--; bonds--; wIn++; waters.push({x:120+chain*30,t:last,out:false}); sayCond(); };
+$('k-reset').onclick=()=>{ chain=1; bonds=0; wOut=0; wIn=0; waters=[]; sayCond(); };
+$('k-carbon').onclick=()=>{ carbon=!carbon; $('k-carbon').setAttribute('aria-pressed',carbon); };
+// 2 POLYMERS -----------------------------------------------------------------
+const POLY={amylose:{n:'Amylose (part of starch)',rows:[['Monomer','alpha-glucose'],['Bonds','1,4 glycosidic only'],['Shape','Unbranched chain that coils into a helix'],['Role','Energy store in plants'],['Where','Starch grains in chloroplasts, seeds, tubers']],say:'Alpha-glucose units joined by 1,4 bonds coil into a compact helix. Being large and insoluble, starch does not affect the water potential of the cell, so it is a good store.'},
+  amylopectin:{n:'Amylopectin (part of starch)',rows:[['Monomer','alpha-glucose'],['Bonds','1,4 plus 1,6 at branches'],['Shape','Branched about every 20 to 30 units'],['Role','Energy store in plants'],['Where','Starch grains']],say:'Branches mean many chain ends, where enzymes can add or remove glucose quickly.'},
+  glycogen:{n:'Glycogen',rows:[['Monomer','alpha-glucose'],['Bonds','1,4 plus 1,6 at branches'],['Shape','Very highly branched (every 8 to 12 units), compact'],['Role','Energy store in animals and fungi'],['Where','Liver and muscle cells']],say:'Glycogen is even more branched than amylopectin, so it can be broken down to glucose very fast when blood glucose falls or muscles need fuel.'},
+  cellulose:{n:'Cellulose',rows:[['Monomer','beta-glucose'],['Bonds','1,4, with alternate units flipped'],['Shape','Straight chains held side by side by hydrogen bonds'],['Role','Strength in plant cell walls'],['Where','Plant cell walls']],say:'In beta-glucose the -OH on carbon 1 points up, so every other unit is turned over. The chains stay straight and lie parallel, linked by many hydrogen bonds into microfibrils with great tensile strength, which let the wall resist turgor pressure.'}};
+let poly='amylose';
+function drawPoly(){ const c=$('c-poly'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif'; const P=poly;
+  // monomer inset
+  const beta=P==='cellulose'; hex(x,x,90,90,46,'rgba(255,209,102,.3)','#ffd166'); x.fillStyle='#fff'; x.fillText(beta?'beta-glucose':'alpha-glucose',40,170); x.strokeStyle='#e63946'; x.lineWidth=3; x.beginPath(); x.moveTo(130,113); x.lineTo(150,beta?75:150); x.stroke(); x.fillStyle='#e63946'; x.fillText('OH on C1 '+(beta?'up':'down'),150,beta?68:165);
+  const col='#ffd166', s=10; const dot=(px,py)=>{ x.fillStyle=col; x.beginPath(); x.arc(px,py,s/2+1,0,7); x.fill(); };
+  if(P==='amylose'){ for(let i=0;i<60;i++){ const t=i*0.5; dot(280+i*10, 260+Math.sin(t)*50); } x.fillStyle='#fff'; x.fillText('unbranched chain, coiled into a helix',300,360); }
+  if(P==='amylopectin'||P==='glycogen'){ const every=P==='glycogen'?9:24; function br(px,py,a,depth,len){ for(let i=0;i<len;i++){ px+=Math.cos(a)*11; py+=Math.sin(a)*11; dot(px,py); if(i>3&&i%every===every-1&&depth<(P==='glycogen'?5:3)){ br(px,py,a+(i%2?0.7:-0.7),depth+1,Math.floor(len*0.7)); } } } br(270,260,0,0,P==='glycogen'?36:56); x.fillStyle='#fff'; x.fillText(P==='glycogen'?'very highly branched (1,6 bonds at branch points)':'branched (1,6 bonds at branch points)',280,440); }
+  if(P==='cellulose'){ for(let r=0;r<6;r++){ for(let i=0;i<50;i++){ x.fillStyle=i%2?'#f2b134':col; x.beginPath(); x.arc(280+i*11,210+r*26,6,0,7); x.fill(); } if(r<5){ x.strokeStyle='rgba(91,192,235,.7)'; x.setLineDash([3,4]); for(let i=0;i<50;i+=3){ x.beginPath(); x.moveTo(280+i*11,216+r*26); x.lineTo(280+i*11,230+r*26); x.stroke(); } x.setLineDash([]); } } x.fillStyle='#fff'; x.fillText('straight parallel chains; dashed = hydrogen bonds (microfibril)',280,400); }
+  $('y-name').textContent=POLY[P].n; $('y-tab').innerHTML=POLY[P].rows.map(r=>'<tr><th>'+r[0]+'</th><td>'+r[1]+'</td></tr>').join(''); $('y-say').textContent=POLY[P].say; }
+document.querySelectorAll('#y-pick button').forEach(b=>b.onclick=()=>{ poly=b.dataset.y; document.querySelectorAll('#y-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); drawPoly(); });
+// 3 LIPIDS ---------------------------------------------------------------------
+const FA={sat:{n:'Saturated',mp:70,col:'#e9c46a'},mono:{n:'Monounsaturated',mp:13,col:'#90be6d'},poly:{n:'Polyunsaturated',mp:-5,col:'#43aa8b'}}; let fas=['sat','sat','sat'], mol='tri';
+function faRow(){ const r=$('l-fa'); r.innerHTML='<span class="lab-l">Fatty acids</span>'; const n=mol==='tri'?3:mol==='phos'?2:0; for(let i=0;i<n;i++){ const s=document.createElement('select'); s.setAttribute('aria-label','Fatty acid '+(i+1)); Object.keys(FA).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=FA[k].n; if(fas[i]===k) o.selected=true; s.appendChild(o); }); s.onchange=()=>{ fas[i]=s.value; drawLip(); }; r.appendChild(s); } if(!n){ const sp=document.createElement('span'); sp.className='note'; sp.textContent='Steroids have four fused carbon rings and no fatty acids.'; r.appendChild(sp); } }
+function tail(x,x0,y0,type,len){ x.strokeStyle=FA[type].col; x.lineWidth=6; x.beginPath(); let px=x0, py=y0; x.moveTo(px,py); const kinks=type==='sat'?[]:type==='mono'?[7]:[6,9]; let ang=0; for(let i=0;i<len;i++){ if(kinks.includes(i)) ang+=0.5; px+=Math.cos(ang)*26; py+=Math.sin(ang)*26+(i%2?6:-6); x.lineTo(px,py); } x.stroke(); kinks.forEach((k,j)=>{ x.fillStyle='#fff'; x.font='bold 13px sans-serif'; x.fillText('C=C',x0+k*26-10,y0-12+j*10); }); }
+function drawLip(){ const c=$('c-lip'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  if(mol==='ster'){ const R=(cx,cy)=>hex(x,x,cx,cy,44,'rgba(233,196,106,.35)','#e9c46a'); R(300,240); R(376,240); R(452,240); x.beginPath(); for(let i=0;i<5;i++){ const a=-Math.PI/2+i*2*Math.PI/5; x.lineTo(530+40*Math.cos(a),232+40*Math.sin(a)); } x.closePath(); x.fillStyle='rgba(233,196,106,.35)'; x.fill(); x.strokeStyle='#e9c46a'; x.stroke(); x.fillStyle='#fff'; x.fillText('Four fused rings: almost entirely non-polar (hydrophobic)',190,350); x.fillText('e.g. cholesterol, oestradiol, testosterone',250,380);
+    x.fillStyle='#4895ef'; for(let i=0;i<14;i++){ x.beginPath(); x.arc(120+i*50,100,9,0,7); x.fill(); x.beginPath(); x.arc(120+i*50,170,9,0,7); x.fill(); } x.fillStyle='#d1c6b1'; x.fillText('membrane',30,140); x.fillText('passes straight through the hydrophobic core',540,140); }
+  else { x.fillStyle='#b5838d'; x.fillRect(90,120,70,220); x.fillStyle='#fff'; x.fillText('glycerol',92,110); const n=mol==='tri'?3:2;
+    for(let i=0;i<n;i++){ const y=150+i*80; x.fillStyle='#f2b134'; x.font='bold 13px sans-serif'; x.fillText('ester',165,y-8); x.strokeStyle='#f2b134'; x.lineWidth=4; x.beginPath(); x.moveTo(160,y); x.lineTo(200,y); x.stroke(); tail(x,200,y,fas[i],18); }
+    if(mol==='phos'){ x.fillStyle='#4895ef'; x.beginPath(); x.arc(125,370,34,0,7); x.fill(); x.fillStyle='#fff'; x.font='bold 15px sans-serif'; x.fillText('phosphate',88,425); x.fillText('Hydrophilic head',40,460); x.fillText('Hydrophobic tails',560,460); } }
+  // properties
+  if(mol==='ster'){ $('l-mp').textContent='(not relevant)'; $('l-state').textContent='-'; $('l-w').textContent='-'; $('l-say').textContent='Steroids are lipids because they are hydrophobic, not because they contain fatty acids. Being non-polar, steroid hormones can diffuse straight through the phospholipid bilayer and bind receptors inside target cells.'; return; }
+  const list=mol==='tri'?fas:fas.slice(0,2), ns=list.filter(k=>k==='sat').length, np=list.filter(k=>k==='poly').length; const mp=Math.round((mol==='tri'?[5,18,40,72][ns]:[-17,20,55][ns])-8*np); /* approximate: tristearin 72, triolein 5; DSPC 55, DOPC -17 */ $('l-mp').textContent=mp+' °C'; $('l-state').textContent=mp>20?'Solid (a fat)':'Liquid (an oil)'; $('l-w').textContent=mol==='tri'?3:2+' (plus the phosphate link)';
+  $('l-say').textContent=mol==='tri'?'Each fatty acid joins glycerol by a condensation reaction, forming an ester bond and releasing water. Saturated fatty acids have only single C-C bonds and straight tails that pack tightly, so the fat is solid at room temperature. Each C=C double bond in an unsaturated fatty acid puts a kink in the tail, so they pack loosely and the oil is liquid. Triglycerides store about twice as much energy per gram as carbohydrates, are insoluble so they do not affect osmosis, and in adipose tissue under the skin they also insulate the body.':
+    'In a phospholipid one fatty acid is replaced by a phosphate group. The phosphate head is hydrophilic and the two tails are hydrophobic: the molecule is amphipathic. In water, phospholipids arrange themselves into a bilayer with heads facing the water on both sides and tails hidden inside.'; }
+document.querySelectorAll('#l-mol button').forEach(b=>b.onclick=()=>{ mol=b.dataset.m; document.querySelectorAll('#l-mol button').forEach(o=>o.setAttribute('aria-pressed',o===b)); faRow(); drawLip(); });
+const PRE={butter:['sat','sat','mono'],olive:['mono','mono','sat'],sunflower:['poly','poly','mono']};
+document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{ fas=PRE[b.dataset.preset].slice(); mol='tri'; document.querySelectorAll('#l-mol button').forEach(o=>o.setAttribute('aria-pressed',o.dataset.m==='tri')); faRow(); drawLip(); });
+// 4 GLYCOPROTEINS -------------------------------------------------------------
+let grp='O', anti=false;
+function drawGp(){ const c=$('c-gp'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif';
+  x.fillStyle='rgba(193,18,31,.5)'; x.fillRect(0,330,900,130); x.fillStyle='#4895ef'; for(let i=0;i<45;i++){ x.beginPath(); x.arc(10+i*20,330,7,0,7); x.fill(); } x.fillStyle='#fff'; x.fillText('Red blood cell membrane',20,440);
+  const ends=grp==='AB'?['A','B','A','B','A']:[grp,grp,grp,grp,grp];
+  ends.forEach((e,i)=>{ const px=110+i*170; x.fillStyle='#6c757d'; x.fillRect(px-10,290,20,60); const sug=[['#ffd166',260],['#90be6d',230],['#e9c46a',200]]; sug.forEach(([col,y])=>{ x.fillStyle=col; x.beginPath(); x.arc(px,y,13,0,7); x.fill(); });
+    x.strokeStyle='#fff'; x.lineWidth=2; x.beginPath(); x.moveTo(px,290); x.lineTo(px,200); x.stroke(); x.fillStyle='#e76f51'; x.beginPath(); x.arc(px+18,190,10,0,7); x.fill();
+    if(e==='A'){ x.fillStyle='#9d4edd'; x.fillRect(px-12,155,24,24); } if(e==='B'){ x.fillStyle='#00b4d8'; x.beginPath(); x.arc(px,166,13,0,7); x.fill(); }
+    if(anti&&e==='A'||anti&&grp==='AB'&&e==='A'){ x.strokeStyle='#f2b134'; x.lineWidth=5; x.beginPath(); x.moveTo(px,150); x.lineTo(px-14,120); x.moveTo(px,150); x.lineTo(px+14,120); x.moveTo(px,150); x.lineTo(px,95); x.stroke(); } });
+  x.fillStyle='#9d4edd'; x.fillRect(20,20,18,18); x.fillStyle='#fff'; x.fillText('extra sugar on antigen A',46,34); x.fillStyle='#00b4d8'; x.beginPath(); x.arc(29,62,9,0,7); x.fill(); x.fillStyle='#fff'; x.fillText('extra sugar on antigen B',46,67); x.fillStyle='#6c757d'; x.fillRect(320,22,16,16); x.fillStyle='#fff'; x.fillText('protein (glycoprotein) or lipid anchor',344,35); if(anti) { x.fillStyle='#f2b134'; x.fillText('anti-A antibody binds only where antigen A is present',320,67); }
+  $('g-say').textContent='Glycoproteins are proteins with carbohydrate chains attached; the chains stick out from the cell surface where other cells and antibodies can detect them. The ABO blood group antigens differ only in the last sugar: group O has the basic chain, A adds one sugar, B adds a different one, AB has both. '+(anti?(grp==='A'||grp==='AB'?'Anti-A antibodies bind these cells: the immune system recognises the A antigen as foreign if the person is group B or O.':'Anti-A antibodies find no A antigen to bind here.'):'Cell recognition like this lets the immune system tell self from non-self, and lets cells in a tissue recognise each other.'); }
+document.querySelectorAll('#g-pick [data-g]').forEach(b=>b.onclick=()=>{ grp=b.dataset.g; document.querySelectorAll('#g-pick [data-g]').forEach(o=>o.setAttribute('aria-pressed',o===b)); drawGp(); });
+$('g-ab').onclick=()=>{ anti=!anti; $('g-ab').setAttribute('aria-pressed',anti); drawGp(); };
+// loop, tabs -------------------------------------------------------------------
+function frame(now){ last=now/1000; try{ if(!$('lab').hidden&&tab==='cond') drawCond(); }catch(e){ console.error(e); } requestAnimationFrame(frame); }
+const TABS=['cond','poly','lip','gp'];
+function showTab(k){ tab=k; TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); if(k==='poly') drawPoly(); if(k==='lip'){ faRow(); drawLip(); } if(k==='gp') drawGp(); if(k==='cond'){ sayCond(); drawCond(); } }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; showTab(tab); }
+$('b-start').onclick=start; setLevel(level); requestAnimationFrame(frame);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.carbDebug={ showTab, start, state:()=>({chain,bonds,wOut,wIn,poly,fas,mol,grp,anti}), mp:()=>$('l-mp').textContent };
+})();
+</script>
+
+<script>
+window.LAB_GUIDE = { title: 'Carbohydrate and Lipid Lab: step by step', sections: {
+  cond: { n: 'Building polymers', tab: '#t-cond', steps: [
+    { n: 'Carbon, the backbone', s: 'Show the carbon skeletons. Each carbon atom forms four covalent bonds, so carbon can build chains, branches and rings of almost any size: the basis of the huge variety of biological molecules.', go: ['#k-carbon'], cs: 'B1.1.1' },
+    { n: 'Condensation', s: 'Add glucose units. Each new **glycosidic bond** releases one water molecule: **condensation**. Monomers join into polymers this way.', go: ['#k-reset', '#k-add', '#k-add', '#k-add'], cs: 'B1.1.2' },
+    { n: 'Hydrolysis', s: 'Break bonds. Each one needs a water molecule: **hydrolysis**, as in digestion by enzymes such as amylase.', go: ['#k-hyd'], q: { q: 'How many water molecules are released when 10 glucose molecules join into a chain?', o: ['10', '9', '11'], a: 1, why: 'A chain of n units has n - 1 bonds, each releasing one water molecule.' }, cs: 'B1.1.3' },
+    { n: 'Monosaccharides', s: 'Glucose is a **monosaccharide**: small, soluble and easily transported, and the main substrate for respiration. Others include fructose, galactose and ribose.', cs: 'B1.1.4' }
+  ] },
+  poly: { n: 'Glucose polymers', tab: '#t-poly', steps: [
+    { n: 'Starch: amylose', s: 'Alpha-glucose joined by 1,4 bonds coils into a helix: compact and insoluble.', go: ['[data-y="amylose"]'], cs: 'B1.1.5' },
+    { n: 'Branched stores', s: 'Amylopectin and glycogen also have 1,6 bonds at branch points. Many branch ends mean glucose can be added or removed quickly. Glycogen is the most branched.', go: ['[data-y="glycogen"]'], cs: 'B1.1.5' },
+    { n: 'Cellulose', s: 'Beta-glucose units, alternately flipped, make straight chains linked by hydrogen bonds into strong microfibrils.', go: ['[data-y="cellulose"]'], q: { q: 'Why is cellulose suited to making cell walls?', o: ['It is branched and soluble', 'Straight beta-glucose chains form hydrogen bonds with each other, making strong microfibrils', 'It stores energy'], a: 1, why: 'Many hydrogen bonds between parallel chains give great tensile strength.' }, cs: 'B1.1.6' }
+  ] },
+  lip: { n: 'Lipids', tab: '#t-lip', steps: [
+    { n: 'Why lipids are hydrophobic', s: 'Lipids are mostly hydrocarbon chains with few polar groups, so they do not form hydrogen bonds with water and do not dissolve.', cs: 'B1.1.8' },
+    { n: 'Making a triglyceride', s: 'Glycerol plus three fatty acids, joined by three condensation reactions (three water released), forming ester bonds.', go: ['[data-preset="butter"]'], cs: 'B1.1.9' },
+    { n: 'Saturated and unsaturated', s: 'Compare butter-like and sunflower-like fats. Double bonds put kinks in the tails, so they pack loosely: lower melting point, liquid oil.', go: ['[data-preset="sunflower"]'], q: { q: 'Why are fats with mostly unsaturated fatty acids liquid at room temperature?', o: ['They have more carbon', 'Kinks from C=C double bonds stop the tails packing closely', 'They contain phosphate'], a: 1, why: 'Loose packing means weaker attractions between molecules, so a lower melting point.' }, cs: 'B1.1.10' },
+    { n: 'Energy store and insulation', s: 'Triglycerides in adipose tissue store about twice the energy per gram of carbohydrate, are insoluble, and insulate the body.', cs: 'B1.1.11' },
+    { n: 'Phospholipids and steroids', s: 'Switch to a phospholipid (amphipathic: forms bilayers), then a steroid (non-polar rings: crosses membranes).', go: ['[data-m="phos"]'], cs: 'B1.1.12, B1.1.13' }
+  ] },
+  gp: { n: 'Glycoproteins', tab: '#t-gp', steps: [
+    { n: 'Sugars on the surface', s: 'Glycoproteins carry carbohydrate chains on the outer surface of the membrane. The ABO antigens differ only in their last sugar.', go: ['[data-g="A"]'], cs: 'B1.1.7' },
+    { n: 'Recognition', s: 'Add anti-A antibodies: they bind only cells with antigen A. Surface carbohydrates let cells recognise self and non-self.', go: ['#g-ab'], q: { q: 'What makes group A and group B red blood cells different?', o: ['Different haemoglobin', 'A different sugar at the end of the glycoprotein chains on the cell surface', 'Different membranes'], a: 1, why: 'The A and B antigens differ only in the terminal sugar of the carbohydrate chain.' }, cs: 'B1.1.7' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

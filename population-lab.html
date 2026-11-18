@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Population Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/population-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Population Lab">
+<meta property="og:description" content="Population Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/population-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Population Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0f1214; --ink:#eef3f5; --dim:#b9c7cd; --panel:#172026; --panel2:#1f2b33; --line:rgba(190,220,235,.2);
+  --accent:#ffb703;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2a1d00}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#0a0d0f}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2a1d00;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.ok{background:rgba(82,183,136,.45)!important}button.no{background:rgba(239,71,111,.4)!important}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:8px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+table.t{border-collapse:collapse;font-size:14px}table.t td,table.t th{border:1px solid var(--line);padding:6px 10px;text-align:center}table.t th{color:var(--accent)}
+.cardq{font:700 19px var(--display);margin:6px 0}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Population Lab</h1><div class="sub">DP Biology C4.1 &middot; simulations with invented but realistic numbers</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Counting, growing, eating and being eaten</h2>
+    <p>A population is all the members of one species in an area. Estimate the size of a population you cannot count, watch a population grow to its carrying capacity, run predators and prey together, sort the relationships between species, and test whether two species are found together more than chance would predict.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-cmr" aria-pressed="true">1. Mark and recapture</button><button type="button" id="t-grow" aria-pressed="false">2. Population growth</button><button type="button" id="t-pp" aria-pressed="false">3. Predator and prey</button><button type="button" id="t-rel" aria-pressed="false">4. Relationships</button><button type="button" id="t-chi" aria-pressed="false">5. Chi-squared</button></div>
+
+    <div class="grid" id="p-cmr">
+      <div class="card"><canvas class="plot" id="c-cmr" width="900" height="460" aria-label="Woodland floor with beetles, some marked"></canvas>
+        <div class="row"><button type="button" class="btn" id="m-cap1">1. Capture and mark</button><button type="button" class="btn" id="m-rel" disabled>2. Release and wait</button><button type="button" class="btn" id="m-cap2" disabled>3. Recapture</button><button type="button" class="btn" id="m-new">New population</button><button type="button" class="btn" id="m-reveal" disabled>Reveal the true number</button></div></div>
+      <div><div class="card"><h2>Lincoln index</h2><div class="stat"><span>Marked in first sample (M)</span><b id="m-M">-</b><span>Caught in second sample (N)</span><b id="m-N">-</b><span>Marked in second sample (R)</span><b id="m-R">-</b><span>Estimate = M x N / R</span><b id="m-est">-</b><span>True population</span><b id="m-true">?</b></div><div class="explain" style="margin-top:8px"><p id="m-say"></p></div><p class="note">Syllabus: C4.1.1, C4.1.2, C4.1.4</p></div></div>
+    </div>
+
+    <div class="grid" id="p-grow" hidden>
+      <div class="card"><canvas class="plot" id="c-grow" width="900" height="440" aria-label="Population size against time"></canvas>
+        <label class="sl">Carrying capacity (K) <b id="g-Kv">500</b><input type="range" id="g-K" min="100" max="900" value="500" step="50"></label>
+        <label class="sl">Growth rate when resources are plentiful <b id="g-rv">0.5</b><input type="range" id="g-r" min="0.1" max="1.2" value="0.5" step="0.05"></label>
+        <div class="row"><button type="button" class="btn" id="g-run">Run 30 generations</button><button type="button" class="btn" id="g-nolim" aria-pressed="false">No limits (exponential)</button><button type="button" class="btn" id="g-clear">Clear</button></div></div>
+      <div><div class="card"><h2>Phases</h2><div class="explain"><p id="g-say"></p></div><p class="note">Syllabus: C4.1.5 to C4.1.8</p></div></div>
+    </div>
+
+    <div class="grid" id="p-pp" hidden>
+      <div class="card"><canvas class="plot" id="c-pp" width="900" height="440" aria-label="Predator and prey populations over time"></canvas>
+        <label class="sl">Prey birth rate <b id="p-av">1.0</b><input type="range" id="p-a" min="0.4" max="1.6" value="1.0" step="0.1"></label>
+        <label class="sl">Plant food for the prey (bottom-up) <b id="p-fv">100%</b><input type="range" id="p-f" min="30" max="150" value="100" step="10"></label>
+        <div class="row"><button type="button" class="btn" id="p-run">Run 40 years</button><button type="button" class="btn" id="p-nopred" aria-pressed="false">Remove the predators</button></div></div>
+      <div><div class="card"><h2>What is happening</h2><div class="explain"><p id="p-say"></p></div><p class="note">Syllabus: C4.1.6, C4.1.16, C4.1.17</p></div></div>
+    </div>
+
+    <div class="grid" id="p-rel" hidden>
+      <div class="card"><h2>Which relationship is this?</h2><div class="cardq" id="r-q"></div><div class="row" id="r-opts"></div><div class="row"><button type="button" class="btn" id="r-next">Next</button><span class="note" id="r-score"></span></div><div class="explain"><p id="r-say"></p></div></div>
+      <div><div class="card"><h2>Kinds of interaction</h2><p><b>Competition</b>: both lose. <b>Predation</b> and <b>herbivory</b>: one eats the other. <b>Parasitism</b>: one benefits, the host is harmed. <b>Pathogenicity</b>: a pathogen causes disease. <b>Mutualism</b>: both benefit. Within a species, members both compete and cooperate.</p><p class="note">Syllabus: C4.1.9 to C4.1.14, C4.1.18</p></div></div>
+    </div>
+
+    <div class="grid" id="p-chi" hidden>
+      <div class="card"><canvas class="plot" id="c-chi" width="900" height="380" aria-label="Quadrats on a hillside with two plant species"></canvas>
+        <div class="row" id="x-pick"><button type="button" class="btn" data-x="assoc" aria-pressed="true">Heather and bilberry</button><button type="button" class="btn" data-x="random" aria-pressed="false">Daisy and moss</button><button type="button" class="btn" data-x="neg" aria-pressed="false">Rush and thyme</button></div>
+        <div class="row"><button type="button" class="btn" id="x-run">Place 100 random quadrats</button></div></div>
+      <div><div class="card"><h2>Contingency table</h2><div id="x-tab"></div><div class="stat" style="margin-top:8px"><span>Chi-squared</span><b id="x-chi">-</b><span>Critical value (1 degree of freedom, p = 0.05)</span><b>3.84</b></div><div class="explain" style="margin-top:8px"><p id="x-say"></p></div><p class="note">Syllabus: C4.1.15</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+const rnd=n=>Math.floor(Math.random()*n);
+// 1 MARK RECAPTURE ----------------------------------------------------------------
+let pop=[], trueN=0, M=0, Nn=0, R=0, stage=0, caught=[];
+function newPop(){ trueN=180+rnd(260); pop=[]; for(let i=0;i<trueN;i++) pop.push({x:20+Math.random()*860,y:20+Math.random()*420,m:false}); M=Nn=R=0; stage=0; caught=[]; ['m-M','m-N','m-R','m-est'].forEach(i=>$(i).textContent='-'); $('m-true').textContent='?'; $('m-rel').disabled=true; $('m-cap2').disabled=true; $('m-reveal').disabled=true; $('m-cap1').disabled=false; drawCmr(); sayCmr(); }
+function sample(k){ const idx=new Set(); while(idx.size<k) idx.add(rnd(pop.length)); return [...idx]; }
+function drawCmr(){ const c=$('c-cmr'), x=c.getContext('2d'); x.fillStyle='#2d2418'; x.fillRect(0,0,c.width,c.height); for(let i=0;i<80;i++){ x.fillStyle='rgba(120,90,50,.4)'; x.beginPath(); x.ellipse((i*137)%900,(i*251)%460,18,7,i,0,7); x.fill(); }
+  pop.forEach((b,i)=>{ const hl=caught.includes(i); x.fillStyle=b.m?'#ffb703':'#1b1b1b'; x.beginPath(); x.ellipse(b.x,b.y,6,4,0.4,0,7); x.fill(); if(b.m){ x.fillStyle='#fff'; x.fillRect(b.x-1,b.y-1,2,2); } if(hl){ x.strokeStyle='#5bc0eb'; x.lineWidth=2; x.beginPath(); x.arc(b.x,b.y,10,0,7); x.stroke(); } }); }
+$('m-cap1').onclick=()=>{ caught=sample(40+rnd(20)); caught.forEach(i=>pop[i].m=true); M=caught.length; $('m-M').textContent=M; stage=1; $('m-cap1').disabled=true; $('m-rel').disabled=false; drawCmr(); sayCmr(); };
+$('m-rel').onclick=()=>{ caught=[]; pop.forEach(b=>{ b.x=20+Math.random()*860; b.y=20+Math.random()*420; }); stage=2; $('m-rel').disabled=true; $('m-cap2').disabled=false; drawCmr(); sayCmr(); };
+$('m-cap2').onclick=()=>{ caught=sample(40+rnd(20)); Nn=caught.length; R=caught.filter(i=>pop[i].m).length; $('m-N').textContent=Nn; $('m-R').textContent=R; $('m-est').textContent=R?Math.round(M*Nn/R):'cannot calculate'; stage=3; $('m-cap2').disabled=true; $('m-reveal').disabled=false; drawCmr(); sayCmr(); };
+$('m-reveal').onclick=()=>{ $('m-true').textContent=trueN; stage=4; sayCmr(); };
+$('m-new').onclick=newPop;
+function sayCmr(){ $('m-say').textContent=['Beetles move about under logs and leaves, so you cannot count them all, and quadrats do not work for animals that move. Use capture-mark-release-recapture.','The beetles caught are marked with a small dot of paint that does not harm them or make them easier for predators to see.','They are released and given time to mix back into the population.','In the second sample, the proportion that are marked is assumed to equal the proportion of the whole population that was marked: R/N = M/population. So population = M x N / R.','Compare the estimate with the true number. Assumptions: marks are not lost, marked animals mix fully and are as likely to be caught, and no births, deaths or migration between samples. Repeat for a better estimate.'][stage]; }
+// 2 GROWTH --------------------------------------------------------------------------
+let runs=[], nolim=false;
+function drawGrow(){ const c=$('c-grow'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=60,B=400,Rr=880,T=20, X=t=>L+(Rr-L)*t/30, Y=v=>B-(B-T)*Math.min(v,1000)/1000;
+  x.strokeStyle='#b9c7cd'; x.lineWidth=2; x.beginPath(); x.moveTo(L,T); x.lineTo(L,B); x.lineTo(Rr,B); x.stroke(); x.fillStyle='#b9c7cd'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillText('Generations',440,430); for(let v=0;v<=1000;v+=200) x.fillText(v,20,Y(v)+5);
+  const K=+$('g-K').value; x.strokeStyle='rgba(255,183,3,.6)'; x.setLineDash([8,6]); x.beginPath(); x.moveTo(L,Y(K)); x.lineTo(Rr,Y(K)); x.stroke(); x.setLineDash([]); x.fillStyle='#ffb703'; x.fillText('carrying capacity K',Rr-160,Y(K)-8);
+  runs.forEach((r,k)=>{ x.strokeStyle=r.nolim?'#ef476f':['#8ecae6','#52b788','#c77dff','#f4a261'][k%4]; x.lineWidth=4; x.beginPath(); r.p.forEach((v,t)=>t?x.lineTo(X(t),Y(v)):x.moveTo(X(t),Y(v))); x.stroke(); });
+  if(runs.length&&!runs[runs.length-1].nolim){ x.fillStyle='#fff'; x.fillText('lag',X(1),Y(30)-14); x.fillText('exponential',X(9),Y(K*0.45)); x.fillText('transitional',X(15),Y(K*0.88)-12); x.fillText('plateau',X(24),Y(K)+22); } }
+$('g-run').onclick=()=>{ const K=+$('g-K').value, r=+$('g-r').value; let n=10; const p=[n]; for(let t=1;t<=30;t++){ n=nolim?n*(1+r):n+r*n*(1-n/K)+(Math.random()-0.5)*K*0.02; n=Math.max(1,n); p.push(n); } runs.push({p,nolim}); if(runs.length>4) runs.shift(); drawGrow(); sayGrow(); };
+$('g-nolim').onclick=()=>{ nolim=!nolim; $('g-nolim').setAttribute('aria-pressed',nolim); };
+$('g-clear').onclick=()=>{ runs=[]; drawGrow(); sayGrow(); };
+$('g-K').oninput=()=>{ $('g-Kv').textContent=$('g-K').value; drawGrow(); }; $('g-r').oninput=()=>{ $('g-rv').textContent=$('g-r').value; };
+function sayGrow(){ $('g-say').textContent=nolim&&runs.length?'With unlimited resources and no predators or disease, a population grows exponentially: it doubles again and again. This never lasts in nature.':'A population introduced to a new habitat grows in an S-shaped (sigmoid) curve. Lag phase: few individuals. Exponential phase: plenty of resources. Transitional phase: competition for food, space and other resources rises, and predation and disease increase. Plateau: births balance deaths at the carrying capacity, the largest population the environment can support. These density-dependent factors act as negative feedback: the bigger the population, the stronger their effect. You can model this with yeast or duckweed.'; }
+// 3 PREDATOR PREY ---------------------------------------------------------------------
+let nopred=false, ppData=null;
+function runPP(){ const a=+$('p-a').value, f=+$('p-f').value/100; let H=40, P=9; const h=[], p=[]; const Kp=200*f; for(let t=0;t<=4000;t++){ const dt=0.01; const dH=a*H*(1-H/Kp)-(nopred?0:0.05*H*P), dP=nopred?-P:0.02*H*P-0.6*P; H=Math.max(0.1,H+dH*dt); P=Math.max(nopred?0:0.05,P+dP*dt); if(t%10===0){ h.push(H); p.push(P); } } ppData={h,p}; drawPP(); }
+function drawPP(){ const c=$('c-pp'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=60,B=400,Rr=880,T=20; x.strokeStyle='#b9c7cd'; x.lineWidth=2; x.beginPath(); x.moveTo(L,T); x.lineTo(L,B); x.lineTo(Rr,B); x.stroke(); x.fillStyle='#b9c7cd'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillText('Years',440,430);
+  if(!ppData) return; const mx=Math.max(...ppData.h)*1.1, mp=Math.max(...ppData.p,1)*1.1; const X=i=>L+(Rr-L)*i/(ppData.h.length-1);
+  x.strokeStyle='#8ecae6'; x.lineWidth=4; x.beginPath(); ppData.h.forEach((v,i)=>i?x.lineTo(X(i),B-(B-T)*v/mx):x.moveTo(X(i),B-(B-T)*v/mx)); x.stroke(); x.strokeStyle='#ef476f'; x.beginPath(); ppData.p.forEach((v,i)=>i?x.lineTo(X(i),B-(B-T)*v/mp):x.moveTo(X(i),B-(B-T)*v/mp)); x.stroke();
+  x.fillStyle='#8ecae6'; x.fillText('prey (snowshoe hare)',L+10,T+16); x.fillStyle='#ef476f'; x.fillText('predator (lynx), own scale',L+200,T+16);
+  $('p-say').textContent=nopred?'Without predators, the prey population rises until it is limited by its food supply (bottom-up control) and stays near that level.':'When prey are plentiful, predators have more food and their numbers rise a little later. More predators eat more prey, so prey numbers fall; then predators starve and fall, and the prey recover. Predation is a density-dependent factor that controls the prey population (top-down control), while the food supply sets the limits from below (bottom-up control). The famous lynx and snowshoe hare cycles in Canadian fur records show this pattern.'; }
+$('p-run').onclick=runPP; $('p-nopred').onclick=()=>{ nopred=!nopred; $('p-nopred').setAttribute('aria-pressed',nopred); runPP(); };
+$('p-a').oninput=()=>{ $('p-av').textContent=(+$('p-a').value).toFixed(1); }; $('p-f').oninput=()=>{ $('p-fv').textContent=$('p-f').value+'%'; };
+// 4 RELATIONSHIPS ------------------------------------------------------------------------
+const RT=['Competition','Predation','Herbivory','Parasitism','Pathogenicity','Mutualism'];
+const RQ=[['Red squirrels and grey squirrels both eat seeds in British woodland',0,'Grey squirrels, an invasive species from North America, compete with the endemic red squirrel for food and have replaced it in most of Britain.'],['A tapeworm living in the gut of a pig',3,'The tapeworm absorbs food from the host, which is harmed but usually not killed.'],['Mycorrhizal fungi on the roots of an oak tree',5,'The fungus helps the tree absorb minerals and water; the tree gives the fungus sugars.'],['A cheetah chasing a gazelle',1,'The predator kills and eats its prey.'],['A deer eating young tree shoots',2,'Herbivory: the plant is eaten but often not killed.'],['The bacterium Mycobacterium tuberculosis in human lungs',4,'A pathogen causes disease in its host.'],['Zooxanthellae algae living inside coral polyps',5,'The algae photosynthesise and pass sugars to the coral; the coral gives shelter and CO2.'],['Black walnut roots releasing a chemical that stops other plants growing nearby',0,'This is allelopathy: a chemical form of competition. Some fungi and bacteria similarly release antibiotics that kill competitors.']];
+let ri=0, rS=0, rD=0, rA=false;
+function showRel(){ const q=RQ[ri%RQ.length]; $('r-q').textContent=q[0]; rA=false; const box=$('r-opts'); box.innerHTML=''; RT.forEach((t,i)=>{ const b=document.createElement('button'); b.type='button'; b.className='btn'; b.textContent=t; b.onclick=()=>{ if(rA) return; rA=true; rD++; if(i===q[1]) rS++; b.classList.add(i===q[1]?'ok':'no'); box.children[q[1]].classList.add('ok'); $('r-say').textContent=(i===q[1]?'Correct. ':'It is '+RT[q[1]].toLowerCase()+'. ')+q[2]; $('r-score').textContent=rS+' of '+rD+' correct'; }; box.appendChild(b); }); $('r-say').textContent='Choose the type of interaction.'; }
+$('r-next').onclick=()=>{ ri++; showRel(); };
+// 5 CHI-SQUARED ------------------------------------------------------------------------
+let mode='assoc', qd=[];
+function drawChi(){ const c=$('c-chi'), x=c.getContext('2d'); x.fillStyle='#3a5a40'; x.fillRect(0,0,c.width,c.height); qd.forEach(q=>{ x.strokeStyle='rgba(255,255,255,.6)'; x.strokeRect(q.x,q.y,26,26); if(q.a){ x.fillStyle='#c77dff'; x.fillRect(q.x+3,q.y+3,9,9); } if(q.b){ x.fillStyle='#4cc9f0'; x.fillRect(q.x+14,q.y+14,9,9); } });
+  x.fillStyle='#fff'; x.font='15px Atkinson Hyperlegible, sans-serif'; const N={assoc:['heather','bilberry'],random:['daisy','moss'],neg:['rush','thyme']}[mode]; x.fillStyle='#c77dff'; x.fillText('purple: '+N[0],10,370); x.fillStyle='#4cc9f0'; x.fillText('blue: '+N[1],200,370); }
+$('x-run').onclick=()=>{ qd=[]; for(let i=0;i<100;i++){ const wet=Math.random(); let a,b; if(mode==='assoc'){ const acid=Math.random()<0.5; a=Math.random()<(acid?0.8:0.15); b=Math.random()<(acid?0.75:0.12); } else if(mode==='random'){ a=Math.random()<0.45; b=Math.random()<0.4; } else { const w=wet<0.5; a=Math.random()<(w?0.7:0.15); b=Math.random()<(w?0.12:0.6); } qd.push({x:10+(i%25)*35,y:15+Math.floor(i/25)*85,a,b}); }
+  const o=[[0,0],[0,0]]; qd.forEach(q=>o[q.a?0:1][q.b?0:1]++); const n=100, ra=[o[0][0]+o[0][1],o[1][0]+o[1][1]], cb=[o[0][0]+o[1][0],o[0][1]+o[1][1]]; let chi=0; const e=[[0,0],[0,0]]; for(let i=0;i<2;i++) for(let j=0;j<2;j++){ e[i][j]=ra[i]*cb[j]/n; if(e[i][j]>0) chi+=Math.pow(o[i][j]-e[i][j],2)/e[i][j]; }
+  const N={assoc:['Heather','Bilberry'],random:['Daisy','Moss'],neg:['Rush','Thyme']}[mode];
+  $('x-tab').innerHTML='<table class="t"><tr><th></th><th>'+N[1]+' present</th><th>'+N[1]+' absent</th></tr><tr><th>'+N[0]+' present</th><td>'+o[0][0]+' ('+e[0][0].toFixed(1)+')</td><td>'+o[0][1]+' ('+e[0][1].toFixed(1)+')</td></tr><tr><th>'+N[0]+' absent</th><td>'+o[1][0]+' ('+e[1][0].toFixed(1)+')</td><td>'+o[1][1]+' ('+e[1][1].toFixed(1)+')</td></tr></table><p class="note">Observed (expected). Expected = row total x column total / grand total.</p>';
+  $('x-chi').textContent=chi.toFixed(2); const sig=chi>3.84, pos=o[0][0]>e[0][0];
+  $('x-say').textContent='Null hypothesis: the two species are distributed independently. '+(sig?'Chi-squared is greater than 3.84, so reject the null hypothesis: the species are '+(pos?'positively associated (found together more than expected), perhaps because both prefer the same conditions, such as acid soil.':'negatively associated (found together less than expected), perhaps because they need different conditions, such as wet and dry ground.'):'Chi-squared is less than 3.84, so the difference from the expected numbers could be due to chance: there is no significant association.'); drawChi(); };
+document.querySelectorAll('#x-pick button').forEach(b=>b.onclick=()=>{ mode=b.dataset.x; document.querySelectorAll('#x-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); qd=[]; drawChi(); $('x-tab').innerHTML=''; $('x-chi').textContent='-'; $('x-say').textContent='Place 100 random quadrats and record whether each species is present.'; });
+// tabs ---------------------------------------------------------------------------------
+const TABS=['cmr','grow','pp','rel','chi'];
+function showTab(k){ TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); if(k==='cmr') drawCmr(); if(k==='grow'){ drawGrow(); sayGrow(); } if(k==='pp'){ if(!ppData) runPP(); else drawPP(); } if(k==='chi') drawChi(); }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; newPop(); showRel(); showTab('cmr'); }
+$('b-start').onclick=start; setLevel(level);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.popDebug={ showTab, start, state:()=>({trueN,M,Nn,R,runs:runs.length,pp:!!ppData}) };
+})();
+</script>
+
+<script>
+window.LAB_GUIDE = { title: 'Population Lab: step by step', sections: {
+  cmr: { n: 'Mark and recapture', tab: '#t-cmr', steps: [
+    { n: 'Populations and samples', s: 'A **population** is all the members of one species living in the same area. Usually we cannot count them all, so we estimate from random samples.', go: ['#m-new'], cs: 'C4.1.1, C4.1.2' },
+    { n: 'Mark, release, recapture', s: 'Capture and mark, release, then recapture.', go: ['#m-cap1', '#m-rel', '#m-cap2'], cs: 'C4.1.4' },
+    { n: 'The Lincoln index', s: 'Population estimate = M x N / R. Reveal the true number and compare.', go: ['#m-reveal'], q: { q: 'A student marks 50 woodlice, then catches 40, of which 8 are marked. Estimate the population.', o: ['80', '250', '400'], a: 1, why: '50 x 40 / 8 = 250.' }, cs: 'C4.1.4' }
+  ] },
+  grow: { n: 'Growth', tab: '#t-grow', steps: [
+    { n: 'The sigmoid curve', s: 'Run the model: lag, exponential, transitional and plateau phases.', go: ['#g-clear', '#g-run'], cs: 'C4.1.7, C4.1.8' },
+    { n: 'Carrying capacity', s: 'Change K and run again. Competition for limited resources, predation and disease rise as the population grows: density-dependent factors, acting by negative feedback.', q: { q: 'Why does a population stop growing at the carrying capacity?', o: ['All individuals die of old age', 'Density-dependent factors such as competition make the death rate equal the birth rate', 'Mutations stop reproduction'], a: 1, why: 'At high density, scarce resources, predators and disease raise death rates and lower birth rates until they balance.' }, cs: 'C4.1.5, C4.1.6' }
+  ] },
+  pp: { n: 'Predator and prey', tab: '#t-pp', steps: [
+    { n: 'Cycles', s: 'Run predator and prey together. Predator numbers rise and fall after the prey numbers.', go: ['#p-run'], cs: 'C4.1.16' },
+    { n: 'Top-down and bottom-up', s: 'Remove the predators, or change the plant food. Predators control prey from the top down; resources limit from the bottom up.', go: ['#p-nopred'], cs: 'C4.1.17' }
+  ] },
+  rel: { n: 'Relationships', tab: '#t-rel', steps: [
+    { n: 'Sort the interactions', s: 'Decide which kind of interaction each example shows: competition, predation, herbivory, parasitism, pathogenicity or mutualism.', go: ['#r-next'], cs: 'C4.1.11, C4.1.12, C4.1.13, C4.1.18' }
+  ] },
+  chi: { n: 'Chi-squared', tab: '#t-chi', steps: [
+    { n: 'Testing for association', s: 'Place random quadrats and record presence and absence of two species. The chi-squared test compares observed and expected numbers.', go: ['[data-x="assoc"]', '#x-run'], cs: 'C4.1.15' },
+    { n: 'Interpreting the result', s: 'With 1 degree of freedom, a value above 3.84 means the association is significant at p = 0.05.', go: ['[data-x="random"]', '#x-run'], q: { q: 'Chi-squared for two plant species is 1.6 (critical value 3.84). What do you conclude?', o: ['They are positively associated', 'There is no significant association: the difference could be due to chance', 'They are negatively associated'], a: 1, why: '1.6 is below the critical value, so the null hypothesis of independence is not rejected.' }, cs: 'C4.1.15' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

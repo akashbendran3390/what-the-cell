@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Climate Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/climate-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Climate Lab">
+<meta property="og:description" content="Climate Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/climate-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Climate Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#130f10; --ink:#f7f0ef; --dim:#cfc1bf; --panel:#1f1819; --panel2:#2a2122; --line:rgba(240,200,195,.2);
+  --accent:#ff8c61;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#2b0c00}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#0d0a0a}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#2b0c00;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+label.sl{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13px;color:var(--dim);margin:8px 0}
+label.sl input{grid-column:1/-1;width:100%;accent-color:var(--accent)}
+label.sl b{color:var(--ink)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+.big{font:800 30px var(--display)}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Climate Lab</h1><div class="sub">DP Biology D4.3 &middot; simple models using typical published values; not forecasts</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>A warming world</h2>
+    <p>Adding greenhouse gases to the atmosphere traps more heat. Turn up carbon dioxide, switch on the feedbacks that make warming worse, see what happens to polar ice, mountain species and coral reefs, and try ways of drawing carbon back out of the air.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-ghe" aria-pressed="true">1. Greenhouse effect</button><button type="button" id="t-fb" aria-pressed="false">2. Feedbacks and tipping points</button><button type="button" id="t-hab" aria-pressed="false">3. Changing habitats</button><button type="button" id="t-cap" aria-pressed="false">4. Capturing carbon</button></div>
+
+    <div class="grid" id="p-ghe">
+      <div class="card"><canvas class="plot" id="c-ghe" width="900" height="440" aria-label="Sunlight in, heat out, and the atmosphere trapping heat"></canvas>
+        <label class="sl">Carbon dioxide in the atmosphere <b id="g-v">280 ppm</b><input type="range" id="g-s" min="280" max="840" value="280" step="10"></label>
+        <div class="row"><button type="button" class="btn" data-c="280">Before 1800 (280)</button><button type="button" class="btn" data-c="420">Today (about 420)</button><button type="button" class="btn" data-c="560">Doubled (560)</button></div></div>
+      <div><div class="card"><h2>Warming from CO2 alone</h2><div class="big" id="g-t">0.0 &deg;C</div><p class="note">Compared with before 1800, after the climate has adjusted. Uses about 3 &deg;C per doubling of CO2.</p><div class="explain"><p id="g-say"></p></div><p class="note">Syllabus: D4.3.1</p></div></div>
+    </div>
+
+    <div class="grid" id="p-fb" hidden>
+      <div class="card"><canvas class="plot" id="c-fb" width="900" height="440" aria-label="Bar showing extra warming from each feedback"></canvas>
+        <label class="sl">Warming from greenhouse gases we emit <b id="f-v">1.5 &deg;C</b><input type="range" id="f-s" min="5" max="40" value="15"></label>
+        <div class="row"><button type="button" class="btn" id="f-ice" aria-pressed="false">Melting ice reflects less sunlight</button><button type="button" class="btn" id="f-perm" aria-pressed="false">Thawing permafrost releases CO2 and methane</button><button type="button" class="btn" id="f-bor" aria-pressed="false">Boreal forests burn and die back</button></div></div>
+      <div><div class="card"><h2>Total warming</h2><div class="big" id="f-t">-</div><div class="explain"><p id="f-say"></p></div><p class="note">Syllabus: D4.3.2, D4.3.3</p></div></div>
+    </div>
+
+    <div class="grid" id="p-hab" hidden>
+      <div class="card"><canvas class="plot" id="c-hab" width="900" height="460" aria-label="Habitat changes with warming"></canvas>
+        <div class="row" id="h-pick"><button type="button" class="btn" data-h="ice" aria-pressed="true">Sea ice</button><button type="button" class="btn" data-h="up" aria-pressed="false">Ocean upwelling</button><button type="button" class="btn" data-h="mtn" aria-pressed="false">Moving uphill and polewards</button><button type="button" class="btn" data-h="coral" aria-pressed="false">Coral reefs</button></div>
+        <label class="sl">Global warming <b id="h-v">+1.0 &deg;C</b><input type="range" id="h-s" min="0" max="40" value="10"></label></div>
+      <div><div class="card"><h2>What is happening</h2><div class="explain"><p id="h-say"></p></div><p class="note">Syllabus: D4.3.4, D4.3.5, D4.3.6, D4.3.7</p></div></div>
+    </div>
+
+    <div class="grid" id="p-cap" hidden>
+      <div class="card"><canvas class="plot" id="c-cap" width="900" height="440" aria-label="Carbon taken up by different actions"></canvas>
+        <div class="row"><button type="button" class="btn" id="c-aff" aria-pressed="false">Plant new forests (afforestation)</button><button type="button" class="btn" id="c-reg" aria-pressed="false">Let cleared forest regrow</button><button type="button" class="btn" id="c-peat" aria-pressed="false">Re-wet drained peatlands</button></div></div>
+      <div><div class="card"><h2>Carbon captured</h2><div class="big" id="c-t">0</div><p class="note">Illustrative tonnes of CO2 per hectare over 40 years</p><div class="explain"><p id="c-say"></p></div><p class="note">Syllabus: D4.3.8</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+// 1 GREENHOUSE ------------------------------------------------------------------------
+const dT=c=>3*Math.log2(c/280);
+function drawGhe(){ const c=+$('g-s').value, t=dT(c), cv=$('c-ghe'), x=cv.getContext('2d'); x.clearRect(0,0,cv.width,cv.height); x.font='15px Atkinson Hyperlegible, sans-serif';
+  x.fillStyle='#ffd166'; x.beginPath(); x.arc(70,60,40,0,7); x.fill(); const g=x.createLinearGradient(0,330,0,440); g.addColorStop(0,'#6a994e'); g.addColorStop(1,'#386641'); x.fillStyle=g; x.fillRect(0,330,900,110);
+  const a=0.15+0.5*(c-280)/560; x.fillStyle='rgba(255,140,97,'+a.toFixed(2)+')'; x.fillRect(0,120,900,60); x.fillStyle='#fff'; x.fillText('Greenhouse gases (CO2, methane, water vapour)',560,112);
+  x.strokeStyle='#ffd166'; x.lineWidth=4; [[110,90,300,330],[140,80,420,330]].forEach(([x1,y1,x2,y2])=>{ x.beginPath(); x.moveTo(x1,y1); x.lineTo(x2,y2); x.stroke(); }); x.fillStyle='#ffd166'; x.fillText('Sunlight (short wavelength) passes through',150,250);
+  const back=Math.round(4+10*(c-280)/560); for(let i=0;i<14;i++){ const px=470+i*28; x.strokeStyle='#ef476f'; x.lineWidth=3; x.beginPath(); x.moveTo(px,330); if(i<back){ x.lineTo(px+8,190); x.lineTo(px+16,320); } else x.lineTo(px+30,20); x.stroke(); }
+  x.fillStyle='#ef476f'; x.fillText('Earth gives off infrared (heat); greenhouse gases absorb some and send it back',300,410);
+  $('g-v').textContent=c+' ppm'; $('g-t').innerHTML=(t>=0?'+':'')+t.toFixed(1)+' &deg;C';
+  $('g-say').textContent='Short-wavelength sunlight passes through the atmosphere and warms the surface. The warm surface gives off longer-wavelength infrared radiation. Greenhouse gases absorb some of it and re-emit it, some back down, so the lower atmosphere warms: the greenhouse effect. It keeps Earth habitable, but burning fossil fuels and cutting forests have raised CO2 from about 280 to about 420 ppm, and methane from farming and landfill has risen too, so the effect is enhanced and the planet is warming (about 1.2 °C so far).'; }
+$('g-s').oninput=drawGhe; document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{ $('g-s').value=b.dataset.c; drawGhe(); });
+// 2 FEEDBACKS ------------------------------------------------------------------------------
+let fb={ice:false,perm:false,bor:false};
+function drawFb(){ const base=+$('f-s').value/10; const add={ice:fb.ice?0.25*base:0,perm:fb.perm?(base>1.5?0.12*base+0.1*(base-1.5):0.05*base):0,bor:fb.bor?(base>2?0.15*base:0.03*base):0}; const tot=base+add.ice+add.perm+add.bor;
+  const c=$('c-fb'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif'; const W=v=>v/7*760; let px=60; const segs=[['Our emissions',base,'#ff8c61'],['Ice-albedo',add.ice,'#8ecae6'],['Permafrost',add.perm,'#b08968'],['Boreal forest',add.bor,'#2d6a4f']];
+  segs.forEach(([n,v,col],i)=>{ x.fillStyle=col; x.fillRect(px,180,W(v),80); if(v>0.05){ x.fillStyle='#fff'; x.fillText(n,px+4,i%2?290:170); } px+=W(v); });
+  for(let t=0;t<=7;t++){ x.fillStyle='#cfc1bf'; x.fillText('+'+t,60+W(t)-8,320); } x.fillText('Warming / °C',400,350);
+  x.strokeStyle='#ffd166'; x.setLineDash([6,6]); x.beginPath(); x.moveTo(60+W(1.5),140); x.lineTo(60+W(1.5),270); x.stroke(); x.beginPath(); x.moveTo(60+W(2),140); x.lineTo(60+W(2),270); x.stroke(); x.setLineDash([]); x.fillStyle='#ffd166'; x.fillText('1.5 and 2 °C targets',60+W(1.5)-20,130);
+  $('f-v').innerHTML='+'+base.toFixed(1)+' &deg;C'; $('f-t').innerHTML='+'+tot.toFixed(1)+' &deg;C';
+  const parts=[]; if(fb.ice) parts.push('Melting snow and sea ice expose darker land and ocean, which absorb more sunlight and warm further.'); if(fb.perm) parts.push('Thawing permafrost lets microbes decompose frozen organic matter, releasing CO2 and methane, which add to warming.'); if(fb.bor) parts.push('Hotter, drier boreal forests suffer more fires, drought and insect outbreaks; trees die faster than they grow, so a carbon sink becomes a carbon source. Beyond a tipping point this may become self-sustaining.');
+  $('f-say').textContent=parts.length?'Positive feedback: warming causes changes that cause more warming. '+parts.join(' '):'Switch on the feedbacks. In a positive feedback loop, a change causes effects that increase the original change.'; }
+$('f-s').oninput=drawFb; ['ice','perm','bor'].forEach(k=>$('f-'+k).onclick=()=>{ fb[k]=!fb[k]; $('f-'+k).setAttribute('aria-pressed',fb[k]); drawFb(); });
+// 3 HABITATS ---------------------------------------------------------------------------------
+let hMode='ice';
+function drawHab(){ const w=+$('h-s').value/10, c=$('c-hab'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='15px Atkinson Hyperlegible, sans-serif'; $('h-v').innerHTML='+'+w.toFixed(1)+' &deg;C';
+  if(hMode==='ice'){ const ext=Math.max(0.3,7.2-2.6*w); x.fillStyle='#03253a'; x.fillRect(0,0,900,460); x.fillStyle='#e0f2fe'; x.beginPath(); x.arc(450,230,40+ext*26,0,7); x.fill(); x.fillStyle='#03253a'; x.fillText('North Pole',415,235);
+    x.fillStyle='#6f4518'; x.fillRect(80,380,160,50); x.fillStyle='#fff'; x.fillText('coast',120,445); const walrus=ext<4.5?12:0; for(let i=0;i<walrus;i++){ x.fillStyle='#b08968'; x.beginPath(); x.ellipse(100+(i%6)*24,390+Math.floor(i/6)*14,10,5,0,0,7); x.fill(); }
+    x.fillStyle='#fff'; x.fillText('Arctic sea ice in September: about '+ext.toFixed(1)+' million km2',20,30);
+    $('h-say').textContent='Sea ice and ice fixed to the coast (landfast ice) are habitats: ringed seals breed on it, polar bears hunt from it, and walruses rest on it between dives. As the Arctic warms, sea ice forms later and melts earlier. Walruses are forced onto crowded beaches far from their feeding grounds, and ice algae at the base of polar food webs decline.'+(ext<4.5?' Here the ice has retreated far from the coast and walruses crowd the shore.':''); }
+  if(hMode==='up'){ const up=Math.max(0.1,1-0.22*w); x.fillStyle='#1d6a96'; x.fillRect(0,60,900,400); x.fillStyle='#6a994e'; x.fillRect(0,0,180,460); x.strokeStyle='#ffd166'; x.lineWidth=3; for(let i=0;i<5;i++){ x.beginPath(); x.moveTo(700-i*90,440); x.quadraticCurveTo(300-i*20,400,220,100+i*10); x.globalAlpha=up; x.stroke(); x.globalAlpha=1; }
+    for(let i=0;i<Math.round(120*up);i++){ x.fillStyle='#95d5b2'; x.fillRect(190+(i*37)%300,70+(i*23)%60,3,3); } const fish=Math.round(14*up); for(let i=0;i<fish;i++){ x.fillStyle='#c0c0c0'; x.beginPath(); x.ellipse(260+(i*53)%260,160+(i*31)%80,9,4,0,0,7); x.fill(); }
+    x.fillStyle='#fff'; x.fillText('Cold, nutrient-rich water rising along the coast (upwelling)',300,30);
+    $('h-say').textContent='Winds and currents bring cold, nutrient-rich deep water to the surface along some coasts (such as Peru and California). The nutrients feed phytoplankton, which support huge numbers of fish, seabirds and mammals. Warming changes winds and makes surface water lighter and more stable, so upwelling can weaken or change in timing: less plankton, fewer fish.'; }
+  if(hMode==='mtn'){ x.fillStyle='#4a4e69'; x.beginPath(); x.moveTo(80,440); x.lineTo(450,40); x.lineTo(820,440); x.fill(); const shift=w*150; const zones=[['Forest',440,300,'#2d6a4f'],['Shrubs',300,210,'#90be6d'],['Alpine meadow',210,120,'#e9c46a'],['Rock and snow',120,40,'#e0e0e0']];
+    zones.forEach(([n,y1,y2,col])=>{ const a=Math.max(40,y1-shift*0.35), b=Math.max(40,y2-shift*0.35); x.save(); x.beginPath(); x.moveTo(80,440); x.lineTo(450,40); x.lineTo(820,440); x.clip(); x.fillStyle=col; x.fillRect(0,b,900,a-b); x.restore(); if(a-b>14){ x.fillStyle='#111'; x.font='bold 14px sans-serif'; x.fillText(n,860-180,(a+b)/2+5); } });
+    x.fillStyle='#fff'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillText('Zones move up about '+Math.round(shift)+' m',20,30);
+    $('h-say').textContent='Temperature falls about 6.5 °C for every 1000 m you climb, so 1 °C of warming moves each climate zone about 150 m uphill. Species shift their ranges upwards and towards the poles. Species already near the summit, such as alpine plants and pikas, have nowhere left to go, and their habitat shrinks.'+(w>2?' At this level of warming the alpine meadow has almost gone.':''); }
+  if(hMode==='coral'){ const bleach=Math.min(100,Math.max(0,(w-0.8)*55)); x.fillStyle='#48cae4'; x.fillRect(0,0,900,460); for(let i=0;i<30;i++){ const px=40+(i*29)%820, py=260+(i*47)%170; const white=(i*37%100)<bleach; x.fillStyle=white?'#f8f9fa':['#ef476f','#f77f00','#9d4edd','#06d6a0'][i%4]; x.beginPath(); for(let k=0;k<5;k++){ x.ellipse(px+k*7-14,py-k*8,6,18,(k-2)*0.3,0,7); } x.fill(); }
+    x.fillStyle='#03253a'; x.fillText('Bleached (white): '+Math.round(bleach)+'% of corals',20,30);
+    $('h-say').textContent='Reef-building corals depend on algae (zooxanthellae) living in their tissues. When the water stays too warm for a few weeks, corals expel the algae and turn white: bleaching. Repeated bleaching kills corals. CO2 dissolving in the sea also makes it more acidic, so corals build their skeletons more slowly. Together these threats could cause the collapse of reef ecosystems, which support about a quarter of all marine species.'; } }
+$('h-s').oninput=drawHab; document.querySelectorAll('#h-pick button').forEach(b=>b.onclick=()=>{ hMode=b.dataset.h; document.querySelectorAll('#h-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); drawHab(); });
+// 4 CARBON CAPTURE -----------------------------------------------------------------------------
+let cap={aff:false,reg:false,peat:false};
+function drawCap(){ const c=$('c-cap'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); const L=70,B=390,R=880,T=20, X=y=>L+(R-L)*y/40, Y=v=>B-(B-T)*v/600; x.strokeStyle='#cfc1bf'; x.lineWidth=2; x.beginPath(); x.moveTo(L,T); x.lineTo(L,B); x.lineTo(R,B); x.stroke(); x.fillStyle='#cfc1bf'; x.font='15px Atkinson Hyperlegible, sans-serif'; x.fillText('Years',440,425); for(let v=0;v<=600;v+=150) x.fillText(v,24,Y(v)+5);
+  const curves={aff:y=>500*(1-Math.exp(-y/25))*Math.min(1,y/6),reg:y=>420*(1-Math.exp(-y/18)),peat:y=>8*y}; const cols={aff:'#2d6a4f',reg:'#90be6d',peat:'#b08968'}; let total=0;
+  Object.keys(cap).forEach(k=>{ if(!cap[k]) return; x.strokeStyle=cols[k]; x.lineWidth=4; x.beginPath(); for(let y=0;y<=40;y+=0.5) y?x.lineTo(X(y),Y(curves[k](y))):x.moveTo(X(0),Y(0)); x.stroke(); total+=curves[k](40); });
+  $('c-t').textContent=Math.round(total)+' t';
+  $('c-say').textContent='Plants take CO2 out of the air by photosynthesis and store the carbon in wood, roots and soil. Afforestation plants forest where there was none; natural regeneration lets cleared forest grow back, often storing carbon fast and supporting more biodiversity; re-wetting drained peatland stops the peat decomposing and lets it slowly build up again. These help, but they cannot replace cutting emissions: a forest that later burns or is cut releases its carbon again.'; }
+['aff','reg','peat'].forEach(k=>$('c-'+k).onclick=()=>{ cap[k]=!cap[k]; $('c-'+k).setAttribute('aria-pressed',cap[k]); drawCap(); });
+// tabs ------------------------------------------------------------------------------------------
+const TABS=['ghe','fb','hab','cap'];
+function showTab(k){ TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); ({ghe:drawGhe,fb:drawFb,hab:drawHab,cap:drawCap})[k](); }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; showTab('ghe'); }
+$('b-start').onclick=start; setLevel(level);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.climDebug={ showTab, start, dT };
+})();
+</script>
+
+<script>
+(function () {
+  var slide = function (id, v) { return function () { var s = document.getElementById(id); if (s) { s.value = v; s.dispatchEvent(new Event('input')); } }; };
+  window.LAB_GUIDE = { title: 'Climate Lab: step by step', sections: {
+    ghe: { n: 'Greenhouse effect', tab: '#t-ghe', steps: [
+      { n: 'How it works', s: 'Sunlight warms the surface; the surface gives off infrared; greenhouse gases absorb and re-emit some of it, warming the lower atmosphere.', go: ['[data-c="280"]'], cs: 'D4.3.1' },
+      { n: 'Raising CO2', s: 'Move CO2 from 280 to today\'s 420 ppm, then to double. Human activity (burning fossil fuels, deforestation, farming) is the main cause.', go: ['[data-c="560"]'], q: { q: 'Which gas has increased most in amount because of burning fossil fuels?', o: ['Oxygen', 'Carbon dioxide', 'Nitrogen'], a: 1, why: 'Combustion of coal, oil and gas releases CO2.' }, cs: 'D4.3.1' }
+    ] },
+    fb: { n: 'Feedbacks', tab: '#t-fb', steps: [
+      { n: 'Positive feedback', s: 'Switch on each feedback. Warming triggers changes that cause more warming.', go: ['#f-ice', '#f-perm'], cs: 'D4.3.2' },
+      { n: 'A tipping point', s: 'Boreal forests may switch from storing carbon to releasing it as fires, drought and pests increase.', go: function () { slide('f-s', 25)(); document.getElementById('f-bor').click(); }, q: { q: 'Why is melting sea ice a positive feedback?', o: ['Ice releases CO2', 'Dark ocean absorbs more sunlight than white ice, so the area warms further', 'Melting ice cools the ocean'], a: 1, why: 'Less reflective surfaces absorb more energy, speeding up warming.' }, cs: 'D4.3.3' }
+    ] },
+    hab: { n: 'Habitats', tab: '#t-hab', steps: [
+      { n: 'Polar ice', s: 'Warm the Arctic: sea ice shrinks and walruses crowd onto beaches.', go: function () { document.querySelector('[data-h="ice"]').click(); slide('h-s', 15)(); }, cs: 'D4.3.4' },
+      { n: 'Upwelling', s: 'Changing currents and winds alter when and how much nutrient-rich water rises, affecting whole food webs.', go: ['[data-h="up"]'], cs: 'D4.3.5' },
+      { n: 'On the move', s: 'Species shift uphill and towards the poles; those at the top have nowhere to go.', go: function () { document.querySelector('[data-h="mtn"]').click(); slide('h-s', 25)(); }, cs: 'D4.3.6' },
+      { n: 'Coral reefs', s: 'Warming causes bleaching and acidification slows skeleton growth: reefs may collapse.', go: ['[data-h="coral"]'], q: { q: 'What happens when corals bleach?', o: ['They grow faster', 'They expel the photosynthetic algae living in their tissues and may starve', 'They turn into rock'], a: 1, why: 'Corals rely on zooxanthellae for much of their food; without them, bleached corals can die.' }, cs: 'D4.3.7' }
+    ] },
+    cap: { n: 'Capturing carbon', tab: '#t-cap', steps: [
+      { n: 'Natural carbon capture', s: 'Switch on each option and compare how much carbon they store over 40 years.', go: ['#c-aff', '#c-reg', '#c-peat'], q: { q: 'How does re-wetting a drained peat bog reduce CO2 in the air?', o: ['Water absorbs CO2 directly', 'Waterlogging stops the peat decomposing and lets new peat build up', 'It releases oxygen'], a: 1, why: 'Without oxygen, decomposers cannot break down the dead plant material, so carbon stays stored.' }, cs: 'D4.3.8' }
+    ] }
+  } };
+})();
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

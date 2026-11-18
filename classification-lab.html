@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Classification Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/classification-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Classification Lab">
+<meta property="og:description" content="Classification Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/classification-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Classification Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0f1311; --ink:#eef5f0; --dim:#b8c9bf; --panel:#17201b; --panel2:#1f2b24; --line:rgba(190,230,205,.2);
+  --accent:#7bd389;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#06210f}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#0a0e0c}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#06210f;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.chip{padding:5px 10px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:13.5px}
+.qbtn{display:block;width:100%;text-align:left;margin:4px 0}
+pre.key{white-space:pre-wrap;background:#0a0e0c;border-radius:10px;padding:10px;font:14px/1.6 ui-monospace,monospace;color:#d8f3dc;min-height:80px}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}table.t td,table.t th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}table.t th{color:var(--accent)}
+.seq{font:700 14px ui-monospace,monospace;letter-spacing:1px}
+.seq .d{color:#ffd166}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Classification Lab</h1><div class="sub">DP Biology A3.1 and A3.2 (HL) &middot; key and chromosome numbers are real; sequences are invented to show the methods</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="false">SL</button><button type="button" id="lv-hl" aria-pressed="true">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Naming and grouping life</h2>
+    <p>Biologists identify species with keys and DNA, ask what a species really is, and group organisms by their evolutionary relationships. Build a key, identify species from DNA in pond water, then build a cladogram from sequences and find out which traditional groups are not natural.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-key" aria-pressed="true">1. Build a key</button><button type="button" id="t-bar" aria-pressed="false">2. DNA barcodes</button><button type="button" id="t-sp" aria-pressed="false">3. What is a species?</button><button type="button" id="t-clad" aria-pressed="false">4. Cladograms</button><button type="button" id="t-dom" aria-pressed="false">5. Three domains</button></div>
+
+    <div class="grid" id="p-key">
+      <div class="card"><h2>Leaf-litter animals</h2><p class="note">Choose a question that splits the group into two. Keep going until every animal is on its own.</p>
+        <div id="y-group"></div><div id="y-qs"></div><div class="row"><button type="button" class="btn" id="y-reset">Start again</button></div></div>
+      <div><div class="card"><h2>Your key</h2><pre class="key" id="y-key"></pre><div class="explain"><p id="y-say"></p></div><p class="note">Syllabus: A3.1.14</p></div></div>
+    </div>
+
+    <div class="grid" id="p-bar" hidden>
+      <div class="card"><canvas class="plot" id="c-bar" width="900" height="420" aria-label="A pond, a sample tube and DNA reads"></canvas>
+        <div class="row"><button type="button" class="btn" id="b-samp">Take a water sample</button><button type="button" class="btn" id="b-seq" disabled>Sequence the barcode region</button><button type="button" class="btn" id="b-match" disabled>Match to the reference library</button></div>
+        <div id="b-reads"></div></div>
+      <div><div class="card"><h2>Species detected</h2><table class="t"><tbody id="b-res"><tr><td class="note">No sample yet</td></tr></tbody></table><div class="explain" style="margin-top:8px"><p id="b-say"></p></div><p class="note">Syllabus: A3.1.15</p></div></div>
+    </div>
+
+    <div class="grid" id="p-sp" hidden>
+      <div class="card"><canvas class="plot" id="c-sp" width="900" height="460" aria-label="Chromosome numbers and a horse-donkey cross"></canvas>
+        <div class="row"><button type="button" class="btn" id="s-mule">Cross a horse and a donkey</button><button type="button" class="btn" id="s-bact">Bacteria swapping genes</button><button type="button" class="btn" id="s-asex">Asexual species</button></div></div>
+      <div><div class="card"><h2>Species and chromosome numbers</h2><table class="t"><tr><th>Species</th><th>2n</th></tr><tr><td>Human</td><td>46</td></tr><tr><td>Chimpanzee</td><td>48</td></tr><tr><td>Horse</td><td>64</td></tr><tr><td>Donkey</td><td>62</td></tr><tr><td>Dog</td><td>78</td></tr><tr><td>Potato</td><td>48</td></tr><tr><td>Fruit fly</td><td>8</td></tr></table><div class="explain" style="margin-top:8px"><p id="s-say"></p></div><p class="note">Syllabus: A3.1.12, A3.1.13</p></div></div>
+    </div>
+
+    <div class="grid" id="p-clad" hidden>
+      <div class="card"><canvas class="plot" id="c-clad" width="900" height="460" aria-label="A cladogram being built from sequence differences"></canvas>
+        <div class="row"><button type="button" class="btn" id="d-next">Group the two most similar</button><button type="button" class="btn" id="d-clock" aria-pressed="false">Molecular clock</button><button type="button" class="btn" id="d-rep" aria-pressed="false">Highlight the traditional "reptiles"</button><button type="button" class="btn" id="d-reset">Start again</button></div>
+        <div id="d-seqs"></div></div>
+      <div><div class="card"><h2>Differences</h2><div id="d-mat"></div><div class="explain" style="margin-top:8px"><p id="d-say"></p></div><p class="note">Syllabus: A3.2.4 to A3.2.8</p></div></div>
+    </div>
+
+    <div class="grid" id="p-dom" hidden>
+      <div class="card"><canvas class="plot" id="c-dom" width="900" height="460" aria-label="Tree of life with three domains"></canvas>
+        <div class="row" id="o-pick"><button type="button" class="btn" data-o="old" aria-pressed="false">Old view: prokaryotes and eukaryotes</button><button type="button" class="btn" data-o="new" aria-pressed="true">rRNA evidence: three domains</button></div></div>
+      <div><div class="card"><h2>Comparing the domains</h2><table class="t"><tr><th></th><th>Bacteria</th><th>Archaea</th><th>Eukarya</th></tr><tr><td>Nucleus</td><td>No</td><td>No</td><td>Yes</td></tr><tr><td>Histones with DNA</td><td>No</td><td>Some</td><td>Yes</td></tr><tr><td>Introns</td><td>Rare</td><td>Some</td><td>Common</td></tr><tr><td>Peptidoglycan wall</td><td>Yes</td><td>No</td><td>No</td></tr><tr><td>Membrane lipids</td><td>Ester-linked</td><td>Ether-linked</td><td>Ester-linked</td></tr></table><div class="explain" style="margin-top:8px"><p id="o-say"></p></div><p class="note">Syllabus: A3.2.1, A3.2.2, A3.2.3, A3.2.9</p></div></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='hl'; try{ level=localStorage.getItem('wtc-cell-level')||'hl'; }catch(e){}
+// 1 KEY --------------------------------------------------------------------------
+const AN=[{n:'Earthworm',legs:0,seg:1},{n:'Slug',legs:0,seg:0},{n:'Spider',legs:8,seg:0},{n:'Ant',legs:6,seg:0,waist:1},{n:'Beetle',legs:6,seg:0,case:1},{n:'Woodlouse',legs:14,seg:1,plates:1},{n:'Centipede',legs:40,seg:1,one:1},{n:'Millipede',legs:120,seg:1,two:1}];
+const QS=[['Has legs',a=>a.legs>0],['Has exactly six legs',a=>a.legs===6],['Has exactly eight legs',a=>a.legs===8],['Has more than eight legs',a=>a.legs>8],['Body made of many similar segments',a=>a.seg===1],['Hard wing cases cover the back',a=>!!a.case],['Very narrow waist between body parts',a=>!!a.waist],['Back covered by overlapping plates; 14 legs',a=>!!a.plates],['One pair of legs on each segment',a=>!!a.one],['Two pairs of legs on most segments',a=>!!a.two]];
+let todo, lines, nextNum;
+function keyReset(){ todo=[{items:AN.slice(),num:1}]; lines=[]; nextNum=2; keyDraw(); }
+function keyDraw(){ const g=todo.find(t=>t.items.length>1); const box=$('y-group'), qs=$('y-qs');
+  if(!g){ box.innerHTML='<p><b>Finished:</b> every animal can now be identified.</p>'; qs.innerHTML=''; }
+  else { box.innerHTML='<p>Step '+g.num+': split this group</p><div class="chips">'+g.items.map(a=>'<span class="chip">'+a.n+'</span>').join('')+'</div>';
+    qs.innerHTML=''; QS.forEach(([q,f])=>{ const yes=g.items.filter(f), no=g.items.filter(a=>!f(a)); if(!yes.length||!no.length) return; const b=document.createElement('button'); b.type='button'; b.className='btn qbtn'; b.textContent=q+'?  ('+yes.length+' yes / '+no.length+' no)';
+      b.onclick=()=>{ const ya=yes.length>1?{items:yes,num:nextNum++}:null, na=no.length>1?{items:no,num:nextNum++}:null;
+        lines.push(g.num+'. '+q+' ........ '+(ya?'go to '+ya.num:yes[0].n)+'\n   Not so ........ '+(na?'go to '+na.num:no[0].n));
+        todo.splice(todo.indexOf(g),1); if(ya) todo.push(ya); if(na) todo.push(na); todo.sort((a,b)=>a.num-b.num); keyDraw(); }; qs.appendChild(b); }); }
+  $('y-key').textContent=lines.join('\n')||'(your key appears here)';
+  $('y-say').textContent=!g?'A dichotomous key gives a series of two-way choices, each based on a clear, observable feature, until one species is left. Good questions use features anyone can check (number of legs) rather than ones that vary (size or colour). Test your key on a classmate.':'Each question must split the group into two smaller groups. Pick features that are easy to see in a specimen.'; }
+$('y-reset').onclick=keyReset;
+// 2 BARCODES --------------------------------------------------------------------
+const LIB=[['Common frog','ACTTGGCCAAGTTTACGGAT'],['Great crested newt','ACTCGGTCAAGCTTACCGAA'],['Stickleback','GCTAGGCTAATTTTAGGCAT'],['Water flea','TTTAGGACAGCTCTACGAAT'],['Mayfly larva','ACAAGGCCTAGATTTCGTAT'],['Brown trout','GCTGGGCTAATCTTACGCAT'],['Signal crayfish (invasive)','TCTAGGACAAGTATACGCTT']];
+const POND=[0,1,2,3,4,6]; let reads=[], stage=0;
+function mutate(s){ return s.split('').map(c=>Math.random()<0.04?'ACGT'[Math.floor(Math.random()*4)]:c).join(''); }
+function ident(a,b){ let n=0; for(let i=0;i<a.length;i++) if(a[i]===b[i]) n++; return Math.round(100*n/a.length); }
+function drawBar(){ const c=$('c-bar'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  x.fillStyle='#1b4332'; x.fillRect(0,0,900,140); x.fillStyle='#2d6a4f'; x.beginPath(); x.ellipse(300,240,260,110,0,0,7); x.fill(); x.fillStyle='#52b788'; for(let i=0;i<14;i++){ x.fillRect(60+i*35,130-(i%3)*12,4,50); }
+  x.fillStyle='#b8c9bf'; x.fillText('Pond: animals shed skin cells, mucus and waste containing DNA (eDNA)',40,390);
+  if(stage>=1){ x.fillStyle='rgba(180,220,255,.25)'; x.fillRect(640,120,60,190); x.strokeStyle='#fff'; x.strokeRect(640,120,60,190); x.fillStyle='#fff'; x.fillText('sample',640,110); for(let i=0;i<20;i++){ x.fillStyle=['#ffd166','#e63946','#4895ef','#52b788'][i%4]; x.fillRect(650+(i*13)%40,150+((i*29)%140),6,2); } }
+  if(stage>=2){ x.fillStyle='#fff'; x.fillText(reads.length+' DNA reads of one barcode gene',720,200); } }
+$('b-samp').onclick=()=>{ stage=1; reads=[]; $('b-seq').disabled=false; $('b-match').disabled=true; $('b-reads').innerHTML=''; $('b-res').innerHTML='<tr><td class="note">Sample taken: now sequence it</td></tr>'; drawBar(); sayBar(); };
+$('b-seq').onclick=()=>{ stage=2; reads=[]; POND.forEach(k=>{ const n=2+Math.floor(Math.random()*5); for(let i=0;i<n;i++) reads.push({s:mutate(LIB[k][1]),k}); }); reads.sort(()=>Math.random()-0.5);
+  $('b-reads').innerHTML='<p class="note">First 8 reads:</p>'+reads.slice(0,8).map(r=>'<div class="seq">'+r.s+'</div>').join(''); $('b-match').disabled=false; drawBar(); sayBar(); };
+$('b-match').onclick=()=>{ stage=3; const found={}; reads.forEach(r=>{ let best=-1,bi=0; LIB.forEach((L,i)=>{ const id=ident(r.s,L[1]); if(id>best){ best=id; bi=i; } }); if(best>=85){ found[bi]=found[bi]||{n:0,id:0}; found[bi].n++; found[bi].id=Math.max(found[bi].id,best); } });
+  $('b-res').innerHTML='<tr><th>Species</th><th>Reads</th><th>Best match</th></tr>'+Object.keys(found).map(i=>'<tr><td>'+LIB[i][0]+'</td><td>'+found[i].n+'</td><td>'+found[i].id+'%</td></tr>').join(''); sayBar(); };
+function sayBar(){ $('b-say').textContent=stage===0?'Every organism leaves traces of DNA in its environment: environmental DNA, or eDNA. Collect a sample of water or soil to find out what lives there, without catching anything.':stage===1?'The DNA is extracted and one short gene that differs between species (a DNA barcode, often part of the COI gene in animals) is copied by PCR.':stage===2?'Thousands of copies are sequenced. Each read is a sequence of the barcode region from one organism; reads contain a few copying and sequencing errors.':'Each read is compared with a reference library of barcodes from known species. Reads that match closely identify the species present, including rare or hidden ones such as newts and invasive crayfish. Brown trout was in the library but not detected, so it is probably absent from this pond.'; }
+// 3 SPECIES ---------------------------------------------------------------------
+let spMode='mule';
+function drawSp(){ const c=$('c-sp'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  const pairs=(n,x0,y0,col,lab)=>{ x.fillStyle='#fff'; x.fillText(lab,x0,y0-12); for(let i=0;i<n;i++){ x.fillStyle=col; x.fillRect(x0+(i%16)*13,y0+Math.floor(i/16)*22,8,16); } };
+  if(spMode==='mule'){ pairs(64,40,50,'#c08552','Horse 2n = 64'); pairs(62,480,50,'#8d99ae','Donkey 2n = 62'); x.fillStyle='#fff'; x.fillText('gametes: n = 32 and n = 31',330,180);
+    pairs(63,250,230,'#b08968','Mule 2n = 63: 32 from the horse, 31 from the donkey'); x.fillStyle='#ffd166'; x.fillText('In meiosis the chromosomes cannot pair up properly, so the mule cannot make gametes: it is sterile.',40,420); }
+  if(spMode==='bact'){ const cells=[[220,200,'#4895ef','Species A'],[450,240,'#e76f51','Species B'],[680,190,'#52b788','Species C']]; cells.forEach(([cx,cy,col,n])=>{ x.fillStyle=col; x.beginPath(); x.ellipse(cx,cy,90,45,0,0,7); x.fill(); x.fillStyle='#fff'; x.fillText(n,cx-36,cy+70); });
+    const t=(performance.now()/1000)%3; x.strokeStyle='#ffd166'; x.lineWidth=4; x.beginPath(); x.arc(220+230*Math.min(1,t/1.5),200+40*Math.min(1,t/1.5),14,0,7); x.stroke(); x.beginPath(); x.arc(450+230*Math.max(0,(t-1.5)/1.5),240-50*Math.max(0,(t-1.5)/1.5),14,0,7); x.stroke();
+    x.fillStyle='#ffd166'; x.fillText('a plasmid (for example, carrying antibiotic resistance) passes between different species',90,360); }
+  if(spMode==='asex'){ for(let g=0;g<4;g++){ const n=Math.pow(2,g); for(let i=0;i<n;i++){ x.fillStyle='#7bd389'; x.beginPath(); x.ellipse(450+(i-(n-1)/2)*(700/Math.max(n,2)),70+g*100,26,14,0,0,7); x.fill(); } } x.fillStyle='#fff'; x.fillText('Bdelloid rotifers: females only, each producing clones of herself',150,440); } }
+function saySp(){ $('s-say').textContent=spMode==='mule'?'The biological species concept defines a species as a group that can interbreed to produce fertile offspring. Members of a species usually share the same chromosome number. Horses and donkeys can mate, but the mule has 63 chromosomes that cannot pair in meiosis, so it is sterile: horses and donkeys are separate species.':
+  spMode==='bact'?'Bacteria reproduce asexually, but they can pass genes, for example on plasmids, even to other species (horizontal gene transfer). So "who can breed with whom" does not define bacterial species; they are grouped by similarities in their DNA instead.':'Asexual organisms never interbreed, so the biological species concept cannot be applied to them at all. They are classified by their structure and DNA sequences.'; }
+['mule','bact','asex'].forEach(m=>$('s-'+m).onclick=()=>{ spMode=m; ['mule','bact','asex'].forEach(o=>$('s-'+o).setAttribute('aria-pressed',o===m)); drawSp(); saySp(); });
+// 4 CLADOGRAM --------------------------------------------------------------------
+const SPC=['Mammal','Lizard','Snake','Crocodile','Bird']; // Invented sequences built from a pattern of shared changes: m = mammal differs, a = lizard+snake vs crocodile+bird, s = snake only, b = bird only, c = same in all.
+const BASE='ATGCATCGATCGATCGATCG', TYP='cmasmbcamsbmcamsbamc', D1={A:'G',T:'C',G:'A',C:'T'}, D2={A:'C',T:'G',G:'T',C:'A'};
+const SEQ=[0,1,2,3,4].map(k=>[...BASE].map((ch,i)=>{ const t=TYP[i]; if(t==='m') return k===0?D1[ch]:ch; if(t==='a') return k===0?ch:(k<=2?D1[ch]:D2[ch]); if(t==='s') return k===2?D1[ch]:ch; if(t==='b') return k===4?D1[ch]:ch; return ch; }).join(''));
+const dist=(a,b)=>{ let n=0; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) n++; return n; };
+let clusters, merges, clock=false, rep=false;
+function cladReset(){ clusters=SPC.map((n,i)=>({ids:[i],name:n,h:0})); merges=[]; cladDraw(); }
+function cd(a,b){ let s=0,n=0; a.ids.forEach(i=>b.ids.forEach(j=>{ s+=dist(SEQ[i],SEQ[j]); n++; })); return s/n; }
+$('d-next').onclick=()=>{ if(clusters.length<2) return; let best=1e9,bi=0,bj=1; for(let i=0;i<clusters.length;i++) for(let j=i+1;j<clusters.length;j++){ const d=cd(clusters[i],clusters[j]); if(d<best){ best=d; bi=i; bj=j; } }
+  const A=clusters[bi], Bc=clusters[bj], m={ids:A.ids.concat(Bc.ids),name:'('+A.name+', '+Bc.name+')',h:best/2,a:A,b:Bc}; merges.push(m); clusters.splice(bj,1); clusters.splice(bi,1,m); cladDraw(); };
+function leafOrder(){ const ord=[]; const walk=n=>{ if(n.a){ walk(n.a); walk(n.b); } else ord.push(n.ids[0]); }; clusters.forEach(walk); return ord; }
+function cladDraw(){ $('d-seqs').innerHTML=SPC.map((n,i)=>'<div class="seq"><span style="display:inline-block;width:100px;font-family:var(--body)">'+n+'</span>'+[...SEQ[i]].map((c,k)=>c!==SEQ[0][k]?'<span class="d">'+c+'</span>':c).join('')+'</div>').join('');
+  $('d-mat').innerHTML='<table class="t"><tr><th></th>'+SPC.map(n=>'<th>'+n.slice(0,4)+'</th>').join('')+'</tr>'+SPC.map((n,i)=>'<tr><th>'+n+'</th>'+SPC.map((m,j)=>'<td>'+(i===j?'-':dist(SEQ[i],SEQ[j]))+'</td>').join('')+'</tr>').join('')+'</table>';
+  const c=$('c-clad'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif'; const ord=leafOrder(), Y={}; ord.forEach((id,k)=>Y[id]=60+k*80); const X=h=>760-h*90;
+  const pos=n=>{ if(!n.a) return {x:X(0),y:Y[n.ids[0]]}; const pa=pos(n.a), pb=pos(n.b), xx=X(n.h); x.strokeStyle=rep&&n.ids.every(i=>i>=1)&&!(n.ids.includes(4)&&!n.ids.includes(1))?'#ffd166':'#7bd389'; x.lineWidth=4; x.beginPath(); x.moveTo(pa.x,pa.y); x.lineTo(xx,pa.y); x.lineTo(xx,pb.y); x.lineTo(pb.x,pb.y); x.stroke(); x.fillStyle='#fff'; x.beginPath(); x.arc(xx,(pa.y+pb.y)/2,5,0,7); x.fill();
+    if(clock){ x.fillStyle='#ffd166'; x.fillText(Math.round(n.h*2*16)+' My',xx-60,(pa.y+pb.y)/2-8); } return {x:xx,y:(pa.y+pb.y)/2}; };
+  clusters.forEach(pos); ord.forEach(id=>{ const isRep=rep&&id>=1&&id<=3; x.fillStyle=isRep?'#ffd166':'#fff'; x.fillText(SPC[id],780,Y[id]+6); });
+  if(rep){ x.fillStyle='#ffd166'; x.fillText('Traditional "reptiles" (yellow names): they do not include all descendants of their common ancestor, because birds are left out',20,440); }
+  $('d-say').textContent=clusters.length>1?'Count the differences between each pair of sequences. The two species with the fewest differences share the most recent common ancestor: join them first, then treat them as one group and repeat. This is a simplified version of how cladograms are built.':
+    rep?'A clade is an ancestor and all its descendants. Crocodiles share a more recent common ancestor with birds than with lizards, so "reptiles" without birds is not a clade. Cladistics shows that some traditional groups do not reflect evolutionary relationships, and classifications have been revised.':
+    clock?'If sequence differences build up at a roughly constant rate (here 1 difference per 16 million years per lineage, invented), the number of differences estimates when clades split: a molecular clock. Real clocks are calibrated with dated fossils.':
+    'Each branch point (node) is a common ancestor. The mammal is the outgroup: most distantly related. Species that branch from the same node form a clade. Cladograms are hypotheses: new evidence can change them.'; }
+$('d-clock').onclick=()=>{ clock=!clock; $('d-clock').setAttribute('aria-pressed',clock); cladDraw(); };
+$('d-rep').onclick=()=>{ rep=!rep; $('d-rep').setAttribute('aria-pressed',rep); while(rep&&clusters.length>1) $('d-next').onclick(); cladDraw(); };
+$('d-reset').onclick=()=>{ clock=false; rep=false; $('d-clock').setAttribute('aria-pressed',false); $('d-rep').setAttribute('aria-pressed',false); cladReset(); };
+// 5 DOMAINS ---------------------------------------------------------------------
+let view='new';
+function drawDom(){ const c=$('c-dom'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif'; x.strokeStyle='#7bd389'; x.lineWidth=5;
+  const line=(a,b,cx,cy)=>{ x.beginPath(); x.moveTo(a,b); x.lineTo(cx,cy); x.stroke(); };
+  if(view==='new'){ line(450,430,450,330); line(450,330,200,180); line(450,330,600,250); line(600,250,520,110); line(600,250,720,110); x.fillStyle='#fff'; x.fillText('LUCA',430,450);
+    [['Bacteria',150,160,'E. coli, cyanobacteria'],['Archaea',470,90,'methanogens, extremophiles'],['Eukarya',690,90,'animals, plants, fungi, protists']].forEach(([n,px,py,e])=>{ x.fillStyle='#7bd389'; x.font='bold 20px sans-serif'; x.fillText(n,px,py); x.fillStyle='#b8c9bf'; x.font='15px sans-serif'; x.fillText(e,px-20,py+22); });
+    x.fillStyle='#ffd166'; x.fillText('Archaea are more closely related to eukaryotes than to bacteria',250,40); }
+  else { line(450,430,450,300); line(450,300,250,160); line(450,300,650,160); x.fillStyle='#7bd389'; x.font='bold 20px sans-serif'; x.fillText('Prokaryotes',180,140); x.fillText('Eukaryotes',600,140); x.fillStyle='#b8c9bf'; x.font='15px sans-serif'; x.fillText('(all cells without a nucleus grouped together)',120,170); } }
+function sayDom(){ $('o-say').textContent=view==='new'?'Comparing the base sequences of ribosomal RNA, which all cells have, Carl Woese found that prokaryotes form two groups as different from each other as from eukaryotes. Life is now classified into three domains above the kingdoms. Classification is useful because it organises the huge diversity of life and lets us predict features of related organisms; it works best when groups match evolutionary relationships.':'The traditional system put all prokaryotes in one kingdom because they lack a nucleus. Organisms do not always fit neatly into ranks such as kingdom, phylum and class, and the ranks are decided by people, not by nature.'; }
+document.querySelectorAll('#o-pick button').forEach(b=>b.onclick=()=>{ view=b.dataset.o; document.querySelectorAll('#o-pick button').forEach(o=>o.setAttribute('aria-pressed',o===b)); drawDom(); sayDom(); });
+// loop, tabs ---------------------------------------------------------------------
+const TABS=['key','bar','sp','clad','dom']; let tab='key';
+function frame(){ try{ if(!$('lab').hidden&&tab==='sp'&&spMode==='bact') drawSp(); }catch(e){ console.error(e); } requestAnimationFrame(frame); }
+function showTab(k){ tab=k; TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); if(k==='bar'){ drawBar(); sayBar(); } if(k==='sp'){ drawSp(); saySp(); } if(k==='clad') cladDraw(); if(k==='dom'){ drawDom(); sayDom(); } }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; keyReset(); cladReset(); showTab(tab); }
+$('b-start').onclick=start; setLevel(level); requestAnimationFrame(frame);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.classDebug={ showTab, start, todo:()=>todo, lines:()=>lines, clusters:()=>clusters, dist };
+})();
+</script>
+
+<script>
+window.LAB_GUIDE = { title: 'Classification Lab: step by step', sections: {
+  key: { n: 'Key', tab: '#t-key', steps: [
+    { hl: true, n: 'A dichotomous key', s: 'A key leads you to a species name through a series of two-way questions. Build one for the eight leaf-litter animals: choose a question that splits each group in two.', go: ['#y-reset'], ch: 'A3.1.14' },
+    { hl: true, n: 'Good questions', s: 'Use features that are clear and constant (number of legs, segments) rather than size or colour, which vary between individuals.', hq: { q: 'Which is the best feature to use in a key?', o: ['Colour of the shell', 'Number of pairs of legs on each segment', 'Size of the animal'], a: 1, why: 'Leg number per segment is fixed and easy to check; colour and size vary.' }, ch: 'A3.1.14' }
+  ] },
+  bar: { n: 'Barcodes', tab: '#t-bar', steps: [
+    { hl: true, n: 'eDNA', s: 'Take a water sample, sequence the barcode gene, and match the reads to a library of known species.', go: ['#b-samp', '#b-seq', '#b-match'], ch: 'A3.1.15' },
+    { hl: true, n: 'Why it is useful', s: 'eDNA finds rare, hidden or invasive species without catching or disturbing them, and many species can be identified from one sample.', hq: { q: 'Why can eDNA detect great crested newts even when none are seen?', o: ['Newts glow in the dark', 'Newts shed cells and mucus containing DNA into the water', 'The barcode is visible'], a: 1, why: 'Organisms leave DNA in their environment, which can be sequenced and matched.' }, ch: 'A3.1.15' }
+  ] },
+  sp: { n: 'Species', tab: '#t-sp', steps: [
+    { hl: true, n: 'Fertile offspring', s: 'Cross a horse and a donkey. The mule has 63 chromosomes that cannot pair in meiosis, so it is sterile. Members of one species usually share a chromosome number.', go: ['#s-mule'], ch: 'A3.1.13' },
+    { hl: true, n: 'Where the concept fails', s: 'The biological species concept cannot be used for organisms that reproduce asexually, or for bacteria that swap genes between species.', go: ['#s-bact'], hq: { q: 'Why is the biological species concept hard to apply to bacteria?', o: ['They have no DNA', 'They reproduce asexually and can transfer genes between different species', 'They are too small to see'], a: 1, why: 'Without interbreeding, and with horizontal gene transfer, "can they breed together?" does not define bacterial species.' }, ch: 'A3.1.12' }
+  ] },
+  clad: { n: 'Cladograms', tab: '#t-clad', steps: [
+    { hl: true, n: 'From sequences to a tree', s: 'Press "Group the two most similar" repeatedly. Fewer differences means a more recent common ancestor.', go: ['#d-reset', '#d-next', '#d-next'], ch: 'A3.2.6' },
+    { hl: true, n: 'Reading a cladogram', s: 'Nodes are common ancestors; a clade is an ancestor with all its descendants; the outgroup branches off first.', go: ['#d-next', '#d-next'], ch: 'A3.2.4, A3.2.7' },
+    { hl: true, n: 'Molecular clock', s: 'Turn on the clock: differences build up at a roughly steady rate, so they estimate when clades split.', go: ['#d-clock'], ch: 'A3.2.5' },
+    { hl: true, n: 'Testing a classification', s: 'Highlight the traditional reptiles: without birds they are not a clade.', go: ['#d-rep'], hq: { q: 'Why is the traditional group "reptiles" not a clade?', o: ['Reptiles are not related', 'It leaves out birds, which descend from the same common ancestor as crocodiles', 'It includes mammals'], a: 1, why: 'A clade must contain an ancestor and all of its descendants.' }, ch: 'A3.2.8' }
+  ] },
+  dom: { n: 'Domains', tab: '#t-dom', steps: [
+    { hl: true, n: 'Why classify?', s: 'Classification organises the diversity of life, gives every species a unique name, and lets us predict features of related organisms. It is most useful when it reflects evolution.', go: ['[data-o="old"]'], ch: 'A3.2.1, A3.2.2, A3.2.3' },
+    { hl: true, n: 'Three domains', s: 'rRNA sequences split prokaryotes into Bacteria and Archaea, as different from each other as from Eukarya.', go: ['[data-o="new"]'], hq: { q: 'What evidence led to the three-domain system?', o: ['Cell size', 'Base sequences of ribosomal RNA', 'Whether cells have a nucleus'], a: 1, why: 'rRNA comparisons showed archaea are a distinct lineage, closer to eukaryotes than to bacteria.' }, ch: 'A3.2.9' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

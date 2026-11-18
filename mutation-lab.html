@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Mutation Lab: IB DP Biology resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/mutation-lab.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Mutation Lab">
+<meta property="og:description" content="Mutation Lab: IB DP Biology resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/mutation-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Mutation Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#110f18; --ink:#f3f1f8; --dim:#c3bdd3; --panel:#1b1826; --panel2:#252134; --line:rgba(210,200,240,.2);
+  --accent:#b8a1ff; --A:#e63946; --T:#2a9d8f; --G:#4895ef; --C:#f4a261; --bad:#ef476f; --ok:#52b788;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif; --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body)}
+#app{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand h1{margin:0;font:800 clamp(22px,3vw,30px)/1.1 var(--display)}
+.brand .sub{font-size:13px;color:var(--dim)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--panel);flex-wrap:wrap}
+.seg button{border:0;background:none;color:var(--dim);font:700 13px var(--body);padding:6px 12px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#1a1033}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(290px,1fr);gap:14px;margin-top:12px}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card+.card{margin-top:14px}
+canvas.plot{width:100%;height:auto;display:block;border-radius:10px;background:#0c0a12}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+button.go,button.btn{font:700 14px var(--body);border-radius:10px;padding:8px 13px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+button.go{background:var(--accent);color:#1a1033;border-color:transparent}
+button.btn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+h2{font:800 18px var(--display);margin:0 0 6px}
+p{margin:6px 0;line-height:1.5}
+.note{font-size:12px;color:var(--dim)}
+.intro{max-width:780px}
+.explain{border-left:4px solid var(--accent);padding:6px 10px;background:var(--panel2);border-radius:8px;min-height:60px}
+.tasks{padding-left:20px;margin:6px 0}.tasks li{margin:5px 0;line-height:1.45}
+.hl-only{display:none} body.hl .hl-only{display:block} body.hl span.hl-only,body.hl button.hl-only{display:inline-block}
+.dna{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.codon{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px;border-radius:8px;background:var(--panel2)}
+.codon.changed{outline:2px solid var(--bad)}
+.bases{display:flex;gap:2px}
+.b{width:26px;height:30px;border:0;border-radius:6px;font:800 15px ui-monospace,monospace;color:#fff;cursor:pointer}
+.b.A{background:var(--A)}.b.T{background:var(--T)}.b.G{background:var(--G)}.b.C{background:var(--C);color:#2a1600}
+.b.sel{outline:2px solid #fff}.b.pam{box-shadow:0 0 0 3px #ffd166}.b.guide{box-shadow:0 0 0 3px #b8a1ff}
+.aa{font:700 12.5px var(--body);color:var(--dim)}
+.aa.stop{color:var(--bad)}.aa.diff{color:#ffd166}
+.verdict{font:800 20px var(--display);margin:6px 0}
+.stat{display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:14px}.stat b{text-align:right}
+#k-al{overflow-x:auto;max-width:100%}
+table.al{border-collapse:collapse;font:700 14px ui-monospace,monospace}
+@media (max-width:520px){table.al{font-size:11px}table.al td{padding:1px 1px}}
+table.al td{padding:2px 3px;text-align:center}
+table.al td.n{text-align:left;font:700 13px var(--body);color:var(--dim);padding-right:10px}
+.badge{display:inline-block;font:700 11px var(--body);padding:2px 7px;border-radius:999px;background:#2a2140;color:var(--accent);margin-left:6px;vertical-align:middle}
+.back{font:700 12px var(--body);color:var(--dim);text-decoration:none}.back:hover{color:var(--ink)}.note a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="brand"><a class="back" href="simulations.html">&larr; What the Cell</a><h1>Mutation Lab</h1><div class="sub">DP Biology D1.3 &middot; real gene sequence for haemoglobin; the evolution model uses invented sequences</div></div>
+    <div class="seg" role="group" aria-label="Level"><button type="button" id="lv-sl" aria-pressed="true">SL</button><button type="button" id="lv-hl" aria-pressed="false">HL</button></div>
+  </div>
+  <div class="card intro" id="intro">
+    <h2>Changing the code</h2>
+    <p>A <b>gene mutation</b> is a change to the base sequence of a gene. In this lab you edit a real gene and see what happens to the protein, follow random mutations into body cells and gametes, and (HL) use CRISPR-Cas9 to knock a gene out or edit it precisely, then find out why some genes have hardly changed in a billion years.</p>
+    <p class="note">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</p>
+      <button type="button" class="go" id="b-start">Start the lab</button>
+  </div>
+  <div id="lab" hidden>
+    <div class="seg" role="tablist" aria-label="Experiment"><button type="button" id="t-mut" aria-pressed="true">1. Mutations</button><button type="button" id="t-rand" aria-pressed="false">2. Germ or body cell?</button><button type="button" id="t-crispr" aria-pressed="false">3. Knockout and CRISPR <span class="badge">HL</span></button><button type="button" id="t-cons" aria-pressed="false">4. Conserved genes <span class="badge">HL</span></button></div>
+
+    <!-- 1 MUTATIONS -->
+    <div class="grid" id="p-mut">
+      <div class="card">
+        <h2>The start of the haemoglobin beta gene</h2>
+        <p class="note">Coding strand, 5' to 3', grouped into codons. Click a base to change it (A, C, G, T in turn). Amino acids are shown below each codon; the first methionine is removed after translation, so codon 7 is amino acid 6.</p>
+        <div class="dna" id="m-dna"></div>
+        <div class="row"><button type="button" class="btn" id="m-sub">Random substitution</button><button type="button" class="btn" id="m-ins">Insert a base</button><button type="button" class="btn" id="m-del">Delete a base</button><button type="button" class="btn" id="m-sickle">Sickle cell mutation</button><button type="button" class="btn" id="m-reset">Undo all</button></div>
+        <p class="note">Insert and delete act just after the selected base (click a base first to select it, holding the Shift key so it does not change), or at a random place if none is selected.</p>
+      </div>
+      <div>
+        <div class="card"><h2>What happened?</h2><div class="verdict" id="m-verdict">No mutation</div><div class="explain"><p id="m-say"></p></div>
+          <div class="stat" style="margin-top:8px"><span>Bases changed, added or lost</span><b id="m-n">0</b><span>Amino acids different</span><b id="m-aa">0</b><span>Protein length (of 10 shown)</span><b id="m-len">10</b></div>
+          <p class="note">Syllabus: D1.3.1, D1.3.2, D1.3.3</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Change the third base of a codon. Is the amino acid always different? Why not?</li>
+          <li>Make the sickle cell mutation. Which amino acid changes, and why does this matter for haemoglobin?</li>
+          <li>Insert one base near the start, then one near the end. Which does more damage, and why?</li>
+          <li>Delete three bases together. Why is the effect smaller than deleting one?</li>
+          <li>Find a single substitution that makes a stop codon. What would happen to the protein?</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <!-- 2 GERM OR SOMATIC -->
+    <div class="grid" id="p-rand" hidden>
+      <div class="card">
+        <canvas class="plot" id="c-rand" width="900" height="520" aria-label="A gene with mutation hits marked, a body and a family tree"></canvas>
+        <div class="row"><span class="note" style="min-width:100px">Mutagen</span><div class="seg" id="r-mg"><button type="button" data-m="none" aria-pressed="true">None (copying errors)</button><button type="button" data-m="uv" aria-pressed="false">UV light</button><button type="button" data-m="smoke" aria-pressed="false">Tobacco smoke</button><button type="button" data-m="xray" aria-pressed="false">X-rays</button></div></div>
+        <div class="row"><button type="button" class="btn" id="r-go">Expose 1000 cells</button><button type="button" class="btn" id="r-clear">Clear</button></div>
+        <div class="row"><span class="note" style="min-width:100px">Where it happens</span><button type="button" class="btn" id="r-som" aria-pressed="true">A skin cell (somatic)</button><button type="button" class="btn" id="r-germ" aria-pressed="false">A cell making sperm (germ line)</button></div>
+      </div>
+      <div>
+        <div class="card"><h2>Results</h2><div class="stat"><span>Cells exposed</span><b id="r-cells">0</b><span>Mutations</span><b id="r-muts">0</b><span>Mutations per cell</span><b id="r-rate">0</b></div><div class="explain" style="margin-top:8px"><p id="r-say"></p></div><p class="note">Syllabus: D1.3.4, D1.3.5, D1.3.6, D1.3.7</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Expose cells with no mutagen, then with each mutagen. How many times higher is the mutation rate?</li>
+          <li>Expose several batches. Do mutations land on particular bases, or anywhere? What does this tell you about whether mutations happen "when needed"?</li>
+          <li>Compare a somatic mutation with a germ-line mutation. Which can be inherited, and which can lead to cancer in the person?</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <!-- 3 CRISPR -->
+    <div class="grid" id="p-crispr" hidden>
+      <div class="card">
+        <h2>Edit the gene with CRISPR-Cas9</h2><p>This cell carries the <b>sickle cell allele</b> (GTG in codon 7). Knock the gene out, or correct it.</p>
+        <p class="note">A 20-base guide RNA (purple) must match the target, and the target must be followed by a PAM sequence NGG (gold), which Cas9 needs in order to bind. Click a G that is part of a GG pair to choose a PAM site.</p>
+        <div class="dna" id="c-dna"></div>
+        <div class="row"><button type="button" class="btn" id="c-cut" disabled>Cut with Cas9</button><button type="button" class="btn" id="c-nhej" disabled>Cell joins the ends (knockout)</button><button type="button" class="btn" id="c-hdr" disabled>Repair with a template (precise edit)</button><button type="button" class="btn" id="c-reset">New cell</button></div>
+        <canvas class="plot" id="c-cv" width="900" height="200" aria-label="Diagram of Cas9 and the guide RNA on the DNA"></canvas>
+      </div>
+      <div>
+        <div class="card"><h2>Step</h2><div class="verdict" id="c-verdict">Choose a target</div><div class="explain"><p id="c-say"></p></div><p class="note">Syllabus: D1.3.8, D1.3.9</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Find a PAM site in the first half of the gene and knock the gene out. Why does a small insertion or deletion stop the protein working?</li>
+          <li>Repeat, but repair with a template that corrects the sickle cell base. Why is this harder for a cell than just joining the ends?</li>
+          <li>Scientists knock out a gene in mice and the mice cannot see colour. What does this tell them?</li>
+        </ol></div>
+      </div>
+    </div>
+
+    <!-- 4 CONSERVED -->
+    <div class="grid" id="p-cons" hidden>
+      <div class="card">
+        <h2>Evolve one gene in eight species</h2>
+        <p class="note">An invented 24-amino-acid protein. Some positions (marked *) are essential for its function: a change there makes the protein fail, and the individual is removed by selection. Run evolution and watch the alignment.</p>
+        <div id="k-al"></div>
+        <div class="row"><button type="button" class="btn" id="k-run">Evolve 50 million years</button><button type="button" class="btn" id="k-reset">Start again</button><label class="note"><input type="checkbox" id="k-noselect"> Turn off selection</label></div>
+        <canvas class="plot" id="k-cv" width="900" height="300" aria-label="Bar chart of how fast different proteins change"></canvas>
+      </div>
+      <div>
+        <div class="card"><h2>What is happening</h2><div class="stat"><span>Time</span><b id="k-time">0</b><span>Identical columns (essential positions)</span><b id="k-ess">-</b><span>Identical columns (other positions)</span><b id="k-oth">-</b></div><div class="explain" style="margin-top:8px"><p id="k-say"></p></div><p class="note">Syllabus: D1.3.10</p></div>
+        <div class="card"><h2>Try these</h2><ol class="tasks">
+          <li>Run 10 times. Which columns stay identical in all eight species? Why?</li>
+          <li>Turn off selection and run again. What happens to the essential positions now?</li>
+          <li>Use the chart: why might histone H4 have changed far less than fibrinopeptides?</li>
+        </ol></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let level='sl'; try{ level=localStorage.getItem('wtc-cell-level')||'sl'; }catch(e){}
+const B='TCAG', AAS='FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG';
+const NAME={F:'Phe',L:'Leu',S:'Ser',Y:'Tyr','*':'STOP',C:'Cys',W:'Trp',P:'Pro',H:'His',Q:'Gln',R:'Arg',I:'Ile',M:'Met',T:'Thr',N:'Asn',K:'Lys',V:'Val',A:'Ala',D:'Asp',E:'Glu',G:'Gly'};
+const code=c=>c.length<3?'':AAS[B.indexOf(c[0])*16+B.indexOf(c[1])*4+B.indexOf(c[2])];
+function translate(s){ const out=[]; for(let i=0;i+2<s.length;i+=3){ const a=code(s.slice(i,i+3)); out.push(a); if(a==='*') break; } return out; }
+// 1. MUTATIONS ------------------------------------------------------------
+const HBB='ATGGTGCACCTGACTCCTGAGGAGAAGTCT'; let seq=HBB, sel=-1, edits=0, lastKind='';
+const REF=translate(HBB);
+function drawMut(){ const box=$('m-dna'); box.innerHTML=''; const aa=translate(seq);
+  for(let c=0;c*3<seq.length;c++){ const cod=seq.slice(c*3,c*3+3), d=document.createElement('div'); d.className='codon'; if(cod!==HBB.slice(c*3,c*3+3)) d.classList.add('changed');
+    const bs=document.createElement('div'); bs.className='bases'; [...cod].forEach((b,j)=>{ const i=c*3+j, el=document.createElement('button'); el.type='button'; el.className='b '+b+(i===sel?' sel':''); el.textContent=b; el.title='Base '+(i+1);
+      el.onclick=e=>{ if(e.shiftKey){ sel=i; drawMut(); return; } seq=seq.slice(0,i)+'ACGT'[('ACGT'.indexOf(b)+1)%4]+seq.slice(i+1); sel=i; edits++; lastKind='sub'; drawMut(); }; bs.appendChild(el); });
+    d.appendChild(bs); const a=document.createElement('div'); const A=aa[c]; a.className='aa'+(A==='*'?' stop':'')+(A&&A!==REF[c]?' diff':''); a.textContent=c<aa.length?(NAME[A]||''):(c===aa.length?'':'-'); if(c>=aa.length) a.textContent='(none)'; d.appendChild(a); box.appendChild(d); }
+  judge(aa); }
+function judge(aa){ let diff=0; for(let i=0;i<10;i++) if(aa[i]!==REF[i]) diff++; const stopAt=aa.indexOf('*'), len=stopAt>=0?stopAt:Math.min(10,aa.length), shift=(seq.length-HBB.length)%3!==0;
+  let v='No mutation', s='This is the normal start of the beta chain of haemoglobin: Met Val His Leu Thr Pro Glu Glu Lys Ser. The protein has 146 amino acids after the first methionine is removed.';
+  if(seq!==HBB){ if(shift){ v='Frameshift'; s='Adding or removing a number of bases that is not a multiple of three shifts the reading frame. Every codon after the change is read differently, so most amino acids after it change, and a stop codon often appears early. The protein will almost certainly not work.'; }
+    else if(stopAt>=0&&stopAt<10){ v='Nonsense: early stop'; s='A codon has become a stop codon. Translation ends there, so the protein is cut short (truncated) and will not work.'; }
+    else if(diff===0){ v='Silent (same protein)'; s='The base sequence changed but every codon still codes for the same amino acid, because the genetic code is degenerate. Changes in the third base of a codon are often silent.'; }
+    else if(seq.slice(18,21)==='GTG'&&diff===1){ v='Missense: sickle cell'; s='GAG has become GTG, so glutamic acid (polar, charged) is replaced by valine (non-polar) at position 6. The haemoglobin sticks together at low oxygen, red blood cells become sickle-shaped, block capillaries and are destroyed. Heterozygotes are partly protected from malaria.'; }
+    else if(seq.length!==HBB.length){ v='In-frame insertion or deletion'; s='Three bases were added or removed, so one amino acid is gained or lost but the rest of the sequence is read correctly. The effect may be small or large, depending on where it is.'; }
+    else { v='Missense'; s='One amino acid is replaced by another. The effect depends on how different the new amino acid is and where it is in the protein: it may change the shape and function a lot or hardly at all.'; } }
+  $('m-verdict').textContent=v; $('m-say').textContent=s; $('m-n').textContent=seq.length!==HBB.length?Math.abs(seq.length-HBB.length):[...seq].filter((b,i)=>b!==HBB[i]).length; $('m-aa').textContent=diff; $('m-len').textContent=len; }
+const rnd=n=>Math.floor(Math.random()*n);
+$('m-sub').onclick=()=>{ const i=3+rnd(seq.length-3), b=seq[i]; let nb; do{ nb='ACGT'[rnd(4)]; }while(nb===b); seq=seq.slice(0,i)+nb+seq.slice(i+1); sel=i; edits++; drawMut(); };
+$('m-ins').onclick=()=>{ const i=sel>=0?sel+1:3+rnd(seq.length-3); seq=seq.slice(0,i)+'ACGT'[rnd(4)]+seq.slice(i); sel=i; edits++; drawMut(); };
+$('m-del').onclick=()=>{ const i=sel>=0?sel:3+rnd(seq.length-3); seq=seq.slice(0,i)+seq.slice(i+1); sel=Math.min(i,seq.length-1); edits++; drawMut(); };
+$('m-sickle').onclick=()=>{ seq=HBB.slice(0,19)+'T'+HBB.slice(20); sel=19; drawMut(); };
+$('m-reset').onclick=()=>{ seq=HBB; sel=-1; drawMut(); };
+// 2. RANDOM MUTATION, GERM VS SOMATIC ---------------------------------------
+const RATE={none:0.0006,uv:0.012,smoke:0.008,xray:0.02}; let mg='none', hits=new Array(60).fill(0), cells=0, muts=0, germ=false;
+function drawRand(){ const c=$('c-rand'), x=c.getContext('2d'), w=c.width; x.clearRect(0,0,w,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  x.fillStyle='#c3bdd3'; x.fillText('Where the mutations landed in a 60-base gene',20,26); const mx=Math.max(3,...hits);
+  hits.forEach((h,i)=>{ const X=20+i*14.3, H=h/mx*120; x.fillStyle=['#e63946','#2a9d8f','#4895ef','#f4a261'][i%4]; x.fillRect(X,170-H,11,H); x.fillRect(X,176,11,10); });
+  x.fillStyle='#c3bdd3'; x.fillText('base 1',16,206); x.fillText('base 60',820,206);
+  // body or family
+  const Y0=250; if(!germ){ x.fillStyle='#f1c6a7'; x.beginPath(); x.arc(200,Y0+50,32,0,7); x.fill(); x.fillRect(176,Y0+82,48,110); x.fillRect(140,Y0+90,36,14); x.fillRect(224,Y0+90,36,14); x.fillRect(180,Y0+192,16,60); x.fillRect(204,Y0+192,16,60);
+      if(muts>0){ x.fillStyle='#ef476f'; x.beginPath(); x.arc(240,Y0+97,10,0,7); x.fill(); x.fillStyle='#fff'; x.fillText('one patch of skin cells carries it',270,Y0+102); x.fillText('(may grow into a tumour; not inherited)',270,Y0+126); } else { x.fillStyle='#c3bdd3'; x.fillText('Expose cells to see where a mutation ends up',270,Y0+102); } }
+  else { const ppl=[[200,Y0+40,1,'Father: mutation in one sperm'],[420,Y0+40,0,'Mother'],[310,Y0+170,1,'Child: in every cell'],[200,Y0+250,0.5,''],[420,Y0+250,0.5,'Grandchildren: half may inherit it']];
+      x.strokeStyle='#c3bdd3'; x.lineWidth=2; x.beginPath(); x.moveTo(200,Y0+40); x.lineTo(420,Y0+40); x.moveTo(310,Y0+40); x.lineTo(310,Y0+140); x.moveTo(310,Y0+200); x.lineTo(310,Y0+225); x.lineTo(200,Y0+225); x.lineTo(200,Y0+230); x.moveTo(310,Y0+225); x.lineTo(420,Y0+225); x.lineTo(420,Y0+230); x.stroke();
+      ppl.forEach(([X,Y,m,t])=>{ x.fillStyle=muts>0&&m===1?'#ef476f':muts>0&&m===0.5?'#f4a261':'#6c6488'; x.beginPath(); x.arc(X,Y,22,0,7); x.fill(); x.fillStyle='#fff'; if(t) x.fillText(t,X+30,Y+5); }); } }
+function sayRand(){ $('r-cells').textContent=cells.toLocaleString(); $('r-muts').textContent=muts; $('r-rate').textContent=cells?(muts/cells).toFixed(4):'0';
+  $('r-say').textContent=cells===0?'Mutations happen when DNA is copied wrongly or damaged. Mutagens such as UV light, X-rays and chemicals in tobacco smoke raise the rate.':
+    (germ?'A mutation in a cell that makes gametes can be passed to offspring, who carry it in every cell. This is how new alleles enter a population and add to genetic diversity, the raw material for evolution.':'A mutation in a body (somatic) cell is passed only to that cell\'s descendants in the same person. It is not inherited by children, but it can contribute to cancer if it affects genes that control cell division.')+' The hits are spread at random along the gene: mutations are not directed towards places where they would be useful.'; }
+$('r-go').onclick=()=>{ const r=RATE[mg]; for(let i=0;i<1000;i++){ cells++; for(let b=0;b<60;b++) if(Math.random()<r/60){ hits[b]++; muts++; } } drawRand(); sayRand(); };
+$('r-clear').onclick=()=>{ hits=new Array(60).fill(0); cells=0; muts=0; drawRand(); sayRand(); };
+document.querySelectorAll('#r-mg button').forEach(b=>b.onclick=()=>{ mg=b.dataset.m; document.querySelectorAll('#r-mg button').forEach(o=>o.setAttribute('aria-pressed',o===b)); });
+$('r-som').onclick=()=>{ germ=false; $('r-som').setAttribute('aria-pressed','true'); $('r-germ').setAttribute('aria-pressed','false'); drawRand(); sayRand(); };
+$('r-germ').onclick=()=>{ germ=true; $('r-germ').setAttribute('aria-pressed','true'); $('r-som').setAttribute('aria-pressed','false'); drawRand(); sayRand(); };
+// 3. CRISPR -------------------------------------------------------------------
+const GENE='ATGGTGCACCTGACTCCTGTGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGATGAAGTTGGTGGTGAGGCC'; let cs=GENE, pam=-1, stage=0, cutAt=-1;
+function drawCr(){ const box=$('c-dna'); box.innerHTML=''; for(let c=0;c*3<cs.length;c++){ const d=document.createElement('div'); d.className='codon'; const bs=document.createElement('div'); bs.className='bases';
+    [...cs.slice(c*3,c*3+3)].forEach((b,j)=>{ const i=c*3+j, el=document.createElement('button'); el.type='button'; el.className='b '+b; el.textContent=b; if(pam>=0&&i>=pam-1&&i<=pam+1) el.classList.add('pam'); if(pam>=0&&i>=pam-21&&i<pam-1) el.classList.add('guide');
+      el.onclick=()=>{ if(stage>0) return; if(b==='G'&&cs[i+1]==='G'&&i>=21) { pam=i; stage=0; } else if(b==='G'&&cs[i-1]==='G'&&i-1>=21){ pam=i-1; } else { $('c-say').textContent='That is not the start of a GG pair with 20 bases before it. Choose another G.'; return; } setCr(); }; bs.appendChild(el); });
+    d.appendChild(bs); const a=document.createElement('div'); const aa=translate(cs); a.className='aa'; a.textContent=c<aa.length?NAME[aa[c]]:''; d.appendChild(a); box.appendChild(d); } drawCv(); }
+function drawCv(){ const c=$('c-cv'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif';
+  x.fillStyle='#4a4366'; x.fillRect(30,120,840,10); x.fillRect(30,150,840,10);
+  if(pam>=0){ x.fillStyle='rgba(184,161,255,.35)'; x.beginPath(); x.ellipse(450,138,170,60,0,0,7); x.fill(); x.fillStyle='#b8a1ff'; x.fillRect(310,100,240,8); x.fillStyle='#fff'; x.fillText('Cas9 with guide RNA',360,60); x.fillStyle='#ffd166'; x.fillRect(560,115,40,50); x.fillText('PAM',562,190); }
+  if(stage>=1){ x.fillStyle='#0c0a12'; x.fillRect(520,110,10,60); x.fillStyle='#ef476f'; x.fillText('double-strand cut',470,30); }
+  if(stage===2){ x.fillStyle='#ef476f'; x.fillRect(518,112,14,56); x.fillStyle='#fff'; x.fillText('ends joined with a small insertion or deletion',380,195); }
+  if(stage===3){ x.fillStyle='#52b788'; x.fillRect(440,90,180,8); x.fillStyle='#fff'; x.fillText('template DNA copied into the gap',420,195); } }
+function setCr(){ $('c-cut').disabled=!(pam>=0&&stage===0); $('c-nhej').disabled=stage!==1; $('c-hdr').disabled=stage!==1;
+  const v=['Choose a target','Target chosen','Cut made','Knocked out','Precisely edited'][stage===0&&pam>=0?1:stage===0?0:stage===1?2:stage===2?3:4]; $('c-verdict').textContent=v;
+  const s={0:pam<0?'CRISPR comes from bacteria, which store pieces of viral DNA (CRISPR sequences) and use Cas9 to cut matching viruses. Scientists give Cas9 a guide RNA of their choice. Start by clicking a G in a GG pair.':'The guide RNA (purple) matches the 20 bases next to the PAM (gold). The guide pairs with this DNA by complementary base pairing, and Cas9 binds. Now cut.',
+    1:'Cas9 cuts both strands about 3 bases before the PAM. The cell must repair the break, and there are two ways.',
+    2:'The cell joined the broken ends quickly, but added or lost a few bases. This shifts the reading frame, so the protein is wrong after this point: the gene is knocked out. Comparing knockout organisms with normal ones shows what the gene does: this is gene knockout.',
+    3:'A repair template with the wanted sequence was supplied, and the cell copied it into the gap. The gene now carries exactly the change chosen: a precise edit. This is how CRISPR could correct a disease allele such as the sickle cell mutation, but it is less efficient than end-joining.'}; $('c-say').textContent=s[stage===0?0:stage===1?1:stage===2?2:3]; drawCv(); }
+$('c-cut').onclick=()=>{ stage=1; cutAt=pam-3; setCr(); };
+$('c-nhej').onclick=()=>{ const r=Math.random()<0.5; cs=r?cs.slice(0,cutAt)+'A'+cs.slice(cutAt):cs.slice(0,cutAt-1)+cs.slice(cutAt); stage=2; drawCr(); setCr(); };
+$('c-hdr').onclick=()=>{ stage=3; const i=19; if(cs[i]==='T') cs=cs.slice(0,i)+'A'+cs.slice(i+1); drawCr(); setCr(); };
+$('c-reset').onclick=()=>{ cs=GENE; pam=-1; stage=0; drawCr(); setCr(); };
+// 4. CONSERVED ----------------------------------------------------------------
+const AA20='ACDEFGHIKLMNPQRSTVWY', ESS=[1,4,5,9,12,13,17,20,21]; const SP=['Human','Mouse','Chicken','Frog','Zebrafish','Fruit fly','Nematode','Yeast'];
+let anc, al, t=0; function initCons(){ let s=1; anc=''; for(let i=0;i<24;i++){ s=(s*7919+13)%9973; anc+=AA20[s%20]; } al=SP.map(()=>anc); t=0; drawCons(); }
+function evolve(){ const nosel=$('k-noselect').checked; al=al.map((s,k)=>{ let a=s.split(''); const n=4+((k*3)%3); for(let m=0;m<n;m++){ const p=rnd(24), nb=AA20[rnd(20)]; if(ESS.includes(p)&&!nosel) continue; a[p]=nb; } return a.join(''); }); t+=50; drawCons(); }
+function drawCons(){ let h='<table class="al"><tr><td class="n"></td>'+[...anc].map((_,i)=>'<td style="color:#ffd166">'+(ESS.includes(i)?'*':'')+'</td>').join('')+'</tr>';
+  let essSame=0, othSame=0; for(let i=0;i<24;i++){ const same=al.every(s=>s[i]===al[0][i]); if(same){ if(ESS.includes(i)) essSame++; else othSame++; } }
+  al.forEach((s,k)=>{ h+='<tr><td class="n">'+SP[k]+'</td>'+[...s].map((c,i)=>{ const same=al.every(o=>o[i]===s[i]); return '<td style="background:'+(same?'rgba(82,183,136,.35)':'transparent')+'">'+c+'</td>'; }).join('')+'</tr>'; }); h+='</table>';
+  $('k-al').innerHTML=h; $('k-time').textContent=t+' million years'; $('k-ess').textContent=essSame+' of '+ESS.length; $('k-oth').textContent=othSame+' of '+(24-ESS.length);
+  $('k-say').textContent=t===0?'All eight species start with the same ancestral sequence. Mutations then happen at random positions in each lineage.':$('k-noselect').checked?'Without selection, changes build up at every position, including the essential ones: nothing removes them. In real organisms, an essential protein that stopped working would kill the individual.':'Mutations hit every position equally, but individuals with changes at essential positions do not survive to reproduce. So those columns stay identical (green) in all species: they are highly conserved. Other positions drift apart.';
+  const c=$('k-cv'), x=c.getContext('2d'); x.clearRect(0,0,c.width,c.height); x.font='16px Atkinson Hyperlegible, sans-serif'; x.fillStyle='#c3bdd3'; x.fillText('Real proteins: millions of years for 1% of amino acids to change (log scale)',20,24);
+  const D=[['Fibrinopeptides',1.1,'#ef476f'],['Haemoglobin',5.8,'#f4a261'],['Cytochrome c',20,'#4895ef'],['Histone H4',600,'#52b788']]; D.forEach(([n,v,col],i)=>{ const W=Math.log10(v*10)/Math.log10(6000)*620; x.fillStyle=col; x.fillRect(200,50+i*58,W,36); x.fillStyle='#fff'; x.fillText(n,20,74+i*58); x.fillText(v+' million years',210+W,74+i*58); }); }
+$('k-run').onclick=evolve; $('k-reset').onclick=initCons; $('k-noselect').onchange=drawCons;
+// tabs, level ------------------------------------------------------------------
+const TABS=['mut','rand','crispr','cons'];
+function showTab(k){ TABS.forEach(t=>{ $('p-'+t).hidden=t!==k; $('t-'+t).setAttribute('aria-pressed',t===k); }); if(k==='crispr'){ drawCr(); setCr(); } if(k==='rand'){ drawRand(); sayRand(); } }
+TABS.forEach(t=>$('t-'+t).onclick=()=>{ showTab(t); try{ history.replaceState(null,'','#'+t); }catch(e){} });
+function setLevel(l){ level=l; try{ localStorage.setItem('wtc-cell-level',l); }catch(e){} document.body.classList.toggle('hl',l==='hl'); $('lv-sl').setAttribute('aria-pressed',l==='sl'); $('lv-hl').setAttribute('aria-pressed',l==='hl'); }
+$('lv-sl').onclick=()=>setLevel('sl'); $('lv-hl').onclick=()=>setLevel('hl');
+function start(){ $('intro').hidden=true; $('lab').hidden=false; drawMut(); initCons(); drawRand(); sayRand(); }
+$('b-start').onclick=start; setLevel(level);
+function fromHash(){ const h=location.hash.slice(1); if(TABS.includes(h)){ if($('lab').hidden) start(); showTab(h); } }
+window.addEventListener('hashchange',fromHash); fromHash();
+window.mutDebug={ get seq(){ return seq; }, set seq(v){ seq=v; drawMut(); }, translate, judge:()=>$('m-verdict').textContent, showTab, start, cr:()=>({cs,pam,stage}), al:()=>al, evolve };
+})();
+</script>
+
+<script>
+window.LAB_GUIDE = { title: 'Mutation Lab: step by step', sections: {
+  mut: { n: 'Mutations', tab: '#t-mut', steps: [
+    { n: 'A real gene', s: 'This is the start of the gene for the beta chain of haemoglobin. Each group of three bases (a codon) codes for one amino acid.', go: ['#m-reset'], cs: 'D1.3.1' },
+    { n: 'Base substitution', s: 'Make a random substitution. Depending on the codon, the result is **silent** (same amino acid), **missense** (a different amino acid) or **nonsense** (a stop codon).', go: ['#m-reset', '#m-sub'], cs: 'D1.3.2' },
+    { n: 'Sickle cell', s: 'One base change, A to T in codon 7, changes glutamic acid to valine. This is the sickle cell mutation.', go: ['#m-sickle'], q: { q: 'Why does a single base substitution in sickle cell anaemia have such a large effect?', o: ['It deletes the gene', 'It replaces a polar amino acid with a non-polar one, so haemoglobin molecules stick together', 'It adds a stop codon'], a: 1, why: 'Valine is non-polar, so deoxygenated haemoglobin forms long fibres that distort the red blood cells.' }, cs: 'D1.3.2' },
+    { n: 'Insertions and deletions', s: 'Insert or delete one base: every codon after it is read in the wrong frame (a **frameshift**), so the protein is changed from that point on. Deleting three bases removes just one amino acid.', go: ['#m-reset', '#m-del'], q: { q: 'Why does a single-base deletion near the start of a gene usually do more harm than a substitution?', o: ['It removes the start codon', 'It shifts the reading frame, changing every following codon', 'It changes only one amino acid'], a: 1, why: 'All codons after the deletion are read differently, so the rest of the polypeptide is wrong.' }, cs: 'D1.3.3' }
+  ] },
+  rand: { n: 'Germ or body cell', tab: '#t-rand', steps: [
+    { n: 'Causes of mutation', s: 'Mutations arise from mistakes in DNA replication and from **mutagens**: UV light, X-rays and gamma rays, and chemicals such as those in tobacco smoke. Compare the rates.', go: ['#r-clear', '[data-m="uv"]', '#r-go', '#r-go'], cs: 'D1.3.4' },
+    { n: 'Mutations are random', s: 'Look at where the hits landed: anywhere along the gene. Mutation does not target places where a change would be useful.', cs: 'D1.3.5' },
+    { n: 'Somatic or germ line', s: 'Switch between a skin cell and a cell making sperm.', pts: ['**Somatic** mutations affect only that person, in the cells descended from the mutated one, and can lead to cancer.', '**Germ-line** mutations can be passed to children, who have them in every cell.'], go: ['#r-germ'], q: { q: 'Which mutation can be inherited by a person\'s children?', o: ['A mutation in a skin cell caused by sunlight', 'A mutation in a cell in the testes that produces sperm', 'A mutation in a liver cell'], a: 1, why: 'Only mutations in cells that give rise to gametes can be passed on.' }, cs: 'D1.3.6, D1.3.7' }
+  ] },
+  crispr: { n: 'CRISPR (HL)', tab: '#t-crispr', steps: [
+    { hl: true, n: 'Gene knockout', s: 'To find out what a gene does, scientists make an organism in which that gene does not work (a **knockout**), then look for what has changed. Knockout mice exist for most mouse genes.', ch: 'D1.3.8' },
+    { hl: true, n: 'Choosing a target', s: 'Click a G that is part of a GG pair. The 20 bases before it become the guide RNA target, and GG is the PAM site Cas9 needs.', go: ['#c-reset'], ch: 'D1.3.9' },
+    { hl: true, n: 'Cut and repair', s: 'Cut with Cas9, then choose a repair: joining the ends usually adds or removes a base (knockout); a template gives a precise edit, here correcting the sickle cell allele.', hq: { q: 'What decides where Cas9 cuts the DNA?', o: ['Cas9 recognises the gene by itself', 'The guide RNA pairs with a matching 20-base sequence next to a PAM site', 'It cuts at random'], a: 1, why: 'The guide RNA is complementary to the target, so Cas9 can be sent to almost any gene.' }, ch: 'D1.3.9' }
+  ] },
+  cons: { n: 'Conserved (HL)', tab: '#t-cons', steps: [
+    { hl: true, n: 'Evolve the gene', s: 'Run evolution a few times. Mutations hit every position, but changes at essential positions are removed by natural selection, so those columns stay identical.', go: ['#k-reset', '#k-run', '#k-run', '#k-run'], ch: 'D1.3.10' },
+    { hl: true, n: 'Real examples', s: 'Histone H4, which packs DNA, is almost identical in peas and cows. Cytochrome c changes slowly; fibrinopeptides, which only need to be cut off, change fast.', hpts: ['Explanations: **functional constraint** (most changes would be harmful, so they are selected against), and possibly lower mutation rates in some regions.'], hq: { q: 'Why is histone H4 one of the most conserved proteins known?', o: ['It is never copied', 'Almost any change disrupts how DNA is packed, so mutations are selected against', 'It is only found in plants'], a: 1, why: 'Strong functional constraint means individuals with changed histone H4 rarely survive and reproduce.' }, ch: 'D1.3.10' }
+  ] }
+} };
+
+/* What the Cell lab guide (2026-11-18). A slide-out "Guide" drawer for the 2D labs: step-by-step walk-throughs for each tab,
+   with SL/HL levels, HL-only steps, quick checks and "Show me" buttons that set up the lab.
+   Data: window.LAB_GUIDE = { sections: { key: { n, tab: '#t-key' (button to open that tab), steps: [ { n, s, pts, h, hpts, q, hq,
+   hl: true (HL only), go: '#id' or ['#a', '#b'] or function } ] } }, section(): returns the key of the open tab (optional) }.
+   q/hq = { q, o: [options], a: index, why }. **bold** works in all text. Keep this file ASCII-safe. */
+(function () {
+  'use strict';
+  var G = window.LAB_GUIDE; if (!G || !G.sections) return;
+  var keys = Object.keys(G.sections), level = 'sl';
+  try { if (localStorage.getItem('wtc-cell-level') === 'hl') level = 'hl'; } catch (e) {}
+  var css = '#wg-btn{position:fixed;right:16px;bottom:16px;z-index:50;font:800 15px var(--body,sans-serif);background:var(--accent,#f2a541);color:#1d1400;border:0;border-radius:999px;padding:11px 18px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.45)}' +
+    '#wg{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:60;background:var(--panel,#141e22);color:var(--ink,#f1f5f4);border-left:1px solid var(--line,rgba(255,255,255,.18));box-shadow:-12px 0 30px rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--body,sans-serif)}' +
+    '#wg header{padding:12px 14px 8px;border-bottom:1px solid var(--line,rgba(255,255,255,.18))}#wg h2{margin:0;font:800 19px var(--display,sans-serif)}' +
+    '#wg .wg-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}#wg .wg-row button{font:700 12.5px var(--body,sans-serif);border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--dim,#ccc);border-radius:999px;padding:5px 11px;cursor:pointer}' +
+    '#wg .wg-row button[aria-pressed="true"]{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg .wg-x{margin-left:auto}' +
+    '#wg .wg-body{padding:12px 14px;overflow-y:auto;flex:1}#wg .wg-eye{font:700 11px var(--body,sans-serif);letter-spacing:.1em;text-transform:uppercase;color:var(--accent,#f2a541)}' +
+    '#wg h3{margin:3px 0 8px;font:800 18px/1.2 var(--display,sans-serif)}#wg p{margin:6px 0;line-height:1.5;font-size:15px}#wg ul{margin:6px 0;padding-left:20px}#wg li{margin:4px 0;line-height:1.45;font-size:14.5px}#wg b{color:var(--accent,#f2a541)}' +
+    '#wg .wg-hl{margin-top:10px;padding:8px 11px;border-radius:11px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.4)}#wg .wg-tag{display:inline-block;font:800 10.5px sans-serif;letter-spacing:.12em;background:#ffd166;color:#1d1400;border-radius:6px;padding:1px 7px}' +
+    '#wg .wg-show{margin:8px 0;font:700 14px var(--body,sans-serif);border:1.5px solid var(--accent,#f2a541);background:transparent;color:var(--accent,#f2a541);border-radius:10px;padding:7px 12px;cursor:pointer}' +
+    '#wg .wg-chk{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line,rgba(255,255,255,.25))}#wg .wg-chk .wg-q{font-size:14.5px;margin:3px 0 4px}' +
+    '#wg .wg-chk button{display:block;width:100%;text-align:left;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:var(--ink,#fff);margin-top:5px;font:600 13.5px var(--body,sans-serif);padding:7px 11px;cursor:pointer}' +
+    '#wg .wg-chk button.ok{background:rgba(80,200,120,.38)}#wg .wg-chk button.no{background:rgba(230,80,80,.32)}#wg .wg-why{font-size:13.5px;margin-top:6px;line-height:1.45}' +
+    '#wg footer{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line,rgba(255,255,255,.18));align-items:center}#wg footer button{font:700 14px var(--body,sans-serif);border-radius:10px;padding:8px 14px;cursor:pointer;border:1px solid var(--line,rgba(255,255,255,.2));background:transparent;color:var(--ink,#fff)}' +
+    '#wg footer .wg-next{background:var(--accent,#f2a541);color:#1d1400;border-color:transparent}#wg footer .wg-of{margin-left:auto;font-size:12.5px;color:var(--dim,#bbb)}' +
+    '@media (min-width:1100px){body.wg-open #app{margin-right:430px}}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
+  var esc = function (t) { return String(t).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+  var ul = function (a) { return a && a.length ? '<ul>' + a.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : ''; };
+  var btn = document.createElement('button'); btn.type = 'button'; btn.id = 'wg-btn'; btn.textContent = 'Guide: step by step'; document.body.appendChild(btn);
+  var box = document.createElement('aside'); box.id = 'wg'; box.hidden = true; box.setAttribute('aria-label', 'Step-by-step guide'); document.body.appendChild(box);
+  var cur = null, at = 0, lockUntil = 0;
+  function current() { if (G.section) { try { var k = G.section(); if (k && G.sections[k]) return k; } catch (e) {} }
+    for (var i = 0; i < keys.length; i++) { var p = document.getElementById('p-' + keys[i]); if (p && !p.hidden && p.offsetParent !== null) return keys[i]; } return cur || keys[0]; }
+  function steps() { return G.sections[cur].steps.filter(function (s) { return !s.hl || level === 'hl'; }); }
+  function syncLabLevel() { var b = document.getElementById('lv-' + level) || document.getElementById('l-' + level); if (b && b.getAttribute('aria-pressed') !== 'true') b.click(); document.body.classList.toggle('hl', level === 'hl'); }
+  function setLevel(l) { level = l; try { localStorage.setItem('wtc-cell-level', l); } catch (e) {} syncLabLevel(); at = Math.min(at, steps().length - 1); render(); }
+  function runGo(go) { var list = typeof go === 'function' ? null : [].concat(go); if (!list) { try { go(); } catch (e) {} return; }
+    var startBtn = document.getElementById('b-start'); var lab = document.getElementById('lab'); if (lab && lab.hidden && startBtn) startBtn.click();
+    lockUntil = Date.now() + 1500; list.forEach(function (sel, i) { var f = function () { var el = document.querySelector(sel); if (el) el.click(); }; if (i === 0) f(); else setTimeout(f, i * 120); }); }
+  function render() { var sec = G.sections[cur], all = steps(); if (!all.length) all = [{ n: sec.n + ' is an HL topic', s: 'This part of the lab covers HL content only. Switch the level to HL at the top of this guide to see the steps.' }]; at = Math.max(0, Math.min(at, all.length - 1)); var s = all[at];
+    var h = '<header><div class="wg-eye">Guide</div><h2></h2><div class="wg-row" role="group" aria-label="Section">' + keys.map(function (k) { return '<button type="button" data-k="' + k + '" aria-pressed="' + (k === cur) + '">' + esc(G.sections[k].n) + '</button>'; }).join('') + '</div>' +
+      '<div class="wg-row"><span style="font-size:12.5px;opacity:.8">Level</span><button type="button" data-l="sl" aria-pressed="' + (level === 'sl') + '">SL</button><button type="button" data-l="hl" aria-pressed="' + (level === 'hl') + '">HL</button><button type="button" class="wg-x">Close</button></div></header>';
+    var b = '<div class="wg-body"><div class="wg-eye">Step ' + (at + 1) + ' of ' + all.length + (s.hl ? ' &middot; HL step' : '') + '</div><h3>' + esc(s.n) + '</h3>' + (s.s ? '<p>' + esc(s.s) + '</p>' : '') + ul(s.pts);
+    if (s.go) b += '<button type="button" class="wg-show">Show me in the lab</button>';
+    if ((s.h || s.hpts) && level === 'hl') b += '<div class="wg-hl"><span class="wg-tag">HL</span>' + (s.h ? '<p>' + esc(s.h) + '</p>' : '') + ul(s.hpts) + '</div>';
+    var q = level === 'hl' && s.hq ? s.hq : s.q;
+    if (q) b += '<div class="wg-chk"><div class="wg-eye">Check yourself' + (q === s.hq ? ' (HL)' : '') + '</div><div class="wg-q">' + esc(q.q) + '</div>' + q.o.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + esc(x) + '</button>'; }).join('') + '<div class="wg-why" hidden></div></div>';
+    b += '</div>';
+    var f = '<footer><button type="button" class="wg-prev"' + (at ? '' : ' disabled') + '>Back</button><button type="button" class="wg-next">' + (at === all.length - 1 ? 'Done' : 'Next step') + '</button><span class="wg-of">' + esc(sec.n) + '</span></footer>';
+    box.innerHTML = h + b + f; box.querySelector('h2').textContent = G.title || 'Step-by-step guide';
+    box.querySelectorAll('[data-k]').forEach(function (x) { x.onclick = function () { cur = x.dataset.k; at = 0; var t = G.sections[cur].tab; if (t) runGo(t); render(); }; });
+    box.querySelectorAll('[data-l]').forEach(function (x) { x.onclick = function () { setLevel(x.dataset.l); }; });
+    box.querySelector('.wg-x').onclick = close;
+    var sh = box.querySelector('.wg-show'); if (sh) sh.onclick = function () { var t = sec.tab; if (t && current() !== cur) runGo(t); setTimeout(function () { runGo(s.go); }, t ? 150 : 0); };
+    box.querySelector('.wg-prev').onclick = function () { if (at > 0) { at--; render(); } };
+    box.querySelector('.wg-next').onclick = function () { if (at < all.length - 1) { at++; render(); } else close(); };
+    if (q) box.querySelectorAll('.wg-chk button').forEach(function (x) { x.onclick = function () { var i = +x.dataset.i; box.querySelectorAll('.wg-chk button').forEach(function (y) { y.classList.remove('ok', 'no'); });
+      x.classList.add(i === q.a ? 'ok' : 'no'); if (i !== q.a) box.querySelectorAll('.wg-chk button')[q.a].classList.add('ok'); var w = box.querySelector('.wg-why'); w.hidden = false; w.innerHTML = (i === q.a ? '<b>Yes.</b> ' : '<b>Not quite.</b> ') + esc(q.why || ''); }; });
+    box.querySelector('.wg-body').scrollTop = 0; }
+  function open() { cur = current(); at = 0; box.hidden = false; btn.hidden = true; document.body.classList.add('wg-open'); syncLabLevel(); render(); }
+  function close() { box.hidden = true; btn.hidden = false; document.body.classList.remove('wg-open'); }
+  btn.onclick = open;
+  // follow the lab: when its tab or level changes, the guide follows
+  setInterval(function () { if (box.hidden || Date.now() < lockUntil) return; var k = current(); if (k !== cur) { cur = k; at = 0; render(); }
+    var lv = document.body.classList.contains('hl') ? 'hl' : null; var b = document.getElementById('lv-hl') || document.getElementById('l-hl'); if (b) lv = b.getAttribute('aria-pressed') === 'true' ? 'hl' : 'sl'; if (lv && lv !== level) { level = lv; render(); } }, 700);
+  window.labGuide = { open: open, close: close, go: function (k, i) { cur = k; at = i || 0; render(); }, state: function () { return { cur: cur, at: at, level: level, n: steps().length }; } };
+})();
+
+</script>
+</body>
+</html>

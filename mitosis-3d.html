@@ -228,6 +228,125 @@ window.JOURNEY = {
   }
 };
 
+// Extras for mitosis (2026-11-18): check questions, SL close-ups on the mitotic index (D2.1.8) and on cytokinesis (D2.1.2-3),
+// and HL close-ups on cyclins (D2.1.12-15) and cancer (D2.1.16-17).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  function canvasPlane(D, w, h) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv); D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(w || 40, h || 25), new THREE.MeshBasicMaterial({ map: tex }))); return { c, tex }; }
+
+  const D_MI = { n: 'Counting the mitotic index', bg: '#0f1622', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'A root tip squash', s: 'Root tips grow fast, so many cells are dividing. A stained, squashed root tip seen under a microscope shows cells at every stage.', cs: 'D2.1.8' },
+      { n: 'Identify the stages', s: 'Look for the shapes of the chromosomes:', pts: ['**Interphase**: a round nucleus, no visible chromosomes.', '**Prophase**: thread-like chromosomes inside the nucleus.', '**Metaphase**: chromosomes in a line across the middle.', '**Anaphase**: two groups moving apart.', '**Telophase**: two groups at the ends, new nuclei forming.'], cs: 'D2.1.7, D2.1.8' },
+      { n: 'Count', s: 'Count the cells that are in mitosis (prophase to telophase) and the total number of cells in the field of view.', cs: 'D2.1.8' },
+      { n: 'Calculate the mitotic index', s: '**Mitotic index** = number of cells in mitosis / total number of cells. A high mitotic index means cells are dividing rapidly, as in growing tissue or a tumour.', q: { q: 'In a field of view, 12 of 80 cells are in mitosis. What is the mitotic index?', o: ['0.12', '0.15', '6.7'], a: 1, why: '12 / 80 = 0.15.' }, cs: 'D2.1.8' }
+    ],
+    build(D) { const { c, tex } = canvasPlane(D); let seed = 11; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+      const cells = []; const stages = ['I', 'I', 'I', 'I', 'I', 'P', 'I', 'M', 'I', 'I', 'A', 'I', 'I', 'T', 'I', 'P', 'I', 'I', 'I', 'M', 'I', 'I', 'I', 'I', 'P', 'I', 'I', 'I', 'A', 'I', 'I', 'I'];
+      for (let r = 0; r < 4; r++) for (let k = 0; k < 8; k++) cells.push({ x: 90 + k * 110 + (r % 2) * 20, y: 90 + r * 125, st: stages[r * 8 + k], a: rnd() });
+      const name = { I: 'Interphase', P: 'Prophase', M: 'Metaphase', A: 'Anaphase', T: 'Telophase' };
+      function drawCell(o, mark) { const { x, y, st } = o; c.fillStyle = '#f6e7f7'; c.strokeStyle = '#9d4edd'; c.lineWidth = 3; c.fillRect(x - 50, y - 55, 100, 110); c.strokeRect(x - 50, y - 55, 100, 110); c.fillStyle = '#5a189a'; c.strokeStyle = '#5a189a';
+        if (st === 'I') { c.globalAlpha = 0.85; c.beginPath(); c.arc(x, y, 22, 0, 7); c.fill(); c.globalAlpha = 1; }
+        if (st === 'P') { c.lineWidth = 4; for (let i = 0; i < 6; i++) { c.beginPath(); c.moveTo(x - 18 + i * 6, y - 18); c.bezierCurveTo(x - 30 + i * 9, y, x - 5 + i * 4, y + 6, x - 12 + i * 7, y + 20); c.stroke(); } c.lineWidth = 2; c.beginPath(); c.arc(x, y, 26, 0, 7); c.stroke(); }
+        if (st === 'M') { for (let i = 0; i < 6; i++) c.fillRect(x - 8, y - 30 + i * 10, 16, 6); }
+        if (st === 'A') { for (let i = 0; i < 5; i++) { c.fillRect(x - 20 + i * 9, y - 36, 5, 16); c.fillRect(x - 20 + i * 9, y + 20, 5, 16); } }
+        if (st === 'T') { c.beginPath(); c.arc(x, y - 30, 14, 0, 7); c.arc(x, y + 30, 14, 0, 7); c.fill(); c.strokeStyle = '#9d4edd'; c.beginPath(); c.moveTo(x - 50, y); c.lineTo(x + 50, y); c.stroke(); }
+        if (mark) { c.strokeStyle = st === 'I' ? 'rgba(0,0,0,.25)' : '#e63946'; c.lineWidth = 5; c.strokeRect(x - 52, y - 57, 104, 114); } }
+      function draw(step, n) { c.fillStyle = '#1b1324'; c.fillRect(0, 0, 1024, 640); cells.forEach((o, i) => drawCell(o, step >= 2 && i < n));
+        if (step === 1) { c.font = 'bold 18px sans-serif'; c.fillStyle = '#ffd166'; cells.forEach(o => { if (o.st !== 'I') c.fillText(name[o.st], o.x - 45, o.y + 72); }); }
+        if (step >= 2) { const done = cells.slice(0, n); const mit = done.filter(o => o.st !== 'I').length; c.fillStyle = '#fff'; c.font = 'bold 26px sans-serif'; c.fillText('Cells counted: ' + done.length + '   In mitosis: ' + mit, 30, 625); }
+        if (step >= 3) { const mit = cells.filter(o => o.st !== 'I').length; c.fillStyle = '#ffd166'; c.font = 'bold 30px sans-serif'; c.fillText('Mitotic index = ' + mit + ' / ' + cells.length + ' = ' + (mit / cells.length).toFixed(2), 520, 625); }
+        tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const n = step === 2 ? Math.min(32, Math.floor((tt - t0) / 0.25)) : 32; const kk = step + ':' + n; if (kk !== key) { key = kk; draw(step, n); } } };
+    } };
+
+  const D_CYTO = { n: 'Cytokinesis compared', bg: '#0f1622', dist: 46, target: V(0, 0, 0), yaw: 0, pitch: 0.15,
+    steps: [
+      { n: 'Animal cell: a cleavage furrow', s: 'A ring of **actin and myosin** filaments under the membrane contracts round the middle, pinching the cell in two.', cs: 'D2.1.2' },
+      { n: 'Plant cell: a cell plate', s: 'A rigid wall cannot pinch in. Instead **vesicles** from the Golgi gather across the middle and fuse to form a **cell plate**, which grows outwards and becomes the new cell wall.', cs: 'D2.1.2' },
+      { n: 'Uneven cytokinesis', s: 'Cytokinesis is usually even, but not always.', pts: ['**Egg production** (oogenesis): one cell keeps almost all the cytoplasm; the small polar bodies break down.', '**Yeast budding**: a small bud pinches off a large parent cell.'], q: { q: 'Why can plant cells not divide by a cleavage furrow?', o: ['They have no actin', 'The rigid cell wall cannot be pinched in, so a new wall is built across the middle', 'They do not do cytokinesis'], a: 1, why: 'Plant cells build a cell plate from vesicles because the wall stops the membrane being pulled in.' }, cs: 'D2.1.3' }
+    ],
+    build(D) { const g = D.scene; const an = new THREE.Group(), pl = new THREE.Group(), un = new THREE.Group(); g.add(an, pl, un);
+      const aHalves = [-1, 1].map(s => { const m = new THREE.Mesh(new THREE.SphereGeometry(5, 28, 20), T(0xff8fab, 0.5)); an.add(m); const n = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 12), M(0x5a189a)); an.add(n); return { m, n, s }; });
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(5, 0.35, 10, 40), M(0xe63946)); ring.rotation.y = Math.PI / 2; an.add(ring);
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(20, 12, 10), T(0x95d5b2, 0.3)); pl.add(wall); const pn = [-5, 5].map(x => { const n = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 12), M(0x5a189a)); n.position.x = x; pl.add(n); return n; });
+      const ves = []; for (let i = 0; i < 18; i++) { const v = new THREE.Mesh(new THREE.SphereGeometry(0.45, 10, 8), M(0xffd166)); pl.add(v); ves.push({ v, y: -5 + (i % 6) * 2, z: -4 + Math.floor(i / 6) * 4, f: A.rnd(-6, 6) }); }
+      const plate = new THREE.Mesh(new THREE.BoxGeometry(0.5, 11, 9), M(0x52b788)); pl.add(plate);
+      const big = new THREE.Mesh(new THREE.SphereGeometry(6, 28, 20), T(0xffc8dd, 0.5)); un.add(big); const small = new THREE.Mesh(new THREE.SphereGeometry(1.6, 18, 12), T(0xffc8dd, 0.6)); un.add(small);
+      const la = D.label('Ring of actin and myosin', V(0, 7, 0)), lp = D.label('Cell plate from vesicles', V(0, 8, 0)), lu = D.label('Egg cell keeps most cytoplasm', V(-2, 8, 0)), lpb = D.label('Polar body', V(8, 3.5, 0));
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0, k = ease((t % 6) / 4);
+          an.visible = step === 0; pl.visible = step === 1; un.visible = step === 2; hideL(la, step !== 0); hideL(lp, step !== 1); hideL(lu, step !== 2); hideL(lpb, step !== 2);
+          aHalves.forEach(o => { o.m.position.x = o.s * (2.6 + 2.4 * k); o.m.scale.set(0.8, 1, 1); o.n.position.x = o.s * (3 + 2.4 * k); }); ring.scale.setScalar(Math.max(0.05, 1 - k)); ring.visible = k < 0.97;
+          ves.forEach(o => { o.v.position.set(o.f * (1 - k), o.y, o.z); o.v.visible = k < 0.9; }); plate.scale.set(1, Math.max(0.01, k), Math.max(0.01, k)); plate.visible = k > 0.05;
+          small.position.set(6 + 2.5 * k, 0, 0); } };
+    } };
+
+  const D_CYC = { n: 'Cyclins and the cell cycle', hl: true, bg: '#0f1622', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'Why cells divide', s: 'Cells proliferate (divide repeatedly) for **growth**, to **replace** worn-out cells such as skin and gut lining, and to **repair** damage.', ch: 'D2.1.12' },
+      { n: 'The cell cycle', s: 'Interphase is most of the cycle:', hpts: ['**G1**: the cell grows, makes proteins and organelles.', '**S**: DNA is replicated.', '**G2**: more growth, and preparation for division.', '**M**: mitosis, then cytokinesis.'], ch: 'D2.1.13, D2.1.14' },
+      { n: 'Cyclins control the timing', s: '**Cyclins** are proteins whose concentrations rise and fall during the cycle. When a cyclin reaches its threshold, it binds and activates a **cyclin-dependent kinase (CDK)**, which phosphorylates target proteins and pushes the cell into the next phase.', ch: 'D2.1.15' },
+      { n: 'Checkpoints', s: 'At checkpoints the cell checks whether conditions are right: is the DNA undamaged and fully replicated, are all chromosomes attached to the spindle? If not, the cycle stops until the problem is fixed, or the cell destroys itself.', hq: { q: 'What would happen if a cyclin stayed above its threshold all the time?', o: ['The cell would stop dividing', 'The cell could keep passing into the next phase without control', 'DNA would not be replicated'], a: 1, why: 'Cyclin-CDK activity drives progress through the cycle, so constant activity removes the brake.' }, ch: 'D2.1.15' }
+    ],
+    build(D) { const { c, tex } = canvasPlane(D);
+      const ph = [['G1', 0, 0.35, '#8ecae6'], ['S', 0.35, 0.65, '#ffd166'], ['G2', 0.65, 0.85, '#95d5b2'], ['M', 0.85, 1, '#ff8fab']];
+      const cyc = [['Cyclin D', '#1d4ed8', 0.05, 0.4], ['Cyclin E', '#2d6a4f', 0.25, 0.42], ['Cyclin A', '#e76f51', 0.35, 0.86], ['Cyclin B', '#9d0208', 0.6, 0.9]];
+      const lvl = (t, a, b) => { if (t < a || t > b + 0.04) return 0.05; const m = (t - a) / (b - a); return t > b ? 0.05 + 0.85 * (1 - (t - b) / 0.04) : 0.05 + 0.85 * Math.min(1, m * 1.15); };
+      function draw(step, t) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640);
+        const cx = 230, cy = 320, R = 170; ph.forEach(([n, a, b, col]) => { c.fillStyle = col; c.beginPath(); c.moveTo(cx, cy); c.arc(cx, cy, R, -Math.PI / 2 + a * 6.283, -Math.PI / 2 + b * 6.283); c.fill(); const m = (a + b) / 2 * 6.283 - Math.PI / 2; c.fillStyle = '#222'; c.font = 'bold 30px sans-serif'; c.fillText(n, cx + Math.cos(m) * 110 - 18, cy + Math.sin(m) * 110 + 10); });
+        c.fillStyle = '#fffaf2'; c.beginPath(); c.arc(cx, cy, 55, 0, 7); c.fill(); const ang = -Math.PI / 2 + t * 6.283; c.strokeStyle = '#111'; c.lineWidth = 6; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(ang) * (R + 12), cy + Math.sin(ang) * (R + 12)); c.stroke();
+        if (step >= 1) { c.fillStyle = '#222'; c.font = '20px sans-serif'; c.fillText('Interphase: G1 + S + G2', 110, 540); }
+        if (step >= 2) { const X0 = 470, W = 500, Y0 = 520, H = 360; c.strokeStyle = '#222'; c.lineWidth = 3; c.beginPath(); c.moveTo(X0, Y0 - H); c.lineTo(X0, Y0); c.lineTo(X0 + W, Y0); c.stroke(); c.fillStyle = '#222'; c.font = '20px sans-serif'; c.fillText('One cell cycle', X0 + 180, Y0 + 32); c.save(); c.translate(X0 - 18, Y0 - 90); c.rotate(-Math.PI / 2); c.fillText('Cyclin level', 0, 0); c.restore();
+          ph.forEach(([n, a, b, col]) => { c.fillStyle = col; c.globalAlpha = 0.25; c.fillRect(X0 + a * W, Y0 - H, (b - a) * W, H); c.globalAlpha = 1; c.fillStyle = '#444'; c.fillText(n, X0 + (a + b) / 2 * W - 10, Y0 - H + 22); });
+          c.setLineDash([8, 6]); c.strokeStyle = '#999'; c.lineWidth = 2; c.beginPath(); c.moveTo(X0, Y0 - H * 0.6); c.lineTo(X0 + W, Y0 - H * 0.6); c.stroke(); c.setLineDash([]); c.fillStyle = '#777'; c.fillText('threshold', X0 + W - 90, Y0 - H * 0.6 - 8);
+          cyc.forEach(([n, col, a, b], i) => { c.strokeStyle = col; c.lineWidth = 4; c.beginPath(); for (let s = 0; s <= t; s += 0.005) { const x = X0 + s * W, y = Y0 - lvl(s, a, b) * H * 0.9; s ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); c.fillStyle = col; c.font = 'bold 18px sans-serif'; c.fillText(n, X0 + 10 + i * 120, Y0 + 60); }); }
+        if (step >= 3) { [0.33, 0.83, 0.92].forEach((p, i) => { const m = -Math.PI / 2 + p * 6.283; c.fillStyle = '#e63946'; c.beginPath(); c.arc(cx + Math.cos(m) * (R + 22), cy + Math.sin(m) * (R + 22), 12, 0, 7); c.fill(); }); c.fillStyle = '#e63946'; c.font = 'bold 20px sans-serif'; c.fillText('Red dots: checkpoints', 120, 575); }
+        tex.needsUpdate = true; }
+      let step = 0, tt = 0, key = '';
+      return { onStep(i) { step = i; }, update(dt) { if (!A.paused) tt += dt; const t = (tt * 0.08) % 1; const kk = step + ':' + Math.round(t * 200); if (kk !== key) { key = kk; draw(step, t); } } };
+    } };
+
+  const D_CAN = { n: 'Cancer: when control fails', hl: true, bg: '#0f1622', dist: 52, target: V(0, 0, 0), yaw: 0.2, pitch: 0.35,
+    steps: [
+      { n: 'Genes that control division', s: 'Two kinds of gene keep the cell cycle in check.', hpts: ['**Proto-oncogenes** promote division when signalled. A mutation can turn one into an **oncogene** that is always "on", like a stuck accelerator.', '**Tumour suppressor genes** (such as p53) stop the cycle when there is damage. A mutation can disable them, like broken brakes.'], ch: 'D2.1.16' },
+      { n: 'A tumour forms', s: 'Usually several mutations are needed in one cell. Then it divides without control and its descendants form a **tumour**: a mass of abnormal cells.', ch: 'D2.1.16' },
+      { n: 'Benign tumours', s: 'A **benign** tumour grows slowly, stays in one place, often has a capsule around it and does not invade other tissues. It can still be harmful if it presses on an organ.', ch: 'D2.1.17' },
+      { n: 'Malignant tumours and metastasis', s: 'A **malignant** tumour grows quickly and invades nearby tissue. Cells can break off, travel in the blood or lymph, and form **secondary tumours** elsewhere: **metastasis**.', hq: { q: 'What is the key difference between benign and malignant tumours?', o: ['Only benign tumours are made of cells', 'Malignant tumours invade tissues and can spread to form secondary tumours', 'Benign tumours always kill'], a: 1, why: 'Invasion and metastasis make malignant tumours (cancers) dangerous.' }, ch: 'D2.1.17' }
+    ],
+    build(D) { const g = D.scene; const tissue = []; for (let i = 0; i < 49; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.4, 14, 10), M(0xffc8dd)); m.position.set((i % 7 - 3) * 3, 0, (Math.floor(i / 7) - 3) * 3); g.add(m); tissue.push(m); }
+      const tum = []; for (let i = 0; i < 40; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1.25, 12, 8), M(0x9d0208)); g.add(m); tum.push({ m, p: A.onSphere(A.rnd(0, 4)).add(V(0, 2, 0)) }); }
+      const cap = new THREE.Mesh(new THREE.SphereGeometry(6.2, 28, 18), T(0xffd166, 0.18)); cap.position.y = 2; g.add(cap);
+      const vessel = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 44, 18, 1, true), T(0xd62828, 0.35)); vessel.rotation.z = Math.PI / 2; vessel.position.set(0, -2, 13); g.add(vessel);
+      const met = []; for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8), M(0x9d0208)); g.add(m); met.push({ m, ph: i / 4 }); }
+      const sec = new THREE.Mesh(new THREE.SphereGeometry(2.4, 16, 12), M(0x9d0208)); sec.position.set(19, 0, 13); g.add(sec);
+      const lc = D.label('Capsule', V(-6, 8, 0)), lm = D.label('Spreads in the blood', V(8, 1, 13)), ls = D.label('Secondary tumour', V(19, 3.5, 13)), lt = D.label('Tumour', V(0, 8.5, 0));
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const grow = step === 0 ? 0.05 : step === 1 ? Math.min(1, 0.05 + t / 4) : 1;
+          tum.forEach((o, i) => { const on = i / tum.length < grow; o.m.visible = on; o.m.position.copy(o.p).multiplyScalar(step === 3 ? 1.25 : 1); });
+          cap.visible = step === 2; vessel.visible = met[0].m.visible = step === 3; met.forEach(o => { o.m.visible = step === 3; const f = (tt * 0.15 + o.ph) % 1; o.m.position.set(-2 + f * 21, -2, 13); }); sec.visible = step === 3 && t > 2;
+          hideL(lc, step !== 2); hideL(lm, step !== 3); hideL(ls, !(step === 3 && t > 2)); hideL(lt, step < 1); } };
+    } };
+
+  return {
+    dives: [D_MI, D_CYTO, D_CYC, D_CAN],
+    stops: {
+      'Interphase': { q: { q: 'What must happen in interphase before mitosis can start?', o: ['The chromosomes condense', 'DNA is replicated, so each chromosome has two sister chromatids', 'The nucleus divides'], a: 1, why: 'Replication in the S phase gives two identical copies, one for each daughter cell.' }, dives: ['Counting the mitotic index'] },
+      'Prophase': { q: { q: 'Why do chromosomes condense in prophase?', o: ['To be copied', 'Short, compact chromosomes can be moved without tangling or breaking', 'To make proteins'], a: 1, why: 'Supercoiling makes them short and thick enough to separate cleanly.' } },
+      'Metaphase': { q: { q: 'What happens in metaphase?', o: ['Chromatids move to the poles', 'Chromosomes line up on the equator, attached to spindle fibres', 'The nuclear envelope re-forms'], a: 1, why: 'Spindle microtubules from both poles attach at the centromere and align the chromosomes.' }, dives: ['Counting the mitotic index'] },
+      'Anaphase': { q: { q: 'What separates in anaphase of mitosis?', o: ['Homologous chromosomes', 'Sister chromatids', 'Daughter cells'], a: 1, why: 'Centromeres split and sister chromatids are pulled to opposite poles.' } },
+      'Telophase': { q: { q: 'How do the two daughter nuclei compare?', o: ['Different numbers of chromosomes', 'Genetically identical, with the same chromosome number as the parent', 'Haploid'], a: 1, why: 'Mitosis gives two identical diploid nuclei.' } },
+      'Cytokinesis': { dives: ['Cytokinesis compared'] },
+      'Controlling the cycle': { hl: true, dives: ['Cyclins and the cell cycle', 'Cancer: when control fails'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

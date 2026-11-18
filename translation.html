@@ -261,6 +261,52 @@ window.JOURNEY = {
   }
 };
 
+// Extras for translation (2026-11-18): HL-only stop, check questions, and an HL close-up on proteasomes (D1.2.18-19).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+  const D_PROT = { n: 'Modifying and recycling proteins', hl: true, bg: '#120f1e', dist: 46, target: V(0, 0, 0), yaw: 0.3, pitch: 0.2,
+    steps: [
+      { n: 'Polypeptides are often modified', s: 'Many polypeptides are not ready to work when they leave the ribosome.', hpts: ['**Folding**, helped by chaperone proteins.', '**Cutting**: insulin is made as one chain, then a middle section is removed, leaving two chains linked by disulfide bonds.', '**Adding groups**: carbohydrate in the Golgi (glycoproteins), phosphate, or lipid.'], ch: 'D1.2.18' },
+      { n: 'Tagging old proteins', s: 'Damaged, misfolded or no longer needed proteins are tagged with a chain of small proteins called **ubiquitin** (green).', ch: 'D1.2.19' },
+      { n: 'The proteasome', s: 'A **proteasome** is a large barrel of protein subunits. It recognises the ubiquitin tag, unfolds the protein and feeds it into its central chamber.', ch: 'D1.2.19' },
+      { n: 'Back to amino acids', s: 'Inside, the protein is cut into short peptides (and later amino acids) using ATP. The ubiquitin is released and reused, and the amino acids are used to make new proteins.', hq: { q: 'Why do cells need proteasomes?', o: ['To make new polypeptides', 'To remove damaged or unneeded proteins and recycle their amino acids', 'To add carbohydrate to proteins'], a: 1, why: 'Proteasomes break down tagged proteins so they do not build up, and the amino acids are reused.' }, ch: 'D1.2.19' }
+    ],
+    build(D) { const g = D.scene; const bar = new THREE.Group(); g.add(bar);
+      for (let r = 0; r < 4; r++) { for (let k = 0; k < 7; k++) { const a = k / 7 * Math.PI * 2; const s = new THREE.Mesh(new THREE.SphereGeometry(1.25, 14, 10), M(r === 0 || r === 3 ? 0x8d99ae : 0x9d4edd)); s.position.set(Math.cos(a) * 3.2, -4.5 + r * 3, Math.sin(a) * 3.2); bar.add(s); } }
+      bar.rotation.z = Math.PI / 2; bar.position.x = 6;
+      const pts = []; for (let i = 0; i < 30; i++) pts.push(V(-22 + i * 0.6, Math.sin(i * 0.9) * 1.6, Math.cos(i * 1.3) * 1.6)); const curve = new THREE.CatmullRomCurve3(pts);
+      const prot = new THREE.Mesh(new THREE.TubeGeometry(curve, 120, 0.45, 8, false), M(0xffb703)); g.add(prot);
+      const ub = []; for (let i = 0; i < 5; i++) { const u = new THREE.Mesh(new THREE.SphereGeometry(0.6, 12, 8), M(0x52b788)); g.add(u); ub.push(u); }
+      const pep = []; for (let i = 0; i < 10; i++) { const p = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6), M(0xffd166)); g.add(p); pep.push({ p, ph: i / 10, d: A.onSphere(1) }); }
+      const insulin = new THREE.Group(); g.add(insulin); const ch = [[0, 0xe63946], [1, 0xe63946], [2, 0x8d99ae]].map(([i, c]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 6, 10), M(c)); m.rotation.z = Math.PI / 2; insulin.add(m); return m; });
+      D.label('Proteasome', V(6, 7, 0)); const lu = D.label('Ubiquitin tag', V(0, 0, 0)), lp = D.label('Peptides out', V(16, -3, 0)), li = D.label('Insulin: middle section cut out', V(-8, 9, 0)); const pU = V(); const lu2 = D.label('Ubiquitin', pU); lu.dataset.off = '1';
+      let step = 0, tt = 0, t0 = 0;
+      return { onStep(i) { step = i; t0 = tt; },
+        update(dt) { if (!A.paused) tt += dt; const t = tt - t0; const k = step < 2 ? 0 : step === 2 ? ease(t / 3) * 0.6 : 0.6 + 0.4 * ease(t / 3);
+          prot.visible = step >= 1; prot.position.x = k * 22; prot.scale.set(1, 1 - k * 0.6, 1 - k * 0.6); bar.rotation.x += dt * (step >= 3 ? 0.6 : 0.15);
+          ub.forEach((u, i) => { u.visible = step >= 1 && step < 3; u.position.set(-22 + k * 22 - 1 - i * 1.1, 2.4 + i * 0.6, 0); }); pU.set(-24 + k * 22, 6, 0); hideL(lu2, !(step === 1 || step === 2));
+          pep.forEach(o => { o.p.visible = step === 3; const f = (tt * 0.4 + o.ph) % 1; o.p.position.set(10 + f * 10, o.d.y * 3 * f, o.d.z * 3 * f); }); hideL(lp, step !== 3);
+          insulin.visible = step === 0; insulin.position.set(-8, 5, 0); const cut = ease((t - 1) / 2); ch[0].position.set(-6.2 - cut * 0.4, 1.2 * cut, 0); ch[1].position.set(6.2 + cut * 0.4, -1.2 * cut, 0); ch[2].position.set(0, 0, 0); ch[2].scale.set(1, Math.max(0.01, 1 - cut), 1); ch[2].visible = cut < 0.98; hideL(li, step !== 0); } };
+    } };
+
+  return {
+    dives: [D_PROT],
+    stops: {
+      'The parts of translation': { q: { q: 'What does a tRNA molecule carry?', o: ['A codon and a ribosome', 'An anticodon and a specific amino acid', 'mRNA'], a: 1, why: 'Each tRNA has an anticodon that matches a codon, and carries the amino acid for that codon.' } },
+      'Starting translation': { q: { q: 'Which codon starts translation?', o: ['UAA', 'AUG', 'UGA'], a: 1, why: 'AUG is the start codon; it codes for methionine.' }, hq: { q: 'In which direction does the ribosome move along mRNA?', o: ['3\' to 5\'', '5\' to 3\'', 'Either'], a: 1, why: 'Translation reads mRNA from the 5\' end towards the 3\' end.' } },
+      'Codon meets anticodon': { q: { q: 'A codon is GCA. What is the anticodon of the matching tRNA?', o: ['CGU', 'CGT', 'GCA'], a: 0, why: 'G pairs with C, C with G, A with U: CGU (RNA has no thymine).' } },
+      'A peptide bond forms': { q: { q: 'What type of reaction joins two amino acids?', o: ['Hydrolysis', 'Condensation, forming a peptide bond and releasing water', 'Phosphorylation'], a: 1, why: 'A condensation reaction links the amino group of one amino acid to the carboxyl group of the next.' } },
+      'The genetic code': { pts: ['**Triplet**: three bases code for one amino acid.', '**Degenerate**: most amino acids have more than one codon.', '**Universal**: almost all organisms use the same code.'], q: { q: 'There are 64 codons but only 20 amino acids. What does this show?', o: ['The code is universal', 'The code is degenerate: several codons can code for the same amino acid', 'Some amino acids have no codon'], a: 1, why: '61 codons code for 20 amino acids (and 3 are stop codons), so most amino acids have several.' } },
+      'Stop codons': { q: { q: 'What happens at a stop codon?', o: ['A special tRNA adds the last amino acid', 'No tRNA matches, so the polypeptide is released', 'The mRNA is cut'], a: 1, why: 'Release factors bind instead of tRNA, freeing the finished polypeptide.' } },
+      'A mutation': { q: { q: 'A base substitution changes GAG to GUG in the haemoglobin gene. What is the effect?', o: ['No change, the code is degenerate', 'Glutamic acid is replaced by valine, giving sickle cell haemoglobin', 'Translation stops early'], a: 1, why: 'One amino acid change alters the shape and behaviour of haemoglobin.' } },
+      'After translation (HL)': { hl: true, dives: ['Modifying and recycling proteins'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

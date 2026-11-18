@@ -231,6 +231,75 @@ window.JOURNEY = {
   }
 };
 
+// Extras for DNA replication (2026-11-18): HL-only stops for D1.1.6-9, check questions, and SL close-ups on PCR and gel
+// electrophoresis (D1.1.4-5).
+JOURNEY.extra = function (A, W) {
+  const { V, M, T, THREE } = A;
+  const hideL = (el, off) => { el.dataset.off = off ? '1' : ''; };
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+
+  const D_PCR = { n: 'PCR: copying DNA in a tube', bg: '#0f1426', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'The polymerase chain reaction', s: '**PCR** makes millions of copies of one section of DNA in a few hours. The tube holds the DNA sample, free **nucleotides**, two **primers** and a heat-stable **DNA polymerase** (Taq polymerase, from a bacterium of hot springs).', cs: 'D1.1.4' },
+      { n: '1. Denaturation: 95 degrees C', s: 'Heating breaks the **hydrogen bonds** between the strands, so the DNA separates into single strands.', cs: 'D1.1.4' },
+      { n: '2. Annealing: about 55 degrees C', s: 'On cooling, short **primers** (pink) bind by complementary base pairing to the start of the target sequence on each strand.', cs: 'D1.1.4' },
+      { n: '3. Extension: 72 degrees C', s: 'Taq polymerase adds nucleotides to the end of each primer, building a new complementary strand. Now there are **two** copies.', cs: 'D1.1.4' },
+      { n: 'Doubling every cycle', s: 'Each cycle doubles the number of copies: after 30 cycles one molecule has become about **a billion** copies (2^30).', q: { q: 'Why is Taq polymerase used in PCR?', o: ['It works fastest at 37 degrees C', 'It is not denatured at 95 degrees C', 'It makes primers'], a: 1, why: 'It comes from a bacterium living in hot springs, so it survives the heating step of every cycle.' }, cs: 'D1.1.4, D1.1.5' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      function strand(x, y, w, col, lab) { c.fillStyle = col; c.fillRect(x, y, w, 14); for (let i = 0; i < w; i += 20) { c.fillRect(x + i + 6, y + (lab === 'top' ? 14 : -10), 4, 10); } }
+      function draw(step, k, cyc) { c.fillStyle = '#fffaf2'; c.fillRect(0, 0, 1024, 640); c.fillStyle = '#222'; c.font = 'bold 30px sans-serif';
+        const temps = ['Room temperature', '95 degrees C', '55 degrees C', '72 degrees C', '']; c.fillText(temps[step], 40, 50);
+        if (step <= 3) { const gap = step === 0 ? 0 : 120 * (step === 1 ? k : 1); const y1 = 260 - gap / 2, y2 = 290 + gap / 2;
+          strand(120, y1, 780, '#1d4ed8', 'top'); strand(120, y2, 780, '#e63946', 'bot'); if (step === 0) { c.fillStyle = '#999'; for (let i = 0; i < 780; i += 20) c.fillRect(126 + i, 274, 3, 16); }
+          if (step >= 2) { const a = step === 2 ? k : 1; c.globalAlpha = a; c.fillStyle = '#ff4fa3'; c.fillRect(160, y1 + 30, 90, 14); c.fillRect(770, y2 - 30, 90, 14); c.globalAlpha = 1; c.font = '22px sans-serif'; c.fillStyle = '#c9184a'; c.fillText('primer', 165, y1 + 70); c.fillText('primer', 775, y2 - 40); }
+          if (step >= 3) { const L = 600 * k; c.fillStyle = '#8ecae6'; c.fillRect(250, y1 + 30, L, 14); c.fillRect(770 - L, y2 - 30, L, 14); c.fillStyle = '#ffb703'; c.beginPath(); c.arc(250 + L, y1 + 37, 18, 0, 7); c.arc(770 - L, y2 - 23, 18, 0, 7); c.fill(); c.fillStyle = '#222'; c.font = '22px sans-serif'; c.fillText('Taq polymerase', 260 + Math.min(L, 500), y1 + 90); } }
+        else { c.fillStyle = '#222'; c.font = '26px sans-serif'; c.fillText('Cycle', 60, 120); c.fillText('Copies', 60, 170); for (let i = 0; i <= cyc; i++) { const x = 180 + i * 80; c.fillStyle = '#1d4ed8'; c.fillText(i, x, 120); c.fillText(Math.pow(2, i), x, 170); }
+          const n = Math.pow(2, cyc); const show = Math.min(n, 64); for (let i = 0; i < show; i++) { const x = 80 + (i % 16) * 56, y = 250 + Math.floor(i / 16) * 70; c.fillStyle = '#1d4ed8'; c.fillRect(x, y, 44, 8); c.fillStyle = '#8ecae6'; c.fillRect(x, y + 12, 44, 8); }
+          c.fillStyle = '#222'; c.font = 'bold 28px sans-serif'; c.fillText('After 30 cycles: about 1 000 000 000 copies', 160, 590); }
+        tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const k = Math.min(1, (tt - t0) / 2.5), cyc = Math.min(6, Math.floor((tt - t0) / 1.2)); const kk = step + ':' + Math.round(k * 30) + ':' + cyc; if (kk !== key) { key = kk; draw(step, k, cyc); } } };
+    } };
+
+  const D_GEL = { n: 'Gel electrophoresis', bg: '#0f1426', dist: 40, target: V(0, 0, 0), yaw: 0, pitch: 0,
+    steps: [
+      { n: 'Separating DNA by size', s: 'DNA is cut into fragments with restriction enzymes (or copied by PCR). The samples are loaded into wells at one end of an agarose **gel**.', cs: 'D1.1.4' },
+      { n: 'Running the gel', s: 'An electric current is passed through the gel. DNA is **negatively charged** (its phosphate groups), so the fragments move towards the **positive** electrode.', cs: 'D1.1.4' },
+      { n: 'Small fragments move further', s: 'The gel is a mesh: **short fragments** slip through quickly and travel further; long ones lag behind. A **ladder** of known sizes lets you estimate fragment lengths.', cs: 'D1.1.4' },
+      { n: 'DNA profiling', s: 'Some regions of DNA vary in length between people (short tandem repeats). Copying these regions and running them on a gel gives a **DNA profile**.', pts: ['Uses: forensic investigations (matching crime scene samples), paternity testing, and identifying species or disease genes.', 'Here: which suspect matches the crime scene sample?'], q: { q: 'Which suspect\'s DNA profile matches the crime scene sample?', o: ['Suspect 1', 'Suspect 2', 'Suspect 3'], a: 1, why: 'All bands of suspect 2 are at the same positions as those of the crime scene sample.' }, cs: 'D1.1.5' }
+    ],
+    build(D) { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 640; const c = cv.getContext('2d'); const tex = new THREE.CanvasTexture(cv);
+      D.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(40, 25), new THREE.MeshBasicMaterial({ map: tex })));
+      const lanes = [['Ladder', [1000, 800, 600, 400, 300, 200, 100]], ['Crime scene', [720, 350, 180]], ['Suspect 1', [650, 350, 240]], ['Suspect 2', [720, 350, 180]], ['Suspect 3', [720, 420, 150]]];
+      const dist = bp => 470 * (1 - Math.log10(bp / 80) / Math.log10(1200 / 80));
+      function draw(step, k) { c.fillStyle = '#111827'; c.fillRect(0, 0, 1024, 640); c.fillStyle = '#c7d2fe'; c.globalAlpha = 0.18; c.fillRect(110, 70, 820, 520); c.globalAlpha = 1;
+        c.fillStyle = '#e5e7eb'; c.font = 'bold 26px sans-serif'; c.fillText('-', 60, 110); c.fillText('+', 60, 590); c.font = '18px sans-serif';
+        lanes.forEach(([n, bands], i) => { const x = 150 + i * 160; c.fillStyle = '#1f2937'; c.fillRect(x, 80, 110, 22); c.fillStyle = '#e5e7eb'; c.fillText(n, x, 64);
+          if (step >= 1) bands.forEach(bp => { const y = 102 + dist(bp) * (step === 1 ? k : 1); c.fillStyle = 'rgba(147,197,253,.95)'; c.fillRect(x + 6, y, 98, 12); if (i === 0 && step >= 2) { c.fillStyle = '#e5e7eb'; c.fillText(bp + ' bp', x - 70, y + 11); } }); });
+        if (step >= 3) { c.strokeStyle = '#facc15'; c.lineWidth = 4; c.strokeRect(150 + 3 * 160 - 6, 76, 122, 520); c.strokeRect(150 + 160 - 6, 76, 122, 520); }
+        tex.needsUpdate = true; }
+      let step = 0, tt = 0, t0 = 0, key = '';
+      return { onStep(i) { step = i; t0 = tt; }, update(dt) { if (!A.paused) tt += dt; const k = Math.min(1, (tt - t0) / 4); const kk = step + ':' + Math.round(k * 40); if (kk !== key) { key = kk; draw(step, k); } } };
+    } };
+
+  return {
+    dives: [D_PCR, D_GEL],
+    outside: { q: { q: 'Why is DNA replication called semi-conservative?', o: ['Half the DNA is destroyed', 'Each new molecule has one old strand and one new strand', 'Only half the genes are copied'], a: 1, why: 'The two original strands separate and each acts as a template, so each daughter molecule keeps one parent strand.' } },
+    stops: {
+      'The DNA double helix': { q: { q: 'Which bases pair together in DNA?', o: ['A with G, C with T', 'A with T, C with G', 'A with U, C with G'], a: 1, why: 'Adenine pairs with thymine and cytosine with guanine, by hydrogen bonds.' }, dives: ['PCR: copying DNA in a tube', 'Gel electrophoresis'] },
+      'Helicase unzips the DNA': { q: { q: 'What does helicase do?', o: ['Joins nucleotides', 'Breaks hydrogen bonds between bases, separating the strands', 'Checks for errors'], a: 1, why: 'Helicase unwinds the helix and separates the two strands.' } },
+      'Complementary base pairing': { q: { q: 'A template strand reads ATTGC. What is the new strand?', o: ['TAACG', 'UAACG', 'ATTGC'], a: 0, why: 'A pairs with T and G with C, so ATTGC gives TAACG.' } },
+      'DNA polymerase': { q: { q: 'What does DNA polymerase do?', o: ['Unwinds the helix', 'Links free nucleotides into a new strand, matching the template', 'Cuts DNA'], a: 1, why: 'It adds nucleotides one by one, joining them with covalent bonds.' }, hq: { q: 'In which direction does DNA polymerase III build a new strand?', o: ['3\' to 5\'', '5\' to 3\'', 'Either'], a: 1, why: 'It can only add nucleotides to the free 3\' end, so new strands grow 5\' to 3\'.' } },
+      'The lagging strand': { hl: true },
+      'Joining the fragments': { hl: true },
+      'Proofreading': { hl: true },
+      'Semi-conservative replication': { dives: ['PCR: copying DNA in a tube'] }
+    }
+  };
+};
+
 </script>
 <script>
 /* What the Cell walk-through engine (2026-11-16). A page supplies window.JOURNEY = {title, sub, intro, note, theme,

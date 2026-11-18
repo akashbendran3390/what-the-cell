@@ -42,7 +42,7 @@
     '<fieldset class="qg-row"><legend>1. Level</legend>' +
     '<label><input type="radio" name="lvl" value="SL"> SL (core topics only)</label>' +
     '<label><input type="radio" name="lvl" value="HL" checked> HL (core and AHL topics)</label></fieldset>' +
-    '<fieldset><legend>2. Topics</legend><p class="qg-hint">Tick the topics you want to practise.</p><div class="qg-units"></div></fieldset>' +
+    '<fieldset><legend>2. Topics</legend><div class="qg-bar"><p class="qg-hint">Tick the topics you want to practise.</p><span class="qg-btns"><button type="button" class="qg-sel" data-all="1">Select all</button><button type="button" class="qg-sel" data-all="0">Clear all</button></span></div><div class="qg-units"></div></fieldset>' +
     '<fieldset class="qg-row"><legend>3. Question types</legend>' + TYPES.map(function (t) { return '<label><input type="checkbox" name="type" value="' + t[0] + '" checked> ' + t[1] + '</label>'; }).join('') + '</fieldset>' +
     '<fieldset class="qg-row"><legend>4. Length</legend><label>Number of questions <select name="n"><option>5</option><option selected>10</option><option>15</option><option>20</option><option value="999">All available</option></select></label></fieldset>' +
     '<div class="qg-actions"><button type="submit" class="qg-go">Make my worksheet</button><span class="qg-msg" role="status"></span></div>';
@@ -59,6 +59,7 @@
       if (live.length) d.open = true;
       var sum = el('summary', null, '<span>' + u.name + '</span><span class="qg-count">' + (live.length ? live.length + ' of ' + u.subs.length + ' topics ready' : 'coming soon') + '</span>');
       d.appendChild(sum);
+      if (live.length) d.appendChild(el('div', { 'class': 'qg-btns qg-unit-btns' }, '<button type="button" class="qg-sel" data-all="1">Select whole unit</button><button type="button" class="qg-sel" data-all="0">Clear unit</button>'));
       var list = el('div', { 'class': 'qg-subs' });
       u.subs.forEach(function (s) {
         var ok = !!INDEX[s.slug];
@@ -68,6 +69,14 @@
       box.appendChild(d);
     });
   }
+  form.addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('.qg-sel') : null;
+    if (!b) return;
+    e.preventDefault();
+    var scope = b.closest('.qg-unit') || form.querySelector('.qg-units');
+    var on = b.getAttribute('data-all') === '1';
+    scope.querySelectorAll('input[name="topic"]:not(:disabled)').forEach(function (c) { c.checked = on; });
+  });
   form.addEventListener('change', function (e) {
     if (e.target.name === 'lvl') { level = e.target.value; drawUnits(); }
   });

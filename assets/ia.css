@@ -81,6 +81,13 @@
 .qg-form label{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
 .qg-form select{font:15px var(--body);padding:6px 8px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg)}
 .qg-hint{margin:0;font-size:14px;color:var(--muted)}
+.qg-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.qg-btns{display:flex;flex-wrap:wrap;gap:6px}
+.qg-unit-btns{padding-top:8px}
+.qg-sel{font:600 13px var(--ui);padding:5px 12px;border-radius:999px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer}
+.qg-sel:hover{background:var(--accent);color:var(--surface)}
+.qg-sel[data-all="0"]{border-color:var(--muted);color:var(--muted)}
+.qg-sel[data-all="0"]:hover{background:var(--muted);color:var(--surface)}
 .qg-units{display:flex;flex-direction:column;gap:6px}
 .qg-unit{background:var(--surface);border-radius:12px;padding:8px 12px}
 .qg-unit>summary{cursor:pointer;display:flex;justify-content:space-between;gap:10px;font:700 15px var(--ui)}

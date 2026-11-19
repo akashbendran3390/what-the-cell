@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Light the Bulb Lab: an interactive circuit simulation for MYP Science. Wire a cell and a bulb, test predictions, read two meters and sort conductors from insulators.">
+<link rel="canonical" href="https://whatthecell.org/myp/light-the-bulb-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Light the Bulb Lab | What the Cell">
+<meta property="og:description" content="Light the Bulb Lab: an interactive circuit simulation for MYP Science. Wire a cell and a bulb, test predictions, read two meters and sort conductors from insulators.">
+<meta property="og:url" content="https://whatthecell.org/myp/light-the-bulb-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Light the Bulb Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=5cfed356">
+<script src="../assets/theme.js?v=d6b97089"></script>
+<style>
+/* Light the Bulb Lab (MYP 5, Electrical safety and circuits, Lesson 1). Hand-written page, not built by a script. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .98rem var(--ui);border:0;border-radius:14px;padding:10px 16px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:var(--surface);border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:10px;min-width:0}
+.stagebox svg{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.msg{border-radius:18px;padding:14px 16px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:1rem}
+.msg.good{--c:var(--mint)} .msg.bad{--c:var(--coral)} .msg.warn{--c:var(--tang)}
+.msg b{font-family:var(--ui)}
+.steps{margin:0;padding-left:20px}.steps li{margin-bottom:6px}
+.found{display:flex;gap:8px}.found span{flex:1;text-align:center;font:800 .85rem var(--ui);padding:8px;border-radius:12px;background:var(--soft);color:var(--muted)}
+.found span.on{background:var(--mint);color:#fff}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:460px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:8px;min-width:0}
+.card.ok{border-color:var(--mint)}.card.no{border-color:var(--coral)}
+.card .row{display:flex;gap:6px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:4px 4px 2px}
+.pick{display:flex;gap:6px}.pick[hidden]{display:none}
+.pick button{font:800 .85rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:4px 12px;cursor:pointer}
+.pick button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.card .why{font-size:.86rem;color:var(--muted);margin:4px 4px 2px;min-height:1.2em}
+.choices{display:grid;gap:8px}
+.choices button{text-align:left;font:600 .95rem/1.35 var(--body);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:10px 12px;cursor:pointer}
+.choices button b{font-family:var(--ui);color:var(--violet);margin-right:6px}
+.choices button[aria-pressed="true"]{border-color:var(--violet);background:var(--soft)}
+.tray{display:flex;flex-wrap:wrap;gap:8px}
+.tray button{font:700 .9rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:7px 11px;cursor:pointer}
+.tray button.done{opacity:.55}
+.tray button[aria-pressed="true"]{border-color:var(--sky);opacity:1}
+table.res2{width:100%;border-collapse:collapse;font-size:.92rem}
+table.res2 th,table.res2 td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+table.res2 th{font:800 .8rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.ok-t{color:var(--mint);font-weight:700}.no-t{color:var(--coral);font-weight:700}
+.panel[hidden]{display:none}
+.stagebox,.card{background:#FFFFFF;color:#1B1640;--surface:#FFFFFF;--ink:#1B1640;--muted:#4F4A78;--line:#DCE2F7;--soft:#E9EEFF}
+/* SVG drawing */
+.wire{fill:none;stroke:#C77B30;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.wire.hot{stroke:#FF4B2B;animation:hot .6s ease-in-out infinite alternate}
+@keyframes hot{to{stroke:#FFB02B}}
+.flow{fill:none;stroke:#FFE14D;stroke-width:6;stroke-linecap:round;stroke-dasharray:1 17;animation:flow 1.1s linear infinite;pointer-events:none}
+@keyframes flow{to{stroke-dashoffset:-36}}
+.end{cursor:grab;stroke:#fff;stroke-width:3}
+.end:active{cursor:grabbing}
+.glow{opacity:0;transition:opacity .25s}
+.lit .glow{opacity:1}
+.glass{fill:#FFF8DD;stroke:#8A7E50;stroke-width:2;transition:fill .25s}
+.lit .glass{fill:#FFE14D}
+.dim .glass{fill:#FFF0A0}.dim .glow{opacity:.35}
+.tgt{fill:transparent;stroke:#5F3DB8;stroke-width:2;stroke-dasharray:4 4;opacity:0;transition:opacity .2s}
+.dragging .tgt{opacity:.8}
+.lbl{font:700 15px "Bricolage Grotesque",sans-serif;fill:var(--ink)}
+.small{font:700 12px "Bricolage Grotesque",sans-serif;fill:var(--muted)}
+.meter{font:800 15px "Bricolage Grotesque",sans-serif}
+</style>
+</head>
+<body>
+<div class="m-band" style="--band1:#1F7A7A;--band2:#5F3DB8;--band3:#2A1D5E">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">MYP Science</a><a href="myp5-electrical-safety.html">Electrical safety</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp.html">MYP Science</a> / <a href="../myp.html#myp5">MYP 5</a> / <a href="myp5-electrical-safety.html#lesson-1">Lesson 1</a></div>
+    <h1>Light the Bulb Lab</h1>
+    <p class="lede">One cell, wires and a bulb. Find out what a bulb needs before it will light, test your ideas about current, and sort conductors from insulators.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="wire" style="--c:var(--coral)"><span>1</span>Wire it up</button>
+    <button role="tab" aria-selected="false" data-t="cards" style="--c:var(--tang)"><span>2</span>Will it light?</button>
+    <button role="tab" aria-selected="false" data-t="ideas" style="--c:var(--violet)"><span>3</span>Four ideas about current</button>
+    <button role="tab" aria-selected="false" data-t="tester" style="--c:var(--mint)"><span>4</span>Conductor tester</button>
+  </div>
+
+  <!-- 1 Wire it up -->
+  <section class="panel" id="p-wire">
+    <div class="lab">
+      <div class="stagebox"><svg id="wsvg" viewBox="0 0 640 410" role="img" aria-label="A cell, a bulb and two wires with ends you can drag"></svg></div>
+      <div class="side">
+        <div class="box top" style="--c:var(--coral)">
+          <h3>Your challenge</h3>
+          <ol class="steps"><li>Drag the coloured ends of the two wires onto the cell and the bulb.</li><li>Make the bulb light. Then find a second, different way.</li><li>Try touching a wire on the glass, or joining + to &minus;. What happens?</li></ol>
+        </div>
+        <div class="msg" id="wmsg">Drag a coloured dot onto the <b>+</b> end of the cell to start.</div>
+        <div class="found" aria-label="Ways found"><span id="w1">Way 1: not found yet</span><span id="w2">Way 2: not found yet</span></div>
+        <button type="button" class="btn" id="wreset">Start again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 Will it light? -->
+  <section class="panel" id="p-cards" hidden>
+    <div class="msg" style="--c:var(--tang);margin-bottom:14px">Predict <b>Yes</b> or <b>No</b> for every card, then press <b>Test them all</b>. Copper lines are wires. The yellow dots show charge moving when a loop is complete.</div>
+    <div class="cards" id="cards"></div>
+    <div class="v-bar"><button type="button" class="btn go" id="ctest">Test them all</button><button type="button" class="btn" id="creset">Clear</button><span class="count" id="cscore"></span></div>
+  </section>
+
+  <!-- 3 Four ideas -->
+  <section class="panel" id="p-ideas" hidden>
+    <div class="lab">
+      <div class="stagebox"><svg id="isvg" viewBox="0 0 640 400" role="img" aria-label="A loop with a cell, a bulb and two ammeters, one each side of the bulb"></svg></div>
+      <div class="side">
+        <div class="box top" style="--c:var(--violet)">
+          <h3>1. Which idea do you agree with?</h3>
+          <div class="choices" id="choices">
+            <button type="button" data-i="A"><b>A</b>Current leaves one end of the cell and goes to the bulb. The return wire is not needed.</button>
+            <button type="button" data-i="B"><b>B</b>Current leaves both ends of the cell and meets in the bulb.</button>
+            <button type="button" data-i="C"><b>C</b>Current goes round, but the bulb uses some up, so less comes back.</button>
+            <button type="button" data-i="D"><b>D</b>Current goes round and is the same all the way round the loop.</button>
+          </div>
+        </div>
+        <div class="v-bar" style="margin:0"><button type="button" class="btn go" id="imeasure" disabled>2. Read the meters</button><button type="button" class="btn" id="iswitch">Open the switch</button><button type="button" class="btn" id="icells">Use two cells</button></div>
+        <div class="msg" id="imsg">Choose an idea first. Then read the two meters.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Conductor tester -->
+  <section class="panel" id="p-tester" hidden>
+    <div class="lab">
+      <div class="stagebox"><svg id="tsvg" viewBox="0 0 640 380" role="img" aria-label="A circuit with a gap between two clips, for testing materials"></svg></div>
+      <div class="side">
+        <div class="box top" style="--c:var(--mint)">
+          <h3>Pick an object from the tray</h3>
+          <div class="tray" id="tray"></div>
+        </div>
+        <div class="msg" id="tmsg">Choose an object. You will predict before you test.</div>
+        <div class="pick" id="tpick" hidden><button type="button" data-p="c" class="btn sim">It conducts</button><button type="button" data-p="i" class="btn vid">It insulates</button></div>
+        <div class="tbl"><table class="res2"><thead><tr><th>Object</th><th>Bulb</th><th>Result</th><th>Your prediction</th></tr></thead><tbody id="trows"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+</div></main>
+
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>. Back to <a href="myp5-electrical-safety.html#lesson-1">Lesson 1: Lighting up</a>.</div></footer>
+
+<script>
+(function(){
+var NS='http://www.w3.org/2000/svg';
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function $(id){return document.getElementById(id)}
+/* ---------- tabs ---------- */
+var tabs=[].slice.call(document.querySelectorAll('.tabs button'));
+function openTab(t){tabs.forEach(function(b){b.setAttribute('aria-selected',b.dataset.t===t?'true':'false')});['wire','cards','ideas','tester'].forEach(function(x){$('p-'+x).hidden=x!==t});try{history.replaceState(null,'','#'+t)}catch(e){}}
+tabs.forEach(function(b){b.onclick=function(){openTab(b.dataset.t)}});
+var h=location.hash.slice(1);if(['wire','cards','ideas','tester'].indexOf(h)>=0)openTab(h);
+
+/* ---------- shared drawings ---------- */
+function bulbBig(g,cx,cy){ // glass centre cx,cy; returns contact points
+  el('circle',{cx:cx,cy:cy,r:96,fill:'url(#halo)','class':'glow'},g);
+  el('circle',{cx:cx,cy:cy,r:58,'class':'glass'},g);
+  el('path',{d:'M'+(cx-12)+' '+(cy+52)+' L'+(cx-10)+' '+(cy+4)+' M'+(cx+12)+' '+(cy+52)+' L'+(cx+10)+' '+(cy+4),stroke:'#8A7E50','stroke-width':3,fill:'none'},g);
+  el('path',{d:'M'+(cx-10)+' '+(cy+4)+' q5 -14 10 0 q5 -14 10 0',stroke:'#D9822B','stroke-width':3,fill:'none'},g);
+  el('rect',{x:cx-24,y:cy+52,width:48,height:48,rx:4,fill:'#B9C0C8',stroke:'#5F6B76','stroke-width':2},g);
+  for(var k=0;k<4;k++)el('line',{x1:cx-24,y1:cy+60+k*10,x2:cx+24,y2:cy+56+k*10,stroke:'#5F6B76','stroke-width':1.5},g);
+  el('rect',{x:cx-16,y:cy+100,width:32,height:10,fill:'#1B1640'},g);
+  el('circle',{cx:cx,cy:cy+116,r:8,fill:'#FFC83D',stroke:'#1B1640','stroke-width':2},g);
+}
+function cellBig(g,x,y){ // body top-left x,y (70 x 170)
+  el('rect',{x:x+23,y:y-14,width:24,height:16,rx:3,fill:'#B9C0C8',stroke:'#5F6B76','stroke-width':2},g);
+  el('rect',{x:x,y:y,width:70,height:170,rx:10,fill:'#1B1640'},g);
+  el('rect',{x:x,y:y,width:70,height:42,rx:10,fill:'#FFC83D'},g);
+  el('rect',{x:x,y:y+30,width:70,height:12,fill:'#FFC83D'},g);
+  var t=el('text',{x:x+86,y:y+22,'class':'lbl'},g);t.textContent='+  end';
+  t=el('text',{x:x+86,y:y+168,'class':'lbl'},g);t.textContent='−  end';
+  t=el('text',{x:x+35,y:y+110,'text-anchor':'middle',fill:'#fff',style:'font:800 18px Bricolage Grotesque,sans-serif'},g);t.textContent='1.5 V';
+}
+function defs(svg){var d=el('defs',{},svg);var r=el('radialGradient',{id:'halo'},d);el('stop',{offset:'0','stop-color':'#FFE14D','stop-opacity':'.85'},r);el('stop',{offset:'1','stop-color':'#FFE14D','stop-opacity':'0'},r)}
+
+/* ---------- 1 Wire it up ---------- */
+var W=$('wsvg');defs(W);
+var gB=el('g',{},W);cellBig(gB,110,118);var gBulb=el('g',{},W);bulbBig(gBulb,450,134);
+var T={P:{x:145,y:104,n:'the + end of the cell'},N:{x:145,y:290,n:'the − end of the cell'},S:{x:474,y:212,n:'the metal side of the bulb'},Tp:{x:450,y:252,n:'the tip of the bulb'},G:{x:450,y:80,n:'the glass'}};
+for(var k in T)T[k].ring=el('circle',{cx:T[k].x,cy:T[k].y,r:22,'class':'tgt'},W);
+var labs=[[490,214,'side contact'],[466,266,'tip contact'],[476,60,'glass']];labs.forEach(function(l){var t=el('text',{x:l[0],y:l[1],'class':'small'},W);t.textContent=l[2]});
+var flowW=el('path',{'class':'flow',d:''},W);flowW.style.display='none';
+var wires=[{c:"#B0356F",a:{x:250,y:322},b:{x:330,y:334}},{c:"#5F3DB8",a:{x:400,y:334},b:{x:480,y:322}}];
+wires.forEach(function(w){w.path=el('path',{'class':'wire'},W);});
+wires.forEach(function(w){['a','b'].forEach(function(e){w[e+'El']=el('circle',{r:12,fill:w.c,'class':'end',tabindex:0},W);w[e+'El'].addEventListener('pointerdown',function(ev){drag(ev,w,e)})})});
+function wpath(p,q){return 'M'+p.x+' '+p.y+' C'+p.x+' '+(p.y+70)+' '+q.x+' '+(q.y+70)+' '+q.x+' '+q.y}
+function at(p){for(var k in T){if(Math.abs(T[k].x-p.x)<1&&Math.abs(T[k].y-p.y)<1)return k}return null}
+function drawW(){wires.forEach(function(w){w.path.setAttribute('d',wpath(w.a,w.b));w.aEl.setAttribute('cx',w.a.x);w.aEl.setAttribute('cy',w.a.y);w.bEl.setAttribute('cx',w.b.x);w.bEl.setAttribute('cy',w.b.y)});evalW()}
+function pt(ev){var p=W.createSVGPoint();p.x=ev.clientX;p.y=ev.clientY;return p.matrixTransform(W.getScreenCTM().inverse())}
+function drag(ev,w,e){ev.preventDefault();W.classList.add('dragging');var el0=ev.target;el0.setPointerCapture(ev.pointerId);
+  function mv(e2){var p=pt(e2);w[e]={x:Math.max(10,Math.min(630,p.x)),y:Math.max(10,Math.min(400,p.y))};drawW()}
+  function up(){el0.removeEventListener('pointermove',mv);el0.removeEventListener('pointerup',up);W.classList.remove('dragging');
+    var best=null,bd=34;for(var k in T){var d=Math.hypot(T[k].x-w[e].x,T[k].y-w[e].y);if(d<bd){bd=d;best=k}}if(best)w[e]={x:T[best].x,y:T[best].y};drawW()}
+  el0.addEventListener('pointermove',mv);el0.addEventListener('pointerup',up)}
+var found={};
+function evalW(){
+  var pairs=wires.map(function(w){return [at(w.a),at(w.b)]});
+  var m=$('wmsg'),lit=false,hot=-1,txt,cls='';
+  wires.forEach(function(w,i){var p=pairs[i];w.path.classList.toggle('hot',(p[0]==='P'&&p[1]==='N')||(p[0]==='N'&&p[1]==='P'));if(w.path.classList.contains('hot'))hot=i});
+  function has(p,a,b){return (p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a)}
+  var way=null;
+  for(var i=0;i<2;i++){var j=1-i;if(has(pairs[i],'P','Tp')&&has(pairs[j],'N','S'))way=1;if(has(pairs[i],'P','S')&&has(pairs[j],'N','Tp'))way=2}
+  var touched=pairs.reduce(function(s,p){return s.concat(p.filter(Boolean))},[]);
+  if(hot>=0){cls='bad';txt='<b>Short circuit!</b> This wire joins the + end straight to the − end. There is almost nothing in the path to slow the charge, so a big current flows: the wire gets hot and the cell goes flat. Pull one end off.'}
+  else if(way){lit=true;found[way]=1;cls='good';txt='<b>It lights!</b> Charge leaves the + end, goes in at '+(way===1?'the tip':'the metal side')+', through the filament, out at '+(way===1?'the metal side':'the tip')+' and back to the − end. A complete loop.'+(found[1]&&found[2]?' You found both ways: it does not matter which contact goes to +.':' Now find the other way.')}
+  else if(touched.indexOf('G')>=0){cls='warn';txt='A wire is touching the <b>glass</b>. Glass is an insulator, so no charge can get in that way. Find a metal contact.'}
+  else if(pairs.some(function(p){return has(p,'P','Tp')||has(p,'P','S')})&&pairs.some(function(p){return has(p,'P','Tp')||has(p,'P','S')})&&pairs.every(function(p){return p.indexOf('N')<0})&&touched.indexOf('Tp')>=0&&touched.indexOf('S')>=0){cls='warn';txt='Both bulb contacts are joined to the <b>+ end</b>. There is no path back to the − end, so nothing flows.'}
+  else if(touched.indexOf('Tp')>=0&&touched.indexOf('S')>=0&&touched.indexOf('N')>=0&&touched.indexOf('P')<0){cls='warn';txt='Both bulb contacts are joined to the <b>− end</b>. Charge needs a way out of the + end too.'}
+  else if(touched.indexOf('P')>=0||touched.indexOf('N')>=0||touched.indexOf('Tp')>=0||touched.indexOf('S')>=0){txt='Getting there. Charge needs a <b>way in</b> to the bulb at one contact and a <b>way out</b> at the other, with each end of the cell joined to a different contact.'}
+  else txt='Drag a coloured dot onto the <b>+</b> end of the cell to start.';
+  m.className='msg '+cls;m.innerHTML=txt;gBulb.setAttribute('class',lit?'lit':'');
+  $('w1').className=found[1]?'on':'';$('w1').textContent=found[1]?'Way 1: tip to +':'Way 1: not found yet';
+  $('w2').className=found[2]?'on':'';$('w2').textContent=found[2]?'Way 2: side to +':'Way 2: not found yet';
+  if(lit){ // path: + end -> wire -> first contact -> filament -> second contact -> wire -> - end -> through the cell
+    var wp=null,wn=null,c1;for(var i2=0;i2<2;i2++){if(pairs[i2].indexOf('P')>=0)wp=i2;else wn=i2}
+    var w1=wires[wp],w2=wires[wn];var p1=at(w1.a)==='P'?[w1.a,w1.b]:[w1.b,w1.a];var p2=at(w2.a)==='N'?[w2.b,w2.a]:[w2.a,w2.b];
+    var d='M'+p1[0].x+' '+p1[0].y+' C'+p1[0].x+' '+(p1[0].y+70)+' '+p1[1].x+' '+(p1[1].y+70)+' '+p1[1].x+' '+p1[1].y+' L450 180 L450 138 L450 180 '+'L'+p2[0].x+' '+p2[0].y+' C'+p2[0].x+' '+(p2[0].y+70)+' '+p2[1].x+' '+(p2[1].y+70)+' '+p2[1].x+' '+p2[1].y+' L145 104';
+    flowW.setAttribute('d',d);flowW.style.display='';W.appendChild(flowW);wires.forEach(function(w){W.appendChild(w.aEl);W.appendChild(w.bEl)})
+  } else flowW.style.display='none';
+}
+$('wreset').onclick=function(){wires[0].a={x:250,y:322};wires[0].b={x:330,y:334};wires[1].a={x:400,y:334};wires[1].b={x:480,y:322};found={};drawW()};
+drawW();
+
+/* ---------- 2 Will it light? ---------- */
+var R={'P-T':[[62,40],[62,22],[140,22],[140,140],[192,140],[192,128]],'P-S':[[62,40],[62,22],[248,22],[248,104],[206,104]],'N-S':[[62,130],[62,156],[248,156],[248,104],[206,104]],'N-T':[[62,130],[62,156],[192,156],[192,128]],'P-N':[[62,40],[62,22],[22,22],[22,156],[62,156],[62,130]],'N-G':[[62,130],[62,156],[258,156],[258,30],[192,30],[192,40]]};
+var CARDS=[['A',['P-T','N-S'],1,'Tip to +, side to −: a complete loop through the filament.'],['B',['P-T','P-S'],0,'Both contacts go to the + end. No way back to −.'],['C',['P-S','N-T'],1,'Side to +, tip to −. Which way round does not matter.'],['D',['P-N','P-T'],0,'A wire joins + to −: a short circuit. The wire gets hot and the bulb has only one contact joined.'],['E',['P-T'],0,'Only one contact is joined. Charge has a way in but no way out.'],['F',['P-T','N-G'],0,'The second wire touches the glass, which is an insulator.']];
+var pred={},tested=false;
+function pts(a){return a.map(function(p){return p.join(',')}).join(' ')}
+function cardSvg(c,lit){
+  var s='<svg viewBox="0 0 280 172" role="img" aria-label="Card '+c[0]+'"><defs><radialGradient id="h'+c[0]+'"><stop offset="0" stop-color="#FFE14D" stop-opacity=".9"/><stop offset="1" stop-color="#FFE14D" stop-opacity="0"/></radialGradient></defs>';
+  if(lit)s+='<circle cx="192" cy="66" r="52" fill="url(#h'+c[0]+')"/>';
+  s+='<rect x="55" y="40" width="14" height="9" fill="#B9C0C8" stroke="#5F6B76"/><rect x="44" y="48" width="36" height="80" rx="4" fill="#1B1640"/><rect x="44" y="48" width="36" height="20" rx="4" fill="#FFC83D"/><text x="86" y="60" class="lbl">+</text><text x="86" y="128" class="lbl">−</text>';
+  s+='<ellipse cx="192" cy="66" rx="24" ry="26" fill="'+(lit?'#FFE14D':'#FFF8DD')+'" stroke="#8A7E50" stroke-width="1.5"/><path d="M186 90 L188 66 M198 90 L196 66 M188 66 q4 -8 8 0" stroke="#D9822B" stroke-width="1.6" fill="none"/><rect x="180" y="90" width="24" height="24" fill="#B9C0C8" stroke="#5F6B76"/><rect x="186" y="114" width="12" height="6" fill="#1B1640"/><circle cx="192" cy="124" r="4" fill="#FFC83D" stroke="#1B1640"/>';
+  c[1].forEach(function(r){s+='<polyline class="wire" style="stroke-width:3.5" points="'+pts(R[r])+'"/>'});
+  if(lit){var a=R[c[1][0]].slice(),b=R[c[1][1]].slice().reverse(),fil=[[a[a.length-1][0],a[a.length-1][1]],[192,70],[b[0][0],b[0][1]]];s+='<polyline class="flow" style="stroke-width:4;stroke-dasharray:1 11" points="'+pts(a.concat(fil,b,[[62,40]]))+'"/>'}
+  s+='<rect x="98" y="66" width="30" height="28" rx="8" fill="#5F3DB8"/><text x="113" y="86" text-anchor="middle" fill="#fff" style="font:800 15px Bricolage Grotesque,sans-serif">'+c[0]+'</text></svg>';return s}
+function renderCards(){var box=$('cards');box.innerHTML='';var right=0;
+  CARDS.forEach(function(c){var d=document.createElement('div');d.className='card'+(tested?(pred[c[0]]===c[2]?' ok':' no'):'');
+    d.innerHTML=cardSvg(c,tested&&c[2])+'<div class="row"><b style="font-family:var(--ui)">Lights?</b><div class="pick"><button type="button" data-v="1" aria-pressed="'+(pred[c[0]]===1)+'">Yes</button><button type="button" data-v="0" aria-pressed="'+(pred[c[0]]===0)+'">No</button></div></div><p class="why">'+(tested?((pred[c[0]]===c[2]?'<span class="ok-t">Correct.</span> ':'<span class="no-t">Not this time.</span> ')+c[3]):'')+'</p>';
+    [].forEach.call(d.querySelectorAll('.pick button'),function(b){b.onclick=function(){pred[c[0]]=+b.dataset.v;renderCards()}});
+    if(tested&&pred[c[0]]===c[2])right++;box.appendChild(d)});
+  $('cscore').textContent=tested?right+' of 6 predictions correct':Object.keys(pred).length+' of 6 predicted'}
+$('ctest').onclick=function(){if(Object.keys(pred).length<6){$('cscore').textContent='Predict all six cards first ('+Object.keys(pred).length+' of 6).';return}tested=true;renderCards()};
+$('creset').onclick=function(){pred={};tested=false;renderCards()};
+renderCards();
+
+/* ---------- 3 Four ideas ---------- */
+var I=$('isvg');defs(I);var choice=null,measured=false,closed=true,two=false;
+function drawI(){I.innerHTML='';defs(I);
+  el('rect',{x:110,y:70,width:400,height:250,rx:6,fill:'none',stroke:'#1B1640','stroke-width':4},I);
+  el('rect',{x:94,y:160,width:34,height:70,fill:'#fff'},I);
+  el('line',{x1:84,y1:180,x2:136,y2:180,stroke:'#1B1640','stroke-width':4},I);el('line',{x1:98,y1:198,x2:122,y2:198,stroke:'#1B1640','stroke-width':8},I);
+  if(two){el('line',{x1:84,y1:214,x2:136,y2:214,stroke:'#1B1640','stroke-width':4},I);el('line',{x1:98,y1:228,x2:122,y2:228,stroke:'#1B1640','stroke-width':8},I)}
+  var t=el('text',{x:40,y:262,'class':'lbl'},I);t.textContent=two?'2 cells':'cell';
+  var g=el('g',{'class':(closed&&measured)?'lit':''},I);el('circle',{cx:510,cy:195,r:80,fill:'url(#halo)','class':'glow'},g);el('circle',{cx:510,cy:195,r:30,'class':'glass'},g);el('path',{d:'M489 174 L531 216 M531 174 L489 216',stroke:'#1B1640','stroke-width':3},g);
+  t=el('text',{x:550,y:200,'class':'lbl'},I);t.textContent='bulb';
+  // switch on the bottom wire
+  el('rect',{x:270,y:306,width:80,height:28,fill:'#fff'},I);el('circle',{cx:280,cy:320,r:5,fill:'#1B1640'},I);el('circle',{cx:340,cy:320,r:5,fill:'#1B1640'},I);
+  el('line',{x1:280,y1:320,x2:closed?340:333,y2:closed?320:290,stroke:'#1B1640','stroke-width':4,'stroke-linecap':'round'},I);
+  t=el('text',{x:310,y:358,'text-anchor':'middle','class':'small'},I);t.textContent=closed?'switch closed':'switch open';
+  var val=measured?(closed?(two?'0.40 A':'0.25 A'):'0.00 A'):'? A';
+  [[310,70,'meter 1: before the bulb',-58],[420,320,'meter 2: after the bulb',58]].forEach(function(m){el('rect',{x:m[0]-30,y:m[1]-26,width:60,height:52,rx:10,fill:'#fff',stroke:'#1B1640','stroke-width':3},I);var a=el('text',{x:m[0],y:m[1]+8,'text-anchor':'middle',style:'font:800 22px Bricolage Grotesque,sans-serif',fill:'#1B1640'},I);a.textContent='A';
+    el('rect',{x:m[0]+38,y:m[1]-16,width:86,height:32,rx:10,fill:measured?'#5F3DB8':'#DCE2F7'},I);var v=el('text',{x:m[0]+81,y:m[1]+6,'text-anchor':'middle','class':'meter',fill:measured?'#fff':'#4F4A78'},I);v.textContent=val;
+    var l=el('text',{x:m[0]-30,y:m[1]+m[3]+(m[3]<0?20:-10),'class':'small'},I);l.textContent=m[2]});
+  if(measured&&closed){el('path',{'class':'flow',d:'M110 160 L110 70 L510 70 L510 320 L110 320 L110 230',style:'stroke-width:7'},I)}
+}
+[].forEach.call(document.querySelectorAll('#choices button'),function(b){b.onclick=function(){choice=b.dataset.i;[].forEach.call(document.querySelectorAll('#choices button'),function(x){x.setAttribute('aria-pressed',x===b)});$('imeasure').disabled=false;$('imsg').className='msg';$('imsg').innerHTML='You chose idea <b>'+choice+'</b>. What will the two meters read if you are right? Now read them.'}});
+var FB={A:'If idea A were right, meter 2 on the return wire would read zero. It reads the same as meter 1, so charge flows back along the return wire too.',B:'If idea B were right, the charge in the two wires would flow towards the bulb from both sides. The meters show charge flowing one way all round the loop, at the same rate on both sides.',C:'If idea C were right, meter 2 would read less than meter 1. Both read the same: the bulb does not use up current. It takes energy from the charges, which carry on round.',D:'Your idea fits the evidence. The current is the same on both sides of the bulb, all the way round the loop. The bulb takes energy from the charges, not the charges themselves.'};
+function ideaMsg(){var m=$('imsg');if(!closed){m.className='msg warn';m.innerHTML='With the switch open there is a gap, so <b>both</b> meters read zero. A gap anywhere stops the current everywhere.';return}
+  m.className='msg '+(choice==='D'?'good':'bad');m.innerHTML='Both meters read <b>'+(two?'0.40 A':'0.25 A')+'</b>. '+FB[choice]+(two?' With two cells the current is bigger and the bulb brighter, but it is still the same on both sides.':'')}
+$('imeasure').onclick=function(){measured=true;drawI();ideaMsg()};
+$('iswitch').onclick=function(){closed=!closed;this.textContent=closed?'Open the switch':'Close the switch';drawI();if(measured)ideaMsg()};
+$('icells').onclick=function(){two=!two;this.textContent=two?'Use one cell':'Use two cells';drawI();if(measured)ideaMsg()};
+drawI();
+
+/* ---------- 4 Conductor tester ---------- */
+var OB=[['Copper wire','#C77B30',2,'Copper is a metal with many free electrons: it conducts very well.'],['Steel paper clip','#9AA4AE',2,'Steel is a metal: it conducts.'],['Aluminium foil','#D5DADF',2,'Aluminium is a metal: it conducts.'],['Coin','#C9A44A',2,'Coins are made of metals: they conduct.'],['Pencil lead (graphite)','#3E3E44',1,'Graphite is not a metal but it does conduct. It slows the charge more than a metal, so the bulb is dim.'],['Plastic ruler','#4FA3FF',0,'Plastic is an insulator: its electrons are held in place.'],['Rubber eraser','#FF8FB0',0,'Rubber is an insulator. That is why tool handles and gloves for electricians use it.'],['Glass rod','#BFE6F2',0,'Glass is an insulator, which is why a bulb is made of it.'],['Dry wooden stick','#B07A45',0,'Dry wood is an insulator. Wet wood can conduct a little, and at 220 V that can be enough to be dangerous.'],['Paper','#F4F1E8',0,'Paper is an insulator.']];
+var X=$('tsvg'),cur=null,res={};defs(X);
+function drawT(){X.innerHTML='';defs(X);
+  el('path',{d:'M140 260 L140 70 L470 70 L470 260 L330 260 M250 260 L140 260',fill:'none',stroke:'#C77B30','stroke-width':6,'stroke-linejoin':'round'},X);
+  cellBigSmall();var on=cur&&res[cur]!=null?OB[cur][2]:0;var g=el('g',{'class':on===2?'lit':on===1?'dim':''},X);el('circle',{cx:470,cy:130,r:70,fill:'url(#halo)','class':'glow'},g);el('circle',{cx:470,cy:130,r:34,'class':'glass'},g);el('path',{d:'M460 150 L462 128 M480 150 L478 128 M462 128 q8 -14 16 0',stroke:'#D9822B','stroke-width':3,fill:'none'},g);el('rect',{x:456,y:160,width:28,height:26,fill:'#B9C0C8',stroke:'#5F6B76'},g);
+  [250,330].forEach(function(x){el('path',{d:'M'+(x-12)+' 250 L'+(x+12)+' 250 L'+(x+12)+' 270 L'+(x-12)+' 270 Z',fill:'#E53935'},X)});
+  var t=el('text',{x:290,y:310,'text-anchor':'middle','class':'small'},X);t.textContent='the gap: put the object here';
+  if(cur!=null){var o=OB[cur];el('rect',{x:236,y:248,width:108,height:24,rx:6,fill:o[1],stroke:'#1B1640','stroke-width':1.5},X);var l=el('text',{x:290,y:236,'text-anchor':'middle','class':'lbl'},X);l.textContent=o[0];
+    if(res[cur]!=null&&o[2])el('path',{'class':'flow',d:'M250 260 L140 260 L140 70 L470 70 L470 260 L330 260 L250 260',style:o[2]===1?'stroke-width:5;opacity:.6;animation-duration:2.4s':'stroke-width:6'},X)}
+}
+function cellBigSmall(){el('rect',{x:110,y:130,width:60,height:90,rx:8,fill:'#1B1640'},X);el('rect',{x:110,y:130,width:60,height:24,rx:8,fill:'#FFC83D'},X);el('rect',{x:128,y:122,width:24,height:10,fill:'#B9C0C8'},X);var t=el('text',{x:140,y:200,'text-anchor':'middle',fill:'#fff',style:'font:800 15px Bricolage Grotesque,sans-serif'},X);t.textContent='1.5 V'}
+var tray=$('tray');OB.forEach(function(o,i){var b=document.createElement('button');b.type='button';b.textContent=o[0];b.onclick=function(){cur=i;[].forEach.call(tray.children,function(x,j){x.setAttribute('aria-pressed',j===i)});$('tmsg').className='msg';$('tmsg').innerHTML='Predict first: will <b>'+o[0].toLowerCase()+'</b> let the bulb light?';$('tpick').hidden=false;drawT()};tray.appendChild(b)});
+[].forEach.call(document.querySelectorAll('#tpick button'),function(b){b.onclick=function(){if(cur==null)return;var o=OB[cur],p=b.dataset.p,ok=(p==='c')===(o[2]>0);res[cur]={p:p,ok:ok};$('tpick').hidden=true;tray.children[cur].classList.add('done');
+  $('tmsg').className='msg '+(ok?'good':'bad');$('tmsg').innerHTML=(o[2]===2?'<b>The bulb lights brightly.</b> ':o[2]===1?'<b>The bulb glows dimly.</b> ':'<b>The bulb stays off.</b> ')+o[3];
+  var rows='';OB.forEach(function(x,i){if(res[i])rows+='<tr><td>'+x[0]+'</td><td>'+(x[2]===2?'bright':x[2]===1?'dim':'off')+'</td><td>'+(x[2]?'conductor':'insulator')+'</td><td class="'+(res[i].ok?'ok-t':'no-t')+'">'+(res[i].ok?'right':'wrong')+'</td></tr>'});$('trows').innerHTML=rows;drawT()}});
+drawT();
+})();
+</script>
+</body>
+</html>

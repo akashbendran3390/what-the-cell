@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Home Safety Lab. Explore electricity at home safely: add up the current from appliances, see how much current would flow through a person, and test what fuses, earth wires and RCDs do when something goes wrong. Mains in Vietnam: 220 V, 50 Hz. MYP Science resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/myp/home-safety-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Home Safety Lab | What the Cell">
+<meta property="og:description" content="Home Safety Lab. Explore electricity at home safely: add up the current from appliances, see how much current would flow through a person, and test what fuses, earth wires and RCDs do when something goes wrong. Mains in Vietnam: 220 V, 50 Hz. MYP Science resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/myp/home-safety-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Home Safety Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=4982a5ef">
+<script src="../assets/theme.js?v=d6b97089"></script>
+<style>
+/* Home Safety Lab (MYP 5, Electrical safety and circuits, Lessons 10 to 14). Hand-written page. Mains values for Vietnam: 220 V, 50 Hz. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .98rem var(--ui);border:0;border-radius:14px;padding:10px 16px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.app{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer;display:flex;flex-direction:column;gap:1px}
+.app b{font:800 .95rem var(--ui)}.app small{color:var(--muted);font-size:.82rem}
+.app[aria-pressed="true"]{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 14%,var(--surface))}
+.app:disabled{opacity:.5;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.25rem/1.15 "IBM Plex Mono",ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+.bar{position:relative;height:26px;border-radius:999px;background:var(--soft);overflow:hidden;border:1px solid var(--line)}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--mint);transition:width .3s}
+.bar i.hot{background:var(--tang)}.bar i.over{background:var(--coral)}
+.bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font:800 .8rem var(--ui);color:var(--ink)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.ctl{display:grid;gap:12px}
+.ctl .lbl{font:800 .85rem var(--ui);color:var(--muted);display:block;margin-bottom:4px}
+.zones{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;font:700 .75rem var(--ui);text-align:center}
+.zones div{padding:6px 4px;border-radius:8px;background:var(--soft);color:var(--muted)}
+.zones div.on{color:#fff}
+.z0.on{background:var(--mint)}.z1.on{background:var(--sun);color:#1E0E4A!important}.z2.on{background:var(--tang)}.z3.on{background:var(--coral)}
+.quiz{display:grid;gap:12px}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}
+.qcard h3{font-size:1.05rem}
+.opts{display:grid;gap:6px;margin-top:8px}
+.opts button{text-align:left;font:600 .95rem/1.35 var(--body);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:8px 11px;cursor:pointer}
+.opts button.right{border-color:var(--mint);background:color-mix(in srgb,var(--mint) 15%,var(--surface))}
+.opts button.wrong{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 12%,var(--surface))}
+.why{font-size:.9rem;color:var(--muted);margin:6px 0 0}
+.lbls{font:700 13px "Bricolage Grotesque",sans-serif;fill:#1E0E4A}
+.lblsm{font:700 11px "Bricolage Grotesque",sans-serif;fill:#473B72}
+.flow{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:1 14;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-30}}
+.spark{animation:blink .25s steps(2) infinite}@keyframes blink{50%{opacity:.2}}
+@media (prefers-reduced-motion:reduce){.flow,.spark{animation:none}}
+</style>
+</head>
+<body>
+<div class="m-band" style="--band1:#B0356F;--band2:#5F3DB8;--band3:#2A1D5E">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">MYP Science</a><a href="myp5-electrical-safety.html">Electrical safety</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp.html">MYP Science</a> / <a href="../myp.html#units">MYP 5, Unit 1</a> / <a href="myp5-electrical-safety.html">Electrical safety and circuits</a></div>
+    <h1>Home Safety Lab</h1>
+    <p class="lede">Explore electricity at home safely: add up the current from appliances, see how much current would flow through a person, and test what fuses, earth wires and RCDs do when something goes wrong. Mains in Vietnam: 220 V, 50 Hz.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="power" style="--c:var(--sky)"><span>1</span>Power and cost</button>
+    <button role="tab" aria-selected="false" data-t="body" style="--c:var(--coral)"><span>2</span>Current through the body</button>
+    <button role="tab" aria-selected="false" data-t="faults" style="--c:var(--tang)"><span>3</span>Wiring faults</button>
+    <button role="tab" aria-selected="false" data-t="challenge" style="--c:var(--mint)"><span>4</span>Make it safe</button>
+  </div>
+
+  <!-- 1 Power and cost -->
+  <section class="panel" id="p-power">
+    <div class="lab">
+      <div class="side">
+        <div class="box top" style="--c:var(--sky)">
+          <h3>Plug appliances into the kitchen</h3>
+          <p class="muted" style="margin:0 0 10px">Tap to switch each one on or off. They are all in parallel on one circuit.</p>
+          <div class="apps" id="apps"></div>
+        </div>
+      </div>
+      <div class="side">
+        <div class="stats"><div><small>Total power</small><span id="pP">0 W</span></div><div><small>Current</small><span id="pI">0.0 A</span></div><div><small>Cost per hour</small><span id="pC">0 d</span></div></div>
+        <div class="box ctl">
+          <div><span class="lbl">Plugged into</span><div class="seg" id="feed"><button type="button" data-f="wall" aria-pressed="true">Wall sockets (16 A breaker)</button><button type="button" data-f="lead" aria-pressed="false">One extension lead (10 A)</button></div></div>
+          <div><span class="lbl">Extension lead or socket: current against its rating</span><div class="bar"><i id="barLead"></i><span><b id="barLeadT">0 A</b><b id="barLeadR">rating 16 A</b></span></div></div>
+          <div><span class="lbl">Circuit breaker: current against 16 A</span><div class="bar"><i id="barMcb"></i><span><b id="barMcbT">0 A</b><b>trips above 16 A</b></span></div></div>
+        </div>
+        <div class="msg" id="pmsg">Switch on some appliances. I = P / V with V = 220 V.</div>
+        <button type="button" class="btn" id="preset" hidden>Reset the breaker</button>
+        <p class="muted" style="font-size:.85rem;margin:0">Cost uses an example price of 2,400 dong per kWh. Real prices rise in steps with use.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 Body -->
+  <section class="panel" id="p-body" hidden>
+    <div class="lab">
+      <div class="stagebox"><svg id="bsvg" viewBox="0 0 560 330" role="img" aria-label="A person touching a live wire while standing on the floor"></svg></div>
+      <div class="side">
+        <div class="box top ctl" style="--c:var(--coral)">
+          <div><span class="lbl">Voltage touched</span><div class="seg" id="bV"><button type="button" data-v="1.5" aria-pressed="false">1.5 V cell</button><button type="button" data-v="12" aria-pressed="false">12 V car battery</button><button type="button" data-v="220" aria-pressed="true">220 V mains</button></div></div>
+          <div><span class="lbl">Skin</span><div class="seg" id="bS"><button type="button" data-r="100000" aria-pressed="true">Dry</button><button type="button" data-r="10000" aria-pressed="false">Sweaty</button><button type="button" data-r="500" aria-pressed="false">Wet</button></div></div>
+          <div><span class="lbl">Standing on</span><div class="seg" id="bF"><button type="button" data-r="0" aria-pressed="true">Wet floor, bare feet</button><button type="button" data-r="50000" aria-pressed="false">Dry tiles</button><button type="button" data-r="1000000" aria-pressed="false">Rubber-soled shoes</button></div></div>
+          <div><span class="lbl">RCD (safety switch) on this circuit</span><div class="seg" id="bR"><button type="button" data-o="0" aria-pressed="true">No RCD</button><button type="button" data-o="1" aria-pressed="false">RCD fitted</button></div></div>
+        </div>
+        <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))"><div><small>Resistance of the path</small><span id="bRt">0</span></div><div><small>Current through the body</small><span id="bI">0 mA</span></div></div>
+        <div class="zones"><div class="z0">under 1 mA<br>not felt</div><div class="z1">1 to 10 mA<br>tingle, pain</div><div class="z2">10 to 50 mA<br>cannot let go</div><div class="z3">over 50 mA<br>can stop the heart</div></div>
+        <div class="msg" id="bmsg"></div>
+        <p class="muted" style="font-size:.85rem;margin:0">Resistances are rounded typical values for a hand-to-feet path; real values vary a lot. Effects are for a.c. at 50 Hz.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 Faults -->
+  <section class="panel" id="p-faults" hidden>
+    <div class="lab">
+      <div class="stagebox"><svg id="fsvg" viewBox="0 0 560 360" role="img" aria-label="A kettle connected to the mains through a fuse, with live, neutral and earth wires"></svg></div>
+      <div class="side">
+        <div class="box top ctl" style="--c:var(--tang)">
+          <div><span class="lbl">Appliance case</span><div class="seg" id="fCase"><button type="button" data-c="metal" aria-pressed="true">Metal case</button><button type="button" data-c="plastic" aria-pressed="false">Double insulated (plastic)</button></div></div>
+          <div><span class="lbl">Earth wire</span><div class="seg" id="fEarth"><button type="button" data-e="1" aria-pressed="true">Connected</button><button type="button" data-e="0" aria-pressed="false">Missing (two-pin socket)</button></div></div>
+          <div><span class="lbl">Fuse in the live wire</span><div class="seg" id="fFuse"><button type="button" data-f="13" aria-pressed="true">13 A fuse</button><button type="button" data-f="0" aria-pressed="false">Replaced with a nail</button></div></div>
+          <div><span class="lbl">RCD on the circuit</span><div class="seg" id="fRcd"><button type="button" data-r="0" aria-pressed="true">No RCD</button><button type="button" data-r="1" aria-pressed="false">RCD fitted</button></div></div>
+          <div><span class="lbl">Make a fault</span><div class="seg" id="fFault"><button type="button" data-k="none" aria-pressed="true">No fault</button><button type="button" data-k="case" aria-pressed="false">Live wire touches the case</button><button type="button" data-k="short" aria-pressed="false">Live touches neutral (short circuit)</button></div></div>
+          <div class="seg"><button type="button" id="fTouch" aria-pressed="false">A person touches the kettle</button><button type="button" id="fReset">Reset</button></div>
+        </div>
+        <div class="msg" id="fmsg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Challenge -->
+  <section class="panel" id="p-challenge" hidden>
+    <div class="msg" style="--c:var(--mint);margin-bottom:14px">Each case below describes a real kind of home in Vietnam. Choose the <b>best</b> answer, then read why. Score: <b id="qScore">0</b> / <b id="qMax">0</b></div>
+    <div class="quiz" id="quiz"></div>
+  </section>
+</div></main>
+
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>. Back to <a href="myp5-electrical-safety.html">Electrical safety and circuits</a>.</div></footer>
+
+<script>
+(function(){
+var NS='http://www.w3.org/2000/svg', V=220;
+function $(id){return document.getElementById(id)}
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function tx(p,x,y,s,c,anc){var t=el('text',{x:x,y:y,'class':c||'lbls','text-anchor':anc||'start'},p);t.textContent=s;return t}
+function seg(id,cb){var bs=[].slice.call($(id).querySelectorAll('button'));bs.forEach(function(b){b.addEventListener('click',function(){bs.forEach(function(x){x.setAttribute('aria-pressed',x===b)});cb(b)})})}
+function val(id,attr){var b=$(id).querySelector('[aria-pressed="true"]');return b?b.getAttribute(attr):null}
+var tabs=[].slice.call(document.querySelectorAll('.tabs button')),T=['power','body','faults','challenge'];
+function openTab(t){tabs.forEach(function(b){b.setAttribute('aria-selected',b.dataset.t===t?'true':'false')});T.forEach(function(x){$('p-'+x).hidden=x!==t});try{history.replaceState(null,'','#'+t)}catch(e){}}
+tabs.forEach(function(b){b.onclick=function(){openTab(b.dataset.t)}});var h=location.hash.slice(1);if(T.indexOf(h)>=0)openTab(h);
+
+/* ---------- 1 Power and cost ---------- */
+var APPS=[['Kettle',2000],['Rice cooker',700],['Microwave',1200],['Iron',1200],['Air conditioner',1100],['Hair dryer',1500],['Fridge',100],['Fan',55],['Lights',100],['TV',100],['Phone charger',15]];
+var on={},tripped=false,feed='wall',heat=0,timer=null;
+var box=$('apps');APPS.forEach(function(a,i){var b=document.createElement('button');b.type='button';b.className='app';b.setAttribute('aria-pressed','false');b.innerHTML='<b>'+a[0]+'</b><small>'+a[1]+' W &middot; '+(a[1]/V).toFixed(a[1]<220?2:1)+' A</small>';b.onclick=function(){if(tripped)return;on[i]=!on[i];b.setAttribute('aria-pressed',on[i]?'true':'false');pUpdate()};box.appendChild(b)});
+seg('feed',function(b){feed=b.dataset.f;heat=0;pUpdate()});
+function pUpdate(){var P=0;APPS.forEach(function(a,i){if(on[i]&&!tripped)P+=a[1]});var I=P/V,cost=P/1000*2400;
+  $('pP').textContent=P+' W';$('pI').textContent=I.toFixed(1)+' A';$('pC').textContent=Math.round(cost).toLocaleString('en')+' d';
+  var lr=feed==='lead'?10:16;$('barLeadR').textContent='rating '+lr+' A';$('barLeadT').textContent=I.toFixed(1)+' A';
+  var bl=$('barLead');bl.style.width=Math.min(100,I/lr*100)+'%';bl.className=I>lr?'over':I>0.8*lr?'hot':'';
+  var bm=$('barMcb');bm.style.width=Math.min(100,I/16*100)+'%';bm.className=I>16?'over':I>12.8?'hot':'';$('barMcbT').textContent=I.toFixed(1)+' A';
+  var m=$('pmsg');clearTimeout(timer);
+  if(tripped){m.className='msg bad';m.innerHTML='<b>The breaker has tripped.</b> Everything on this circuit is off. Switch some appliances off, then reset it.';return}
+  if(I>16){m.className='msg bad';m.innerHTML='<b>'+I.toFixed(1)+' A is more than the 16 A breaker.</b> The breaker will trip in a moment to stop the cables overheating&hellip;';timer=setTimeout(function(){tripped=true;$('preset').hidden=false;[].forEach.call(box.children,function(b){b.disabled=true});pUpdate()},2000);return}
+  if(feed==='lead'&&I>10){m.className='msg bad';m.innerHTML='<b>Overloaded!</b> '+I.toFixed(1)+' A flows through a lead rated 10 A. The breaker does <b>not</b> trip (it allows 16 A), so the lead&rsquo;s thin cable and plug get hot: a fire risk. Move high-power appliances to other wall sockets.';return}
+  if(I>0.8*lr){m.className='msg warn';m.innerHTML='Close to the limit: '+I.toFixed(1)+' A of '+lr+' A. Adding one more high-power appliance would overload it.';return}
+  m.className='msg good';m.innerHTML=P?'Total current '+I.toFixed(1)+' A. Each appliance is in parallel, so the currents <b>add up</b> in the cable that feeds them.':'Switch on some appliances. I = P / V with V = 220 V.'}
+$('preset').onclick=function(){tripped=false;on={};[].forEach.call(box.children,function(b){b.disabled=false;b.setAttribute('aria-pressed','false')});$('preset').hidden=true;pUpdate()};
+pUpdate();
+
+/* ---------- 2 Body ---------- */
+function bUpdate(){var Vt=+val('bV','data-v'),Rs=+val('bS','data-r'),Rf=+val('bF','data-r'),rcd=val('bR','data-o')==='1';
+  var R=Rs+Rf+500,I=Vt/R,mA=I*1000;
+  $('bRt').textContent=R>=1e6?(R/1e6).toFixed(1)+' MΩ':R>=1000?Math.round(R/1000)+' kΩ':R+' Ω';$('bI').textContent=(mA<1?mA.toFixed(2):mA<10?mA.toFixed(1):Math.round(mA))+' mA';
+  var z=mA<1?0:mA<10?1:mA<50?2:3;[].forEach.call(document.querySelectorAll('.zones div'),function(d,i){d.classList.toggle('on',i===z)});
+  var m=$('bmsg'),txt='I = V / R = '+Vt+' / '+R.toLocaleString('en')+' = '+(mA<1?mA.toFixed(2):mA.toFixed(1))+' mA. ';
+  if(z===0){m.className='msg good';txt+='Too small to feel. '+(Vt<20?'This is why low-voltage cells are safe to use in class.':'High skin and floor resistance keep the current tiny, but never rely on it.')}
+  else if(z===1){m.className='msg warn';txt+='A painful shock that you could probably pull away from.'}
+  else{m.className='msg bad';txt+=(z===2?'Your muscles would clamp onto the wire: you might not be able to let go.':'Enough to upset the heart’s rhythm and kill.')}
+  if(rcd&&mA>30){txt+=' <b>The RCD trips</b>: it senses current leaking through the person and cuts the supply in about 30 milliseconds, usually before the heart is harmed.';m.className='msg warn'}
+  else if(rcd&&z>0){txt+=' The RCD does not trip below about 30 mA, but this current is small.'}
+  m.innerHTML=txt;drawBody(mA,rcd&&mA>30)}
+function drawBody(mA,trip){var s=$('bsvg');s.innerHTML='';
+  el('rect',{x:0,y:290,width:560,height:40,fill:val('bF','data-r')==='0'?'#BFE6F2':'#E8E1D3'},s);tx(s,20,315,val('bF','data-r')==='0'?'wet floor':val('bF','data-r')==='50000'?'dry tiles':'rubber soles','lblsm');
+  el('path',{d:'M40 60 H300',stroke:'#B5532A','stroke-width':6},s);tx(s,40,48,'live wire: '+val('bV','data-v')+' V','lbls');
+  el('circle',{cx:330,cy:110,r:22,fill:'#F7D9C4',stroke:'#1E0E4A','stroke-width':2},s);
+  el('path',{d:'M330 132 V220 M330 220 L305 290 M330 220 L355 290 M330 150 L300 66 M330 150 L370 190',stroke:'#1E0E4A','stroke-width':6,fill:'none','stroke-linecap':'round'},s);
+  if(val('bS','data-r')!=='100000'){for(var k=0;k<3;k++)el('circle',{cx:296+k*7,cy:78+k*5,r:3,fill:'#3A86C8'},s)}
+  if(mA>=1&&!trip){var w=Math.min(9,2+Math.log10(mA)*3);el('path',{'class':'flow',d:'M300 60 L300 66 L330 150 L330 220 L305 290 L305 300',stroke:'#E4572E','stroke-width':w},s);el('circle',{cx:300,cy:62,r:10,fill:'#FBDD82','class':'spark'},s)}
+  if(trip){el('rect',{x:420,y:30,width:120,height:44,rx:8,fill:'#1F7A7A'},s);tx(s,480,57,'RCD tripped','lbls','middle').setAttribute('style','fill:#fff')}
+  tx(s,400,140,'path: hand to feet','lblsm')}
+['bV','bS','bF','bR'].forEach(function(id){seg(id,bUpdate)});bUpdate();
+
+/* ---------- 3 Faults ---------- */
+var touch=false,blown=false,rcdTrip=false;
+seg('fCase',fReset);seg('fEarth',fReset);seg('fFuse',fReset);seg('fRcd',fReset);seg('fFault',fReset);
+$('fTouch').onclick=function(){touch=!touch;this.setAttribute('aria-pressed',touch);this.textContent=touch?'The person lets go':'A person touches the kettle';fUpdate()};
+$('fReset').onclick=function(){touch=false;$('fTouch').setAttribute('aria-pressed','false');$('fTouch').textContent='A person touches the kettle';fReset()};
+function fReset(){blown=false;rcdTrip=false;fUpdate()}
+function fUpdate(){var metal=val('fCase','data-c')==='metal',earth=val('fEarth','data-e')==='1'&&metal,fuse=val('fFuse','data-f')!=='0',rcd=val('fRcd','data-r')==='1',fault=val('fFault','data-k');
+  var m=$('fmsg'),t='',cls='good',live=!blown&&!rcdTrip,caseLive=false,earthI=0,bodyI=0,shortI=0;
+  if(fault==='none'){t='<b>Normal use.</b> Current flows in through the live wire, through the heating element, and back through the neutral wire: about 9 A for a 2000 W kettle. The earth wire carries no current.'+(touch?' Touching the case is safe.':'')}
+  else if(fault==='short'){shortI=live?V/0.3:0;
+    if(!live){t='<b>Safe now.</b> The '+(blown?'fuse melted':'supply was cut')+' and the circuit is open. Find and fix the damaged cable before fitting a new fuse.'}
+    else if(fuse){blown=true;cls='good';t='<b>Short circuit!</b> Live touched neutral, so there was almost no resistance: I = 220 / 0.3, about 730 A. The 13 A fuse <b>melted at once</b> and cut off the live wire. The cable was protected.';live=false}
+    else{cls='bad';t='<b>Danger!</b> Short circuit with no working fuse: hundreds of amps flow. The cable heats up, its insulation melts and it can start a fire. (The 16 A breaker at the board should still trip, but a nail in place of a fuse removes the appliance&rsquo;s own protection.)'}}
+  else if(fault==='case'){
+    if(!metal){t='<b>Double insulated.</b> The case is plastic, an insulator, and the live parts sit inside a second layer of insulation. Even with a loose wire inside, the case cannot become live, so no earth wire is needed.'+(touch?' The person is safe.':'')}
+    else if(!live){t='<b>Safe now.</b> The '+(blown?'fuse melted':'RCD tripped')+' and the live wire is cut off. Unplug the kettle and have it repaired before using it again.'}
+    else if(earth){earthI=V/1.5;if(fuse){blown=true;live=false;t='<b>The earth wire worked.</b> The live wire touched the metal case. Current rushed through the low-resistance earth wire to the ground: I = 220 / 1.5, about 150 A. This large current <b>melted the fuse</b> almost at once, cutting off the live wire before anyone touched the case.'}
+      else{cls='bad';caseLive=true;t='<b>Danger.</b> The earth wire carries a huge current to the ground, but there is no working fuse to cut the supply. The earth wire and cables get hot, and if the earth connection fails the case becomes live at 220 V.'}}
+    else{caseLive=true;
+      if(rcd&&touch){rcdTrip=true;live=false;cls='warn';t='<b>The RCD saved the person.</b> With no earth wire the case became live. When the person touched it, about 110 mA leaked through their body to the ground. The RCD noticed that the current in the live and neutral wires was no longer equal and cut the supply in about 30 ms.'}
+      else if(touch){bodyI=V/2000;cls='bad';t='<b>Electric shock.</b> With no earth wire the case is live at 220 V. Current flows through the person to the ground: I = 220 / 2000 = 0.11 A = 110 mA, enough to stop the heart. The fuse does <b>not</b> blow: 0.11 A is far below 13 A. Only an RCD would have helped.'}
+      else{cls='warn';t='<b>Hidden danger.</b> With no earth wire the live wire has made the whole metal case live at 220 V, but nothing has happened yet: no current flows until someone touches it. Try touching it, with and without an RCD.'}}}
+  m.className='msg '+cls;m.innerHTML=t;drawFault(metal,earth,fuse,rcd,fault,live,caseLive,earthI,bodyI,shortI)}
+function drawFault(metal,earth,fuse,rcd,fault,live,caseLive,earthI,bodyI,shortI){var s=$('fsvg');s.innerHTML='';
+  el('rect',{x:20,y:40,width:110,height:230,rx:10,fill:'#EFE6FF',stroke:'#5F3DB8','stroke-width':2},s);tx(s,75,30,'wall socket','lblsm','middle');tx(s,75,290,'220 V','lbls','middle');
+  if(rcd){el('rect',{x:30,y:244,width:90,height:22,rx:4,fill:rcdTrip?'#B0356F':'#1F7A7A'},s);tx(s,75,259,rcdTrip?'RCD tripped':'RCD','lblsm','middle').setAttribute('style','fill:#fff')}
+  var Y={L:90,N:150,E:210};var C={L:'#B5532A',N:'#2F6BD8',E:'#2E9A4F'};
+  ['L','N','E'].forEach(function(k){if(k==='E'&&!earth)return;var x2=k==='E'?370:330;el('path',{d:'M130 '+Y[k]+' H'+x2,stroke:C[k],'stroke-width':5,'stroke-dasharray':k==='E'?'0':'0'},s);tx(s,138,Y[k]-8,k==='L'?'live (brown)':k==='N'?'neutral (blue)':'earth (green and yellow)','lblsm')});
+  if(!earth&&metal)tx(s,140,Y.E-8,'no earth wire','lblsm');
+  el('rect',{x:210,y:Y.L-12,width:52,height:24,rx:4,fill:blown?'#F3D1D1':'#fff',stroke:'#1E0E4A','stroke-width':2},s);
+  if(fuse&&!blown)el('line',{x1:214,y1:Y.L,x2:258,y2:Y.L,stroke:'#8A7E50','stroke-width':2},s);
+  if(!fuse)el('line',{x1:214,y1:Y.L,x2:258,y2:Y.L,stroke:'#555','stroke-width':6},s);
+  tx(s,236,Y.L-18,!fuse?'nail':blown?'fuse melted':'13 A fuse','lblsm','middle');
+  el('rect',{x:330,y:60,width:150,height:200,rx:24,fill:metal?(caseLive?'#F7C8B8':'#D5DADF'):'#F4F1E8',stroke:caseLive?'#E4572E':'#1E0E4A','stroke-width':caseLive?4:2},s);
+  tx(s,405,280,metal?'metal kettle':'plastic kettle','lbls','middle');
+  el('path',{d:'M350 '+Y.L+' C390 '+(Y.L)+' 390 '+Y.N+' 330 '+Y.N,stroke:'#E4572E','stroke-width':4,fill:'none'},s);tx(s,360,180,'element','lblsm');
+  if(earth)el('circle',{cx:370,cy:Y.E,r:6,fill:'#2E9A4F'},s);
+  if(fault==='case'&&metal){el('path',{d:'M350 '+Y.L+' L345 70',stroke:'#B5532A','stroke-width':4},s);el('circle',{cx:345,cy:70,r:8,fill:'#FBDD82','class':live?'spark':''},s)}
+  if(fault==='short'){el('path',{d:'M300 '+Y.L+' L300 '+Y.N,stroke:'#B5532A','stroke-width':4},s);el('circle',{cx:300,cy:120,r:8,fill:'#FBDD82','class':live?'spark':''},s)}
+  if(live&&fault==='none')el('path',{'class':'flow',d:'M130 '+Y.L+' H350 C390 '+Y.L+' 390 '+Y.N+' 330 '+Y.N+' H130',stroke:'#FBDD82'},s);
+  if(live&&shortI)el('path',{'class':'flow',d:'M130 '+Y.L+' H300 V'+Y.N+' H130',stroke:'#E4572E','stroke-width':8},s);
+  if(touch&&metal){el('circle',{cx:520,cy:100,r:14,fill:'#F7D9C4',stroke:'#1E0E4A','stroke-width':2},s);el('path',{d:'M520 114 V200 M520 200 L505 300 M520 200 L535 300 M520 130 L482 150',stroke:'#1E0E4A','stroke-width':5,fill:'none','stroke-linecap':'round'},s);
+    if(bodyI)el('path',{'class':'flow',d:'M482 150 L520 130 L520 200 L505 300',stroke:'#E4572E','stroke-width':6},s)}
+  el('rect',{x:0,y:310,width:560,height:50,fill:'#E8E1D3'},s);tx(s,20,340,'ground','lblsm')}
+fUpdate();
+
+/* ---------- 4 Challenge ---------- */
+var Q=[
+ ['Minh plugs a kettle (9 A), a microwave (5.5 A) and an iron (5.5 A) into one extension lead rated 10 A.','What is the main danger, and the best fix?',['The breaker will trip every time; fit a bigger breaker.','About 20 A flows in a lead rated 10 A, so it overheats; use separate wall sockets for high-power appliances.','The kettle will boil more slowly; use a thicker kettle cable.','Nothing: parallel circuits share the current.'],1,'The currents add up in the lead (9 + 5.5 + 5.5 = 20 A). The 16 A breaker might not trip until later, but the 10 A lead overheats first. A bigger breaker would make it worse.'],
+ ['An old apartment has only two-pin sockets. The family buys a washing machine with a metal case.','Which change gives the most protection against an electric shock?',['Use a thicker extension lead.','Fit a bigger fuse in the plug.','Have an electrician fit an earthed socket and an RCD.','Keep the machine switched off at night.'],2,'With no earth wire, a fault can make the metal case live. An earthed socket lets a fault current blow the fuse; an RCD cuts the supply if current leaks through a person.'],
+ ['A 1500 W hair dryer works at 220 V. Fuses of 3 A, 5 A, 10 A and 13 A are available.','Which fuse should it have?',['3 A','5 A','10 A','13 A'],2,'I = 1500 / 220 = 6.8 A. Choose the smallest rating above the normal current: 10 A. A 3 A or 5 A fuse would blow in normal use; 13 A gives less protection.'],
+ ['A fuse in a plug keeps blowing, so someone replaces it with a piece of thick wire.','Why is this dangerous?',['The wire has too much resistance.','The appliance will not work.','Nothing can melt to cut the current in a fault, so cables can overheat and start a fire.','Thick wire gives people electric shocks.'],2,'The fuse is the weak point on purpose. A thick wire will not melt, so a short circuit or overload can heat the cable until it burns.'],
+ ['A student uses a hair dryer with wet hands, standing barefoot on a wet bathroom floor.','Why is this much more dangerous than using it with dry hands and shoes on?',['Water makes the voltage higher.','Wet skin and a wet floor have far less resistance, so a fault would drive a much bigger current through the body.','Water stops the RCD working.','The hair dryer takes more power when wet.'],1,'I = V / R. With dry skin and shoes R can be over 100,000 ohms; wet, it can fall to about 1,000 ohms, so the current is about 100 times bigger.'],
+ ['A circuit breaker is rated 16 A. A person touches a live wire and 0.1 A flows through them.','Why does the breaker not save them?',['0.1 A is far below 16 A, so the breaker does not notice; only an RCD (about 30 mA) would trip.','Breakers only work on light circuits.','The breaker is in the neutral wire.','0.1 A is too small to hurt anyone.'],0,'Fuses and breakers protect cables from large currents. People are harmed by currents around 50 mA, far below their ratings. An RCD detects small leakage currents.']];
+var qBox=$('quiz'),score=0,done=0;$('qMax').textContent=Q.length;
+Q.forEach(function(q,qi){var d=document.createElement('div');d.className='qcard';d.innerHTML='<h3>Case '+(qi+1)+'</h3><p style="margin:0">'+q[0]+'</p><p style="margin:6px 0 0"><b>'+q[1]+'</b></p><div class="opts"></div><p class="why" hidden></p>';
+  var o=d.querySelector('.opts');q[2].forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;b.onclick=function(){if(d.dataset.done)return;d.dataset.done=1;done++;
+      [].forEach.call(o.children,function(x,j){if(j===q[3])x.classList.add('right')});if(i===q[3])score++;else b.classList.add('wrong');var w=d.querySelector('.why');w.hidden=false;w.textContent=q[4];$('qScore').textContent=score};o.appendChild(b)});qBox.appendChild(d)});
+})();
+</script>
+</body>
+</html>

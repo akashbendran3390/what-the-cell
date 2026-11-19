@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
-<link rel="stylesheet" href="assets/myp.css?v=5cfed356">
+<link rel="stylesheet" href="assets/myp.css?v=4982a5ef">
 <script src="assets/theme.js?v=d6b97089"></script>
 </head>
 <body>
@@ -69,7 +69,7 @@
 (function () {
   // Six units per year. Only MYP 5 Unit 1 is built so far; its lessons link to the unit page.
   var U = 'myp/myp5-electrical-safety.html';
-  var LESSONS = [['Lighting up', 1], ['Charge', 0], ['Current', 0], ['Potential difference', 0], ['Circuit symbols and diagrams', 0], ['Resistance and Ohm’s law', 0], ['What changes resistance', 0], ['Series circuits', 0], ['Parallel circuits', 0], ['Energy, power and cost', 0], ['Mains electricity at home', 0], ['Electricity and the body', 0], ['Safety devices', 0], ['Review', 0], ['Criterion A test', 0]];
+  var LESSONS = /*lessons*/[['Lighting up', 1], ['Charge', 1], ['Current', 1], ['Potential difference', 1], ['Circuit symbols and diagrams', 1], ['Resistance and Ohmâ€™s law', 1], ['What changes resistance', 1], ['Series circuits', 1], ['Parallel circuits', 1], ['Energy, power and cost', 1], ['Mains electricity at home', 1], ['Electricity and the body', 1], ['Safety devices', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons*/;
   var YEARS = { 5: [{ t: 'Electrical safety and circuits', s: 'Physics', ready: true }] };
   var year = 5, unit = 0;
   var ut = document.getElementById('utabs'), up = document.getElementById('upanel');
@@ -86,7 +86,7 @@
     var L = '';
     LESSONS.forEach(function (l, i) {
       var n = i + 1, c = ['--y1', '--y2', '--y3', '--y4', '--y5'][i % 5];
-      L += (l[1] ? '<a class="lesson ready" href="' + U + '#lesson-' + n + '"' : '<div class="lesson"') + ' style="--c:var(' + c + ')"><span class="n"><b>' + n + '</b><span class="st">' + (l[1] ? 'Ready' : (n === 15 ? 'Test' : 'Coming soon')) + '</span></span><strong>' + l[0] + '</strong>' + (l[1] ? '</a>' : '</div>');
+      L += (l[1] ? '<a class="lesson ready" href="myp/es-lesson-' + (n < 10 ? '0' : '') + n + '.html"' : '<div class="lesson"') + ' style="--c:var(' + c + ')"><span class="n"><b>' + n + '</b><span class="st">' + (l[1] ? 'Ready' : (n === 15 ? 'Test' : 'Coming soon')) + '</span></span><strong>' + l[0] + '</strong>' + (l[1] ? '</a>' : '</div>');
     });
     up.innerHTML = '<div class="box top upane" style="--c:var(--y5)"><div class="uhead"><div><p class="eyebrow">MYP ' + year + ' &middot; Unit ' + (unit + 1) + ' &middot; ' + u.s + '</p><h3>' + u.t + '</h3><p class="muted">15 lessons of 55 minutes, a unit review and a Criterion A test.</p></div>' +
       '<div class="acts"><a class="btn go" href="' + U + '">Open the unit &rarr;</a><a class="btn pdf" href="' + U + '#unit-notes">Unit notes</a><a class="btn sim" href="' + U + '#practicals">Practicals</a><a class="btn vid" href="' + U + '#unit-review">Unit review</a></div></div>' +

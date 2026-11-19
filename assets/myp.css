@@ -189,3 +189,7 @@ button.year:focus-visible{outline:3px solid var(--sun);outline-offset:4px}
 .uhead .acts{display:flex;gap:8px;flex-wrap:wrap}
 .eyebrow{margin:0;font:800 .8rem var(--ui);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
 .upane-empty{text-align:center;padding:30px}
+
+/* Lesson page: previous / all lessons / next */
+.lnav{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin:0 0 26px}
+.lnav .btn{font-size:.9rem}

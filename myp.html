@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
 <link rel="stylesheet" href="assets/myp.css?v=4982a5ef">
+<link rel="stylesheet" href="assets/labquest.css?v=43f308f2">
 <script src="assets/theme.js?v=d6b97089"></script>
 </head>
 <body>
@@ -40,6 +41,9 @@
 </div>
 
 <main><div class="m-wrap">
+  <!-- Daily Lab Quest: daily science game with streaks (assets/labquest.js, questions in assets/labquest-bank.js), 2026-11-20 -->
+  <section id="lab-quest" aria-label="Daily Lab Quest"><noscript><p>The Daily Lab Quest game needs JavaScript.</p></noscript></section>
+
   <section class="m-sec" aria-labelledby="years-h">
     <h2 id="years-h"><span class="dot" style="--c:var(--sky)"></span>1. Choose your year</h2>
     <div class="years" role="tablist" aria-label="MYP year">
@@ -65,11 +69,13 @@
 </div></main>
 
 <footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</div></footer>
+<script src="assets/labquest-bank.js?v=65b30dd5"></script>
+<script src="assets/labquest.js?v=1a8aec0f"></script>
 <script>
 (function () {
   // Six units per year. Only MYP 5 Unit 1 is built so far; its lessons link to the unit page.
   var U = 'myp/myp5-electrical-safety.html';
-  var LESSONS = /*lessons*/[['Lighting up', 1], ['Charge', 1], ['Current', 1], ['Potential difference', 1], ['Circuit symbols and diagrams', 1], ['Resistance and Ohmâ€™s law', 1], ['What changes resistance', 1], ['Series circuits', 1], ['Parallel circuits', 1], ['Energy, power and cost', 1], ['Mains electricity at home', 1], ['Electricity and the body', 1], ['Safety devices', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons*/;
+  var LESSONS = /*lessons*/[['Lighting up', 1], ['Charge', 1], ['Current', 1], ['Potential difference', 1], ['Circuit symbols and diagrams', 1], ['Resistance and Ohm\u2019s law', 1], ['What changes resistance', 1], ['Series circuits', 1], ['Parallel circuits', 1], ['Energy, power and cost', 1], ['Mains electricity at home', 1], ['Electricity and the body', 1], ['Safety devices', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons*/;
   var YEARS = { 5: [{ t: 'Electrical safety and circuits', s: 'Physics', ready: true }] };
   var year = 5, unit = 0;
   var ut = document.getElementById('utabs'), up = document.getElementById('upanel');

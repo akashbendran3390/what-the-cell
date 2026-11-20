@@ -205,7 +205,7 @@ function bUpdate(){var Vt=+val('bV','data-v'),Rs=+val('bS','data-r'),Rf=+val('bF
   if(z===0){m.className='msg good';txt+='Too small to feel. '+(Vt<20?'This is why low-voltage cells are safe to use in class.':'High skin and floor resistance keep the current tiny, but never rely on it.')}
   else if(z===1){m.className='msg warn';txt+='A painful shock that you could probably pull away from.'}
   else{m.className='msg bad';txt+=(z===2?'Your muscles would clamp onto the wire: you might not be able to let go.':'Enough to upset the heart’s rhythm and kill.')}
-  if(rcd&&mA>30){txt+=' <b>The RCD trips</b>: it senses current leaking through the person and cuts the supply in about 30 milliseconds, usually before the heart is harmed.';m.className='msg warn'}
+  if(rcd&&mA>30){txt+=' <b>The RCD trips</b>: it senses current leaking through the person and cuts the supply in a fraction of a second, usually before the heart is harmed.';m.className='msg warn'}
   else if(rcd&&z>0){txt+=' The RCD does not trip below about 30 mA, but this current is small.'}
   m.innerHTML=txt;drawBody(mA,rcd&&mA>30)}
 function drawBody(mA,trip){var s=$('bsvg');s.innerHTML='';
@@ -238,7 +238,7 @@ function fUpdate(){var metal=val('fCase','data-c')==='metal',earth=val('fEarth',
     else if(earth){earthI=V/1.5;if(fuse){blown=true;live=false;t='<b>The earth wire worked.</b> The live wire touched the metal case. Current rushed through the low-resistance earth wire to the ground: I = 220 / 1.5, about 150 A. This large current <b>melted the fuse</b> almost at once, cutting off the live wire before anyone touched the case.'}
       else{cls='bad';caseLive=true;t='<b>Danger.</b> The earth wire carries a huge current to the ground, but there is no working fuse to cut the supply. The earth wire and cables get hot, and if the earth connection fails the case becomes live at 220 V.'}}
     else{caseLive=true;
-      if(rcd&&touch){rcdTrip=true;live=false;cls='warn';t='<b>The RCD saved the person.</b> With no earth wire the case became live. When the person touched it, about 110 mA leaked through their body to the ground. The RCD noticed that the current in the live and neutral wires was no longer equal and cut the supply in about 30 ms.'}
+      if(rcd&&touch){rcdTrip=true;live=false;cls='warn';t='<b>The RCD saved the person.</b> With no earth wire the case became live. When the person touched it, about 110 mA leaked through their body to the ground. The RCD noticed that the current in the live and neutral wires was no longer equal and cut the supply in a fraction of a second.'}
       else if(touch){bodyI=V/2000;cls='bad';t='<b>Electric shock.</b> With no earth wire the case is live at 220 V. Current flows through the person to the ground: I = 220 / 2000 = 0.11 A = 110 mA, enough to stop the heart. The fuse does <b>not</b> blow: 0.11 A is far below 13 A. Only an RCD would have helped.'}
       else{cls='warn';t='<b>Hidden danger.</b> With no earth wire the live wire has made the whole metal case live at 220 V, but nothing has happened yet: no current flows until someone touches it. Try touching it, with and without an RCD.'}}}
   m.className='msg '+cls;m.innerHTML=t;drawFault(metal,earth,fuse,rcd,fault,live,caseLive,earthI,bodyI,shortI)}

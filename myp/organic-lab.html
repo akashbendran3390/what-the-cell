@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Organic Molecules Lab. Build alkanes, alkenes and alkynes and name them, explore a fractionating column, sort isomers, crack long molecules, grow polymer chains and identify plastics by floating them. MYP Science resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/myp/organic-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Organic Molecules Lab | What the Cell">
+<meta property="og:description" content="Organic Molecules Lab. Build alkanes, alkenes and alkynes and name them, explore a fractionating column, sort isomers, crack long molecules, grow polymer chains and identify plastics by floating them. MYP Science resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/myp/organic-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Organic Molecules Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=88e0df76">
+<script src="../assets/theme.js?v=d5656978"></script>
+<style>
+/* Organic Molecules Lab (MYP 5, Unit 5: Useful organic compounds), 2026-11-21. Hand-written page.
+   Tabs: #build, #fractions, #isomers, #crack, #polymer, #plastics. window.ocDebug for testing. */.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,.8fr);gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.05rem/1.15 ui-monospace,monospace;min-width:0;overflow-wrap:anywhere}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+
+.atomH{fill:#fff;stroke:#1E0E4A;stroke-width:1.5}.atomC{fill:#3C3C3C}.atomX{fill:#2E7D4F}.atomBr{fill:#8B4513}.atomO{fill:#E4572E}
+svg text.el{font:700 13px ui-sans-serif,system-ui;text-anchor:middle;dominant-baseline:central}
+.lev{cursor:pointer}.lev:hover rect,.lev.on rect{stroke:#B0356F;stroke-width:4}
+.piece{cursor:pointer}
+select.pick{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.isorow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:6px 10px;background:var(--surface)}
+.isorow svg{width:150px;height:70px}
+</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#5F3DB8;--band2:#1F7A7A;--band3:#B5532A;--band-pic:url('art/myp/myp-organic-petroleum-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp5-organic-compounds.html">Organic compounds</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#units">MYP 5, Unit 5</a> / <a href="myp5-organic-compounds.html">Useful organic compounds</a></div>
+    <h1>Organic Molecules Lab</h1>
+    <p class="lede">Build alkanes, alkenes and alkynes and name them, explore a fractionating column, sort isomers, crack long molecules, grow polymer chains and identify plastics by floating them.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="build" style="--c:var(--violet)"><span>1</span>Build</button>
+    <button role="tab" aria-selected="false" data-t="fractions" style="--c:var(--tang)"><span>2</span>Fractions</button>
+    <button role="tab" aria-selected="false" data-t="isomers" style="--c:var(--sky)"><span>3</span>Isomers</button>
+    <button role="tab" aria-selected="false" data-t="crack" style="--c:var(--coral)"><span>4</span>Cracking</button>
+    <button role="tab" aria-selected="false" data-t="polymer" style="--c:var(--mint)"><span>5</span>Polymers</button>
+    <button role="tab" aria-selected="false" data-t="plastics" style="--c:var(--pink)"><span>6</span>Plastics</button>
+  </div>
+
+  <section class="panel" id="p-build">
+    <p class="intro">Choose how many carbons and the type of carbon&ndash;carbon bond. The lab draws the <b>displayed formula</b>, gives the molecular formula and the name, and checks it against the general formula. With a double bond you can try <b>addition reactions</b>.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="b-svg" viewBox="0 0 720 260" aria-label="Displayed formula"></svg></div>
+      <div class="side">
+        <div class="ctl"><div><label for="b-n">Carbons: <b id="b-no"></b></label><input type="range" id="b-n" min="1" max="10" value="3"></div></div>
+        <div class="seg" id="b-type"><button aria-pressed="true" data-v="1">single only</button><button aria-pressed="false" data-v="2">one C=C</button><button aria-pressed="false" data-v="3">one triple</button></div>
+        <div class="stats"><div><small>Formula</small><span id="b-f"></span></div><div><small>Name</small><span id="b-name"></span></div><div><small>At 25 &deg;C</small><span id="b-state"></span></div></div>
+        <div class="row" id="b-add"><button class="btn2" data-a="H2">Add H&#8322;</button><button class="btn2 alt" data-a="Br2">Add Br&#8322;</button><button class="btn2 warm" data-a="H2O">Add H&#8322;O</button></div>
+        <div class="msg" id="b-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-fractions" hidden>
+    <p class="intro">Crude oil vapour enters at the bottom of the column. It is <b>hot at the bottom and cool at the top</b>. Click a level to see which hydrocarbons condense there.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="f-svg" viewBox="0 0 420 470" aria-label="Fractionating column"></svg></div>
+      <div class="side"><div class="msg" id="f-msg">Click a level of the column.</div>
+        <div class="tablewrap"><table class="t" id="f-tab"><tr><th>Fraction</th><th>Carbons</th><th>Boils at</th></tr></table></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-isomers" hidden>
+    <p class="intro">All six carbon skeletons below are C&#8325;H&#8321;&#8322; (hydrogens not drawn). Trace the longest chain, then choose the name of each. Some are the <b>same molecule</b> drawn in a different way.</p>
+    <div class="lab">
+      <div class="side" id="i-list"></div>
+      <div class="side"><button class="btn2" id="i-check">Check my names</button><div class="msg" id="i-msg">There are only three different isomers of C&#8325;H&#8321;&#8322;.</div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-crack" hidden>
+    <p class="intro">Choose a long alkane and decide how many carbons go into the <b>alkane</b> product. The rest must become an <b>alkene</b>. The lab checks that the atoms balance.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="c-svg" viewBox="0 0 720 220" aria-label="Cracking"></svg></div>
+      <div class="side">
+        <div class="ctl"><div><label for="c-n">Long alkane: <b id="c-no"></b> carbons</label><input type="range" id="c-n" min="6" max="16" value="10"></div>
+          <div><label for="c-m">Carbons in the alkane product: <b id="c-mo"></b></label><input type="range" id="c-m" min="1" max="14" value="8"></div></div>
+        <div class="eq" id="c-eq"></div>
+        <div class="msg" id="c-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-polymer" hidden>
+    <p class="intro">Choose a monomer. In <b>addition polymerisation</b> the C=C bonds open and the monomers join into a chain with nothing else made. Switch to <b>condensation</b> to see a small molecule given off at every link.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="p-svg" viewBox="0 0 720 260" aria-label="Polymer chain"></svg></div>
+      <div class="side">
+        <div class="seg" id="p-mode"><button aria-pressed="true" data-v="add">addition</button><button aria-pressed="false" data-v="con">condensation</button></div>
+        <select class="pick" id="p-mono" aria-label="Monomer"></select>
+        <div class="ctl"><div><label for="p-k">Monomers joined: <b id="p-ko"></b></label><input type="range" id="p-k" min="1" max="10" value="3"></div></div>
+        <div class="msg" id="p-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-plastics" hidden>
+    <p class="intro">Six unknown plastic pieces. Drop each into <b>water</b> (density 1.00 g/cm&sup3;) and into <b>salt water</b> (about 1.20 g/cm&sup3;). Use the results to name each plastic.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="s-svg" viewBox="0 0 720 300" aria-label="Two beakers"></svg></div>
+      <div class="side">
+        <div class="seg" id="s-pieces"></div>
+        <div class="row"><button class="btn2" id="s-w">Drop in water</button><button class="btn2 alt" id="s-s">Drop in salt water</button></div>
+        <div class="tablewrap"><table class="t" id="s-tab"><tr><th>Piece</th><th>Water</th><th>Salt water</th><th>Your answer</th></tr></table></div>
+        <button class="btn2 warm" id="s-check">Check my answers</button>
+        <div class="msg" id="s-msg">Push each piece under before letting go, so air bubbles do not hold it up.</div>
+      </div>
+    </div>
+  </section>
+</div></main>
+
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</div></footer>
+
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  var SUB = '₀₁₂₃₄₅₆₇₈₉';
+  function sub(n) { return String(n).split('').map(function (d) { return SUB[+d]; }).join(''); }
+  function f(c, h, extra) { return 'C' + (c > 1 ? sub(c) : '') + 'H' + (h > 1 ? sub(h) : '') + (extra || ''); }
+  var PRE = ['', 'meth', 'eth', 'prop', 'but', 'pent', 'hex', 'hept', 'oct', 'non', 'dec', 'undec', 'dodec', 'tridec', 'tetradec', 'pentadec', 'hexadec'];
+  var BP = [0, -162, -89, -42, -1, 36, 69, 98, 126, 151, 174];
+  function svgEl(t, a) { var e = document.createElementNS('http://www.w3.org/2000/svg', t); for (var k in a) e.setAttribute(k, a[k]); return e; }
+  function atom(svg, x, y, e) { var cls = e === 'C' ? 'atomC' : e === 'H' ? 'atomH' : e === 'Br' ? 'atomBr' : e === 'O' ? 'atomO' : 'atomX'; svg.appendChild(svgEl('circle', { cx: x, cy: y, r: 13, 'class': cls })); var t = svgEl('text', { x: x, y: y, 'class': 'el', fill: e === 'H' ? '#1E0E4A' : '#fff' }); t.textContent = e; svg.appendChild(t); }
+  function bond(svg, x1, y1, x2, y2, o) { var dx = x2 - x1, dy = y2 - y1, L = Math.sqrt(dx * dx + dy * dy), px = -dy / L * 4, py = dx / L * 4; var offs = o === 1 ? [0] : o === 2 ? [-1, 1] : [-1.6, 0, 1.6]; offs.forEach(function (k) { svg.appendChild(svgEl('line', { x1: x1 + k * px, y1: y1 + k * py, x2: x2 + k * px, y2: y2 + k * py, stroke: '#1E0E4A', 'stroke-width': 2 })); }); }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  // displayed straight chain; type 1/2/3 at bond position 1; subs: optional groups replacing H on C1/C2 (addition products)
+  function chain(svg, n, type, ox, oy, d, add) {
+    var atoms = [], x0 = ox; add = add || null;
+    for (var i = 0; i < n; i++) {
+      var cx = x0 + i * d, nH = 2; if (type > 1 && i < 2) nH = (type === 2 ? 1 : 0); if (i === 0 || i === n - 1) nH += (n === 1 ? 2 : 1);
+      var spots = [[cx, oy - d], [cx, oy + d]], ends = []; if (i === 0) ends.push([cx - d, oy]); if (i === n - 1) ends.push([cx + d, oy]);
+      var all = (type === 3 && i < 2) ? ends.concat(spots) : spots.concat(ends), used = 0;
+      for (var k = 0; k < all.length && used < nH; k++) { var e = 'H'; if (add && i < 2 && k === 1 && add[i]) e = add[i]; bond(svg, cx, oy, all[k][0], all[k][1], 1); atoms.push([all[k][0], all[k][1], e]); used++; }
+      if (add && i < 2 && type === 2) { }
+      if (i < n - 1) bond(svg, cx, oy, cx + d, oy, (i === 0 && type > 1) ? type : 1);
+      atoms.push([cx, oy, 'C']);
+    }
+    atoms.forEach(function (a) { atom(svg, a[0], a[1], a[2]); });
+  }
+  // ---- Build
+  var B = { n: 3, t: 1, add: null };
+  function bName(n, t) { if (t === 1) return PRE[n] + 'ane'; if (n === 2) return t === 2 ? 'ethene' : 'ethyne'; if (n === 3) return t === 2 ? 'propene' : 'propyne'; return PRE[n] + '-1-' + (t === 2 ? 'ene' : 'yne'); }
+  function bDraw() {
+    var n = B.n, t = B.t; if (t > 1 && n < 2) { t = B.t = 1; segSet('b-type', '1'); }
+    $('b-no').textContent = n; var svg = $('b-svg'); clear(svg); var d = n > 7 ? 54 : 64, w = (n + 1) * d; var ox = Math.max(40, (720 - w) / 2 + d / 2);
+    var h = t === 1 ? 2 * n + 2 : t === 2 ? 2 * n : 2 * n - 2;
+    var msg = $('b-msg');
+    if (B.add && t === 2) {
+      var a = B.add, subs = a === 'H2' ? ['H', 'H'] : a === 'Br2' ? ['Br', 'Br'] : ['H', 'O'];
+      chain(svg, n, 1, ox, 130, d, subs); var prod = a === 'H2' ? [f(n, 2 * n + 2), PRE[n] + 'ane'] : a === 'Br2' ? [f(n, 2 * n, 'Br₂'), '1,2-dibromo' + PRE[n] + 'ane'] : [f(n, 2 * n + 1, 'OH'), n === 2 ? 'ethanol' : 'an alcohol'];
+      $('b-f').textContent = prod[0]; $('b-name').textContent = prod[1]; $('b-state').textContent = '–';
+      msg.className = 'msg good'; msg.innerHTML = '<b>Addition reaction.</b> The C=C opened and two new atoms (or groups) added on, one to each carbon. One product only. ' + (a === 'Br2' ? 'This is why bromine water loses its colour.' : a === 'H2' ? 'This is hydrogenation, used to harden vegetable oils (nickel catalyst).' : 'This is hydration (steam, phosphoric acid catalyst): it makes an alcohol.');
+      return;
+    }
+    chain(svg, n, t, ox, 130, d, null);
+    $('b-f').textContent = f(n, h); $('b-name').textContent = bName(n, t);
+    var st = t === 1 && n <= 10 ? (BP[n] < 25 ? 'gas' : 'liquid') : (n <= 4 ? 'gas' : 'liquid');
+    $('b-state').textContent = st; $('b-add').style.display = t === 2 ? '' : 'none';
+    var gf = t === 1 ? 'CₙH₂ₙ₊₂' : t === 2 ? 'CₙH₂ₙ' : 'CₙH₂ₙ₋₂';
+    msg.className = 'msg'; msg.innerHTML = (t === 1 ? '<b>Alkane</b>: saturated, single bonds only.' : t === 2 ? '<b>Alkene</b>: unsaturated, one C=C. It decolourises bromine water.' : '<b>Alkyne</b>: unsaturated, one triple bond.') + ' General formula ' + gf + ': with n = ' + n + ' that gives ' + f(n, h) + '.' + (t === 1 && n <= 10 ? ' Boiling point ' + BP[n] + ' °C.' : '');
+  }
+  function segSet(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'); }); }
+  $('b-n').addEventListener('input', function () { B.n = +this.value; B.add = null; bDraw(); });
+  [].forEach.call($('b-type').querySelectorAll('button'), function (b) { b.addEventListener('click', function () { B.t = +b.dataset.v; B.add = null; segSet('b-type', b.dataset.v); bDraw(); }); });
+  [].forEach.call($('b-add').querySelectorAll('button'), function (b) { b.addEventListener('click', function () { B.add = b.dataset.a; bDraw(); }); });
+  bDraw();
+
+  // ---- Fractions
+  var FR = [['refinery gases', '1–4', 'below 25 °C', 'LPG, cooking gas', '#E9F3FB'], ['petrol', '5–10', '25–70 °C', 'car fuel', '#D6EAF5'], ['naphtha', '8–12', '70–160 °C', 'making plastics and chemicals', '#C2DEEE'], ['kerosene', '10–16', '160–250 °C', 'jet fuel, lamps', '#F3E3B8'], ['diesel', '14–20', '250–350 °C', 'lorries, buses, trains', '#E8C98A'], ['fuel oil', '20–40', '350–400 °C', 'ships, power stations', '#C99A5B'], ['bitumen', 'over 40', 'over 400 °C', 'roads and roofs', '#6B4A2B']];
+  (function () {
+    var svg = $('f-svg'), x = 90, y = 30, w = 130, hh = 56;
+    FR.forEach(function (r, i) {
+      var g = svgEl('g', { 'class': 'lev', tabindex: 0, role: 'button', 'aria-label': r[0] }); g.appendChild(svgEl('rect', { x: x, y: y + i * hh, width: w, height: hh, fill: r[4], stroke: '#1E0E4A', 'stroke-width': 1.5 }));
+      var t = svgEl('text', { x: x + w + 50, y: y + i * hh + hh / 2, 'class': 'el', fill: 'currentColor', 'text-anchor': 'start' }); t.style.textAnchor = 'start'; t.textContent = '→ ' + r[0]; g.appendChild(t);
+      g.addEventListener('click', function () { [].forEach.call(svg.querySelectorAll('.lev'), function (q) { q.classList.remove('on'); }); g.classList.add('on'); var m = $('f-msg'); m.className = 'msg good'; m.innerHTML = '<b>' + r[0] + '</b>: about ' + r[1] + ' carbons, boils ' + r[2] + '. Used for ' + r[3] + '. ' + (i < 2 ? 'Short chains: low boiling point, runny, very flammable.' : i > 4 ? 'Long chains: high boiling point, thick (viscous), hard to light.' : 'Middle-sized chains.'); });
+      svg.appendChild(g);
+      var tr = document.createElement('tr'); tr.innerHTML = '<td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td>'; $('f-tab').appendChild(tr);
+    });
+    var hot = svgEl('text', { x: x + w / 2, y: y + 7 * hh + 22, 'class': 'el', fill: '#B5532A' }); hot.textContent = 'hot (about 400 °C)'; svg.appendChild(hot);
+    var cool = svgEl('text', { x: x + w / 2, y: y - 14, 'class': 'el', fill: '#1F7A7A' }); cool.textContent = 'cool'; svg.appendChild(cool);
+  })();
+
+  // ---- Isomers (carbon skeletons as [col,row] points and bonds)
+  var ISO = [
+    { c: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], b: [[0, 1], [1, 2], [2, 3], [3, 4]], a: 'pentane' },
+    { c: [[0, 0], [1, 0], [2, 0], [3, 0], [1, -1]], b: [[0, 1], [1, 2], [2, 3], [1, 4]], a: '2-methylbutane' },
+    { c: [[0, 0], [1, 0], [2, 0], [1, -1], [1, 1]], b: [[0, 1], [1, 2], [1, 3], [1, 4]], a: '2,2-dimethylpropane' },
+    { c: [[0, 0], [1, 0], [2, 0], [2, 1], [3, 1]], b: [[0, 1], [1, 2], [2, 3], [3, 4]], a: 'pentane' },
+    { c: [[0, 0], [1, 0], [2, 0], [3, 0], [2, 1]], b: [[0, 1], [1, 2], [2, 3], [2, 4]], a: '2-methylbutane' },
+    { c: [[0, 1], [1, 1], [1, 0], [2, 0], [3, 0]], b: [[0, 1], [1, 2], [2, 3], [3, 4]], a: 'pentane' }];
+  var NAMES = ['choose…', 'pentane', '2-methylbutane', '2,2-dimethylpropane'];
+  ISO.forEach(function (m, i) {
+    var row = document.createElement('div'); row.className = 'isorow'; var svg = svgEl('svg', { viewBox: '0 0 150 70' });
+    m.b.forEach(function (p) { var A = m.c[p[0]], Z = m.c[p[1]]; bond(svg, 20 + A[0] * 30, 35 + A[1] * 22, 20 + Z[0] * 30, 35 + Z[1] * 22, 1); });
+    m.c.forEach(function (A) { svg.appendChild(svgEl('circle', { cx: 20 + A[0] * 30, cy: 35 + A[1] * 22, r: 9, 'class': 'atomC' })); });
+    var sel = document.createElement('select'); sel.className = 'pick'; sel.id = 'i-s' + i; NAMES.forEach(function (n) { var o = document.createElement('option'); o.textContent = n; sel.appendChild(o); });
+    row.appendChild(svg); var lab = document.createElement('div'); lab.innerHTML = '<b>' + String.fromCharCode(65 + i) + '</b> '; lab.appendChild(sel); row.appendChild(lab); $('i-list').appendChild(row);
+  });
+  $('i-check').addEventListener('click', function () { var ok = 0; ISO.forEach(function (m, i) { var s = $('i-s' + i); var good = s.value === m.a; s.style.borderColor = good ? 'var(--mint)' : 'var(--coral)'; if (good) ok++; }); var msg = $('i-msg'); msg.className = 'msg ' + (ok === 6 ? 'good' : 'warn'); msg.innerHTML = ok === 6 ? '<b>All six correct.</b> A, D and F are all pentane (bent chains are still one chain of five); B and E are both 2-methylbutane.' : ok + ' of 6 correct. Trace the longest chain of carbons; number from the end nearest the branch.'; });
+
+  // ---- Cracking
+  function cDraw() {
+    var n = +$('c-n').value, m = +$('c-m').value; $('c-no').textContent = n; $('c-mo').textContent = m; var k = n - m, msg = $('c-msg'), svg = $('c-svg'); clear(svg);
+    if (k < 2) { $('c-eq').textContent = f(n, 2 * n + 2) + ' → ?'; msg.className = 'msg bad'; msg.innerHTML = 'The alkene needs <b>at least 2 carbons</b> (there is no alkene with one carbon). Make the alkane product shorter.'; return; }
+    chainMini(svg, n, 1, 20, 50); chainMini(svg, m, 1, 20, 150); chainMini(svg, k, 2, 30 + m * 26 + 40, 150);
+    $('c-eq').textContent = f(n, 2 * n + 2) + ' → ' + f(m, 2 * m + 2) + ' + ' + f(k, 2 * k);
+    msg.className = 'msg good'; msg.innerHTML = '<b>Balanced:</b> ' + n + ' carbons and ' + (2 * n + 2) + ' hydrogens on each side. Products: ' + PRE[m] + 'ane (an alkane' + (m >= 5 && m <= 10 ? ', in the petrol range' : '') + ') and ' + (k === 2 ? 'ethene' : k === 3 ? 'propene' : PRE[k] + 'ene') + ' (an alkene, useful for making polymers). There are not enough hydrogens for both products to be alkanes.';
+  }
+  function chainMini(svg, n, t, ox, oy) { for (var i = 0; i < n; i++) { var x = ox + i * 26; if (i < n - 1) bond(svg, x, oy, x + 26, oy, (t === 2 && i === 0) ? 2 : 1); } for (var j = 0; j < n; j++) svg.appendChild(svgEl('circle', { cx: ox + j * 26, cy: oy, r: 9, 'class': 'atomC' })); var lab = svgEl('text', { x: ox, y: oy + 26, 'class': 'el', fill: 'currentColor' }); lab.style.textAnchor = 'start'; lab.textContent = t === 2 ? 'alkene (C=C)' : 'C' + n + ' alkane'; svg.appendChild(lab); }
+  $('c-n').addEventListener('input', function () { $('c-m').max = this.value - 2; if (+$('c-m').value > this.value - 2) $('c-m').value = this.value - 2; cDraw(); });
+  $('c-m').addEventListener('input', cDraw); cDraw();
+
+  // ---- Polymers
+  var MON = [{ n: 'ethene', g: ['H', 'H', 'H', 'H'], p: 'poly(ethene)', u: 'bags, bottles, cling film' }, { n: 'propene', g: ['H', 'H', 'H', 'CH₃'], p: 'poly(propene)', u: 'ropes, food boxes' }, { n: 'chloroethene', g: ['H', 'H', 'H', 'Cl'], p: 'poly(chloroethene), PVC', u: 'pipes, window frames' }, { n: 'tetrafluoroethene', g: ['F', 'F', 'F', 'F'], p: 'PTFE', u: 'non-stick pans' }, { n: 'styrene', g: ['H', 'H', 'H', 'C₆H₅'], p: 'poly(styrene)', u: 'foam packaging' }];
+  MON.forEach(function (m, i) { var o = document.createElement('option'); o.value = i; o.textContent = m.n; $('p-mono').appendChild(o); });
+  var PM = 'add';
+  function grp(svg, x, y, e) { if (e.length <= 2) { atom(svg, x, y, e); return; } svg.appendChild(svgEl('rect', { x: x - 20, y: y - 11, width: 40, height: 22, rx: 8, fill: '#3C3C3C' })); var t = svgEl('text', { x: x, y: y, 'class': 'el', fill: '#fff' }); t.textContent = e; svg.appendChild(t); }
+  function pDraw() {
+    var k = +$('p-k').value; $('p-ko').textContent = k; var svg = $('p-svg'); clear(svg); var msg = $('p-msg');
+    if (PM === 'add') {
+      var m = MON[+$('p-mono').value], d = 34, x0 = 40;
+      bond(svg, x0 - 24, 130, x0 + (2 * k - 1) * d + 24, 130, 1);
+      for (var i = 0; i < 2 * k; i++) { var x = x0 + i * d, top = (i % 2 ? m.g[2] : m.g[0]), bot = (i % 2 ? m.g[3] : m.g[1]); bond(svg, x, 130, x, 92, 1); bond(svg, x, 130, x, 168, 1); atom(svg, x, 130, 'C'); grp(svg, x, 92, top); grp(svg, x, 168, bot); }
+      var t = svgEl('text', { x: 360, y: 230, 'class': 'el', fill: 'currentColor' }); t.textContent = k + ' ' + m.n + ' monomer' + (k > 1 ? 's' : '') + ' joined: part of ' + m.p; svg.appendChild(t);
+      msg.className = 'msg good'; msg.innerHTML = '<b>' + m.p + '</b> from ' + m.n + '. Each C=C opened and bonded to the next monomer. Nothing else is made. Uses: ' + m.u + '. In a real polymer there are thousands of monomers.';
+    } else {
+      var d2 = 70, xs = 30;
+      for (var j = 0; j < k; j++) { var X = xs + j * d2 * 2 / Math.max(1, k / 4); }
+      var per = Math.min(k, 8); for (var q = 0; q < per; q++) { var bx = 20 + q * 85; svg.appendChild(svgEl('rect', { x: bx, y: 110, width: 36, height: 30, rx: 8, fill: '#5F3DB8' })); svg.appendChild(svgEl('rect', { x: bx + 38, y: 110, width: 36, height: 30, rx: 8, fill: '#1F7A7A' })); var wa = svgEl('text', { x: bx + 38, y: 175, 'class': 'el', fill: '#2F6BD8' }); wa.textContent = 'H₂O'; svg.appendChild(wa); }
+      var tt = svgEl('text', { x: 360, y: 230, 'class': 'el', fill: 'currentColor' }); tt.textContent = k + ' pairs of monomers joined: ' + (2 * k - 1) + ' links, ' + (2 * k - 1) + ' water molecules given off'; svg.appendChild(tt);
+      msg.className = 'msg'; msg.innerHTML = '<b>Condensation polymerisation.</b> Two different monomers (purple and teal) each have a reactive group at both ends. Every link gives off a small molecule, here water. Examples: polyester (PET), nylon (gives off HCl or water), and natural polymers such as starch and proteins.';
+    }
+  }
+  [].forEach.call($('p-mode').querySelectorAll('button'), function (b) { b.addEventListener('click', function () { PM = b.dataset.v; segSet('p-mode', PM); $('p-mono').disabled = PM !== 'add'; pDraw(); }); });
+  $('p-mono').addEventListener('change', pDraw); $('p-k').addEventListener('input', pDraw); pDraw();
+
+  // ---- Plastics
+  var PL = [['PP', 0.90], ['LDPE', 0.92], ['HDPE', 0.95], ['PS', 1.05], ['PVC', 1.38], ['PET', 1.38]];
+  var order = [3, 0, 5, 1, 4, 2], cur = 0, res = {};
+  order.forEach(function (pi, i) { var b = document.createElement('button'); b.textContent = String.fromCharCode(65 + i); b.dataset.v = i; b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false'); b.addEventListener('click', function () { cur = i; segSet('s-pieces', String(i)); sDraw(null); }); $('s-pieces').appendChild(b);
+    var tr = document.createElement('tr'); tr.innerHTML = '<td>' + String.fromCharCode(65 + i) + '</td><td id="s-w' + i + '">–</td><td id="s-s' + i + '">–</td><td><select class="pick" id="s-a' + i + '"><option>choose…</option><option>PP, LDPE or HDPE</option><option>PS</option><option>PVC or PET</option></select></td>'; $('s-tab').appendChild(tr); });
+  function sDraw(where) {
+    var svg = $('s-svg'); clear(svg);
+    [[60, 'water', '#CDEBF7'], [400, 'salt water', '#BFE3D8']].forEach(function (b) { svg.appendChild(svgEl('rect', { x: b[0], y: 70, width: 260, height: 200, fill: b[2], stroke: '#1E0E4A', 'stroke-width': 2 })); var t = svgEl('text', { x: b[0] + 130, y: 290, 'class': 'el', fill: 'currentColor' }); t.textContent = b[1]; svg.appendChild(t); });
+    if (where) { var dens = PL[order[cur]][1], liq = where === 'w' ? 1.00 : 1.20, fl = dens < liq, bx = where === 'w' ? 190 : 530, y = fl ? 74 : 240; svg.appendChild(svgEl('rect', { x: bx - 20, y: y, width: 40, height: 22, rx: 4, fill: '#B0356F' })); var tl = svgEl('text', { x: bx, y: y + 11, 'class': 'el', fill: '#fff' }); tl.textContent = String.fromCharCode(65 + cur); svg.appendChild(tl); res[cur + where] = fl ? 'floats' : 'sinks'; $('s-' + where + cur).textContent = fl ? 'floats' : 'sinks'; }
+  }
+  $('s-w').addEventListener('click', function () { sDraw('w'); }); $('s-s').addEventListener('click', function () { sDraw('s'); }); sDraw(null);
+  $('s-check').addEventListener('click', function () { var ok = 0; order.forEach(function (pi, i) { var d = PL[pi][1], want = d < 1 ? 'PP, LDPE or HDPE' : d < 1.2 ? 'PS' : 'PVC or PET', s = $('s-a' + i), g = s.value === want; s.style.borderColor = g ? 'var(--mint)' : 'var(--coral)'; if (g) ok++; }); var m = $('s-msg'); m.className = 'msg ' + (ok === 6 ? 'good' : 'warn'); m.innerHTML = ok === 6 ? '<b>All six correct.</b> Recycling plants sort shredded plastics in tanks this way. The float test cannot separate PP, LDPE and HDPE, or PVC and PET: other tests are needed.' : ok + ' of 6 correct. Floats in water: density below 1.00. Sinks in water but floats in salt water: between 1.00 and 1.20.'; });
+
+  // ---- Tabs
+  function show(t) { [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.dataset.t === t ? 'true' : 'false'); }); ['build', 'fractions', 'isomers', 'crack', 'polymer', 'plastics'].forEach(function (p) { $('p-' + p).hidden = p !== t; }); }
+  [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.addEventListener('click', function () { show(b.dataset.t); history.replaceState(null, '', '#' + b.dataset.t); }); });
+  window.ocDebug = { show: show, B: B, crack: function (n, m) { $('c-n').value = n; $('c-m').max = n - 2; $('c-m').value = m; cDraw(); return $('c-eq').textContent; } };
+  var h0 = location.hash.replace('#', ''); if (['build', 'fractions', 'isomers', 'crack', 'polymer', 'plastics'].indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

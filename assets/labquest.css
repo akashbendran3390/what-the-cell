@@ -191,3 +191,31 @@ body.lq-noscroll{overflow:hidden}
 .lq-ov{grid-template-columns:minmax(0,1fr)}.lq-panel{justify-self:center;min-width:0}
 .lq-round,.lq-scene,.lq-opts,.lq-odds{min-width:0}
 @media (prefers-reduced-motion:reduce){.lq-drop.go .lq-fall{transform:translateY(var(--y))}}
+
+/* ---------- streak board (labquest-board.js, 2026-11-21) ---------- */
+.lq-board{margin:14px 0 6px}
+.lq-bcard{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:16px 18px;box-shadow:0 8px 24px rgba(42,29,94,.08)}
+.lq-bhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.lq-bhead h3{margin:0;font:800 1.25rem var(--display)}
+.lq-btabs{display:flex;gap:6px}
+.lq-btabs button{font:800 .88rem var(--ui);border:2px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.lq-btabs button[aria-selected=true]{background:#5F3DB8;border-color:#5F3DB8;color:#fff}
+.lq-blist{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:6px}
+.lq-blist li{display:grid;grid-template-columns:2.4rem minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 12px;border-radius:14px;background:var(--soft)}
+.lq-blist li.me{outline:3px solid #F5B301;background:rgba(245,179,1,.15)}
+.lq-blist li.lq-bnote{display:block;background:none;padding:4px 0}
+.lq-bpos{font:800 1.1rem var(--ui);text-align:center}
+.lq-bname{font:800 1rem var(--ui);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lq-bval{text-align:right;line-height:1.15}
+.lq-bval b{display:block;font:800 1.1rem var(--ui)}
+.lq-bval small{color:var(--muted);font-size:.76rem}
+.lq-bnote{color:var(--muted);font-size:.92rem;margin:6px 0}
+.lq-bnote.small{font-size:.8rem}
+.lq-bnote b{color:var(--ink)}
+.lq-join{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lq-join p{flex-basis:100%;margin:2px 0}
+.lq-join input{font:700 1rem var(--ui);border:2px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--surface);color:var(--ink);min-width:0;flex:1 1 140px}
+.lq-join input#lq-ini{flex:0 0 80px}
+.lq-join button[type=submit]{font:800 1rem var(--ui);border:0;border-radius:12px;padding:9px 16px;background:#B0356F;color:#fff;cursor:pointer}
+.lq-blink{background:none;border:0;color:#5F3DB8;font:700 .9rem var(--ui);text-decoration:underline;cursor:pointer;padding:4px}
+.lq-bmsg{color:#B0356F;font-weight:700;margin:0}

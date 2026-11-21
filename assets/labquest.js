@@ -345,6 +345,7 @@
       if (S.last !== today) { S.streak = (S.last === vnDate(-1)) ? S.streak + 1 : 1; S.last = today; }
       S.best = Math.max(S.best, S.streak);
       S.hist[today] = { score: run.score, right: run.right, year: S.year, marks: marks };
+      try { window.dispatchEvent(new CustomEvent('lq-done', { detail: { day: today, score: run.score, right: run.right, year: S.year } })); } catch (e) {}
       var free = CARDS.map(function (c, i) { return i; }).filter(function (i) { return S.cards.indexOf(i) < 0; });
       if (free.length) { card = free[hash('card|' + today) % free.length]; S.cards.push(card); free.splice(free.indexOf(card), 1); }
       if (run.right === 10 && free.length) { bonusCard = free[hash('bonus|' + today) % free.length]; S.cards.push(bonusCard); }

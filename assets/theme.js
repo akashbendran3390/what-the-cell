@@ -7,7 +7,7 @@
 
   // Site search and "Continue where you left off" (2026-11-21): load search.js from beside this file.
   // build-search.ps1 sets SEARCH_V so browsers fetch new versions of the search files at once.
-  var SEARCH_V = '543ee55b';
+  var SEARCH_V = '53c20529';
   var me = document.currentScript;
   if (me && me.src) {
     var ss = document.createElement('script');

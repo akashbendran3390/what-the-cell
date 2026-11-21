@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Flight Lab. Balance the forces on balloons, planes, helicopters and rockets, measure density and pressure, test Archimedes’ principle, float a boat and a submarine, launch a balloon, stall a wing and crash carts to test momentum. MYP Science resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/myp/flight-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Flight Lab | What the Cell">
+<meta property="og:description" content="Flight Lab. Balance the forces on balloons, planes, helicopters and rockets, measure density and pressure, test Archimedes’ principle, float a boat and a submarine, launch a balloon, stall a wing and crash carts to test momentum. MYP Science resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/myp/flight-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Flight Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=4a6cfc70">
+<script src="../assets/theme.js?v=1c573521"></script>
+<style>
+/* Flight Lab (MYP 5, Unit 6: Flight), 2026-11-21. Hand-written page. g = 9.8 N/kg, air 1.29 kg/m3 (the unit's values).
+   Tabs: #forces, #density, #pressure, #depth, #buoyancy, #balloon, #wing, #momentum. window.flDebug for testing. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.02rem/1.15 ui-monospace,monospace;min-width:0;overflow-wrap:anywhere}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+sub,sup{font-size:.72em}
+svg text{font-family:ui-sans-serif,system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#2A1D5E;--band2:#1F7A7A;--band3:#5F3DB8;--band-pic:url('art/myp/myp-flight-takeoff-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp5-flight.html">Flight</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp5">MYP 5, Unit 6</a> / <a href="myp5-flight.html">Flight</a></div>
+    <h1>Flight Lab</h1>
+    <p class="lede">Balance the forces on balloons, planes, helicopters and rockets, measure density and pressure, test Archimedes&rsquo; principle, float a boat and a submarine, launch a balloon, stall a wing and crash carts to test momentum.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="forces" style="--c:var(--violet)"><span>1</span>Forces</button>
+    <button role="tab" aria-selected="false" data-t="density" style="--c:var(--tang)"><span>2</span>Density</button>
+    <button role="tab" aria-selected="false" data-t="pressure" style="--c:var(--coral)"><span>3</span>Pressure</button>
+    <button role="tab" aria-selected="false" data-t="depth" style="--c:var(--sky)"><span>4</span>Depth</button>
+    <button role="tab" aria-selected="false" data-t="buoyancy" style="--c:var(--mint)"><span>5</span>Buoyancy</button>
+    <button role="tab" aria-selected="false" data-t="balloon" style="--c:var(--pink)"><span>6</span>Balloons</button>
+    <button role="tab" aria-selected="false" data-t="wing" style="--c:var(--violet)"><span>7</span>Wings</button>
+    <button role="tab" aria-selected="false" data-t="momentum" style="--c:var(--tang)"><span>8</span>Momentum</button>
+  </div>
+
+  <section class="panel" id="p-forces">
+    <p class="intro">Choose a flying machine and set the forces. The lab draws the <b>free-body diagram</b> with arrows to scale and finds the <b>resultant force</b>. Balanced forces mean no change in motion.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="f-svg" viewBox="0 0 560 420" aria-label="Free-body diagram"></svg></div>
+      <div class="side">
+        <div class="seg" id="f-obj"><button aria-pressed="true" data-v="balloon">Balloon</button><button aria-pressed="false" data-v="plane">Plane</button><button aria-pressed="false" data-v="heli">Helicopter</button><button aria-pressed="false" data-v="rocket">Rocket</button></div>
+        <div class="ctl" id="f-ctl"></div>
+        <div class="stats"><div><small>Up &minus; down</small><span id="f-v"></span></div><div><small>Forwards &minus; back</small><span id="f-h"></span></div><div><small>Motion</small><span id="f-m"></span></div></div>
+        <div class="msg" id="f-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-density" hidden>
+    <p class="intro">Choose a material and a cube size. Read the <b>mass</b> and <b>volume</b>, calculate the <b>density</b>, then drop the cube into a liquid. Objects less dense than the liquid float.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="d-svg" viewBox="0 0 560 360" aria-label="Density tank"></svg></div>
+      <div class="side">
+        <div class="ctl"><div><label for="d-mat">Material</label><select id="d-mat" class="btn2 ghost"></select></div>
+          <div><label for="d-s">Cube side: <b id="d-so"></b> cm</label><input type="range" id="d-s" min="2" max="6" step="1" value="3"></div></div>
+        <div class="stats"><div><small>Mass</small><span id="d-m"></span></div><div><small>Volume</small><span id="d-V"></span></div><div><small>Density</small><span id="d-r">?</span></div></div>
+        <div class="ans"><span>Your density (g/cm<sup>3</sup>):</span><input id="d-in" inputmode="decimal" aria-label="Your density"></div>
+        <div class="seg" id="d-liq"><button aria-pressed="true" data-v="1.00">Water 1.00</button><button aria-pressed="false" data-v="0.92">Oil 0.92</button><button aria-pressed="false" data-v="1.03">Sea water 1.03</button><button aria-pressed="false" data-v="1.40">Syrup 1.40</button></div>
+        <div class="row"><button class="btn2" id="d-check">Check my density</button><button class="btn2 alt" id="d-drop">Drop it in</button></div>
+        <div class="msg" id="d-msg">Density = mass &divide; volume. A cube&rsquo;s volume is side &times; side &times; side.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-pressure" hidden>
+    <p class="intro">Stand on snow in different footwear: the same <b>force</b> on a different <b>area</b> gives a different <b>pressure</b>. Then use a <b>hydraulic jack</b> to lift a car.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="pr-svg" viewBox="0 0 560 380" aria-label="Pressure on snow and a hydraulic jack"></svg></div>
+      <div class="side">
+        <div class="seg" id="pr-shoe"><button aria-pressed="true" data-v="shoes">Trainers</button><button aria-pressed="false" data-v="one">One foot</button><button aria-pressed="false" data-v="snow">Snowshoes</button><button aria-pressed="false" data-v="heel">Stiletto heels</button></div>
+        <div class="ctl"><div><label for="pr-w">Weight: <b id="pr-wo"></b> N</label><input type="range" id="pr-w" min="300" max="1000" step="10" value="600"></div></div>
+        <div class="stats"><div><small>Area</small><span id="pr-A"></span></div><div><small>Pressure</small><span id="pr-P"></span></div><div><small>Sinks</small><span id="pr-s"></span></div></div>
+        <div class="ctl"><div><label for="pr-F">Jack: push on small piston: <b id="pr-Fo"></b> N</label><input type="range" id="pr-F" min="10" max="300" step="10" value="100"></div>
+          <div><label for="pr-a">Small piston area: <b id="pr-ao"></b> cm<sup>2</sup></label><input type="range" id="pr-a" min="1" max="10" value="2"></div>
+          <div><label for="pr-B">Large piston area: <b id="pr-Bo"></b> cm<sup>2</sup></label><input type="range" id="pr-B" min="20" max="400" step="10" value="100"></div></div>
+        <div class="msg" id="pr-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-depth" hidden>
+    <p class="intro">Lower the pressure gauge into a liquid: <b>P = &rho; &times; g &times; h</b>. Then take the plane up and watch the <b>air pressure</b> fall with height.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="h-svg" viewBox="0 0 560 380" aria-label="Pressure and depth"></svg></div>
+      <div class="side">
+        <div class="seg" id="h-liq"><button aria-pressed="true" data-v="1000">Fresh water</button><button aria-pressed="false" data-v="1025">Sea water</button><button aria-pressed="false" data-v="800">Oil</button></div>
+        <div class="ctl"><div><label for="h-d">Depth: <b id="h-do"></b> m</label><input type="range" id="h-d" min="0" max="20" step="0.5" value="5"></div></div>
+        <div class="stats"><div><small>From the liquid</small><span id="h-p"></span></div><div><small>Plus the air</small><span id="h-t"></span></div><div><small>Atmospheres</small><span id="h-a"></span></div></div>
+        <div class="ctl"><div><label for="h-alt">Plane altitude: <b id="h-alto"></b> m</label><input type="range" id="h-alt" min="0" max="12000" step="250" value="0"></div></div>
+        <div class="msg" id="h-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-buoyancy" hidden>
+    <p class="intro">Test <b>Archimedes&rsquo; principle</b> with a newton meter, load a boat to its <b>Plimsoll line</b>, or flood a submarine&rsquo;s <b>ballast tanks</b>.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="b-svg" viewBox="0 0 560 380" aria-label="Buoyancy"></svg></div>
+      <div class="side">
+        <div class="seg" id="b-mode"><button aria-pressed="true" data-v="meter">Newton meter</button><button aria-pressed="false" data-v="boat">Boat</button><button aria-pressed="false" data-v="sub">Submarine</button></div>
+        <div class="seg" id="b-liq"><button aria-pressed="true" data-v="1000">Fresh water</button><button aria-pressed="false" data-v="1025">Sea water</button></div>
+        <div class="ctl" id="b-ctl"></div>
+        <div class="stats"><div><small id="b-l1"></small><span id="b-s1"></span></div><div><small id="b-l2"></small><span id="b-s2"></span></div><div><small id="b-l3"></small><span id="b-s3"></span></div></div>
+        <div class="msg" id="b-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-balloon" hidden>
+    <p class="intro">Choose the gas, the size and the load. The lab finds the <b>upthrust</b> (weight of air displaced, air = 1.29 kg/m<sup>3</sup>), the total <b>weight</b> including the gas, and the <b>resultant force</b>.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="g-svg" viewBox="0 0 560 400" aria-label="Balloon"></svg></div>
+      <div class="side">
+        <div class="seg" id="g-gas"><button aria-pressed="true" data-v="hot">Hot air</button><button aria-pressed="false" data-v="he">Helium</button><button aria-pressed="false" data-v="h2">Hydrogen</button></div>
+        <div class="ctl"><div><label for="g-V">Volume: <b id="g-Vo"></b> m<sup>3</sup></label><input type="range" id="g-V" min="0" max="100" value="60"></div>
+          <div id="g-Tw"><label for="g-T">Air inside: <b id="g-To"></b> &deg;C</label><input type="range" id="g-T" min="0" max="120" value="100"></div>
+          <div><label for="g-L">Load (basket, people, instruments): <b id="g-Lo"></b> kg</label><input type="range" id="g-L" min="0" max="100" value="40"></div></div>
+        <table class="t" id="g-tab"></table>
+        <div class="msg" id="g-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-wing" hidden>
+    <p class="intro">A light aircraft (1200 kg, wing area 16 m<sup>2</sup>) on the runway. Change the <b>air speed</b> and the <b>angle of attack</b>: faster air over the top means lower pressure above. Lift must beat weight to fly; too big an angle and the wing <b>stalls</b>.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="w-svg" viewBox="0 0 560 380" aria-label="Wing"></svg></div>
+      <div class="side">
+        <div class="ctl"><div><label for="w-v">Air speed: <b id="w-vo"></b> m/s</label><input type="range" id="w-v" min="0" max="80" value="25"></div>
+          <div><label for="w-a">Angle of attack: <b id="w-ao"></b>&deg;</label><input type="range" id="w-a" min="-4" max="22" value="6"></div>
+          <div><label for="w-T">Engine thrust: <b id="w-To"></b> N</label><input type="range" id="w-T" min="0" max="5000" step="100" value="2500"></div></div>
+        <div class="seg" id="w-air"><button aria-pressed="true" data-v="1.29">Sea level, cool</button><button aria-pressed="false" data-v="1.0">High and hot airport</button></div>
+        <div class="stats"><div><small>Lift / weight</small><span id="w-L"></span></div><div><small>Pressure difference</small><span id="w-P"></span></div><div><small>Thrust &minus; drag</small><span id="w-D"></span></div></div>
+        <div class="msg" id="w-msg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-momentum" hidden>
+    <p class="intro">Crash two carts and check that <b>momentum (p = mv)</b> is conserved, or fire balls out of a rocket in space and watch it speed up.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="m-svg" viewBox="0 0 560 300" aria-label="Momentum"></svg></div>
+      <div class="side">
+        <div class="seg" id="m-mode"><button aria-pressed="true" data-v="carts">Carts</button><button aria-pressed="false" data-v="rocket">Rocket</button></div>
+        <div id="m-carts" class="ctl">
+          <div><label for="m-ma">Cart A mass: <b id="m-mao"></b> kg</label><input type="range" id="m-ma" min="1" max="5" step="0.5" value="2"></div>
+          <div><label for="m-va">Cart A velocity: <b id="m-vao"></b> m/s</label><input type="range" id="m-va" min="-4" max="6" step="0.5" value="3"></div>
+          <div><label for="m-mb">Cart B mass: <b id="m-mbo"></b> kg</label><input type="range" id="m-mb" min="1" max="5" step="0.5" value="2"></div>
+          <div><label for="m-vb">Cart B velocity: <b id="m-vbo"></b> m/s</label><input type="range" id="m-vb" min="-4" max="4" step="0.5" value="0"></div>
+          <div class="seg" id="m-type"><button aria-pressed="true" data-v="stick">Sticky</button><button aria-pressed="false" data-v="bounce">Bouncy (elastic)</button></div>
+          <div class="row"><button class="btn2" id="m-go">Crash</button><button class="btn2 ghost" id="m-reset">Reset</button></div>
+        </div>
+        <div id="m-rocket" class="ctl" hidden>
+          <p class="why">Rocket 1000 kg without balls, carrying five 100 kg balls. Each ball leaves at 200 m/s relative to the rocket. Start at rest in space.</p>
+          <div class="row"><button class="btn2" id="m-back">Fire one out of the back</button><button class="btn2 warm" id="m-front">Fire one out of the front</button><button class="btn2 ghost" id="m-rr">Reset</button></div>
+        </div>
+        <table class="t" id="m-tab"></table>
+        <div class="msg" id="m-msg"></div>
+      </div>
+    </div>
+  </section>
+</div></main>
+
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</div></footer>
+
+<script>
+(function () {
+  var G = 9.8, AIR = 1.29;
+  function $(id) { return document.getElementById(id); }
+  function svgEl(t, a) { var e = document.createElementNS('http://www.w3.org/2000/svg', t); for (var k in a) e.setAttribute(k, a[k]); return e; }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function txt(svg, x, y, s, o) { o = o || {}; var t = svgEl('text', { x: x, y: y, 'font-size': o.size || 13, 'text-anchor': o.anchor || 'middle', fill: o.fill || '#1E0E4A', 'font-weight': o.bold ? 700 : 400 }); t.textContent = s; svg.appendChild(t); return t; }
+  function rect(svg, x, y, w, h, fill, extra) { var a = { x: x, y: y, width: w, height: h, fill: fill, stroke: '#1E0E4A', 'stroke-width': 1.5 }; for (var k in (extra || {})) a[k] = extra[k]; var r = svgEl('rect', a); svg.appendChild(r); return r; }
+  function arrow(svg, x1, y1, x2, y2, col, label, w) {
+    w = w || 5; var dx = x2 - x1, dy = y2 - y1, L = Math.sqrt(dx * dx + dy * dy); if (L < 2) return;
+    var ux = dx / L, uy = dy / L, hx = x2 - ux * 14, hy = y2 - uy * 14;
+    svg.appendChild(svgEl('line', { x1: x1, y1: y1, x2: hx, y2: hy, stroke: col, 'stroke-width': w, 'stroke-linecap': 'round' }));
+    svg.appendChild(svgEl('polygon', { points: x2 + ',' + y2 + ' ' + (hx - uy * 9) + ',' + (hy + ux * 9) + ' ' + (hx + uy * 9) + ',' + (hy - ux * 9), fill: col }));
+    if (label) { var lx = x2 + ux * 16 + (Math.abs(uy) > 0.5 ? 0 : 0), ly = y2 + uy * 16 + 4; txt(svg, lx + (Math.abs(ux) > 0.5 ? ux * 30 : 0), ly + (Math.abs(uy) > 0.5 ? (uy > 0 ? 8 : -2) : 0), label, { fill: col, bold: true, size: 13 }); }
+  }
+  function segSet(id, v) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.setAttribute('aria-pressed', b.dataset.v === v ? 'true' : 'false'); }); }
+  function segOn(id, fn) { [].forEach.call($(id).querySelectorAll('button'), function (b) { b.addEventListener('click', function () { segSet(id, b.dataset.v); fn(b.dataset.v); }); }); }
+  function fmt(n, dp) { var s = Number(n).toFixed(dp === undefined ? 0 : dp); var p = s.split('.'); p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' '); return p.join('.'); }
+  function slider(host, id, label, unit, min, max, step, val, fn) { var d = document.createElement('div'); d.innerHTML = '<label for="' + id + '">' + label + ': <b id="' + id + 'o"></b> ' + unit + '</label><input type="range" id="' + id + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + val + '">'; host.appendChild(d); $(id).addEventListener('input', fn); return $(id); }
+  var C = { lift: '#2F6BD8', weight: '#A4343A', thrust: '#2E7D4F', drag: '#B5532A' };
+
+  // ---------------- 1. Forces ----------------
+  var FO = 'balloon';
+  var FDEF = {
+    balloon: { up: ['Upthrust', 0, 8000, 5000], down: ['Weight', 0, 8000, 4500], name: 'hot-air balloon' },
+    plane: { up: ['Lift', 0, 800, 600], down: ['Weight', 0, 800, 600], fw: ['Thrust', 0, 300, 200], bk: ['Drag', 0, 300, 150], name: 'aircraft', unit: 'kN' },
+    heli: { up: ['Lift', 0, 30000, 14700], down: ['Weight', 0, 30000, 14700], tilt: true, bk: ['Drag', 0, 3000, 500], name: 'helicopter' },
+    rocket: { up: ['Thrust', 0, 50, 35], down: ['Weight', 0, 50, 28.4], name: 'rocket', unit: 'MN', step: 0.2 }
+  };
+  function fBuild() {
+    var d = FDEF[FO], host = $('f-ctl'); host.innerHTML = ''; var u = d.unit || 'N', st = d.step || (u === 'N' ? 100 : 10);
+    slider(host, 'f-up', d.up[0], u, d.up[1], d.up[2], st, d.up[3], fDraw); slider(host, 'f-dn', d.down[0], u, d.down[1], d.down[2], st, d.down[3], fDraw);
+    if (d.fw) slider(host, 'f-fw', d.fw[0], u, d.fw[1], d.fw[2], st, d.fw[3], fDraw);
+    if (d.bk) slider(host, 'f-bk', d.bk[0], u, d.bk[1], d.bk[2], d.unit ? st : 100, d.bk[3], fDraw);
+    if (d.tilt) slider(host, 'f-tl', 'Rotor tilt', '&deg;', 0, 20, 1, 0, fDraw);
+    fDraw();
+  }
+  function fDraw() {
+    var d = FDEF[FO], u = d.unit || 'N', svg = $('f-svg'); clear(svg);
+    var up = +$('f-up').value, dn = +$('f-dn').value, fw = d.fw ? +$('f-fw').value : 0, bk = d.bk ? +$('f-bk').value : 0, tl = d.tilt ? +$('f-tl').value : 0;
+    ['f-up', 'f-dn', 'f-fw', 'f-bk', 'f-tl'].forEach(function (k) { if ($(k)) $(k + 'o').textContent = fmt(+$(k).value, (d.step && k !== 'f-tl') ? 1 : 0); });
+    var upV = up * Math.cos(tl * Math.PI / 180), upH = up * Math.sin(tl * Math.PI / 180);
+    var resV = upV - dn, resH = fw + upH - bk;
+    var mx = Math.max(up, dn, fw, bk, 1), sc = 115 / mx, cx = 280, cy = 210;
+    svg.appendChild(svgEl('rect', { x: 0, y: 0, width: 560, height: 420, fill: '#EEF6FC' }));
+    if (FO === 'balloon') { svg.appendChild(svgEl('ellipse', { cx: cx, cy: cy - 10, rx: 48, ry: 56, fill: '#E4572E', stroke: '#1E0E4A', 'stroke-width': 1.5 })); rect(svg, cx - 14, cy + 52, 28, 18, '#B5874A'); }
+    else if (FO === 'plane') { svg.appendChild(svgEl('path', { d: 'M' + (cx - 80) + ' ' + cy + ' Q ' + (cx - 60) + ' ' + (cy - 18) + ' ' + (cx + 60) + ' ' + (cy - 12) + ' L ' + (cx + 82) + ' ' + cy + ' L ' + (cx + 60) + ' ' + (cy + 12) + ' Q ' + (cx - 60) + ' ' + (cy + 16) + ' ' + (cx - 80) + ' ' + cy + ' Z', fill: '#E9EEF3', stroke: '#1E0E4A', 'stroke-width': 1.5 })); svg.appendChild(svgEl('path', { d: 'M' + (cx - 70) + ' ' + (cy - 6) + ' L ' + (cx - 82) + ' ' + (cy - 34) + ' L ' + (cx - 58) + ' ' + (cy - 8) + 'Z', fill: '#A4343A' })); }
+    else if (FO === 'heli') { var g = svgEl('g', { transform: 'rotate(' + tl + ' ' + cx + ' ' + cy + ')' }); g.appendChild(svgEl('ellipse', { cx: cx, cy: cy, rx: 44, ry: 26, fill: '#F5B301', stroke: '#1E0E4A', 'stroke-width': 1.5 })); g.appendChild(svgEl('rect', { x: cx - 110, y: cy - 6, width: 70, height: 10, fill: '#F5B301', stroke: '#1E0E4A' })); g.appendChild(svgEl('line', { x1: cx - 90, y1: cy - 34, x2: cx + 90, y2: cy - 34, stroke: '#1E0E4A', 'stroke-width': 4 })); g.appendChild(svgEl('line', { x1: cx, y1: cy - 26, x2: cx, y2: cy - 34, stroke: '#1E0E4A', 'stroke-width': 3 })); svg.appendChild(g); }
+    else { rect(svg, cx - 16, cy - 50, 32, 100, '#E9EEF3'); svg.appendChild(svgEl('polygon', { points: (cx - 16) + ',' + (cy - 50) + ' ' + cx + ',' + (cy - 80) + ' ' + (cx + 16) + ',' + (cy - 50), fill: '#A4343A' })); }
+    var a = tl * Math.PI / 180;
+    var u0 = FO === 'balloon' ? 70 : FO === 'rocket' ? 82 : 40, d0 = FO === 'balloon' ? 72 : FO === 'rocket' ? 52 : 30;
+    arrow(svg, cx, cy - u0, cx + Math.sin(a) * up * sc, cy - u0 - Math.cos(a) * up * sc, C.lift, d.up[0] + ' ' + fmt(up, d.step ? 1 : 0) + ' ' + u);
+    arrow(svg, cx, cy + d0, cx, cy + d0 + dn * sc, C.weight, d.down[0] + ' ' + fmt(dn, d.step ? 1 : 0) + ' ' + u);
+    if (d.fw) arrow(svg, cx + 60, cy, cx + 60 + fw * sc, cy, C.thrust, d.fw[0] + ' ' + fw);
+    if (d.bk) arrow(svg, cx - 60, cy, cx - 60 - bk * sc, cy, C.drag, d.bk[0] + ' ' + bk);
+    var dp = d.step ? 1 : 0, tol = mx * 0.005;
+    $('f-v').textContent = (Math.abs(resV) <= tol ? '0' : fmt(resV, dp)) + ' ' + u; $('f-h').textContent = (Math.abs(resH) <= tol ? '0' : fmt(resH, dp)) + ' ' + u;
+    var vtxt = Math.abs(resV) <= tol ? 'balanced up and down' : resV > 0 ? 'speeds up upwards' : 'speeds up downwards';
+    var htxt = (d.fw || d.tilt || d.bk) ? (Math.abs(resH) <= tol ? 'balanced forwards and back' : resH > 0 ? 'speeds up forwards' : 'slows down (or speeds up backwards)') : '';
+    $('f-m').textContent = (Math.abs(resV) <= tol && (!htxt || Math.abs(resH) <= tol)) ? 'no change' : 'changing';
+    var m = $('f-msg'); m.className = 'msg ' + (Math.abs(resV) <= tol ? 'good' : 'warn');
+    m.innerHTML = 'The ' + d.name + ': <b>' + vtxt + '</b>' + (htxt ? '; <b>' + htxt + '</b>' : '') + '. ' + (Math.abs(resV) <= tol ? 'Balanced forces: it stays still or keeps a steady speed (hovering or cruising).' : 'An unbalanced force changes the motion.') + (d.tilt && tl > 0 ? ' Tilting the rotor turns part of the lift into a forward pull, so less is left to hold it up.' : '');
+  }
+  segOn('f-obj', function (v) { FO = v; fBuild(); });
+  fBuild();
+
+  // ---------------- 2. Density ----------------
+  var MAT = [['cork', 0.24], ['pine wood', 0.50], ['candle wax', 0.90], ['ice', 0.92], ['plastic (PVC)', 1.38], ['stone', 2.6], ['aluminium', 2.7], ['steel', 7.9], ['gold', 19.3], ['mystery A', 1.15], ['mystery B', 0.68], ['mystery C', 8.9]];
+  MAT.forEach(function (m, i) { var o = document.createElement('option'); o.value = i; o.textContent = m[0]; $('d-mat').appendChild(o); });
+  var DL = 1.00, Ddrop = false;
+  function dVals() { var m = MAT[+$('d-mat').value], s = +$('d-s').value, V = s * s * s; return { name: m[0], rho: m[1], s: s, V: V, M: m[1] * V }; }
+  function dDraw() {
+    var v = dVals(), svg = $('d-svg'); clear(svg); $('d-so').textContent = v.s;
+    $('d-m').textContent = fmt(v.M, 1) + ' g'; $('d-V').textContent = v.V + ' cm³'; if (!Ddrop) $('d-r').textContent = '?';
+    var col = DL < 1 ? '#F7E3B5' : DL > 1.2 ? '#E9B872' : DL > 1.01 ? '#BFE3D8' : '#CDEBF7';
+    rect(svg, 120, 80, 320, 250, '#fff'); svg.appendChild(svgEl('rect', { x: 122, y: 130, width: 316, height: 198, fill: col }));
+    var px = v.s * 18, x = 280 - px / 2, y;
+    if (!Ddrop) y = 20; else if (v.rho < DL) { var frac = v.rho / DL; y = 130 - px * (1 - frac); } else y = 328 - px;
+    rect(svg, x, y, px, px, '#B0356F'); txt(svg, 280, y + px / 2 + 5, v.name.indexOf('mystery') === 0 ? '?' : '', { fill: '#fff', bold: true });
+    txt(svg, 280, 356, 'liquid density ' + DL.toFixed(2) + ' g/cm³', { size: 12 });
+  }
+  $('d-mat').addEventListener('change', function () { Ddrop = false; $('d-in').value = ''; dDraw(); }); $('d-s').addEventListener('input', function () { Ddrop = false; dDraw(); });
+  segOn('d-liq', function (v) { DL = +v; Ddrop = false; dDraw(); });
+  $('d-check').addEventListener('click', function () { var v = dVals(), g = parseFloat(($('d-in').value || '').replace(',', '.')), m = $('d-msg'); if (isNaN(g)) { m.className = 'msg warn'; m.innerHTML = 'Type your density first.'; return; } var ok = Math.abs(g - v.rho) <= v.rho * 0.03 + 0.005; m.className = 'msg ' + (ok ? 'good' : 'bad'); m.innerHTML = ok ? '<b>Correct:</b> ' + fmt(v.M, 1) + ' g &divide; ' + v.V + ' cm&sup3; = ' + v.rho + ' g/cm&sup3;' + (v.name.indexOf('mystery') === 0 ? '. Compare with the table in your notes to identify it.' : '.') : 'Not quite. Density = mass &divide; volume = ' + fmt(v.M, 1) + ' &divide; ' + v.V + '.'; if (ok) $('d-r').textContent = v.rho + ' g/cm³'; });
+  $('d-drop').addEventListener('click', function () { var v = dVals(); Ddrop = true; dDraw(); $('d-r').textContent = v.rho + ' g/cm³'; var fl = v.rho < DL, m = $('d-msg'); m.className = 'msg ' + (fl ? 'good' : 'warn'); m.innerHTML = fl ? '<b>It floats.</b> ' + v.rho + ' &lt; ' + DL.toFixed(2) + ': less dense than the liquid. About ' + Math.round(v.rho / DL * 100) + '% of it is under the surface (its density &divide; the liquid&rsquo;s).' : '<b>It sinks.</b> ' + v.rho + ' &gt; ' + DL.toFixed(2) + ': denser than the liquid. Changing the size does not change the density.'; });
+  dDraw();
+
+  // ---------------- 3. Pressure ----------------
+  var SHOE = { shoes: [2 * 250, 'two trainers, 250 cm² each'], one: [250, 'one trainer'], snow: [2 * 1800, 'two snowshoes, 1800 cm² each'], heel: [2 * 1, 'two stiletto heels, 1 cm² each'] }, SH = 'shoes';
+  function prDraw() {
+    var W = +$('pr-w').value, A = SHOE[SH][0], Am = A / 10000, P = W / Am, svg = $('pr-svg'); clear(svg);
+    $('pr-wo').textContent = W; $('pr-A').textContent = fmt(A) + ' cm²'; $('pr-P').textContent = P >= 1e6 ? fmt(P / 1e6, 1) + ' MPa' : fmt(P / 1000, 1) + ' kPa';
+    var sink = Math.min(90, Math.max(2, 16 * Math.log10(P / 1000))); $('pr-s').textContent = Math.round(sink / 3) + ' cm';
+    rect(svg, 20, 150, 250, 120, '#F7FBFF'); txt(svg, 145, 290, 'snow', { size: 12 });
+    var fw = SH === 'snow' ? 180 : SH === 'one' ? 50 : SH === 'heel' ? 16 : 90; var fy = 150 + sink * 0.9 - 34;
+    rect(svg, 145 - fw / 2, fy, fw, 34, '#5F3DB8'); arrow(svg, 145, fy - 70, 145, fy - 4, C.weight, ''); txt(svg, 145, fy - 78, W + ' N', { fill: C.weight, bold: true });
+    // jack
+    var F = +$('pr-F').value, a = +$('pr-a').value, B = +$('pr-B').value, Pj = F / a, out = Pj * B;
+    $('pr-Fo').textContent = F; $('pr-ao').textContent = a; $('pr-Bo').textContent = B;
+    var sw = 10 + a * 4, lw = 20 + B * 0.4, base = 300;
+    rect(svg, 300, base - 30, 240, 40, '#CDEBF7'); rect(svg, 310, base - 110, sw, 80, '#CDEBF7'); rect(svg, 530 - lw, base - 110, lw, 80, '#CDEBF7');
+    rect(svg, 306, base - 116, sw + 8, 8, '#8C8C8C'); rect(svg, 526 - lw, base - 116, lw + 8, 8, '#8C8C8C');
+    arrow(svg, 310 + sw / 2, base - 170, 310 + sw / 2, base - 120, C.weight, ''); txt(svg, 310 + sw / 2 + 4, base - 176, F + ' N', { fill: C.weight, bold: true, anchor: 'start' });
+    var lifts = out >= 12000; var cy = lifts ? base - 168 : base - 150; rect(svg, 530 - lw / 2 - 40, cy, 80, 30, '#E4572E'); txt(svg, 530 - lw / 2, cy - 6, 'car 12 000 N', { size: 11 });
+    txt(svg, 420, base + 32, 'force out: ' + fmt(out) + ' N', { bold: true, fill: C.lift });
+    var m = $('pr-msg'); m.className = 'msg ' + (lifts ? 'good' : 'warn');
+    m.innerHTML = '<b>' + SHOE[SH][1] + ':</b> P = ' + W + ' N &divide; ' + Am + ' m&sup2; = ' + fmt(P) + ' Pa. ' + (SH === 'snow' ? 'A large area spreads the force: low pressure, so you hardly sink.' : SH === 'heel' ? 'A tiny area concentrates the force: a huge pressure.' : '') + '<br><b>Jack:</b> pressure = ' + F + ' &divide; ' + a + ' = ' + fmt(Pj, 1) + ' N/cm&sup2;; on ' + B + ' cm&sup2; that gives ' + fmt(out) + ' N. ' + (lifts ? 'Enough to lift the car.' : 'Not enough to lift the 12 000 N car yet: make the large piston bigger or the small one smaller.');
+  }
+  segOn('pr-shoe', function (v) { SH = v; prDraw(); }); ['pr-w', 'pr-F', 'pr-a', 'pr-B'].forEach(function (k) { $(k).addEventListener('input', prDraw); }); prDraw();
+
+  // ---------------- 4. Depth ----------------
+  var RHO = 1000;
+  function hDraw() {
+    var h = +$('h-d').value, p = RHO * G * h, tot = p + 101300, alt = +$('h-alt').value, svg = $('h-svg'); clear(svg);
+    $('h-do').textContent = h; $('h-p').textContent = fmt(p / 1000, 1) + ' kPa'; $('h-t').textContent = fmt(tot / 1000, 1) + ' kPa'; $('h-a').textContent = (tot / 101300).toFixed(2); $('h-alto').textContent = fmt(alt);
+    var col = RHO === 800 ? '#F7E3B5' : RHO === 1025 ? '#BFE3D8' : '#CDEBF7';
+    svg.appendChild(svgEl('rect', { x: 20, y: 40, width: 220, height: 320, fill: col, stroke: '#1E0E4A' }));
+    for (var k = 0; k <= 20; k += 5) { var yy = 40 + k * 16; svg.appendChild(svgEl('line', { x1: 20, y1: yy, x2: 32, y2: yy, stroke: '#1E0E4A' })); txt(svg, 46, yy + 4, k + ' m', { size: 10 }); }
+    var gy = 40 + h * 16; svg.appendChild(svgEl('line', { x1: 130, y1: 20, x2: 130, y2: gy, stroke: '#1E0E4A' })); svg.appendChild(svgEl('circle', { cx: 130, cy: gy, r: 12, fill: '#fff', stroke: '#B0356F', 'stroke-width': 3 }));
+    var ar = Math.min(40, 8 + h * 1.6); [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { arrow(svg, 130 + d[0] * (ar + 14), gy + d[1] * (ar + 14), 130 + d[0] * 14, gy + d[1] * 14, '#B0356F', '', 3); });
+    // graph
+    svg.appendChild(svgEl('line', { x1: 290, y1: 40, x2: 290, y2: 200, stroke: '#1E0E4A' })); svg.appendChild(svgEl('line', { x1: 290, y1: 200, x2: 540, y2: 200, stroke: '#1E0E4A' }));
+    txt(svg, 415, 216, 'depth (0 to 20 m)', { size: 11 }); txt(svg, 300, 34, 'pressure from the liquid', { size: 11, anchor: 'start' });
+    svg.appendChild(svgEl('line', { x1: 290, y1: 200, x2: 540, y2: 200 - 1025 * G * 20 / 1300, stroke: '#ccc', 'stroke-dasharray': '4 4' }));
+    svg.appendChild(svgEl('line', { x1: 290, y1: 200, x2: 540, y2: 200 - RHO * G * 20 / 1300, stroke: '#5F3DB8', 'stroke-width': 3 }));
+    svg.appendChild(svgEl('circle', { cx: 290 + h * 12.5, cy: 200 - p / 1300, r: 6, fill: '#B0356F' }));
+    // altitude
+    var pa = 101.3 * Math.exp(-alt / 8400); txt(svg, 415, 250, 'Plane at ' + fmt(alt) + ' m: outside air ' + pa.toFixed(0) + ' kPa', { bold: true, size: 13 });
+    rect(svg, 290, 262, 250, 16, '#EEE'); svg.appendChild(svgEl('rect', { x: 290, y: 262, width: 250 * pa / 101.3, height: 16, fill: '#2F6BD8' }));
+    var mark = alt >= 11000 ? 'cruising height: cabins are pressurised to about 75–80 kPa' : alt >= 8800 ? 'higher than Everest (8849 m): about 34 kPa there' : alt >= 5500 ? 'about half of sea-level pressure' : alt >= 1400 && alt <= 1600 ? 'the height of Da Lat' : '';
+    if (mark) txt(svg, 415, 300, mark, { size: 11 });
+    var m = $('h-msg'); m.className = 'msg'; m.innerHTML = 'P = &rho;gh = ' + RHO + ' &times; 9.8 &times; ' + h + ' = <b>' + fmt(p) + ' Pa</b>. Pressure grows steadily with depth (a straight-line graph) and acts in every direction. Denser liquids give more pressure at the same depth. Air pressure falls as you go up because there is less air above.';
+  }
+  segOn('h-liq', function (v) { RHO = +v; hDraw(); }); ['h-d', 'h-alt'].forEach(function (k) { $(k).addEventListener('input', hDraw); }); hDraw();
+
+  // ---------------- 5. Buoyancy ----------------
+  var BM = 'meter', BL = 1000;
+  function bBuild() {
+    var host = $('b-ctl'); host.innerHTML = '';
+    if (BM === 'meter') { var s = document.createElement('div'); s.innerHTML = '<div class="seg" id="b-mat"><button aria-pressed="true" data-v="2.7">Aluminium</button><button aria-pressed="false" data-v="7.9">Steel</button><button aria-pressed="false" data-v="1.2">Plastic</button></div>'; host.appendChild(s); segOn('b-mat', function () { bDraw(); });
+      slider(host, 'b-V', 'Volume', 'cm³', 100, 1000, 50, 400, bDraw); slider(host, 'b-dep', 'Lowered into the water', '%', 0, 100, 5, 0, bDraw); }
+    else if (BM === 'boat') slider(host, 'b-c', 'Cargo', 'kg', 0, 3000, 100, 800, bDraw);
+    else slider(host, 'b-f', 'Ballast tanks flooded', '%', 0, 100, 5, 0, bDraw);
+    bDraw();
+  }
+  function pressed(id) { var b = $(id).querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function bDraw() {
+    var svg = $('b-svg'); clear(svg); var m = $('b-msg'); var wc = BL === 1025 ? '#BFE3D8' : '#CDEBF7';
+    if (BM === 'meter') {
+      var rho = +pressed('b-mat') * 1000, V = +$('b-V').value / 1e6, f = +$('b-dep').value / 100; $('b-Vo').textContent = $('b-V').value; $('b-depo').textContent = $('b-dep').value;
+      var W = rho * V * G, up = BL * G * V * f, read = W - up;
+      $('b-l1').textContent = 'Weight in air'; $('b-s1').textContent = W.toFixed(2) + ' N'; $('b-l2').textContent = 'Reading'; $('b-s2').textContent = read.toFixed(2) + ' N'; $('b-l3').textContent = 'Upthrust'; $('b-s3').textContent = up.toFixed(2) + ' N';
+      rect(svg, 150, 160, 220, 200, '#fff'); svg.appendChild(svgEl('rect', { x: 152, y: 190, width: 216, height: 168, fill: wc })); rect(svg, 368, 190, 60, 10, '#fff');
+      var spill = Math.min(60, V * f * 1e6 / 12); svg.appendChild(svgEl('rect', { x: 430, y: 360 - spill, width: 70, height: spill, fill: wc, stroke: '#1E0E4A' })); txt(svg, 465, 372, 'overflow: ' + Math.round(V * f * 1e6) + ' cm³', { size: 11 });
+      var side = Math.cbrt(V * 1e6) * 9, by = 120 + f * (side + 76) ; rect(svg, 260 - side / 2, by, side, side, '#8C8C8C');
+      svg.appendChild(svgEl('line', { x1: 260, y1: 20, x2: 260, y2: by, stroke: '#1E0E4A', 'stroke-width': 2 })); rect(svg, 246, 20, 28, 70, '#F5F0DC'); txt(svg, 300, 60, read.toFixed(2) + ' N', { bold: true, anchor: 'start' });
+      m.className = 'msg ' + (f > 0 ? 'good' : ''); m.innerHTML = f === 0 ? 'Lower the block into the water and watch the reading fall.' : 'Upthrust = ' + W.toFixed(2) + ' &minus; ' + read.toFixed(2) + ' = <b>' + up.toFixed(2) + ' N</b>. The overflow is ' + Math.round(V * f * 1e6) + ' cm&sup3; of water, which weighs ' + up.toFixed(2) + ' N: <b>upthrust = weight of fluid displaced</b>.' + (f === 1 ? ' Once fully under, lowering it further would not change the upthrust.' : '');
+    } else if (BM === 'boat') {
+      var cargo = +$('b-c').value, mass = 1000 + cargo, A = 4, draft = mass / (BL * A), lim = 2400 / (1025 * A);
+      $('b-co').textContent = cargo; $('b-l1').textContent = 'Total mass'; $('b-s1').textContent = fmt(mass) + ' kg'; $('b-l2').textContent = 'Sits down'; $('b-s2').textContent = draft.toFixed(2) + ' m'; $('b-l3').textContent = 'Upthrust'; $('b-s3').textContent = fmt(mass * G) + ' N';
+      var sy = 160; svg.appendChild(svgEl('rect', { x: 20, y: sy, width: 520, height: 200, fill: wc }));
+      var hullTop = sy - 60 + draft * 100 - 0; var hb = hullTop + 100; svg.appendChild(svgEl('polygon', { points: '160,' + hullTop + ' 400,' + hullTop + ' 380,' + hb + ' 180,' + hb, fill: '#7D8A96', stroke: '#1E0E4A', 'stroke-width': 1.5 }));
+      var plim = hullTop + 100 - lim * 100; svg.appendChild(svgEl('line', { x1: 300, y1: plim, x2: 340, y2: plim, stroke: '#F5B301', 'stroke-width': 4 })); txt(svg, 350, plim + 4, 'Plimsoll line', { size: 11, anchor: 'start', fill: '#fff' });
+      var over = draft > lim + 0.001, sunk = draft > 1.0; svg.appendChild(svgEl('line', { x1: 20, y1: sy, x2: 540, y2: sy, stroke: '#1F7A7A', 'stroke-width': 2 }));
+      m.className = 'msg ' + (sunk ? 'bad' : over ? 'warn' : 'good'); m.innerHTML = sunk ? '<b>Sunk!</b> The boat would have to sit more than 1 m deep: water pours over the side.' : 'The boat sinks until it displaces its own weight of water: ' + fmt(mass) + ' kg, which is ' + (mass / BL).toFixed(2) + ' m&sup3; of ' + (BL === 1025 ? 'sea' : 'fresh') + ' water. ' + (over ? '<b>Overloaded:</b> it is below its Plimsoll line.' : 'It is safely above its Plimsoll line.') + (BL === 1000 ? ' Fresh water is less dense, so it sits lower here than at sea.' : '');
+    } else {
+      var fl = +$('b-f').value / 100, msub = 95000 + fl * 10000, Vs = 100, rhoAvg = msub / Vs, Wt = msub * G, Umax = BL * G * Vs;
+      $('b-fo').textContent = Math.round(fl * 100); $('b-l1').textContent = 'Weight'; $('b-s1').textContent = fmt(Wt / 1000) + ' kN'; $('b-l2').textContent = 'Upthrust (under)'; $('b-s2').textContent = fmt(Umax / 1000) + ' kN'; $('b-l3').textContent = 'Average density'; $('b-s3').textContent = fmt(rhoAvg) + ' kg/m³';
+      svg.appendChild(svgEl('rect', { x: 20, y: 60, width: 520, height: 300, fill: wc }));
+      var diff = rhoAvg - BL, y = diff < -5 ? 40 : diff > 5 ? 290 : 170;
+      rect(svg, 160, y, 240, 60, '#7D8A96', { rx: 30 }); rect(svg, 200, y + 18, 60, 24, fl > 0 ? wc : '#fff'); rect(svg, 300, y + 18, 60, 24, fl > 0 ? wc : '#fff');
+      m.className = 'msg ' + (Math.abs(diff) <= 5 ? 'good' : ''); m.innerHTML = diff < -5 ? 'Average density below the water&rsquo;s: it <b>floats</b> with part above the surface. Flood the tanks to dive.' : diff > 5 ? 'Average density above the water&rsquo;s: weight &gt; upthrust, so it <b>sinks</b>. Blow water out of the tanks with compressed air to rise.' : '<b>Hovering:</b> weight = upthrust. The volume never changed; only the weight did.';
+    }
+  }
+  segOn('b-mode', function (v) { BM = v; bBuild(); }); segOn('b-liq', function (v) { BL = +v; bDraw(); }); bBuild();
+
+  // ---------------- 6. Balloons ----------------
+  var GAS = 'hot';
+  function gScale() { var x = +$('g-V').value / 100; return GAS === 'hot' ? Math.round(200 + x * 3800) : +(0.1 + x * x * 19.9).toFixed(2); }
+  function gLoad() { var x = +$('g-L').value / 100; return GAS === 'hot' ? Math.round(x * 1500) : +(x * 20).toFixed(1); }
+  function gDraw() {
+    var V = gScale(), L = gLoad(), T = +$('g-T').value, svg = $('g-svg'); clear(svg);
+    $('g-Vo').textContent = fmt(V, GAS === 'hot' ? 0 : 2); $('g-Lo').textContent = fmt(L, GAS === 'hot' ? 0 : 1); $('g-To').textContent = T; $('g-Tw').hidden = GAS !== 'hot';
+    var rg = GAS === 'hot' ? AIR * 273 / (273 + T) : GAS === 'he' ? 0.18 : 0.09;
+    var env = GAS === 'hot' ? 0.06 * V : 0.05 + 0.02 * V;
+    var up = AIR * G * V, wGas = rg * V * G, wRest = (env + L) * G, W = wGas + wRest, R = up - W;
+    var tab = $('g-tab'); tab.innerHTML = '<tr><th>Force</th><th>Working</th><th>N</th></tr>' +
+      '<tr><td>upthrust</td><td>1.29 &times; 9.8 &times; ' + fmt(V, 2) + '</td><td>' + fmt(up, 1) + '</td></tr>' +
+      '<tr><td>weight of gas</td><td>' + rg.toFixed(2) + ' &times; 9.8 &times; ' + fmt(V, 2) + '</td><td>' + fmt(wGas, 1) + '</td></tr>' +
+      '<tr><td>envelope + load</td><td>(' + fmt(env, 1) + ' + ' + fmt(L, 1) + ') &times; 9.8</td><td>' + fmt(wRest, 1) + '</td></tr>' +
+      '<tr><th>resultant</th><td></td><th>' + fmt(R, 1) + (R > 0 ? ' up' : R < 0 ? ' down' : '') + '</th></tr>';
+    var r = 70, cx = 280, top = R > 0.5 ? 40 : R < -0.5 ? 150 : 95; svg.appendChild(svgEl('rect', { x: 0, y: 0, width: 560, height: 400, fill: '#EEF6FC' })); svg.appendChild(svgEl('rect', { x: 0, y: 370, width: 560, height: 30, fill: '#9FD6CF' }));
+    var col = GAS === 'hot' ? '#E4572E' : GAS === 'he' ? '#9FB3C8' : '#F5B301';
+    svg.appendChild(svgEl('ellipse', { cx: cx, cy: top + r, rx: r, ry: r * 1.1, fill: col, stroke: '#1E0E4A', 'stroke-width': 1.5 }));
+    svg.appendChild(svgEl('line', { x1: cx - 18, y1: top + 2.1 * r, x2: cx - 14, y2: top + 2.1 * r + 40, stroke: '#1E0E4A' })); svg.appendChild(svgEl('line', { x1: cx + 18, y1: top + 2.1 * r, x2: cx + 14, y2: top + 2.1 * r + 40, stroke: '#1E0E4A' }));
+    rect(svg, cx - 18, top + 2.1 * r + 40, 36, 24, '#B5874A');
+    arrow(svg, cx + 110, top + r + 40, cx + 110, top + r + 40 - Math.min(110, 20 + up / Math.max(up, W) * 90), C.lift, 'upthrust');
+    arrow(svg, cx - 110, top + r, cx - 110, top + r + Math.min(110, 20 + W / Math.max(up, W) * 90), C.weight, 'weight');
+    var m = $('g-msg'), hover = Math.abs(R) < Math.max(0.02 * up, 0.05); m.className = 'msg ' + (hover ? 'good' : R > 0 ? 'good' : 'warn');
+    m.innerHTML = (hover ? '<b>It hovers:</b> upthrust and weight balance.' : R > 0 ? '<b>It rises:</b> the upthrust is bigger than the total weight.' : '<b>It does not rise:</b> the total weight is bigger than the upthrust.') + ' Average density: ' + ((W / G) / V).toFixed(2) + ' kg/m&sup3; compared with 1.29 for the air.' + (GAS === 'hot' ? ' Hotter air inside is less dense (outside air taken as 1.29 kg/m&sup3;, at 0 &deg;C).' : GAS === 'h2' ? ' Hydrogen lifts a little more than helium, but it burns explosively.' : '');
+  }
+  segOn('g-gas', function (v) { GAS = v; gDraw(); }); ['g-V', 'g-T', 'g-L'].forEach(function (k) { $(k).addEventListener('input', gDraw); }); gDraw();
+
+  // ---------------- 7. Wings ----------------
+  var WRHO = 1.29, WM = 1200, WA = 16;
+  function CL(a) { return a <= 15 ? 0.25 + 0.09 * a : Math.max(0.5, 1.6 - 0.25 * (a - 15)); }
+  function wDraw() {
+    var v = +$('w-v').value, a = +$('w-a').value, T = +$('w-T').value, svg = $('w-svg'); clear(svg);
+    $('w-vo').textContent = v; $('w-ao').textContent = a; $('w-To').textContent = fmt(T);
+    var cl = CL(a), L = Math.max(0, 0.5 * WRHO * v * v * WA * cl), W = WM * G, dP = L / WA, D = 0.5 * WRHO * v * v * WA * (0.03 + 0.0025 * a * a / 4), stall = a > 15;
+    $('w-L').textContent = fmt(L) + ' / ' + fmt(W) + ' N'; $('w-P').textContent = fmt(dP) + ' Pa'; $('w-D').textContent = fmt(T - D) + ' N';
+    svg.appendChild(svgEl('rect', { x: 0, y: 0, width: 560, height: 380, fill: '#EEF6FC' }));
+    var g = svgEl('g', { transform: 'rotate(' + a + ' 200 190)' });
+    g.appendChild(svgEl('path', { d: 'M110 190 C 130 150, 260 145, 380 196 C 280 196, 170 205, 110 190 Z', fill: '#9FB3C8', stroke: '#1E0E4A', 'stroke-width': 1.5 })); svg.appendChild(g);
+    var sp = Math.min(1, v / 60);
+    for (var k = 0; k < 3; k++) { var y = 120 - k * 22; if (stall && k === 0) { svg.appendChild(svgEl('path', { d: 'M300 ' + (y + 40) + ' q 15 -20 30 0 t 30 0 t 30 0', fill: 'none', stroke: '#A4343A', 'stroke-width': 2.5 })); continue; } svg.appendChild(svgEl('path', { d: 'M20 ' + (y + 30) + ' C 140 ' + (y - 4 - a * 2) + ', 300 ' + (y - 4) + ', 540 ' + (y + 30 + a * 3), fill: 'none', stroke: '#2F6BD8', 'stroke-width': 1.5 + sp * 3, opacity: 0.4 + sp * 0.6 })); }
+    for (var j = 0; j < 2; j++) { var y2 = 250 + j * 24; svg.appendChild(svgEl('path', { d: 'M20 ' + y2 + ' C 160 ' + (y2 + 6) + ', 320 ' + (y2 + 6) + ', 540 ' + (y2 + a * 3), fill: 'none', stroke: '#5F6B76', 'stroke-width': 1.5 + sp * 1.5, opacity: 0.6 })); }
+    txt(svg, 280, 40, 'faster air above: lower pressure', { fill: '#2F6BD8', bold: true }); txt(svg, 280, 330, 'slower air below: higher pressure', { fill: '#A4343A', bold: true });
+    arrow(svg, 470, 200, 470, 200 - Math.min(150, L / W * 80), C.lift, 'lift'); arrow(svg, 520, 200, 520, 280, C.weight, 'weight');
+    var state, cls;
+    if (stall) { state = '<b>STALL!</b> The angle of attack is above about 15&deg;: the air breaks into swirls over the top and lift falls suddenly. Lower the nose.'; cls = 'bad'; }
+    else if (L < W * 0.98) { state = v < 5 ? 'Waiting on the runway.' : 'Lift is less than weight, so it cannot leave the ground (or it sinks). Go faster or raise the angle a little.'; cls = 'warn'; }
+    else if (L > W * 1.02) { state = '<b>Climbing:</b> lift is bigger than weight.'; cls = 'good'; }
+    else { state = '<b>Level flight:</b> lift = weight.'; cls = 'good'; }
+    var acc = (T - D) / WM; state += ' Thrust &minus; drag = ' + fmt(T - D) + ' N, so it ' + (Math.abs(T - D) < 50 ? 'keeps a steady speed.' : T > D ? 'speeds up (' + acc.toFixed(1) + ' m/s&sup2;).' : 'slows down.');
+    var vmin = Math.sqrt(2 * W / (WRHO * WA * CL(Math.min(a, 15)))); if (!stall && a > -2) state += ' At this angle the slowest speed that holds its height is about ' + vmin.toFixed(0) + ' m/s.';
+    var m = $('w-msg'); m.className = 'msg ' + cls; m.innerHTML = state + (WRHO < 1.2 ? ' Thin, hot air: less lift at the same speed, so a longer take-off run.' : '');
+  }
+  ['w-v', 'w-a', 'w-T'].forEach(function (k) { $(k).addEventListener('input', wDraw); }); segOn('w-air', function (v) { WRHO = +v; wDraw(); }); wDraw();
+
+  // ---------------- 8. Momentum ----------------
+  var MM = 'carts', MT = 'stick', anim = null, after = null;
+  var RK = { M: 1000, n: 5, v: 0, log: [] };
+  function cartsVals() { return { ma: +$('m-ma').value, va: +$('m-va').value, mb: +$('m-mb').value, vb: +$('m-vb').value }; }
+  function cartsAfter(c) { if (MT === 'stick') { var v = (c.ma * c.va + c.mb * c.vb) / (c.ma + c.mb); return [v, v]; } var t = c.ma + c.mb; return [((c.ma - c.mb) * c.va + 2 * c.mb * c.vb) / t, ((c.mb - c.ma) * c.vb + 2 * c.ma * c.va) / t]; }
+  function mTable(c, a) { var pb = c.ma * c.va + c.mb * c.vb, eb = 0.5 * c.ma * c.va * c.va + 0.5 * c.mb * c.vb * c.vb; var rows = '<tr><th></th><th>Before</th><th>After</th></tr>'; if (a) { var pa = c.ma * a[0] + c.mb * a[1], ea = 0.5 * c.ma * a[0] * a[0] + 0.5 * c.mb * a[1] * a[1]; rows += '<tr><td>A velocity</td><td>' + c.va + ' m/s</td><td>' + a[0].toFixed(2) + ' m/s</td></tr><tr><td>B velocity</td><td>' + c.vb + ' m/s</td><td>' + a[1].toFixed(2) + ' m/s</td></tr><tr><td>total momentum</td><td>' + pb.toFixed(2) + ' kg m/s</td><td>' + pa.toFixed(2) + ' kg m/s</td></tr><tr><td>kinetic energy</td><td>' + eb.toFixed(2) + ' J</td><td>' + ea.toFixed(2) + ' J</td></tr>'; } else rows += '<tr><td>total momentum</td><td>' + pb.toFixed(2) + ' kg m/s</td><td>?</td></tr><tr><td>kinetic energy</td><td>' + eb.toFixed(2) + ' J</td><td>?</td></tr>'; $('m-tab').innerHTML = rows; }
+  function cartDraw(xa, xb, c) { var svg = $('m-svg'); clear(svg); svg.appendChild(svgEl('rect', { x: 0, y: 0, width: 560, height: 300, fill: '#EEF6FC' })); svg.appendChild(svgEl('line', { x1: 10, y1: 200, x2: 550, y2: 200, stroke: '#1E0E4A', 'stroke-width': 2 }));
+    var wa = 40 + c.ma * 10, wb = 40 + c.mb * 10; rect(svg, xa - wa, 160, wa, 40, '#9FD6CF', { rx: 6 }); rect(svg, xb, 160, wb, 40, '#F4C6D6', { rx: 6 }); txt(svg, xa - wa / 2, 185, 'A ' + c.ma + ' kg', { size: 12 }); txt(svg, xb + wb / 2, 185, 'B ' + c.mb + ' kg', { size: 12 }); }
+  function mReset() { if (anim) cancelAnimationFrame(anim); anim = null; after = null; var c = cartsVals(); ['ma', 'va', 'mb', 'vb'].forEach(function (k) { $('m-' + k + 'o').textContent = c[k]; }); cartDraw(200, 320, c); mTable(c, null); var m = $('m-msg'); m.className = 'msg'; m.innerHTML = 'Set the carts, predict the velocities after, then press Crash. Velocities to the right are positive.'; }
+  function mGo() { var c = cartsVals(); if (c.va <= c.vb) { var m0 = $('m-msg'); m0.className = 'msg warn'; m0.innerHTML = 'Cart A must be moving towards cart B faster than B is moving away, or they will never meet.'; return; } var a = cartsAfter(c), xa = 200, xb = 320, hit = false, t0 = null;
+    if (anim) cancelAnimationFrame(anim);
+    function step(ts) { if (t0 === null) t0 = ts; var dt = Math.min(0.05, (ts - t0) / 1000); t0 = ts; var va = hit ? a[0] : c.va, vb = hit ? a[1] : c.vb; xa += va * 40 * dt; xb += vb * 40 * dt; if (!hit && xa >= xb) { hit = true; xa = xb; } cartDraw(xa, xb, c); if (hit && (xa < -100 || xb > 660 || xa > 660 || xb < -100 || ts > 0 && (Math.abs(xa - 200) > 340 || Math.abs(xb - 320) > 340))) { anim = null; return; } anim = requestAnimationFrame(step); }
+    anim = requestAnimationFrame(step); after = a; mTable(c, a);
+    var pb = c.ma * c.va + c.mb * c.vb, eb = 0.5 * c.ma * c.va * c.va + 0.5 * c.mb * c.vb * c.vb, ea = 0.5 * c.ma * a[0] * a[0] + 0.5 * c.mb * a[1] * a[1], m = $('m-msg'); m.className = 'msg good';
+    m.innerHTML = '<b>Momentum is conserved:</b> ' + pb.toFixed(2) + ' kg m/s before and after. ' + (MT === 'stick' ? 'Sticky (inelastic) collision: kinetic energy fell from ' + eb.toFixed(2) + ' J to ' + ea.toFixed(2) + ' J; the rest became heat and sound.' : 'Elastic collision: kinetic energy is also conserved here (' + eb.toFixed(2) + ' J).'); }
+  function rkDraw(msg) { var svg = $('m-svg'); clear(svg); svg.appendChild(svgEl('rect', { x: 0, y: 0, width: 560, height: 300, fill: '#1E0E4A' })); for (var i = 0; i < 30; i++) svg.appendChild(svgEl('circle', { cx: (i * 97) % 560, cy: (i * 53) % 300, r: 1.2, fill: '#fff' }));
+    rect(svg, 200, 120, 160, 50, '#E9EEF3'); svg.appendChild(svgEl('polygon', { points: '360,120 400,145 360,170', fill: '#A4343A' })); for (var b = 0; b < RK.n; b++) svg.appendChild(svgEl('circle', { cx: 222 + b * 26, cy: 145, r: 9, fill: '#8C8C8C' }));
+    txt(svg, 280, 220, 'rocket velocity: ' + RK.v.toFixed(1) + ' m/s', { fill: '#8ADFDA', bold: true, size: 16 }); txt(svg, 280, 245, 'mass now: ' + (RK.M + RK.n * 100) + ' kg', { fill: '#C9B8F5', size: 13 });
+    var rows = '<tr><th>Shot</th><th>Direction</th><th>Rocket velocity after</th></tr>'; RK.log.forEach(function (r, i) { rows += '<tr><td>' + (i + 1) + '</td><td>' + r[0] + '</td><td>' + r[1].toFixed(1) + ' m/s</td></tr>'; }); $('m-tab').innerHTML = rows; var m = $('m-msg'); m.className = 'msg'; m.innerHTML = msg || 'Fire balls out of the back. Each time, the momentum the ball takes backwards is given to the rocket forwards.'; }
+  function fire(dir) { if (RK.n === 0) { rkDraw('No balls left. Reset to try again.'); return; } var Mb = RK.M + RK.n * 100, u = 200, s = dir === 'back' ? 1 : -1; var dv = s * 100 * u / (Mb - 100); RK.v += dv; RK.n--; RK.log.push([dir, RK.v]);
+    rkDraw('Momentum before = momentum after: ' + Mb + ' kg rocket and balls; the ball leaves at 200 m/s relative to the rocket, so the remaining ' + (Mb - 100) + ' kg changes speed by 100 &times; 200 &divide; ' + (Mb - 100) + ' = ' + Math.abs(dv).toFixed(1) + ' m/s. ' + (dir === 'back' ? 'Each shot gives a slightly bigger change, because the rocket is lighter: the acceleration grows as fuel is used.' : 'Firing forwards slows the rocket (or sends it backwards).')); }
+  segOn('m-mode', function (v) { MM = v; $('m-carts').hidden = v !== 'carts'; $('m-rocket').hidden = v !== 'rocket'; if (anim) cancelAnimationFrame(anim); if (v === 'carts') mReset(); else rkDraw(); });
+  segOn('m-type', function (v) { MT = v; mReset(); }); ['m-ma', 'm-va', 'm-mb', 'm-vb'].forEach(function (k) { $(k).addEventListener('input', mReset); });
+  $('m-go').addEventListener('click', mGo); $('m-reset').addEventListener('click', mReset);
+  $('m-back').addEventListener('click', function () { fire('back'); }); $('m-front').addEventListener('click', function () { fire('front'); }); $('m-rr').addEventListener('click', function () { RK = { M: 1000, n: 5, v: 0, log: [] }; rkDraw(); });
+  mReset();
+
+  // ---------------- Tabs ----------------
+  var TABS = ['forces', 'density', 'pressure', 'depth', 'buoyancy', 'balloon', 'wing', 'momentum'];
+  function show(t) { [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.dataset.t === t ? 'true' : 'false'); }); TABS.forEach(function (p) { $('p-' + p).hidden = p !== t; }); }
+  [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.addEventListener('click', function () { show(b.dataset.t); history.replaceState(null, '', '#' + b.dataset.t); }); });
+  window.flDebug = { show: show, CL: CL, cartsAfter: function (ma, va, mb, vb, type) { MT = type || 'stick'; return cartsAfter({ ma: ma, va: va, mb: mb, vb: vb }); }, fire: fire, rocket: function () { return RK; } };
+  var h0 = location.hash.replace('#', ''); if (TABS.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

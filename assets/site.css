@@ -93,7 +93,9 @@ main{display:flex;flex-direction:column;gap:36px;min-width:0}
 .door p{max-width:34ch;position:relative}
 .door-soon{background:var(--lilac);color:var(--on-bright)}
 .door-soon .eyebrow{color:var(--on-bright)}
-.door-soon .pill{align-self:flex-start;font:600 14px var(--ui);padding:5px 14px;background:var(--yellow);color:var(--on-bright)}
+.door-soon .pill{margin-top:auto;align-self:flex-start;position:relative;font:700 17px var(--ui);background:var(--yellow);color:var(--on-bright);padding:9px 18px;border-radius:99px}   /* same as the DP Biology button (teacher, 2026-11-21) */
+.door-soon{box-shadow:var(--shadow);transition:transform .18s}
+.door-soon:hover{transform:translateY(-4px)}
 .door-live{background:linear-gradient(125deg,var(--magenta),var(--tB));color:#fff;text-decoration:none;box-shadow:var(--shadow);transition:transform .18s}
 .door-live:hover{transform:translateY(-4px)}
 .door-live .eyebrow{color:#fff}

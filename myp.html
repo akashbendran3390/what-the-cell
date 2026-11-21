@@ -4,19 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!-- seo -->
-<meta name="description" content="MYP Science on What the Cell: units for MYP 1 to MYP 5 with slides, short videos, simulations and worksheets.">
+<meta name="description" content="MYP Science on What the Cell: the Daily Lab Quest game and an overview of the units for MYP 1 to MYP 5.">
 <link rel="canonical" href="https://whatthecell.org/myp.html">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-48.png" sizes="48x48" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#2A1D5E">
 <meta property="og:site_name" content="What the Cell">
-<meta property="og:title" content="MYP Science | What the Cell">
-<meta property="og:description" content="MYP Science on What the Cell: units for MYP 1 to MYP 5 with slides, short videos, simulations and worksheets.">
+<meta property="og:title" content="MYP Science overview | What the Cell">
+<meta property="og:description" content="MYP Science on What the Cell: the Daily Lab Quest game and an overview of the units for MYP 1 to MYP 5.">
 <meta property="og:url" content="https://whatthecell.org/myp.html">
 <meta property="og:image" content="https://whatthecell.org/logo-512.png">
 <!-- /seo -->
-<title>MYP Science | What the Cell</title>
+<title>MYP Science overview | What the Cell</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
@@ -25,46 +25,56 @@
 <script src="assets/theme.js?v=d6b97089"></script>
 </head>
 <body>
-<!-- Hand-written page (2026-11-19). Choose a year (MYP 1 to 5), then a unit tab (6 units per year); a unit opens its lessons.
-     Unit names other than MYP 5 Unit 1 are placeholders until the teacher supplies them. -->
+<!-- MYP overview page (2026-11-21, teacher's request): the Daily Lab Quest game at the top, then an overview of the years and units.
+     The year and unit chooser with every lesson is on myp-science.html. Keep the MYP 5 unit list in step with YEARS in myp-science.html. -->
 <div class="m-band">
   <div class="m-wrap">
     <header class="m-head">
       <a class="m-mark" href="index.html">What the Cell</a>
-      <nav class="m-nav site-nav" aria-label="MYP"><a href="index.html">Home</a><a href="myp.html" aria-current="page">MYP Science</a><a href="dp-biology.html">DP Biology</a><a href="teachers.html">Teacher resources</a></nav>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="index.html">Home</a><a href="myp.html" aria-current="page">Overview</a><a href="myp-science.html">MYP Science</a><a href="teachers.html">Teacher resources</a></nav>
     </header>
-    <div class="m-crumbs"><a href="index.html">Home</a> / MYP Science</div>
+    <div class="m-crumbs"><a href="index.html">Home</a> / MYP overview</div>
     <h1>MYP Science</h1>
-    <p class="lede">Science for the Middle Years Programme, from MYP 1 to MYP 5. Pick your year, then your unit. Every unit has slides, short videos, simulations, notes, practicals and a unit review.</p>
-    <div class="stickers"><span class="sticker sun">Slides and notes</span><span class="sticker">Videos under 5 minutes</span><span class="sticker">Simulations</span><span class="sticker">Practicals</span><span class="sticker">Unit review</span></div>
+    <p class="lede">Science for the Middle Years Programme, from MYP 1 to MYP 5. Play today&rsquo;s Lab Quest, see what each year covers, then head to MYP Science for your lessons.</p>
+    <div class="stickers"><a class="sticker sun" href="myp-science.html" style="text-decoration:none">Go to MYP Science &rarr;</a><span class="sticker">Slides and notes</span><span class="sticker">Videos under 5 minutes</span><span class="sticker">Simulations</span><span class="sticker">Revision tab</span></div>
   </div>
 </div>
 
 <main><div class="m-wrap">
-  <!-- Daily Lab Quest: daily science game with streaks (assets/labquest.js, questions in assets/labquest-bank.js), 2026-11-20 -->
+  <!-- Daily Lab Quest: daily science game with streaks (assets/labquest.js, questions in assets/labquest-bank.js), 2026-11-20; streak board labquest-board.js -->
   <section id="lab-quest" aria-label="Daily Lab Quest" data-api="https://cellgrimage.akash-bendran9.workers.dev"><noscript><p>The Daily Lab Quest game needs JavaScript.</p></noscript></section>
 
-  <section class="m-sec" aria-labelledby="years-h">
-    <h2 id="years-h"><span class="dot" style="--c:var(--sky)"></span>1. Choose your year</h2>
-    <div class="years" role="tablist" aria-label="MYP year">
-      <button type="button" class="year" role="tab" data-y="1" style="--c:var(--y1);--st:var(--st-pink)"><span class="num">1</span><h3>MYP 1</h3><p>Ages 11 to 12</p><span class="soon">Coming soon</span></button>
-      <button type="button" class="year" role="tab" data-y="2" style="--c:var(--y2);--st:var(--st-orange)"><span class="num">2</span><h3>MYP 2</h3><p>Ages 12 to 13</p><span class="soon">Coming soon</span></button>
-      <button type="button" class="year" role="tab" data-y="3" style="--c:var(--y3);--st:var(--st-cyan)"><span class="num">3</span><h3>MYP 3</h3><p>Ages 13 to 14</p><span class="soon">Coming soon</span></button>
-      <button type="button" class="year" role="tab" data-y="4" style="--c:var(--y4);--st:var(--st-lilac)"><span class="num">4</span><h3>MYP 4</h3><p>Ages 14 to 15</p><span class="soon">Coming soon</span></button>
-      <button type="button" class="year" role="tab" data-y="5" style="--c:var(--y5);--st:var(--st-yellow)"><span class="num">5</span><h3>MYP 5</h3><p>Ages 15 to 16</p><span class="soon ready">Unit 1 ready</span></button>
+  <section class="m-sec" aria-labelledby="ov-years-h">
+    <h2 id="ov-years-h"><span class="dot" style="--c:var(--sky)"></span>The five years</h2>
+    <div class="grid g3">
+      <div class="box top" style="--c:var(--y1)"><p class="eyebrow">Ages 11 to 12</p><h3>MYP 1</h3><p class="muted" style="margin:0">Coming soon.</p></div>
+      <div class="box top" style="--c:var(--y2)"><p class="eyebrow">Ages 12 to 13</p><h3>MYP 2</h3><p class="muted" style="margin:0">Coming soon.</p></div>
+      <div class="box top" style="--c:var(--y3)"><p class="eyebrow">Ages 13 to 14</p><h3>MYP 3</h3><p class="muted" style="margin:0">Coming soon.</p></div>
+      <div class="box top" style="--c:var(--y4)"><p class="eyebrow">Ages 14 to 15</p><h3>MYP 4</h3><p class="muted" style="margin:0">Coming soon.</p></div>
+      <div class="box top" style="--c:var(--y5)"><p class="eyebrow">Ages 15 to 16</p><h3>MYP 5</h3><p class="muted" style="margin:0">Six units across two semesters: biology, chemistry and physics. Two units are ready now.</p></div>
     </div>
   </section>
 
-  <section class="m-sec" id="units" aria-labelledby="units-h">
-    <h2 id="units-h"><span class="dot" style="--c:var(--coral)"></span>2. <span id="units-title">MYP 5 units</span></h2>
-    <div class="utabs" role="tablist" aria-label="Units" id="utabs"></div>
-    <div class="upanel" id="upanel" role="tabpanel"></div>
+  <section class="m-sec" aria-labelledby="ov-units-h">
+    <h2 id="ov-units-h"><span class="dot" style="--c:var(--coral)"></span>MYP 5 at a glance</h2>
+    <div class="grid g3">
+      <div class="box top" style="--c:var(--y1)"><p class="eyebrow">Unit 1 &middot; Biology &middot; Semester 1</p><h3>Reproduction</h3><p class="muted">Asexual and sexual reproduction, flowers and seeds, human reproduction, pregnancy and keeping healthy.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
+      <div class="box top" style="--c:var(--y2)"><p class="eyebrow">Unit 2 &middot; Chemistry &middot; Semester 1</p><h3>Making use of energy changes in chemical reactions</h3><p class="muted">Heat and temperature, specific heat capacity, exothermic and endothermic reactions, fuels, bond energies and Hess&rsquo;s law. 13 lessons.</p><a class="btn go" href="myp/myp5-energy-changes.html">Open the unit &rarr;</a></div>
+      <div class="box top" style="--c:var(--y3)"><p class="eyebrow">Unit 3 &middot; Physics &middot; Semester 1</p><h3>Electrical safety and circuits</h3><p class="muted">Charge, current, voltage and resistance, series and parallel circuits, power and cost, and staying safe with mains electricity. 15 lessons.</p><a class="btn go" href="myp/myp5-electrical-safety.html">Open the unit &rarr;</a></div>
+      <div class="box top" style="--c:var(--y4)"><p class="eyebrow">Unit 4 &middot; Biology &middot; Semester 2, from January</p><h3>Genetics</h3><p class="muted">DNA, genes and inheritance.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
+      <div class="box top" style="--c:var(--y5)"><p class="eyebrow">Unit 5 &middot; Chemistry &middot; Semester 2</p><h3>Organic compounds</h3><p class="muted">Carbon compounds and the materials made from them.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
+      <div class="box top" style="--c:var(--y1)"><p class="eyebrow">Unit 6 &middot; Physics &middot; Semester 2</p><h3>Flight</h3><p class="muted">Forces and motion in the air.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
+    </div>
   </section>
 
-  <section class="m-sec grid g3" aria-label="How the units work">
-    <div class="box top" style="--c:var(--coral)"><h3>Learn at your own pace</h3><p class="muted">Every lesson's slides are on its page, with a full-screen button and the videos that go with each slide.</p></div>
-    <div class="box top" style="--c:var(--mint)"><h3>Try it, don't just read it</h3><p class="muted">Our own simulations let you build circuits and run practicals online when there is no time for the lab.</p></div>
-    <div class="box top" style="--c:var(--tang)"><h3>Revise the whole unit</h3><p class="muted">Each unit has notes for the whole unit and a unit review worksheet to download. Your teacher has the answers.</p></div>
+  <section class="m-sec" aria-labelledby="ov-how-h">
+    <h2 id="ov-how-h"><span class="dot" style="--c:var(--mint)"></span>How every unit works</h2>
+    <div class="grid g3">
+      <div class="box top" style="--c:var(--coral)"><h3>Lessons you can revisit</h3><p class="muted" style="margin:0">Every lesson has its slides on its own page, with a full-screen button, the short videos that go with each slide, and a worksheet to download.</p></div>
+      <div class="box top" style="--c:var(--mint)"><h3>Try it, don&rsquo;t just read it</h3><p class="muted" style="margin:0">Our own simulations let you run practicals online, plus free PhET simulations where they help.</p></div>
+      <div class="box top" style="--c:var(--tang)"><h3>A Revision tab</h3><p class="muted" style="margin:0">Each unit page has a Revision tab: a checklist, a revision slide deck, notes for the whole unit and a unit review sheet.</p></div>
+    </div>
+    <p style="margin-top:18px"><a class="btn go" href="myp-science.html">Go to MYP Science: choose your year and unit &rarr;</a></p>
   </section>
 </div></main>
 
@@ -72,46 +82,5 @@
 <script src="assets/labquest-bank.js?v=65b30dd5"></script>
 <script src="assets/labquest.js?v=392d673f"></script>
 <script src="assets/labquest-board.js?v=52623e69"></script>
-<script>
-(function () {
-  // Six units per year, in the teacher's teaching order (2026-11-21): MYP 5 = Reproduction, Energy changes, Electrical safety
-  // (semester 1), then Genetics, Organic compounds, Flight (semester 2). Each built unit has a page, a lesson-file prefix and
-  // a lesson list; build-myp-pages.ps1 rewrites the Electrical safety list between the lessons markers.
-  var LESSONS =/*lessons*/[['Lighting up', 1], ['Charge', 1], ['Current', 1], ['Potential difference', 1], ['Circuit symbols and diagrams', 1], ['Resistance and Ohmâ€™s law', 1], ['What changes resistance', 1], ['Series circuits', 1], ['Parallel circuits', 1], ['Energy, power and cost', 1], ['Mains electricity at home', 1], ['Electricity and the body', 1], ['Safety devices', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons*/;
-  var YEARS = { 5: [
-    { t: 'Reproduction', s: 'Biology', when: 'Semester 1' },
-    { t: 'Making use of energy changes in chemical reactions', s: 'Chemistry', when: 'Semester 1', ready: true, now: true, page: 'myp/myp5-energy-changes.html', pre: 'myp/ec-lesson-', blurb: 'Unit notes, unit review, the Energy Changes Lab and short videos are ready for the test. Lesson pages are being added.',
-      lessons: /*lessons-ec*/[['Heat and temperature', 1], ['Heat transfer', 1], ['Specific heat capacity', 1], ['Measuring specific heat capacity', 1], ['Exothermic and endothermic', 1], ['Hot and cold packs', 1], ['Combustion', 1], ['Calorimetry', 1], ['Investigating fuels', 1], ['Bond energies', 1], ['Hess&rsquo;s law', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons-ec*/ },
-    { t: 'Electrical safety and circuits', s: 'Physics', when: 'Semester 1', ready: true, page: 'myp/myp5-electrical-safety.html', pre: 'myp/es-lesson-', lessons: LESSONS, blurb: '15 lessons of 55 minutes, a unit review and a Criterion A test.' },
-    { t: 'Genetics', s: 'Biology', when: 'Semester 2, from January' },
-    { t: 'Organic compounds', s: 'Chemistry', when: 'Semester 2' },
-    { t: 'Flight', s: 'Physics', when: 'Semester 2' }
-  ] };
-  var year = 5, unit = 2;
-  YEARS[5].forEach(function (u, i) { if (u.now) unit = i; });
-  var ut = document.getElementById('utabs'), up = document.getElementById('upanel');
-  function units(y) { var a = YEARS[y] || []; var out = []; for (var i = 0; i < 6; i++) out.push(a[i] || { t: 'Coming soon', s: '' }); return out; }
-  function draw() {
-    [].forEach.call(document.querySelectorAll('.year'), function (b) { b.setAttribute('aria-selected', +b.dataset.y === year ? 'true' : 'false'); });
-    document.getElementById('units-title').textContent = 'MYP ' + year + ' units';
-    var us = units(year), h = '';
-    us.forEach(function (u, i) { h += '<button type="button" role="tab" class="utab' + (u.ready ? ' live' : '') + '" aria-selected="' + (i === unit) + '" data-u="' + i + '"><b>Unit ' + (i + 1) + '</b><span>' + u.t + '</span></button>'; });
-    ut.innerHTML = h;
-    [].forEach.call(ut.children, function (b) { b.onclick = function () { unit = +b.dataset.u; draw(); }; });
-    var u = us[unit];
-    if (!u.ready) { up.innerHTML = '<div class="box upane-empty"><h3>MYP ' + year + ', Unit ' + (unit + 1) + (u.s ? ': ' + u.t : '') + '</h3><p class="muted" style="margin:0">' + (u.s ? u.s + ' &middot; ' + (u.when || '') + '. Coming soon.' : 'This unit is coming soon.') + '</p></div>'; return; }
-    var L = '', U = u.page, n0 = u.lessons.length;
-    u.lessons.forEach(function (l, i) {
-      var n = i + 1, c = ['--y1', '--y2', '--y3', '--y4', '--y5'][i % 5];
-      L += (l[1] ? '<a class="lesson ready" href="' + u.pre + (n < 10 ? '0' : '') + n + '.html"' : '<div class="lesson"') + ' style="--c:var(' + c + ')"><span class="n"><b>' + n + '</b><span class="st">' + (l[1] ? 'Ready' : (n === n0 && /test/i.test(l[0]) ? 'Test' : 'Coming soon')) + '</span></span><strong>' + l[0] + '</strong>' + (l[1] ? '</a>' : '</div>');
-    });
-    up.innerHTML = '<div class="box top upane" style="--c:var(--y5)"><div class="uhead"><div><p class="eyebrow">MYP ' + year + ' &middot; Unit ' + (unit + 1) + ' &middot; ' + u.s + ' &middot; ' + u.when + '</p><h3>' + u.t + '</h3><p class="muted">' + u.blurb + '</p></div>' +
-      '<div class="acts"><a class="btn go" href="' + U + '">Open the unit &rarr;</a><a class="btn pdf" href="' + U + '#unit-notes">Unit notes</a><a class="btn sim" href="' + U + '#practicals">Practicals</a><a class="btn vid" href="' + U + '#unit-review">Unit review</a></div></div>' +
-      '<div class="lessons">' + L + '</div></div>';
-  }
-  [].forEach.call(document.querySelectorAll('.year'), function (b) { b.onclick = function () { year = +b.dataset.y; unit = 0; (YEARS[year] || []).forEach(function (x, i) { if (x.now || (x.ready && !(YEARS[year] || []).some(function (z) { return z.now; }))) unit = i; }); draw(); document.getElementById('units').scrollIntoView({ behavior: 'smooth', block: 'start' }); }; });
-  draw();
-})();
-</script>
 </body>
 </html>

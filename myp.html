@@ -20,12 +20,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
-<link rel="stylesheet" href="assets/myp.css?v=f8c3885e">
+<link rel="stylesheet" href="assets/myp.css?v=c2e9c83f">
 <link rel="stylesheet" href="assets/labquest.css?v=57f25392">
 <script src="assets/theme.js?v=d6b97089"></script>
 </head>
 <body>
-<!-- MYP overview page (2026-11-21, teacher's request): the Daily Lab Quest game at the top, then an overview of the years and units.
+<!-- MYP overview page (2026-11-21, teacher's request): the Daily Lab Quest game at the top, then one big square per year listing its units; each square opens that year on myp-science.html (#myp1 to #myp5).
      The year and unit chooser with every lesson is on myp-science.html. Keep the MYP 5 unit list in step with YEARS in myp-science.html. -->
 <div class="m-band">
   <div class="m-wrap">
@@ -35,7 +35,7 @@
     </header>
     <div class="m-crumbs"><a href="index.html">Home</a> / MYP overview</div>
     <h1>MYP Science</h1>
-    <p class="lede">Science for the Middle Years Programme, from MYP 1 to MYP 5. Play today&rsquo;s Lab Quest, see what each year covers, then head to MYP Science for your lessons.</p>
+    <p class="lede">Science for the Middle Years Programme, from MYP 1 to MYP 5. Play today&rsquo;s Lab Quest, then pick your year to find your lessons.</p>
     <div class="stickers"><a class="sticker sun" href="myp-science.html" style="text-decoration:none">Go to MYP Science &rarr;</a><span class="sticker">Slides and notes</span><span class="sticker">Videos under 5 minutes</span><span class="sticker">Simulations</span><span class="sticker">Revision tab</span></div>
   </div>
 </div>
@@ -45,38 +45,15 @@
   <section id="lab-quest" aria-label="Daily Lab Quest" data-api="https://cellgrimage.akash-bendran9.workers.dev"><noscript><p>The Daily Lab Quest game needs JavaScript.</p></noscript></section>
 
   <section class="m-sec" aria-labelledby="ov-years-h">
-    <h2 id="ov-years-h"><span class="dot" style="--c:var(--sky)"></span>The five years</h2>
-    <div class="grid g3">
-      <div class="box top" style="--c:var(--y1)"><p class="eyebrow">Ages 11 to 12</p><h3>MYP 1</h3><p class="muted" style="margin:0">Coming soon.</p></div>
-      <div class="box top" style="--c:var(--y2)"><p class="eyebrow">Ages 12 to 13</p><h3>MYP 2</h3><p class="muted" style="margin:0">Coming soon.</p></div>
-      <div class="box top" style="--c:var(--y3)"><p class="eyebrow">Ages 13 to 14</p><h3>MYP 3</h3><p class="muted" style="margin:0">Coming soon.</p></div>
-      <div class="box top" style="--c:var(--y4)"><p class="eyebrow">Ages 14 to 15</p><h3>MYP 4</h3><p class="muted" style="margin:0">Coming soon.</p></div>
-      <div class="box top" style="--c:var(--y5)"><p class="eyebrow">Ages 15 to 16</p><h3>MYP 5</h3><p class="muted" style="margin:0">Six units across two semesters: biology, chemistry and physics. Two units are ready now.</p></div>
+    <h2 id="ov-years-h"><span class="dot" style="--c:var(--sky)"></span>Choose your year</h2>
+    <div class="ysq">
+      <a class="ysq-card" href="myp-science.html#myp1" style="--c:var(--y1);--st:var(--st-pink)"><span class="num">1</span><h3>MYP 1</h3><p class="age">Ages 11 to 12</p><ul><li class="soon">Units coming soon</li></ul></a>
+      <a class="ysq-card" href="myp-science.html#myp2" style="--c:var(--y2);--st:var(--st-orange)"><span class="num">2</span><h3>MYP 2</h3><p class="age">Ages 12 to 13</p><ul><li class="soon">Units coming soon</li></ul></a>
+      <a class="ysq-card" href="myp-science.html#myp3" style="--c:var(--y3);--st:var(--st-cyan)"><span class="num">3</span><h3>MYP 3</h3><p class="age">Ages 13 to 14</p><ul><li class="soon">Units coming soon</li></ul></a>
+      <a class="ysq-card" href="myp-science.html#myp4" style="--c:var(--y4);--st:var(--st-lilac)"><span class="num">4</span><h3>MYP 4</h3><p class="age">Ages 14 to 15</p><ul><li class="soon">Units coming soon</li></ul></a>
+      <a class="ysq-card big" href="myp-science.html#myp5" style="--c:var(--y5);--st:var(--st-yellow)"><span class="num">5</span><h3>MYP 5</h3><p class="age">Ages 15 to 16</p><ul><li class="ok">Reproduction</li><li class="ok">Energy changes</li><li class="ok">Electrical safety and circuits</li><li class="ok">Genetics</li><li>Organic compounds <i>soon</i></li><li>Flight <i>soon</i></li></ul><span class="go">Open MYP 5 &rarr;</span></a>
     </div>
-  </section>
-
-  <section class="m-sec" aria-labelledby="ov-units-h">
-    <h2 id="ov-units-h"><span class="dot" style="--c:var(--coral)"></span>MYP 5 at a glance</h2>
-    <div class="grid g3">
-      <div class="box top" style="--c:var(--y1)"><p class="eyebrow">Unit 1 &middot; Biology &middot; Semester 1</p><h3>Reproduction</h3><p class="muted">Asexual and sexual reproduction, flowers and seeds, human reproduction, pregnancy and keeping healthy. 14 lessons.</p><a class="btn go" href="myp/myp5-reproduction.html">Open the unit &rarr;</a></div>
-      <div class="box top" style="--c:var(--y2)"><p class="eyebrow">Unit 2 &middot; Chemistry &middot; Semester 1</p><h3>Making use of energy changes in chemical reactions</h3><p class="muted">Heat and temperature, specific heat capacity, exothermic and endothermic reactions, fuels, bond energies and Hess&rsquo;s law. 13 lessons.</p><a class="btn go" href="myp/myp5-energy-changes.html">Open the unit &rarr;</a></div>
-      <div class="box top" style="--c:var(--y3)"><p class="eyebrow">Unit 3 &middot; Physics &middot; Semester 1</p><h3>Electrical safety and circuits</h3><p class="muted">Charge, current, voltage and resistance, series and parallel circuits, power and cost, and staying safe with mains electricity. 15 lessons.</p><a class="btn go" href="myp/myp5-electrical-safety.html">Open the unit &rarr;</a></div>
-      <div class="box top" style="--c:var(--y4)"><p class="eyebrow">Unit 4 &middot; Biology &middot; Semester 2, from January</p><h3>Genetics</h3><p class="muted">DNA, genes and inheritance.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
-      <div class="box top" style="--c:var(--y5)"><p class="eyebrow">Unit 5 &middot; Chemistry &middot; Semester 2</p><h3>Organic compounds</h3><p class="muted">Carbon compounds and the materials made from them.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
-      <div class="box top" style="--c:var(--y1)"><p class="eyebrow">Unit 6 &middot; Physics &middot; Semester 2</p><h3>Flight</h3><p class="muted">Forces and motion in the air.</p><p class="muted" style="margin:0"><b>Coming soon</b></p></div>
-    </div>
-  </section>
-
-  <section class="m-sec" aria-labelledby="ov-how-h">
-    <h2 id="ov-how-h"><span class="dot" style="--c:var(--mint)"></span>How every unit works</h2>
-    <div class="grid g3">
-      <div class="box top" style="--c:var(--coral)"><h3>Lessons you can revisit</h3><p class="muted" style="margin:0">Every lesson has its slides on its own page, with a full-screen button, the short videos that go with each slide, and a worksheet to download.</p></div>
-      <div class="box top" style="--c:var(--mint)"><h3>Try it, don&rsquo;t just read it</h3><p class="muted" style="margin:0">Our own simulations let you run practicals online, plus free PhET simulations where they help.</p></div>
-      <div class="box top" style="--c:var(--tang)"><h3>A Revision tab</h3><p class="muted" style="margin:0">Each unit page has a Revision tab: a checklist, a revision slide deck, notes for the whole unit and a unit review sheet.</p></div>
-    </div>
-    <p style="margin-top:18px"><a class="btn go" href="myp-science.html">Go to MYP Science: choose your year and unit &rarr;</a></p>
-  </section>
-</div></main>
+  </section></div></main>
 
 <footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="about.html#permission">permission to use</a>.</div></footer>
 <script src="assets/labquest-bank.js?v=65b30dd5"></script>

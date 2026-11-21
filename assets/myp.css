@@ -193,3 +193,13 @@ button.year:focus-visible{outline:3px solid var(--sun);outline-offset:4px}
 /* Lesson page: previous / all lessons / next */
 .lnav{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;margin:0 0 26px}
 .lnav .btn{font-size:.9rem}
+
+/* Unit page tabs: "The unit" (lessons and content) and "Revision" (teacher's request, 2026-11-21). assets/myp-unit.js switches them; #revision opens Revision. */
+.ptabs{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 4px}
+.ptab{font:800 1.05rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:16px;padding:11px 20px;cursor:pointer;box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:8px}
+.ptab[aria-selected="true"]{background:var(--c,var(--violet));border-color:var(--c,var(--violet));color:#fff}
+.ptab .pi{font-size:1.15rem}
+.ppanel[hidden]{display:none}
+.revcheck{columns:2;column-gap:28px;padding-left:20px;margin:0}
+.revcheck li{break-inside:avoid;margin-bottom:4px}
+@media (max-width:700px){.revcheck{columns:1}}

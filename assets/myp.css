@@ -243,3 +243,9 @@ button.year:focus-visible{outline:3px solid var(--sun);outline-offset:4px}
 .lesson .l-pic+.n{position:relative}
 a.lesson:hover .l-pic{filter:saturate(1.15) brightness(1.05)}
 @media print{.lesson .l-pic{display:none}}
+
+/* Site audit (2026-11-21) */
+.year>*{position:relative;z-index:1}
+@media (max-width:760px){.m-band::after{display:none}}
+@media (max-width:560px){.year{min-height:0}h1,h2{overflow-wrap:break-word;hyphens:auto}}
+.ptabs{margin-bottom:26px}

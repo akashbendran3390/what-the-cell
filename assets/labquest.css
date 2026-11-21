@@ -285,3 +285,6 @@ body.lq-noscroll{overflow:hidden}
 @media (max-width:900px){.lq-card>.lq-scene{opacity:.5}}
 @media (max-width:640px){.lq-card{padding-bottom:172px}.lq-card>.lq-scene{width:calc(100% - 28px);right:14px;bottom:8px;opacity:.7}}
 @media (prefers-reduced-motion:reduce){.lq-scene *{animation:none!important}.lq-scene .lqs-drop,.lq-scene .lqs-rip{display:none}.lq-scene .lqs-ind{fill-opacity:.4}}
+
+/* Site audit (2026-11-21): room between the streak board and the next section */
+#lab-quest{margin-bottom:40px}

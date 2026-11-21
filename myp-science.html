@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
-<link rel="stylesheet" href="assets/myp.css?v=f8c3885e">
+<link rel="stylesheet" href="assets/myp.css?v=c2e9c83f">
 
 <script src="assets/theme.js?v=d6b97089"></script>
 </head>
@@ -48,7 +48,7 @@
       <button type="button" class="year" role="tab" data-y="2" style="--c:var(--y2);--st:var(--st-orange)"><span class="num">2</span><h3>MYP 2</h3><p>Ages 12 to 13</p><span class="soon">Coming soon</span></button>
       <button type="button" class="year" role="tab" data-y="3" style="--c:var(--y3);--st:var(--st-cyan)"><span class="num">3</span><h3>MYP 3</h3><p>Ages 13 to 14</p><span class="soon">Coming soon</span></button>
       <button type="button" class="year" role="tab" data-y="4" style="--c:var(--y4);--st:var(--st-lilac)"><span class="num">4</span><h3>MYP 4</h3><p>Ages 14 to 15</p><span class="soon">Coming soon</span></button>
-      <button type="button" class="year" role="tab" data-y="5" style="--c:var(--y5);--st:var(--st-yellow)"><span class="num">5</span><h3>MYP 5</h3><p>Ages 15 to 16</p><span class="soon ready">2 units ready</span></button>
+      <button type="button" class="year" role="tab" data-y="5" style="--c:var(--y5);--st:var(--st-yellow)"><span class="num">5</span><h3>MYP 5</h3><p>Ages 15 to 16</p><span class="soon ready">3 units ready</span></button>
     </div>
   </section>
 
@@ -71,14 +71,15 @@
   // Six units per year, in the teacher's teaching order (2026-11-21): MYP 5 = Reproduction, Energy changes, Electrical safety
   // (semester 1), then Genetics, Organic compounds, Flight (semester 2). Each built unit has a page, a lesson-file prefix and
   // a lesson list; build-myp-pages.ps1 rewrites the Electrical safety list between the lessons markers.
-  var LESSONS =/*lessons*/[['Lighting up', 1], ['Charge', 1], ['Current', 1], ['Potential difference', 1], ['Circuit symbols and diagrams', 1], ['Resistance and Ohm&rsquo;s law', 1], ['What changes resistance', 1], ['Series circuits', 1], ['Parallel circuits', 1], ['Energy, power and cost', 1], ['Mains electricity at home', 1], ['Electricity and the body', 1], ['Safety devices', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons*/;
+  var LESSONS =/*lessons*/[['Lighting up', 1], ['Charge', 1], ['Current', 1], ['Potential difference', 1], ['Circuit symbols and diagrams', 1], ['Resistance and Ohm\u2019s law', 1], ['What changes resistance', 1], ['Series circuits', 1], ['Parallel circuits', 1], ['Energy, power and cost', 1], ['Mains electricity at home', 1], ['Electricity and the body', 1], ['Safety devices', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons*/;
   var YEARS = { 5: [
     { t: 'Reproduction', s: 'Biology', when: 'Semester 1', ready: true, page: 'myp/myp5-reproduction.html', pre: 'myp/rp-lesson-', blurb: '14 lessons with picture-rich slides, worksheets, short videos and labs, and a Revision tab for the test.',
       lessons: /*lessons-rp*/[['Asexual and sexual reproduction', 1], ['Asexual reproduction', 1], ['Mitosis and cloning', 1], ['Meiosis and fertilisation', 1], ['Flowers and pollination', 1], ['Seeds, dispersal and germination', 1], ['The male reproductive system', 1], ['The menstrual cycle', 1], ['Pregnancy and the placenta', 1], ['Birth, twins and prenatal testing', 1], ['Contraception, infertility and IVF', 1], ['Sexually transmitted infections', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons-rp*/ },
     { t: 'Making use of energy changes in chemical reactions', s: 'Chemistry', when: 'Semester 1', ready: true, now: true, page: 'myp/myp5-energy-changes.html', pre: 'myp/ec-lesson-', blurb: '13 lessons with slides, worksheets and short videos, the Energy Changes Lab, and a Revision tab for the test.',
       lessons: /*lessons-ec*/[['Heat and temperature', 1], ['Heat transfer', 1], ['Specific heat capacity', 1], ['Measuring specific heat capacity', 1], ['Exothermic and endothermic', 1], ['Hot and cold packs', 1], ['Combustion', 1], ['Calorimetry', 1], ['Investigating fuels', 1], ['Bond energies', 1], ['Hess&rsquo;s law', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons-ec*/ },
     { t: 'Electrical safety and circuits', s: 'Physics', when: 'Semester 1', ready: true, page: 'myp/myp5-electrical-safety.html', pre: 'myp/es-lesson-', lessons: LESSONS, blurb: '15 lessons of 55 minutes with slides, worksheets and three online labs, and a Revision tab for the test.' },
-    { t: 'Genetics', s: 'Biology', when: 'Semester 2, from January' },
+    { t: 'Genetics', s: 'Biology', when: 'Semester 2, from January', ready: true, page: 'myp/myp5-genetics.html', pre: 'myp/ge-lesson-', blurb: '14 lessons with picture-rich slides, worksheets, short videos and genetics labs, and a Revision tab for the test.',
+      lessons: /*lessons-ge*/[['DNA, genes and chromosomes', 1], ['The structure of DNA', 1], ['From genes to proteins', 1], ['Variation', 1], ['Mendel and alleles', 1], ['Punnett squares and probability', 1], ['Solving genetics problems', 1], ['Codominance and blood groups', 1], ['Sex determination and sex linkage', 1], ['Pedigree charts', 1], ['Mutations and genetic disorders', 1], ['Genetic technology', 1], ['Review', 1], ['Criterion A test', 0]]/*/lessons-ge*/ },
     { t: 'Organic compounds', s: 'Chemistry', when: 'Semester 2' },
     { t: 'Flight', s: 'Physics', when: 'Semester 2' }
   ] };
@@ -105,7 +106,10 @@
       '<div class="lessons">' + L + '</div></div>';
   }
   [].forEach.call(document.querySelectorAll('.year'), function (b) { b.onclick = function () { year = +b.dataset.y; unit = 0; (YEARS[year] || []).forEach(function (x, i) { if (x.now || (x.ready && !(YEARS[year] || []).some(function (z) { return z.now; }))) unit = i; }); draw(); document.getElementById('units').scrollIntoView({ behavior: 'smooth', block: 'start' }); }; });
-  draw();
+  // #myp1 to #myp5 (from the Overview's year squares) opens that year's tab (2026-11-21)
+  function fromHash() { var m = /^#myp([1-5])$/.exec(location.hash); if (!m) return false; var b = document.querySelector('.year[data-y="' + m[1] + '"]'); if (b) b.onclick(); return true; }
+  if (!fromHash()) draw();
+  window.addEventListener('hashchange', fromHash);
 })();
 </script>
 </body>

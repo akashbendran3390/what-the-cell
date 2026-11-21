@@ -177,6 +177,34 @@
   function liveStreak() { var y = vnDate(-1); return (S.last === today || S.last === y) ? S.streak : 0; }
   function countdown() { var now = Date.now() + 7 * 3600e3, next = (Math.floor(now / 864e5) + 1) * 864e5, s = Math.max(0, Math.floor((next - now) / 1000)); var hh = Math.floor(s / 3600), mm = Math.floor(s % 3600 / 60), ss = s % 60; return hh + 'h ' + (mm < 10 ? '0' : '') + mm + 'm ' + (ss < 10 ? '0' : '') + ss + 's'; }
 
+  // Animated glassware behind the lobby card (teacher's request, 2026-11-21): a burette drips into a conical flask
+  // whose indicator turns pink, steam rises from a beaker, bubbles rise in a round flask, and a rack of test tubes.
+  // Pure decoration (aria-hidden); the motion stops when the device asks for reduced motion (labquest.css).
+  var SCENE = '<svg class="lq-scene" viewBox="0 0 460 220" aria-hidden="true" focusable="false">' +
+    '<g class="g">' +
+    '<line x1="0" y1="212.5" x2="460" y2="212.5"/>' +
+    '<rect x="30" y="203" width="84" height="9" rx="2"/><line x1="52" y1="203" x2="52" y2="14"/>' +
+    '<path d="M52 42h46M52 58h46"/>' +
+    '<path d="M96 8v118l4 10v14h4v-14l4-10V8"/><rect x="95" y="130" width="14" height="5" rx="1.5"/>' +
+    '<path d="M100 26h4M100 40h6M100 54h4M100 68h6M100 82h4M100 96h6M100 110h4"/>' +
+    '</g>' +
+    '<rect class="lqs-bur" x="97.5" y="34" width="9" height="90"/>' +
+    '<circle class="lqs-drop" cx="102" cy="152" r="2.6"/>' +
+    '<path class="lqs-ind" d="M77 206l10-22h30l10 22z"/>' +
+    '<ellipse class="lqs-rip" cx="102" cy="184.5" rx="13" ry="2"/>' +
+    '<path class="g" d="M95 160v14l-26 34h66l-26-34v-14M93 160h18"/>' +
+    '<path class="lqs-liq b" d="M182 178h60v26a4 4 0 0 1-4 4h-52a4 4 0 0 1-4-4z"/>' +
+    '<path class="g" d="M178 136h4v68a4 4 0 0 0 4 4h52a4 4 0 0 0 4-4v-68h4M182 150h8M182 165h12M182 180h8"/>' +
+    '<g class="lqs-steam"><path d="M196 126c-6-8 6-14 0-24"/><path d="M212 128c-6-9 6-15 0-26"/><path d="M228 126c-6-8 6-14 0-24"/></g>' +
+    '<circle class="lqs-liq c" cx="320" cy="180" r="24"/>' +
+    '<path class="g" d="M312 112v40a28 28 0 1 0 16 0v-40M309 112h22"/>' +
+    '<path class="g" d="M290 212l10-18M350 212l-10-18M294 198h52"/>' +
+    '<g class="lqs-bub"><circle cx="312" cy="190" r="3"/><circle cx="324" cy="196" r="2.2"/><circle cx="331" cy="186" r="2.6"/><circle cx="318" cy="182" r="1.8"/></g>' +
+    '<path class="lqs-liq d" d="M386 172v18a6 6 0 0 0 12 0v-18zM404 160v30a6 6 0 0 0 12 0v-30zM422 176v14a6 6 0 0 0 12 0v-14z"/>' +
+    '<path class="lqs-liq b" d="M440 166v24a6 6 0 0 0 12 0v-24z"/>' +
+    '<path class="g" d="M386 132v58a6 6 0 0 0 12 0v-58M404 132v58a6 6 0 0 0 12 0v-58M422 132v58a6 6 0 0 0 12 0v-58M440 132v58a6 6 0 0 0 12 0v-58M378 150h82M378 200h82M380 150v62M458 150v62"/>' +
+    '</svg>';
+
   function lobby() {
     var st = liveStreak(), rk = rank(S.xp), done = S.hist[today];
     var pct = rk.hi ? Math.round((S.xp - rk.lo) / (rk.hi - rk.lo) * 100) : 100;
@@ -190,7 +218,7 @@
     if (!done) act = '<div class="lq-years" role="group" aria-label="Your MYP year">' + years + '</div><div class="lq-acts"><button type="button" class="lq-play" id="lq-play">▶ Start today&rsquo;s quest</button><button type="button" class="lq-ghost" data-open="book">📚 Sticker book (' + S.cards.length + ')</button><button type="button" class="lq-ghost" data-open="badges">🏅 Badges (' + Object.keys(S.badges).length + '/' + BADGES.length + ')</button></div>';
     else act = '<div class="lq-done"><div class="lq-score-big"><b>' + done.score + '</b><span>points today &middot; MYP ' + done.year + ' &middot; ' + done.right + '/10 right</span></div><div class="lq-next">Next quest in <b id="lq-cd">' + countdown() + '</b></div></div>' +
       '<div class="lq-years" role="group" aria-label="Year for practice and tomorrow">' + years + '</div><div class="lq-acts"><button type="button" class="lq-play alt" id="lq-prac">💪 Practice round (5 questions)</button><button type="button" class="lq-ghost" data-open="book">📚 Sticker book (' + S.cards.length + ')</button><button type="button" class="lq-ghost" data-open="badges">🏅 Badges (' + Object.keys(S.badges).length + '/' + BADGES.length + ')</button><button type="button" class="lq-ghost" id="lq-share">📋 Copy my result</button></div>';
-    root.innerHTML = '<div class="lq-card">' + head + act + '<button type="button" class="lq-sound" id="lq-sound" aria-pressed="' + !!S.sound + '" title="Sound effects">' + (S.sound ? '🔊' : '🔈') + '</button><p class="lq-note">Your streak, cards and badges are saved in this browser on this device.</p></div>';
+    root.innerHTML = '<div class="lq-card">' + SCENE + head + act + '<button type="button" class="lq-sound" id="lq-sound" aria-pressed="' + !!S.sound + '" title="Sound effects">' + (S.sound ? '🔊' : '🔈') + '</button><p class="lq-note">Your streak, cards and badges are saved in this browser on this device.</p></div>';
     [].forEach.call(root.querySelectorAll('.lq-yr'), function (b) { b.onclick = function () { S.year = +b.dataset.y; save(); lobby(); }; });
     var p = document.getElementById('lq-play'); if (p) p.onclick = function () { start('daily'); };
     var pr = document.getElementById('lq-prac'); if (pr) pr.onclick = function () { start('practice'); };

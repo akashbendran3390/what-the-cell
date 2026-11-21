@@ -258,3 +258,30 @@ body.lq-noscroll{overflow:hidden}
 .lq-join input#lq-ini{flex:0 0 90px}
 .lq-join button[type=submit]{padding:11px 22px;background:#5F3DB8}
 @media (max-width:640px){.lq-week{flex-wrap:nowrap;gap:5px}.lq-day{width:auto;flex:1 1 0;min-width:0;height:46px}.lq-join input{flex-basis:100%}.lq-join input#lq-ini{flex:1 1 90px}}
+
+/* ---------- Animated glassware behind the lobby card (teacher's request, 2026-11-21). SVG is SCENE in labquest.js. ---------- */
+.lq-card>*{position:relative;z-index:1}
+.lq-card>.lq-sound{position:absolute;z-index:2}
+.lq-card>.lq-scene{position:absolute;z-index:0;right:14px;bottom:6px;width:min(400px,40%);height:auto;pointer-events:none;opacity:.9;background:none;border:0;border-radius:0;padding:0;margin:0;box-shadow:none}
+.lq-scene .g,.lq-scene .g *{fill:none;stroke:#D9D2F5;stroke-opacity:.75;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lq-scene .lqs-liq{stroke:none}
+.lq-scene .lqs-liq.b{fill:#8ADFDA;fill-opacity:.32}
+.lq-scene .lqs-liq.c{fill:#9BE58A;fill-opacity:.45}
+.lq-scene .lqs-liq.d{fill:#F7A8CF;fill-opacity:.35}
+.lq-scene .lqs-bur{fill:#8ADFDA;fill-opacity:.35;transform-box:fill-box;transform-origin:50% 100%;animation:lqs-bur 24s linear infinite}
+.lq-scene .lqs-drop{fill:#B8F0EC;transform-box:fill-box;transform-origin:50% 0;animation:lqs-drip 2.4s ease-in infinite}
+.lq-scene .lqs-ind{fill:#F7A8CF;animation:lqs-ind 24s ease-in-out infinite}
+.lq-scene .lqs-rip{fill:none;stroke:#F7A8CF;stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:lqs-rip 2.4s ease-out infinite}
+.lq-scene .lqs-steam path{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;opacity:0;animation:lqs-steam 4s ease-out infinite}
+.lq-scene .lqs-steam path:nth-child(2){animation-delay:1.3s}.lq-scene .lqs-steam path:nth-child(3){animation-delay:2.6s}
+.lq-scene .lqs-bub circle{fill:none;stroke:#FFF3C4;stroke-width:1.4;opacity:0;animation:lqs-bub 3s ease-in infinite}
+.lq-scene .lqs-bub circle:nth-child(2){animation-delay:.8s}.lq-scene .lqs-bub circle:nth-child(3){animation-delay:1.6s}.lq-scene .lqs-bub circle:nth-child(4){animation-delay:2.3s}
+@keyframes lqs-drip{0%{transform:scale(.2);opacity:0}30%{transform:scale(1);opacity:1}55%{transform:translateY(0);opacity:1}80%{transform:translateY(30px);opacity:1}82%,100%{transform:translateY(30px);opacity:0}}
+@keyframes lqs-rip{0%,78%{transform:scale(.3);opacity:0}84%{opacity:.9}100%{transform:scale(1.1);opacity:0}}
+@keyframes lqs-ind{0%,100%{fill-opacity:.12}45%,70%{fill-opacity:.6}}
+@keyframes lqs-bur{0%{transform:scaleY(1)}90%{transform:scaleY(.55)}100%{transform:scaleY(1)}}
+@keyframes lqs-steam{0%{opacity:0;transform:translateY(8px)}30%{opacity:.45}100%{opacity:0;transform:translateY(-22px)}}
+@keyframes lqs-bub{0%{opacity:0;transform:translateY(0)}15%{opacity:.9}100%{opacity:0;transform:translateY(-34px)}}
+@media (max-width:900px){.lq-card>.lq-scene{opacity:.5}}
+@media (max-width:640px){.lq-card{padding-bottom:172px}.lq-card>.lq-scene{width:calc(100% - 28px);right:14px;bottom:8px;opacity:.7}}
+@media (prefers-reduced-motion:reduce){.lq-scene *{animation:none!important}.lq-scene .lqs-drop,.lq-scene .lqs-rip{display:none}.lq-scene .lqs-ind{fill-opacity:.4}}

@@ -219,3 +219,42 @@ body.lq-noscroll{overflow:hidden}
 .lq-join button[type=submit]{font:800 1rem var(--ui);border:0;border-radius:12px;padding:9px 16px;background:#B0356F;color:#fff;cursor:pointer}
 .lq-blink{background:none;border:0;color:#5F3DB8;font:700 .9rem var(--ui);text-decoration:underline;cursor:pointer;padding:4px}
 .lq-bmsg{color:#B0356F;font-weight:700;margin:0}
+
+/* ---------- Cleaner look (teacher's request, 2026-11-21: the heavy display font looked clubbed and the small text on the busy gradient looked blurry).
+   Headings use Bricolage Grotesque; the card is solid deep violet with one soft glow; labels are solid white and larger;
+   the streak and rank panels are solid white scoreboard cards. Overrides the rules above. ---------- */
+.lq-card{background:radial-gradient(circle at 100% 0%,rgb(176 53 111/.55),transparent 45%),#2A1D5E;box-shadow:0 14px 32px rgb(42 29 94/.25);padding:24px 24px 16px}
+.lq-card::after{display:none}
+.lq-kicker{font:800 .82rem var(--ui);letter-spacing:.12em}
+.lq-title{font:800 clamp(1.4rem,3.2vw,2rem)/1.15 var(--ui);letter-spacing:-.01em;margin:0 0 8px}
+.lq-sub{opacity:1;font-size:1rem;line-height:1.5;color:#EDE8FA}
+.lq-hero .lq-fizz{filter:none}
+.lq-flame,.lq-rank{background:#fff;color:#2A1D5E;border:0;box-shadow:0 4px 0 rgb(0 0 0/.18)}
+.lq-flame b{font:800 2rem/1 var(--ui);font-variant-numeric:tabular-nums}
+.lq-flame small,.lq-rank small{font:700 .85rem var(--ui);opacity:1;color:#5B5277}
+.lq-flame.hot{background:#E4572E;color:#fff}.lq-flame.hot small{color:#fff}
+.lq-rank b{font:800 1.15rem var(--ui);color:#2A1D5E}
+.lq-bar{background:#E9E4F7}
+.lq-bar i{background:linear-gradient(90deg,#5F3DB8,#B0356F)}
+.lq-week{gap:8px;margin:20px 0 14px}
+.lq-day{width:48px;height:48px;border-radius:12px;background:rgb(255 255 255/.10);border:2px solid rgb(255 255 255/.22);font:800 .95rem var(--ui);color:#fff;grid-template-rows:auto;place-items:center}
+.lq-day i{display:none}
+.lq-day.on{background:#22A06B;border-color:#22A06B;color:#fff}
+.lq-day.on::before{content:"\2713";font-size:1.1rem;line-height:1}
+.lq-day.on{grid-template-rows:auto auto;align-content:center;gap:0;line-height:1.05}
+.lq-day.today{border:3px solid #FBDD82}
+.lq-yr{font:700 .95rem var(--ui);border-color:rgb(255 255 255/.5)}
+.lq-ghost{font:700 .95rem var(--ui);background:rgb(255 255 255/.08);border-color:rgb(255 255 255/.5)}
+.lq-play{font:800 1.15rem var(--ui)}
+.lq-note{font-size:.88rem;opacity:1;color:#D9D2F0}
+.lq-sound{background:rgb(255 255 255/.14)}
+.lq-score-big{background:#fff;color:#2A1D5E}
+.lq-score-big b{font:800 2.4rem/1 var(--ui);color:#B0356F}
+.lq-bhead h3{font:800 1.3rem var(--ui);letter-spacing:-.01em;color:var(--ink)}
+.lq-bnote{font-size:.95rem}
+.lq-bnote.small{font-size:.85rem}
+.lq-join{gap:10px}
+.lq-join input{flex:1 1 200px;padding:10px 12px}
+.lq-join input#lq-ini{flex:0 0 90px}
+.lq-join button[type=submit]{padding:11px 22px;background:#5F3DB8}
+@media (max-width:640px){.lq-week{flex-wrap:nowrap;gap:5px}.lq-day{width:auto;flex:1 1 0;min-width:0;height:46px}.lq-join input{flex-basis:100%}.lq-join input#lq-ini{flex:1 1 90px}}

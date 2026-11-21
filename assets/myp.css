@@ -46,7 +46,7 @@ img{max-width:100%}
 .sticker{font:700 .85rem var(--ui);padding:5px 12px;border-radius:999px;background:#fff;color:var(--violet)}
 .sticker.sun{background:var(--sun);color:#1E0E4A}
 
-main{padding-block:34px 70px}
+main{padding-block:34px 70px;overflow-x:clip}
 .m-sec{margin:0 0 44px}
 .m-sec>h2,.m-h2{font:800 1.7rem/1.15 var(--ui);margin:0 0 14px;display:flex;align-items:center;gap:10px;text-wrap:balance}
 .dot{flex:none;width:14px;height:14px;border-radius:50%;background:var(--c,var(--sky));box-shadow:0 0 0 5px color-mix(in srgb,var(--c,var(--sky)) 25%,transparent)}

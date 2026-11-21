@@ -4,6 +4,17 @@
   function saved() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
   function remember(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
   var theme = saved() === 'dark' ? 'dark' : 'light';
+
+  // Site search and "Continue where you left off" (2026-11-21): load search.js from beside this file.
+  // build-search.ps1 sets SEARCH_V so browsers fetch new versions of the search files at once.
+  var SEARCH_V = '4ff72c3d';
+  var me = document.currentScript;
+  if (me && me.src) {
+    var ss = document.createElement('script');
+    ss.src = me.src.replace(/theme\.js.*$/, 'search.js?v=' + SEARCH_V);
+    ss.async = true;
+    document.head.appendChild(ss);
+  }
   root.setAttribute('data-theme', theme);
 
   var MOON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a.6.6 0 0 0-.8-.7A9.7 9.7 0 1 0 21.2 15.4a.6.6 0 0 0-.7-.8Z"/></svg>';

@@ -769,3 +769,12 @@ html.sim-open-page{overflow:hidden}
 .sim-key span{display:inline-flex;align-items:center;gap:7px}
 .sim-key span::before{content:"";width:22px;height:12px;border-radius:4px;background:#7b8aa0}
 .sim-key .k-own::before{background:#0f766e}.sim-key .k-phet::before{background:#f08a24}
+
+/* Breadcrumbs on every DP page and course-map shortcuts on the DP hub (teacher's request, 2026-11-21) */
+.wtc-crumbs{color:rgb(255 255 255/.88);margin-bottom:2px}
+.crumbs span[aria-hidden]{opacity:.6}
+.crumbs .here{font-weight:700;color:#fff}
+.hub-paths{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 0}
+.hub-paths a{display:inline-flex;align-items:center;gap:6px;font:700 15.5px var(--ui);color:#2A1D5E;background:#fff;border-radius:99px;padding:7px 16px;text-decoration:none;box-shadow:0 4px 14px rgb(20 10 50/.25)}
+.hub-paths a.alt{background:rgb(255 255 255/.16);color:#fff;border:1.5px solid rgb(255 255 255/.5);box-shadow:none}
+.hub-paths a:hover{transform:translateY(-1px)}

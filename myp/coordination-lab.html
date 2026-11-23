@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Coordination Lab. Follow signals from receptors to effectors, dim the lights for the pupil, send impulses along neurones and across synapses, cut a reflex arc, test your reaction time, explore the brain and the glands, and keep temperature, blood glucose and water in balance. Then make a seedling...">
+<link rel="canonical" href="https://whatthecell.org/myp/coordination-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Coordination Lab | What the Cell">
+<meta property="og:description" content="Coordination Lab. Follow signals from receptors to effectors, dim the lights for the pupil, send impulses along neurones and across synapses, cut a reflex arc, test your reaction time, explore the brain and the glands, and keep temperature, blood glucose and water in balance. Then make a seedling...">
+<meta property="og:url" content="https://whatthecell.org/myp/coordination-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Coordination Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=6fddf602">
+<script src="../assets/theme.js?v=912b7a38"></script>
+<style>
+/* Coordination Lab (MYP 4, Unit 5: Coordinated Body Systems), 2026-11-23. Hand-written page.
+   Tabs: #stimulus #eye #neurone #synapse #reflex #reaction #brain #glands #temp #glucose #water #adrenaline #tropism.
+   Each tab ends with a challenge. window.cbDebug.tick(n, dt) steps the animations for testing in a hidden pane. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+.eqbig{font:700 1.15rem/2.2 ui-monospace,monospace;text-align:center;padding:8px 0 4px;overflow-x:auto}
+.co{display:inline-flex;align-items:center;gap:2px;margin-right:2px;vertical-align:middle}
+.co button{font:800 .8rem var(--ui);border:0;border-radius:8px;width:24px;height:24px;cursor:pointer;background:var(--soft);color:var(--ink)}
+.co b{min-width:14px;text-align:center;color:#B0356F}
+#d-list .prow{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr)}
+table.t{margin:0}
+.rbox{display:block;width:100%;height:190px;border:0;border-radius:16px;font:800 1.3rem var(--ui);background:#2E7DB8;color:#fff;cursor:pointer;margin-bottom:10px}.rbox.wait{background:#B5532A}.rbox.go{background:#4CA64C}
+.chip input{margin-right:5px;vertical-align:middle}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#B0356F;--band2:#5F3DB8;--band3:#2A1D5E;--band-pic:url('art/myp/myp4-coord-purkinje-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp4-coordination.html">Coordinated Body Systems</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp4">MYP 4, Unit 5</a> / <a href="myp4-coordination.html">Coordinated Body Systems</a></div>
+    <h1>Coordination Lab</h1>
+    <p class="lede">Follow signals from receptors to effectors, dim the lights for the pupil, send impulses along neurones and across synapses, cut a reflex arc, test your reaction time, explore the brain and the glands, and keep temperature, blood glucose and water in balance. Then make a seedling bend towards light.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="stimulus" style="--c:var(--coral)"><span>1</span>Stimulus and response</button>
+    <button role="tab" aria-selected="false" data-t="eye" style="--c:var(--tang)"><span>2</span>The eye</button>
+    <button role="tab" aria-selected="false" data-t="neurone" style="--c:var(--sky)"><span>3</span>Neurones</button>
+    <button role="tab" aria-selected="false" data-t="synapse" style="--c:var(--mint)"><span>4</span>Synapse</button>
+    <button role="tab" aria-selected="false" data-t="reflex" style="--c:var(--pink)"><span>5</span>Reflex arc</button>
+    <button role="tab" aria-selected="false" data-t="reaction" style="--c:var(--violet)"><span>6</span>Reaction time</button>
+    <button role="tab" aria-selected="false" data-t="brain" style="--c:var(--coral)"><span>7</span>Brain</button>
+    <button role="tab" aria-selected="false" data-t="glands" style="--c:var(--tang)"><span>8</span>Glands</button>
+    <button role="tab" aria-selected="false" data-t="temp" style="--c:var(--sky)"><span>9</span>Temperature</button>
+    <button role="tab" aria-selected="false" data-t="glucose" style="--c:var(--mint)"><span>10</span>Blood glucose</button>
+    <button role="tab" aria-selected="false" data-t="water" style="--c:var(--pink)"><span>11</span>Water balance</button>
+    <button role="tab" aria-selected="false" data-t="adrenaline" style="--c:var(--violet)"><span>12</span>Adrenaline</button>
+    <button role="tab" aria-selected="false" data-t="tropism" style="--c:var(--coral)"><span>13</span>Tropisms</button>
+  </div>
+
+  <section class="panel" id="p-stimulus">
+    <p class="intro">Pick a situation, then click the five boxes in the right order: stimulus, receptor, coordinator, effector, response.</p>
+    <div class="lab"><div class="stagebox"><div id="st-cards" class="cards"></div><svg id="st-svg" viewBox="0 0 720 120" role="img" aria-label="Your pathway"></svg></div>
+      <div class="side"><span class="lbl">Situation</span><div class="seg" id="st-sit"></div><div class="row"><button class="btn2 ghost" id="st-reset">Start again</button></div><div class="msg" id="st-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Build all four pathways correctly. <span class="why" id="ch-st-m">0 of 4.</span></div>
+  </section>
+
+  <section class="panel" id="p-eye" hidden>
+    <p class="intro">Change the light and the distance to the object. Watch the pupil and the lens. (A simple model, not to scale.)</p>
+    <div class="lab"><div class="stagebox"><svg id="e-svg" viewBox="0 0 720 340" role="img" aria-label="Eye model"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="e-l">Light: <b id="e-lo"></b></label><input type="range" id="e-l" min="0" max="10" step="1" value="5"></div><div><label for="e-d">Object distance: <b id="e-do"></b> cm</label><input type="range" id="e-d" min="10" max="600" step="10" value="300"></div></div>
+        <div class="stats"><div><small>Pupil</small><span id="e-p"></span></div><div><small>Lens</small><span id="e-ln"></span></div><div><small>Image</small><span id="e-im"></span></div></div><div class="msg" id="e-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> In bright light, what happens to the pupil? <span class="seg" id="ch-e"></span><span class="why" id="ch-e-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-neurone" hidden>
+    <p class="intro">Send an impulse from a toe receptor to the brain. Compare a neurone with and without its fatty sheath.</p>
+    <div class="lab"><div class="stagebox"><svg id="n-svg" viewBox="0 0 720 260" role="img" aria-label="Two neurones racing"></svg></div>
+      <div class="side"><div class="row"><button class="btn2" id="n-go">Send impulses</button></div><div class="stats"><div><small>With sheath</small><span id="n-a"></span></div><div><small>Without sheath</small><span id="n-b"></span></div><div><small>Length</small><span>1 m</span></div></div><div class="msg" id="n-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Why does the fatty sheath matter? <span class="seg" id="ch-n"></span><span class="why" id="ch-n-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-synapse" hidden>
+    <p class="intro">Send impulses across the synapse. Add caffeine or alcohol and count how many impulses get through.</p>
+    <div class="lab"><div class="stagebox"><svg id="y-svg" viewBox="0 0 720 300" role="img" aria-label="A synapse"></svg></div>
+      <div class="side"><span class="lbl">Drug</span><div class="seg" id="y-drug"><button aria-pressed="true" data-v="none">none</button><button aria-pressed="false" data-v="caf">caffeine</button><button aria-pressed="false" data-v="alc">alcohol</button></div>
+        <div class="row"><button class="btn2" id="y-go">Send 10 impulses</button></div><div class="stats"><div><small>Sent</small><span id="y-s"></span></div><div><small>Passed on</small><span id="y-p"></span></div><div><small>Delay</small><span id="y-d"></span></div></div><div class="msg" id="y-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> What crosses the synapse? <span class="seg" id="ch-y"></span><span class="why" id="ch-y-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-reflex" hidden>
+    <p class="intro">Touch the hot plate and follow the impulse round the reflex arc. Then cut one neurone and try again.</p>
+    <div class="lab"><div class="stagebox"><svg id="r-svg" viewBox="0 0 720 320" role="img" aria-label="A reflex arc"></svg></div>
+      <div class="side"><span class="lbl">Cut</span><div class="seg" id="r-cut"><button aria-pressed="true" data-v="none">nothing</button><button aria-pressed="false" data-v="sens">sensory neurone</button><button aria-pressed="false" data-v="mot">motor neurone</button></div>
+        <div class="row"><button class="btn2 warm" id="r-go">Touch the hot plate</button></div><div class="msg" id="r-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> If the sensory neurone is cut, will the person feel the heat? <span class="seg" id="ch-r"></span><span class="why" id="ch-r-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-reaction" hidden>
+    <p class="intro">Press Start, then click the big box (or press the space bar) as soon as it changes. Do 10 trials. Try with a sound cue too.</p>
+    <div class="lab"><div class="stagebox"><button id="x-box" class="rbox">Press Start</button><svg id="x-svg" viewBox="0 0 720 160" role="img" aria-label="Your reaction times"></svg></div>
+      <div class="side"><span class="lbl">Cue</span><div class="seg" id="x-cue"><button aria-pressed="true" data-v="see">colour change</button><button aria-pressed="false" data-v="hear">a beep</button></div><div class="row"><button class="btn2" id="x-go">Start</button><button class="btn2 ghost" id="x-reset">Clear</button></div>
+        <div class="stats"><div><small>Last</small><span id="x-l"></span></div><div><small>Mean</small><span id="x-m"></span></div><div><small>Trials</small><span id="x-n"></span></div></div><div class="msg" id="x-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Complete 10 trials and compare your first five with your last five. <span class="why" id="ch-x-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-brain" hidden>
+    <p class="intro">Click a region to see what it does. Then try the quiz below.</p>
+    <div class="lab"><div class="stagebox"><svg id="b-svg" viewBox="0 0 720 360" role="img" aria-label="A simple brain map"></svg></div>
+      <div class="side"><div class="msg" id="b-msg">Click a region.</div><span class="lbl">Quiz: which region is affected?</span><div id="b-q" class="msg"></div><div class="seg" id="b-ans"><button data-v="cer">cerebrum</button><button data-v="cbl">cerebellum</button><button data-v="bs">brain stem</button></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Answer three quiz questions correctly in a row. <span class="why" id="ch-b-m">0 in a row.</span></div>
+  </section>
+
+  <section class="panel" id="p-glands" hidden>
+    <p class="intro">Click a gland to release its hormone. Watch it travel in the blood to its target organs.</p>
+    <div class="lab"><div class="stagebox"><svg id="g-svg" viewBox="0 0 720 420" role="img" aria-label="Body outline with glands"></svg></div>
+      <div class="side"><div class="msg" id="g-msg">Click a gland.</div></div></div>
+    <div class="challenge"><b>Challenge.</b> Which gland is called the master gland? <span class="seg" id="ch-g"></span><span class="why" id="ch-g-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-temp" hidden>
+    <p class="intro">Change the air temperature and the exercise level. Watch the body's effectors keep the core near 37 &deg;C. Switch an effector off to see what happens.</p>
+    <div class="lab"><div class="stagebox"><svg id="t-svg" viewBox="0 0 720 340" role="img" aria-label="Body temperature graph"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="t-air">Air: <b id="t-airo"></b> &deg;C</label><input type="range" id="t-air" min="0" max="45" step="1" value="25"></div><div><label for="t-ex">Exercise: <b id="t-exo"></b></label><input type="range" id="t-ex" min="0" max="3" step="1" value="0"></div></div>
+        <div class="row"><label class="chip"><input type="checkbox" id="t-sw" checked> sweating</label><label class="chip"><input type="checkbox" id="t-sh" checked> shivering</label><label class="chip"><input type="checkbox" id="t-bv" checked> blood vessels</label></div>
+        <div class="stats"><div><small>Core</small><span id="t-c"></span></div><div><small>Sweat</small><span id="t-s"></span></div><div><small>Skin vessels</small><span id="t-v"></span></div></div><div class="msg" id="t-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> At 40 &deg;C air with hard exercise, keep the core below 38 &deg;C. Then turn sweating off. <span class="why" id="ch-t-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-glucose" hidden>
+    <p class="intro">Eat, exercise and inject insulin. Watch blood glucose and the hormones over a day. The green band is the healthy range.</p>
+    <div class="lab"><div class="stagebox"><svg id="u-svg" viewBox="0 0 720 340" role="img" aria-label="Blood glucose graph"></svg></div>
+      <div class="side"><span class="lbl">Person</span><div class="seg" id="u-who"><button aria-pressed="true" data-v="h">healthy</button><button aria-pressed="false" data-v="t1">type 1 diabetes</button></div>
+        <div class="row"><button class="btn2" id="u-eat">Eat a meal</button><button class="btn2 alt" id="u-run">Exercise</button><button class="btn2 warm" id="u-ins">Inject insulin</button><button class="btn2 ghost" id="u-reset">New day</button></div>
+        <div class="stats"><div><small>Glucose</small><span id="u-g"></span></div><div><small>Insulin</small><span id="u-i"></span></div><div><small>Glucagon</small><span id="u-c"></span></div></div><div class="msg" id="u-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> With type 1 diabetes, eat a meal and keep glucose in the green band using insulin. <span class="why" id="ch-u-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-water" hidden>
+    <p class="intro">Events change the water in the blood. The pituitary releases ADH and the kidneys respond. Keep the water level in the green zone.</p>
+    <div class="lab"><div class="stagebox"><svg id="w-svg" viewBox="0 0 720 300" role="img" aria-label="Water balance gauges"></svg></div>
+      <div class="side"><div class="row"><button class="btn2 warm" id="w-run">Run in the heat</button><button class="btn2" id="w-drink">Drink 500 mL</button><button class="btn2 ghost" id="w-salt">Salty snack</button></div>
+        <div class="stats"><div><small>Blood water</small><span id="w-b"></span></div><div><small>ADH</small><span id="w-a"></span></div><div><small>Urine</small><span id="w-u"></span></div></div><div class="msg" id="w-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> After running in the heat, what happens to ADH? <span class="seg" id="ch-w"></span><span class="why" id="ch-w-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-adrenaline" hidden>
+    <p class="intro">Trigger a fright. The nervous response is instant; adrenaline takes a few seconds and lasts for minutes.</p>
+    <div class="lab"><div class="stagebox"><svg id="a-svg" viewBox="0 0 720 320" role="img" aria-label="Heart rate, breathing and glucose over time"></svg></div>
+      <div class="side"><div class="row"><button class="btn2 warm" id="a-go">A dog runs at you!</button></div><div class="stats"><div><small>Heart rate</small><span id="a-h"></span></div><div><small>Breaths/min</small><span id="a-b"></span></div><div><small>Glucose</small><span id="a-g"></span></div></div><div class="msg" id="a-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Which response is fastest? <span class="seg" id="ch-a"></span><span class="why" id="ch-a-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-tropism" hidden>
+    <p class="intro">Move the light and grow the seedling. Red dots show auxin. Try covering the tip.</p>
+    <div class="lab"><div class="stagebox"><svg id="p-svg" viewBox="0 0 720 340" role="img" aria-label="A seedling and a light"></svg></div>
+      <div class="side"><span class="lbl">Light</span><div class="seg" id="p-light"><button aria-pressed="false" data-v="-1">left</button><button aria-pressed="true" data-v="0">above</button><button aria-pressed="false" data-v="1">right</button></div>
+        <div class="row"><label class="chip"><input type="checkbox" id="p-cap"> cover the tip</label></div><div class="row"><button class="btn2" id="p-go">Grow for 3 days</button><button class="btn2 ghost" id="p-reset">New seedling</button></div><div class="msg" id="p-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Where does auxin collect when light comes from the right? <span class="seg" id="ch-p"></span><span class="why" id="ch-p-m"></span></div>
+  </section>
+
+  <p class="why" style="margin-top:22px">Made by What the Cell for MYP 4 Science, Coordinated Body Systems. Models are simplified for learning: numbers are rounded and some effects are left out.</p>
+</div></main>
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</div></footer>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  function fmt(x, d) { return (+x).toLocaleString('en-GB', { maximumFractionDigits: d == null ? 0 : d }); }
+  function svg(tag, a, txt) { var e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; }
+  var INK = '#1E0E4A', GREY = '#6B6390', RED = '#D9442B', BLUE = '#2E7DB8', TEAL = '#1F7A7A', PINK = '#B0356F', GOLD = '#E0A800', GREEN = '#4CA64C', VIO = '#5F3DB8';
+  function T(S, x, y, t, o) { o = o || {}; S.appendChild(svg('text', { x: x, y: y, 'font-size': o.s || 14, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'system-ui', 'font-weight': o.w || 400 }, t)); }
+  function seg(el, items, cb) { el.innerHTML = items.map(function (it, i) { return '<button data-v="' + it[0] + '" aria-pressed="' + (i === 0) + '">' + it[1] + '</button>'; }).join(''); [].forEach.call(el.children, function (b) { b.onclick = function () { [].forEach.call(el.children, function (x) { x.setAttribute('aria-pressed', x === b); }); cb && cb(b.dataset.v); }; }); }
+  function segv(el, cb) { [].forEach.call(el.children, function (b) { b.onclick = function () { [].forEach.call(el.children, function (x) { x.setAttribute('aria-pressed', x === b); }); cb && cb(b.dataset.v); }; }); }
+  function cur(el) { var b = el.querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function quiz(id, opts, right, ok, no) { seg($(id), opts, function (v) { var m = $(id + '-m'); m.innerHTML = v === right ? '<b>Yes.</b> ' + ok : '<b>Not quite.</b> ' + no; m.style.color = v === right ? 'var(--mint)' : 'var(--coral)'; }); [].forEach.call($(id).children, function (b) { b.setAttribute('aria-pressed', 'false'); }); }
+  function done(id, html) { $(id).innerHTML = '<b>Done!</b> ' + (html || ''); $(id).style.color = 'var(--mint)'; }
+  var anims = [], last = 0;
+  function run(dur, f, end) { var a = { t: 0, dur: dur, f: f, end: end }; anims.push(a); return a; }
+  function step(dt) { for (var i = anims.length - 1; i >= 0; i--) { var a = anims[i]; a.t = Math.min(a.dur, a.t + dt); try { a.f(a.t); } catch (e) { } if (a.t >= a.dur) { anims.splice(i, 1); a.end && a.end(); } } }
+  function loop(ts) { var dt = last ? Math.min(0.05, Math.max(0, (ts - last) / 1000)) : 0; last = ts; step(dt); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+  function stopAll() { anims.length = 0; }
+  var NAMES = ['stimulus', 'eye', 'neurone', 'synapse', 'reflex', 'reaction', 'brain', 'glands', 'temp', 'glucose', 'water', 'adrenaline', 'tropism'];
+  var tabs = document.querySelectorAll('.tabs button');
+  function show(t) { stopAll(); [].forEach.call(tabs, function (b) { b.setAttribute('aria-selected', b.dataset.t === t); }); NAMES.forEach(function (k) { $('p-' + k).hidden = k !== t; }); if (history.replaceState) history.replaceState(null, '', '#' + t); }
+  [].forEach.call(tabs, function (b) { b.onclick = function () { show(b.dataset.t); }; });
+
+  // 1 stimulus
+  var SIT = [['hot', 'touching a hot pan', ['heat', 'skin receptors', 'spinal cord', 'arm muscles', 'hand pulls away']], ['name', 'hearing your name', ['sound', 'ear (cochlea)', 'brain', 'neck muscles', 'head turns']], ['food', 'smelling food', ['chemicals in air', 'nose', 'brain', 'salivary glands', 'mouth waters']], ['light', 'a bright light', ['light', 'retina', 'brain', 'iris muscles', 'pupil gets smaller']]];
+  var STEP = ['stimulus', 'receptor', 'coordinator', 'effector', 'response'], S1 = { i: 0, picked: [], done: {} };
+  seg($('st-sit'), SIT.map(function (s, i) { return [i, s[1]]; }), function (v) { S1.i = +v; S1.picked = []; stDraw(); });
+  $('st-reset').onclick = function () { S1.picked = []; stDraw(); };
+  function stDraw() {
+    var all = []; SIT.forEach(function (s) { s[2].forEach(function (c, k) { all.push([c, k]); }); });
+    var seen = {}, opts = SIT[S1.i][2].map(function (c, k) { return [c, k]; }); all.forEach(function (a) { if (opts.length < 10 && !seen[a[0]] && SIT[S1.i][2].indexOf(a[0]) < 0 && (a[0].length % 3 === S1.i % 3)) { opts.push(a); seen[a[0]] = 1; } });
+    opts.sort(function (a, b) { return a[0] < b[0] ? -1 : 1; });
+    $('st-cards').innerHTML = opts.map(function (o) { return '<button class="rx" data-c="' + o[0] + '"><b>' + o[0] + '</b></button>'; }).join('');
+    [].forEach.call($('st-cards').children, function (b) { b.onclick = function () { var want = SIT[S1.i][2][S1.picked.length], m = $('st-msg'); if (b.dataset.c === want) { S1.picked.push(want); b.disabled = true; m.className = 'msg good'; m.textContent = 'Yes: that is the ' + STEP[S1.picked.length - 1] + '.'; if (S1.picked.length === 5) { S1.done[S1.i] = 1; m.innerHTML = '<b>Complete pathway!</b>'; var n = Object.keys(S1.done).length; $('ch-st-m').textContent = n + ' of 4.'; if (n === 4) done('ch-st-m', 'All four pathways built.'); } } else { m.className = 'msg bad'; m.textContent = 'Not the ' + STEP[S1.picked.length] + ' for this situation. Try another.'; } stPath(); }; });
+    stPath(); $('st-msg').className = 'msg'; $('st-msg').textContent = 'Click the ' + STEP[S1.picked.length] + ' first.';
+  }
+  function stPath() { var S = $('st-svg'); S.innerHTML = ''; for (var k = 0; k < 5; k++) { var x = 10 + k * 142; S.appendChild(svg('rect', { x: x, y: 30, width: 128, height: 56, rx: 10, fill: S1.picked[k] ? TEAL : '#EEF', stroke: INK })); T(S, x + 64, 22, STEP[k], { a: 'middle', s: 12, c: GREY }); if (S1.picked[k]) T(S, x + 64, 63, S1.picked[k], { a: 'middle', s: 12, c: '#fff', w: 700 }); } }
+  stDraw();
+
+  // 2 eye
+  function eDraw() {
+    var L = +$('e-l').value, d = +$('e-d').value; $('e-lo').textContent = ['very dim', 'dim', 'dim', 'dull', 'normal', 'normal', 'normal', 'bright', 'bright', 'very bright', 'dazzling'][L]; $('e-do').textContent = d;
+    var S = $('e-svg'); S.innerHTML = ''; var pr = 34 - L * 2.8; S.appendChild(svg('rect', { x: 0, y: 0, width: 720, height: 340, fill: 'rgb(' + (40 + L * 21) + ',' + (40 + L * 21) + ',' + (50 + L * 20) + ')' }));
+    S.appendChild(svg('circle', { cx: 170, cy: 170, r: 110, fill: '#fff', stroke: INK })); S.appendChild(svg('circle', { cx: 170, cy: 170, r: 60, fill: '#7A4A2A' })); S.appendChild(svg('circle', { cx: 170, cy: 170, r: pr, fill: '#111' })); T(S, 170, 310, 'front view: iris and pupil', { a: 'middle', s: 12, c: L > 6 ? INK : '#fff' });
+    S.appendChild(svg('circle', { cx: 520, cy: 170, r: 110, fill: '#FDF4EC', stroke: INK })); var fat = d < 100 ? 34 : d < 300 ? 24 : 16; S.appendChild(svg('ellipse', { cx: 430, cy: 170, rx: fat / 2, ry: 46, fill: '#CFE8F7', stroke: BLUE }));
+    S.appendChild(svg('path', { d: 'M520 60 A110 110 0 0 1 520 280', fill: 'none', stroke: RED, 'stroke-width': 6 })); T(S, 640, 175, 'retina', { s: 12, c: L > 6 ? INK : '#fff' }); T(S, 430, 110, 'lens', { a: 'middle', s: 12, c: L > 6 ? INK : '#fff' });
+    S.appendChild(svg('line', { x1: 300, y1: 140, x2: 430, y2: 160, stroke: GOLD, 'stroke-width': 2 })); S.appendChild(svg('line', { x1: 300, y1: 200, x2: 430, y2: 180, stroke: GOLD, 'stroke-width': 2 })); S.appendChild(svg('line', { x1: 430, y1: 160, x2: 628, y2: 175, stroke: GOLD, 'stroke-width': 2 })); S.appendChild(svg('line', { x1: 430, y1: 180, x2: 628, y2: 165, stroke: GOLD, 'stroke-width': 2 }));
+    $('e-p').textContent = pr < 12 ? 'small' : pr < 24 ? 'medium' : 'large'; $('e-ln').textContent = fat > 30 ? 'fat' : fat > 20 ? 'medium' : 'thin'; $('e-im').textContent = 'focused';
+    $('e-msg').innerHTML = (L >= 7 ? 'Bright light: the iris makes the pupil <b>smaller</b> to protect the retina (a reflex). ' : L <= 2 ? 'Dim light: the pupil gets <b>bigger</b> to let in more light. ' : 'Normal light: medium pupil. ') + (d < 100 ? 'Near object: the lens becomes <b>fatter</b> to focus.' : 'Far object: the lens is <b>thinner</b>.');
+  }
+  $('e-l').oninput = $('e-d').oninput = eDraw; eDraw();
+  quiz('ch-e', [['small', 'it gets smaller'], ['big', 'it gets bigger'], ['same', 'no change']], 'small', 'The iris muscles narrow the pupil, protecting the retina: the pupil reflex.', 'Think about protecting the retina.');
+
+  // 3 neurone
+  function nDraw(pa, pb) { var S = $('n-svg'); S.innerHTML = ''; [[70, 'with fatty sheath', pa, TEAL], [170, 'no sheath', pb, PINK]].forEach(function (r) { var y = r[0]; S.appendChild(svg('line', { x1: 60, y1: y, x2: 660, y2: y, stroke: '#999', 'stroke-width': 4 })); if (r[1] === 'with fatty sheath') for (var i = 0; i < 12; i++) S.appendChild(svg('rect', { x: 70 + i * 49, y: y - 9, width: 40, height: 18, rx: 9, fill: '#F5E6A8', stroke: '#C8B060' })); S.appendChild(svg('circle', { cx: 60 + r[2] * 600, cy: y, r: 9, fill: r[3] })); T(S, 60, y - 18, r[1], { s: 12, c: GREY }); }); T(S, 60, 230, 'toe receptor', { s: 12 }); T(S, 660, 230, 'spinal cord', { s: 12, a: 'end' }); }
+  $('n-go').onclick = function () { stopAll(); var va = 100, vb = 2, ta = 1 / va, tb = 1 / vb; run(2.5, function (t) { nDraw(Math.min(1, t * 2 / (ta * 40)), Math.min(1, t / tb)); }, function () { $('n-a').textContent = '0.01 s'; $('n-b').textContent = '0.5 s'; $('n-msg').innerHTML = 'Slow motion. With a fatty sheath the impulse travels about 100 m/s; without one about 2 m/s. The sheath insulates the axon so the impulse jumps along it.'; }); };
+  nDraw(0, 0); quiz('ch-n', [['fast', 'it speeds up the impulse'], ['food', 'it feeds the neurone'], ['chem', 'it makes neurotransmitter']], 'fast', 'The fatty (myelin) sheath insulates the axon, so impulses travel much faster.', 'Compare the two racing impulses.');
+
+  // 4 synapse
+  var Y = { sent: 0, pass: 0 };
+  function yDraw(t) { var S = $('y-svg'); S.innerHTML = ''; S.appendChild(svg('path', { d: 'M40 80 L300 80 Q340 150 300 220 L40 220 Z', fill: '#E6F3FB', stroke: INK })); S.appendChild(svg('path', { d: 'M680 60 L420 60 Q380 150 420 240 L680 240 Z', fill: '#F3E6F7', stroke: INK })); T(S, 60, 70, 'axon ending', { s: 12 }); T(S, 670, 52, 'next neurone', { s: 12, a: 'end' }); for (var r = 0; r < 4; r++) S.appendChild(svg('rect', { x: 408, y: 95 + r * 32, width: 14, height: 20, fill: VIO })); T(S, 360, 270, 'synapse (gap)', { a: 'middle', s: 12 }); var drug = cur($('y-drug')); if (t != null) { var ph = t % 1; if (ph < 0.3) S.appendChild(svg('circle', { cx: 60 + ph / 0.3 * 230, cy: 150, r: 9, fill: GOLD })); else for (var k = 0; k < 8; k++) { var x = 320 + Math.min(1, (ph - 0.3) / 0.4) * 80 + (k % 2) * 6, y = 110 + k * 12; S.appendChild(svg('circle', { cx: x, cy: y, r: 4, fill: RED })); } } T(S, 40, 290, drug === 'caf' ? 'caffeine: the next neurone fires more easily' : drug === 'alc' ? 'alcohol: messages cross more slowly' : 'no drug', { s: 12, c: GREY }); }
+  segv($('y-drug'), function () { yDraw(); });
+  $('y-go').onclick = function () { stopAll(); var drug = cur($('y-drug')), pr = drug === 'caf' ? 1 : drug === 'alc' ? 0.6 : 0.9, delay = drug === 'alc' ? 3 : 1; Y = { sent: 0, pass: 0 }; var seed = 7; function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; } run(10, function (t) { yDraw(t); var n = Math.floor(t) + (t >= 10 ? 0 : 0); while (Y.sent < Math.min(10, Math.floor(t + 0.001))) { Y.sent++; Y.pass = Math.round(Y.sent * pr); } $('y-s').textContent = Y.sent; $('y-p').textContent = Y.pass; $('y-d').textContent = delay + ' ms'; }, function () { Y.sent = 10; $('y-s').textContent = 10; $('y-msg').innerHTML = 'Each impulse releases <b>neurotransmitter</b>, which diffuses across the gap and fits receptors on the next neurone. ' + (drug === 'caf' ? 'Caffeine makes the next neurone fire more easily: you feel more alert.' : drug === 'alc' ? 'Alcohol slows and weakens transmission: reactions are slower.' : 'Most impulses are passed on.'); }); };
+  yDraw(); quiz('ch-y', [['chem', 'a chemical (neurotransmitter)'], ['elec', 'an electric spark'], ['blood', 'blood']], 'chem', 'The neurotransmitter diffuses across the gap and fits receptor molecules.', 'Watch the red particles crossing the gap.');
+
+  // 5 reflex
+  var RP = [[90, 250], [150, 200], [330, 120], [420, 120], [430, 200], [250, 220], [180, 240]];
+  function rDraw(k, cut) { var S = $('r-svg'); S.innerHTML = ''; S.appendChild(svg('rect', { x: 40, y: 260, width: 120, height: 30, rx: 6, fill: RED })); T(S, 100, 310, 'hot plate', { a: 'middle', s: 12 }); S.appendChild(svg('ellipse', { cx: 375, cy: 120, rx: 70, ry: 50, fill: '#EEE', stroke: INK })); T(S, 375, 60, 'spinal cord', { a: 'middle', s: 12 }); S.appendChild(svg('ellipse', { cx: 230, cy: 215, rx: 90, ry: 22, fill: '#F2C9A0', stroke: INK })); T(S, 230, 255, 'arm muscle (effector)', { a: 'middle', s: 12 });
+    S.appendChild(svg('polyline', { points: '90,250 150,200 330,120', fill: 'none', stroke: BLUE, 'stroke-width': 4, 'stroke-dasharray': cut === 'sens' ? '10 30' : '0' })); S.appendChild(svg('line', { x1: 330, y1: 120, x2: 420, y2: 120, stroke: VIO, 'stroke-width': 4 })); S.appendChild(svg('polyline', { points: '420,120 430,200 320,215', fill: 'none', stroke: PINK, 'stroke-width': 4, 'stroke-dasharray': cut === 'mot' ? '10 30' : '0' }));
+    T(S, 160, 180, 'sensory', { s: 12, c: BLUE }); T(S, 375, 112, 'relay', { a: 'middle', s: 12, c: VIO }); T(S, 450, 180, 'motor', { s: 12, c: PINK }); S.appendChild(svg('line', { x1: 375, y1: 70, x2: 375, y2: 20, stroke: '#999', 'stroke-dasharray': '4 3' })); T(S, 385, 30, 'to the brain', { s: 12, c: GREY });
+    if (k != null) { var i = Math.floor(k), f = k - i; if (i < RP.length - 1) { var a = RP[i], b = RP[i + 1]; S.appendChild(svg('circle', { cx: a[0] + (b[0] - a[0]) * f, cy: a[1] + (b[1] - a[1]) * f, r: 9, fill: GOLD, stroke: INK })); } } }
+  segv($('r-cut'), function () { rDraw(null, cur($('r-cut'))); });
+  $('r-go').onclick = function () { stopAll(); var cut = cur($('r-cut')), stopAt = cut === 'sens' ? 1.5 : cut === 'mot' ? 3.5 : 5.9; run(3, function (t) { rDraw(Math.min(stopAt, t * 2), cut); }, function () { var m = $('r-msg'); if (cut === 'sens') { m.className = 'msg bad'; m.innerHTML = 'The impulse cannot reach the spinal cord: <b>no reflex and no pain felt</b>. The hand stays on the plate: dangerous.'; } else if (cut === 'mot') { m.className = 'msg warm'; m.innerHTML = 'The spinal cord and brain get the message (<b>pain is felt</b>) but the impulse cannot reach the muscle: the hand does not move.'; } else { m.className = 'msg good'; m.innerHTML = 'Receptor &rarr; sensory &rarr; relay &rarr; motor &rarr; muscle: the hand pulls away in about 0.1 s. A message also goes up to the brain, so you feel pain a moment later.'; } }); };
+  rDraw(null, 'none'); quiz('ch-r', [['no', 'no'], ['yes', 'yes']], 'no', 'Without the sensory neurone no impulse reaches the spinal cord or the brain.', 'Where does the pain message travel?');
+
+  // 6 reaction
+  var X = { times: [], state: 'idle', t0: 0, timer: null };
+  function xBeep() { try { var C = new (window.AudioContext || window.webkitAudioContext)(); var o = C.createOscillator(); o.frequency.value = 880; o.connect(C.destination); o.start(); o.stop(C.currentTime + 0.15); } catch (e) { } }
+  function xDraw() { var S = $('x-svg'); S.innerHTML = ''; S.appendChild(svg('line', { x1: 40, y1: 140, x2: 700, y2: 140, stroke: INK })); X.times.forEach(function (t, i) { var h = Math.min(120, t / 4); S.appendChild(svg('rect', { x: 50 + i * 64, y: 140 - h, width: 40, height: h, fill: i < 5 ? BLUE : TEAL })); T(S, 70 + i * 64, 136 - h, Math.round(t), { a: 'middle', s: 11 }); }); var n = X.times.length; $('x-n').textContent = n; $('x-l').textContent = n ? Math.round(X.times[n - 1]) + ' ms' : '-'; $('x-m').textContent = n ? Math.round(X.times.reduce(function (a, b) { return a + b; }, 0) / n) + ' ms' : '-'; if (n >= 10) { var f = X.times.slice(0, 5).reduce(function (a, b) { return a + b; }, 0) / 5, l = X.times.slice(5, 10).reduce(function (a, b) { return a + b; }, 0) / 5; done('ch-x-m', 'First five: ' + Math.round(f) + ' ms; last five: ' + Math.round(l) + ' ms. ' + (l < f ? 'Practice helped.' : 'No clear improvement.')); } }
+  function xArm() { var b = $('x-box'); X.state = 'wait'; b.className = 'rbox wait'; b.textContent = 'Wait...'; clearTimeout(X.timer); X.timer = setTimeout(function () { X.state = 'go'; X.t0 = performance.now(); if (cur($('x-cue')) === 'hear') { xBeep(); b.textContent = 'Click!'; } else { b.className = 'rbox go'; b.textContent = 'CLICK!'; } }, 1500 + Math.random() * 2500); }
+  function xHit() { var b = $('x-box'); if (X.state === 'go') { var t = performance.now() - X.t0; X.times.push(t); X.state = 'idle'; b.className = 'rbox'; b.textContent = Math.round(t) + ' ms. Press Start for the next trial.'; $('x-msg').innerHTML = 'Typical: 200 to 300 ms for sight, a little faster for sound. The computer adds a few milliseconds.'; xDraw(); } else if (X.state === 'wait') { clearTimeout(X.timer); X.state = 'idle'; b.className = 'rbox'; b.textContent = 'Too soon! Press Start again.'; } }
+  $('x-go').onclick = xArm; $('x-box').onclick = xHit; document.addEventListener('keydown', function (e) { if (e.code === 'Space' && !$('p-reaction').hidden && X.state !== 'idle') { e.preventDefault(); xHit(); } });
+  $('x-reset').onclick = function () { X.times = []; xDraw(); }; segv($('x-cue'));
+  xDraw();
+
+  // 7 brain
+  var BR = { cer: ['cerebrum', 'Thinking, memory, language, the senses and voluntary movement. Left half controls the right side of the body.'], cbl: ['cerebellum', 'Balance, posture and smooth coordinated movement.'], bs: ['brain stem', 'Breathing, heart rate, swallowing and many reflexes. Works even when you sleep.'] };
+  var BQ = [['A gymnast keeps falling off the beam after a head injury.', 'cbl'], ['A person cannot remember new names.', 'cer'], ['A patient needs a machine to help them breathe.', 'bs'], ['A person cannot understand words after a stroke.', 'cer'], ['Someone\'s movements become shaky and uncoordinated.', 'cbl'], ['Heart rate control is damaged.', 'bs']], BQi = 0, BQs = 0;
+  function bDraw(sel) { var S = $('b-svg'); S.innerHTML = ''; var rg = [['cer', 'M80 200 C 70 90 200 30 330 40 C 470 50 540 130 520 210 C 510 250 450 260 400 255 L 330 260 C 260 265 180 270 140 255 C 100 240 84 225 80 200 Z', '#F7C7C7'], ['cbl', 'M400 255 C 430 300 500 300 520 260 C 525 245 515 235 500 232 Z', '#C7DDF7'], ['bs', 'M330 260 C 333 300 340 330 345 350 L 375 350 C 370 320 368 290 370 258 Z', '#D8C7F7']]; rg.forEach(function (r) { var p = svg('path', { d: r[1], fill: sel === r[0] ? GOLD : r[2], stroke: INK, 'stroke-width': 2, style: 'cursor:pointer' }); p.onclick = function () { bDraw(r[0]); $('b-msg').innerHTML = '<b>' + BR[r[0]][0] + ':</b> ' + BR[r[0]][1]; }; S.appendChild(p); }); T(S, 300, 150, 'cerebrum', { a: 'middle', s: 14 }); T(S, 470, 280, 'cerebellum', { a: 'middle', s: 12 }); T(S, 400, 340, 'brain stem', { s: 12 }); T(S, 600, 30, 'front', { s: 12, c: GREY, a: 'end' }); }
+  function bAsk() { $('b-q').textContent = BQ[BQi % BQ.length][0]; }
+  [].forEach.call($('b-ans').children, function (b) { b.onclick = function () { var ok = b.dataset.v === BQ[BQi % BQ.length][1]; BQs = ok ? BQs + 1 : 0; $('b-q').innerHTML = (ok ? '<b>Correct.</b> ' : '<b>No:</b> it is the ' + BR[BQ[BQi % BQ.length][1]][0] + '. ') + 'Next: ' ; BQi++; setTimeout(bAsk, 900); $('ch-b-m').textContent = BQs + ' in a row.'; if (BQs >= 3) done('ch-b-m', 'Three in a row.'); }; });
+  bDraw(); bAsk();
+
+  // 8 glands
+  var GL = [['pit', 'pituitary', 360, 62, 'growth hormone, ADH and hormones that control other glands', [[360, 300, 'kidneys'], [300, 370, 'bones']]], ['thy', 'thyroid', 360, 118, 'thyroxine: sets the speed of metabolism', [[330, 200, 'all cells'], [400, 230, 'heart']]], ['adr', 'adrenal glands', 330, 255, 'adrenaline: fight or flight', [[380, 175, 'heart'], [400, 230, 'liver']]], ['pan', 'pancreas', 395, 245, 'insulin and glucagon: blood glucose', [[400, 225, 'liver'], [300, 300, 'muscles']]]];
+  function gDraw(sel, k) { var S = $('g-svg'); S.innerHTML = ''; S.appendChild(svg('circle', { cx: 360, cy: 60, r: 42, fill: '#FBEDE3', stroke: INK })); S.appendChild(svg('path', { d: 'M330 100 L330 120 L270 135 L240 300 M390 100 L390 120 L450 135 L480 300 M270 135 L285 330 L300 410 M450 135 L435 330 L420 410 M285 330 L435 330', fill: 'none', stroke: INK, 'stroke-width': 2 })); GL.forEach(function (g) { var c = svg('circle', { cx: g[2], cy: g[3], r: 12, fill: sel === g[0] ? GOLD : PINK, stroke: INK, style: 'cursor:pointer' }); c.onclick = function () { gRelease(g); }; S.appendChild(c); T(S, g[2] + 18, g[3] + 4, g[1], { s: 12 }); }); if (sel) { var g = GL.filter(function (x) { return x[0] === sel; })[0]; g[5].forEach(function (tg) { var x = g[2] + (tg[0] - g[2]) * k, y = g[3] + (tg[1] - g[3]) * k; for (var q = 0; q < 3; q++) S.appendChild(svg('circle', { cx: x + q * 5, cy: y + q * 3, r: 4, fill: RED })); if (k >= 1) { S.appendChild(svg('circle', { cx: tg[0], cy: tg[1], r: 16, fill: 'none', stroke: TEAL, 'stroke-width': 3 })); T(S, tg[0] + 20, tg[1] + 4, tg[2], { s: 12, c: TEAL, w: 700 }); } }); } }
+  function gRelease(g) { stopAll(); $('g-msg').innerHTML = '<b>' + g[1] + ':</b> ' + g[4] + '. The hormone travels in the blood and only target organs respond.'; run(1.5, function (t) { gDraw(g[0], t / 1.5); }); }
+  gDraw(); quiz('ch-g', [['pit', 'pituitary'], ['thy', 'thyroid'], ['pan', 'pancreas']], 'pit', 'Its hormones control many other glands.', 'Which gland controls the others?');
+
+  // 9 temperature
+  var TM = { core: 37, pts: [], t: 0 };
+  function tStep(dt) { var air = +$('t-air').value, ex = +$('t-ex').value, sw = $('t-sw').checked, sh = $('t-sh').checked, bv = $('t-bv').checked; var err = TM.core - 37; var sweat = sw ? Math.max(0, Math.min(1, err * 2)) : 0, shiver = sh ? Math.max(0, Math.min(1, -err * 2)) : 0, vd = bv ? Math.max(-1, Math.min(1, err * 2)) : 0; var gain = 0.08 + ex * 0.12 + shiver * 0.12, loss = (TM.core - air) * (0.006 + 0.004 * vd) + sweat * (air > 35 ? 0.5 : 0.6); TM.core += (gain - loss) * dt * 0.8; TM.core = Math.max(30, Math.min(43, TM.core)); TM.sweat = sweat; TM.shiver = shiver; TM.vd = vd; }
+  function tDraw() { var S = $('t-svg'); S.innerHTML = ''; var X = function (i) { return 60 + i * 2; }, Y = function (c) { return 300 - (c - 34) * 40; }; S.appendChild(svg('rect', { x: 60, y: Y(37.5), width: 620, height: Y(36.5) - Y(37.5), fill: 'rgba(76,166,76,.2)' })); for (var c = 34; c <= 41; c++) T(S, 52, Y(c) + 4, c, { a: 'end', s: 11 }); S.appendChild(svg('line', { x1: 60, y1: 300, x2: 680, y2: 300, stroke: INK })); S.appendChild(svg('line', { x1: 60, y1: 20, x2: 60, y2: 300, stroke: INK })); T(S, 64, 16, 'core temperature (°C)', { s: 12 }); T(S, 370, 330, 'time', { a: 'middle', s: 12 }); if (TM.pts.length > 1) S.appendChild(svg('polyline', { points: TM.pts.map(function (c, i) { return X(i) + ',' + Y(c); }).join(' '), fill: 'none', stroke: RED, 'stroke-width': 3 })); $('t-c').textContent = fmt(TM.core, 1) + ' °C'; $('t-s').textContent = TM.sweat > 0.6 ? 'lots' : TM.sweat > 0.1 ? 'some' : 'none'; $('t-v').textContent = TM.vd > 0.2 ? 'widened' : TM.vd < -0.2 ? 'narrowed' : 'normal'; $('t-airo').textContent = $('t-air').value; $('t-exo').textContent = ['rest', 'walking', 'jogging', 'hard'][+$('t-ex').value]; var m = TM.core > 38.5 ? 'Core too hot: <b>danger of heat stroke</b>.' : TM.core < 35.5 ? 'Core too cold: <b>danger of hypothermia</b>.' : 'Negative feedback is keeping the core near 37 °C.'; $('t-msg').innerHTML = m + (TM.shiver > 0.2 ? ' Shivering releases heat.' : ''); }
+  ['t-air', 't-ex', 't-sw', 't-sh', 't-bv'].forEach(function (id) { $(id).oninput = $(id).onchange = function () { tDraw(); }; });
+  function tLoop() { run(1e9, function (t) { var dt = t - TM.t; TM.t = t; if (dt <= 0) return; tStep(dt * 4); TM.acc = (TM.acc || 0) + dt; if (TM.acc > 0.15) { TM.acc = 0; TM.pts.push(TM.core); if (TM.pts.length > 310) TM.pts.shift(); tDraw(); if (+$('t-air').value >= 40 && +$('t-ex').value === 3 && $('t-sw').checked && TM.pts.length > 100 && TM.pts.slice(-60).every(function (c) { return c < 38; })) done('ch-t-m', 'Sweating kept the core below 38 °C. Now turn it off and watch the core rise.'); } }); }
+  // 10 glucose
+  var U = { g: 5, ins: 0, glc: 0, food: 0, ex: 0, inj: 0, pts: [], t: 0, ok: 0, ate: false };
+  function uStep(dt) { var t1 = cur($('u-who')) === 't1'; var absorb = U.food * 0.5; U.food = Math.max(0, U.food - absorb * dt); var e = U.g - 5.2; U.ins = t1 ? U.inj : Math.max(0, e) * 0.25; U.glc = Math.max(0, -e) * 0.9; U.inj = Math.max(0, U.inj - U.inj * 0.25 * dt); U.ex = Math.max(0, U.ex - 0.2 * dt); U.g += (absorb * 0.6 - U.ins * 0.6 * Math.max(0, U.g - 2) / 5 + U.glc * 0.35 - U.ex * 0.5 + (t1 ? 0.02 : 0)) * dt; U.g = Math.max(2, Math.min(20, U.g)); }
+  function uDraw() { var S = $('u-svg'); S.innerHTML = ''; var X = function (i) { return 60 + i * 2; }, Y = function (g) { return 300 - g * 14; }; S.appendChild(svg('rect', { x: 60, y: Y(7.8), width: 620, height: Y(4) - Y(7.8), fill: 'rgba(76,166,76,.2)' })); for (var g = 0; g <= 20; g += 4) T(S, 52, Y(g) + 4, g, { a: 'end', s: 11 }); S.appendChild(svg('line', { x1: 60, y1: 300, x2: 680, y2: 300, stroke: INK })); S.appendChild(svg('line', { x1: 60, y1: 20, x2: 60, y2: 300, stroke: INK })); T(S, 64, 16, 'blood glucose (mmol/L)', { s: 12 }); T(S, 370, 330, 'time', { a: 'middle', s: 12 }); if (U.pts.length > 1) S.appendChild(svg('polyline', { points: U.pts.map(function (g, i) { return X(i) + ',' + Y(g); }).join(' '), fill: 'none', stroke: RED, 'stroke-width': 3 })); $('u-g').textContent = fmt(U.g, 1); $('u-i').textContent = U.ins > 0.6 ? 'high' : U.ins > 0.1 ? 'some' : 'low'; $('u-c').textContent = U.glc > 0.4 ? 'high' : U.glc > 0.05 ? 'some' : 'low'; var t1 = cur($('u-who')) === 't1'; $('u-msg').innerHTML = (U.g > 7.8 ? 'Glucose is <b>high</b>. ' + (t1 ? 'The pancreas makes no insulin: inject some.' : 'The pancreas releases insulin.') : U.g < 4 ? 'Glucose is <b>low</b>: the pancreas releases glucagon, so the liver releases glucose.' : 'In the healthy range.'); }
+  function uLoop() { run(1e9, function (t) { var dt = t - U.t; U.t = t; if (dt <= 0) return; uStep(dt * 2); U.acc = (U.acc || 0) + dt; if (U.acc > 0.15) { U.acc = 0; U.pts.push(U.g); if (U.pts.length > 310) U.pts.shift(); uDraw(); if (cur($('u-who')) === 't1' && U.ate && U.g >= 4 && U.g <= 7.8) { U.ok++; if (U.ok > 60) done('ch-u-m', 'Glucose stayed in range with insulin.'); } else U.ok = 0; } }); }
+  $('u-eat').onclick = function () { U.food += 6; U.ate = true; }; $('u-run').onclick = function () { U.ex += 2; }; $('u-ins').onclick = function () { U.inj += 2.5; }; $('u-reset').onclick = function () { U.g = cur($('u-who')) === 't1' ? 8 : 5; U.pts = []; U.food = 0; U.inj = 0; U.ex = 0; U.ate = false; U.ok = 0; };
+  segv($('u-who'), function () { $('u-reset').onclick(); });
+
+  // 11 water
+  var W = { b: 50, adh: 50, urine: 50, t: 0 };
+  function wDraw() { var S = $('w-svg'); S.innerHTML = ''; [[60, 'blood water', W.b, BLUE], [300, 'ADH', W.adh, VIO], [540, 'urine made', W.urine, GOLD]].forEach(function (g) { S.appendChild(svg('rect', { x: g[0], y: 40, width: 120, height: 200, rx: 10, fill: '#F3F6F8', stroke: INK })); if (g[1] === 'blood water') S.appendChild(svg('rect', { x: g[0], y: 40 + 200 * 0.35, width: 120, height: 200 * 0.3, fill: 'rgba(76,166,76,.25)' })); S.appendChild(svg('rect', { x: g[0] + 10, y: 240 - g[2] * 2, width: 100, height: g[2] * 2, rx: 6, fill: g[3] })); T(S, g[0] + 60, 265, g[1], { a: 'middle', s: 13 }); }); $('w-b').textContent = W.b < 35 ? 'low' : W.b > 65 ? 'high' : 'normal'; $('w-a').textContent = W.adh > 65 ? 'high' : W.adh < 35 ? 'low' : 'normal'; $('w-u').textContent = W.urine < 35 ? 'little, dark' : W.urine > 65 ? 'lots, pale' : 'normal'; }
+  function wStep(dt) { var target = 50 - (W.b - 50) * 1.5; W.adh += (Math.max(0, Math.min(100, target)) - W.adh) * dt * 0.8; W.urine = Math.max(0, Math.min(100, 100 - W.adh)); W.b += (W.urine - 50) * -0.02 * dt + (50 - W.b) * 0.05 * dt; W.b = Math.max(0, Math.min(100, W.b)); }
+  function wLoop() { run(1e9, function (t) { var dt = t - W.t; W.t = t; if (dt <= 0) return; wStep(dt); wDraw(); }); }
+  $('w-run').onclick = function () { W.b = Math.max(10, W.b - 25); $('w-msg').innerHTML = 'Water lost in sweat. The brain detects it: the pituitary releases <b>more ADH</b>; the kidneys keep water; you make a little dark urine and feel thirsty.'; };
+  $('w-drink').onclick = function () { W.b = Math.min(95, W.b + 25); $('w-msg').innerHTML = 'Extra water: <b>less ADH</b>; the kidneys take back less water; you make lots of pale urine.'; };
+  $('w-salt').onclick = function () { W.b = Math.max(10, W.b - 15); $('w-msg').innerHTML = 'Salt makes the blood more concentrated, like having too little water: <b>more ADH</b> and thirst.'; };
+  quiz('ch-w', [['more', 'more ADH'], ['less', 'less ADH'], ['same', 'no change']], 'more', 'More ADH makes the kidneys take back more water.', 'The body needs to keep water. What makes the kidneys keep it?');
+
+  // 12 adrenaline
+  var AD = { t: 0, f: -1 };
+  function aVals(t) { if (AD.f < 0) return [70, 15, 5]; var s = t - AD.f, adr = s < 2 ? 0 : Math.min(1, (s - 2) / 3) * Math.exp(-Math.max(0, s - 5) / 25); var nerve = s < 0.3 ? 0 : Math.exp(-(s - 0.3) / 2) * 0.5; return [70 + 70 * Math.max(adr, nerve), 15 + 15 * adr, 5 + 2.5 * adr]; }
+  function aDraw() { var S = $('a-svg'); S.innerHTML = ''; var X = function (s) { return 60 + s * 10; }; S.appendChild(svg('line', { x1: 60, y1: 280, x2: 680, y2: 280, stroke: INK })); T(S, 370, 305, 'seconds after the fright', { a: 'middle', s: 12 }); for (var s = 0; s <= 60; s += 10) T(S, X(s), 296, s, { a: 'middle', s: 11 }); var series = [[0, 'heart rate', RED, function (v) { return 280 - (v - 50) * 2; }], [1, 'breaths', BLUE, function (v) { return 280 - v * 5; }], [2, 'glucose', GOLD, function (v) { return 280 - v * 20; }]]; if (AD.f >= 0) series.forEach(function (sr) { var pts = []; for (var s = 0; s <= Math.min(60, AD.t - AD.f); s += 0.5) pts.push(X(s) + ',' + sr[3](aVals(AD.f + s)[sr[0]])); S.appendChild(svg('polyline', { points: pts.join(' '), fill: 'none', stroke: sr[2], 'stroke-width': 3 })); }); T(S, 600, 30, 'heart rate', { s: 12, c: RED }); T(S, 600, 48, 'breathing', { s: 12, c: BLUE }); T(S, 600, 66, 'glucose', { s: 12, c: GOLD }); var v = aVals(AD.t); $('a-h').textContent = Math.round(v[0]) + ' bpm'; $('a-b').textContent = Math.round(v[1]); $('a-g').textContent = fmt(v[2], 1) + ' mmol/L'; }
+  $('a-go').onclick = function () { stopAll(); AD.t = 0; AD.f = 0; run(60, function (t) { AD.t = t * 1; aDraw(); var s = AD.t; $('a-msg').innerHTML = s < 0.5 ? 'Eyes &rarr; brain &rarr; motor neurones: you <b>jump back</b> (nerves, under 0.5 s).' : s < 4 ? 'Nerves stimulate the <b>adrenal glands</b>.' : '<b>Adrenaline</b> in the blood: heart rate, breathing and glucose rise, and stay high for minutes.'; }); };
+  aDraw(); quiz('ch-a', [['nerve', 'jumping back (nerves)'], ['adr', 'adrenaline'], ['same', 'both the same']], 'nerve', 'Nerve impulses act in under a second; adrenaline takes a few seconds to build up but lasts for minutes.', 'Watch when each change starts.');
+
+  // 13 tropism
+  var P = { g: 0 };
+  function pDraw() { var S = $('p-svg'); S.innerHTML = ''; S.appendChild(svg('rect', { x: 0, y: 290, width: 720, height: 50, fill: '#8B6B4A' })); var L = +cur($('p-light')), cap = $('p-cap').checked; var lx = L === 0 ? 360 : L < 0 ? 80 : 640, ly = L === 0 ? 40 : 120; S.appendChild(svg('circle', { cx: lx, cy: ly, r: 26, fill: GOLD })); T(S, lx, ly + 45, 'light', { a: 'middle', s: 12 });
+    var h = 40 + P.g * 140, bend = cap || L === 0 ? 0 : L * Math.min(1, P.g) * 0.6; var pts = [], x = 360, y = 290; for (var i = 0; i <= 20; i++) { var f = i / 20, ang = bend * f * f; x += Math.sin(ang) * h / 20; y -= Math.cos(ang) * h / 20; pts.push(x + ',' + y); } S.appendChild(svg('polyline', { points: '360,290 ' + pts.join(' '), fill: 'none', stroke: GREEN, 'stroke-width': 10, 'stroke-linecap': 'round' }));
+    if (cap) S.appendChild(svg('circle', { cx: x, cy: y, r: 9, fill: '#BBB', stroke: INK })); var side = cap || L === 0 ? 0 : -L; for (var k = 0; k < 5; k++) { var pp = pts[Math.min(19, 4 + k * 3)].split(','); S.appendChild(svg('circle', { cx: +pp[0] + (side === 0 ? (k % 2 ? 6 : -6) : side * 7), cy: +pp[1], r: 4, fill: RED })); }
+    $('p-msg').innerHTML = cap ? 'With the tip covered, the shoot cannot detect the light, so auxin spreads evenly and the shoot grows <b>straight</b>.' : L === 0 ? 'Light from above: auxin spreads evenly, so the shoot grows straight up.' : 'Light from the ' + (L < 0 ? 'left' : 'right') + ': auxin (red) moves to the <b>shaded side</b>; those cells grow longer, so the shoot bends <b>towards the light</b>.'; }
+  segv($('p-light'), pDraw); $('p-cap').onchange = pDraw;
+  $('p-go').onclick = function () { stopAll(); P.g = 0; run(3, function (t) { P.g = t / 3; pDraw(); }); };
+  $('p-reset').onclick = function () { stopAll(); P.g = 0; pDraw(); };
+  pDraw(); quiz('ch-p', [['shade', 'on the shaded (left) side'], ['lit', 'on the lit (right) side'], ['tip', 'only in the tip']], 'shade', 'Auxin moves away from the light, so the shaded side grows faster.', 'Look at the red dots.');
+
+  var showOrig = show; show = function (t) { showOrig(t); if (t === 'temp') { TM.t = 0; tLoop(); } if (t === 'glucose') { U.t = 0; uLoop(); } if (t === 'water') { W.t = 0; wLoop(); } };
+  [].forEach.call(tabs, function (b) { b.onclick = function () { show(b.dataset.t); }; });
+  tDraw(); uDraw(); wDraw();
+  window.cbDebug = { show: show, tick: function (n, dt) { for (var i = 0; i < (n || 1); i++) step(dt || 0.05); }, TM: TM, U: U, W: W, X: X };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

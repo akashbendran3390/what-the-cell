@@ -33,8 +33,15 @@
   var set = me.getAttribute('data-set');
   var ver = me.getAttribute('data-v') || '1';
   var base = me.src.replace(/lang-help\.js.*$/, 'lang/' + set + '/');
-  var data = {};
-  window.WTC_LANG = { gloss: function (code, obj) { data[code] = obj; } };
+  var data = {}, parts = {};
+  // DP word parts: parts.en = {part: [meaning, [keys]]}; parts.<code> = {part: translated meaning}.
+  window.WTC_LANG = { gloss: function (code, obj) { data[code] = obj; }, parts: function (code, obj) { parts[code] = obj; } };
+  var partsOf = null;
+  function keyParts(k) {
+    if (!partsOf) { partsOf = {}; var en = parts.en || {}; Object.keys(en).forEach(function (p) { en[p][1].forEach(function (key) { (partsOf[key] = partsOf[key] || []).push(p); }); }); }
+    return partsOf[k] || [];
+  }
+  function partTr(p) { return lang === 'en' ? null : (parts[lang] || {})[p] || null; }
 
   var loading = {};
   function load(code) {
@@ -54,7 +61,7 @@
   function findKey(t) {
     var g = data.en || {}, k = norm(t);
     var bare = k.replace(/\s*\(.*?\)$/, '');
-    var tries = [k, bare, bare.replace(/s$/, ''), k.replace(/s$/, ''), k.replace(/es$/, ''), k.replace(/ies$/, 'y'), k.replace(/i$/, 'us'), k.replace(/a$/, 'on'), k.replace(/ae$/, 'a')];
+    var tries = [k, bare, bare.replace(/s$/, ''), k.replace(/s$/, ''), k.replace(/es$/, ''), k.replace(/ies$/, 'y'), k.replace(/i$/, 'us'), k.replace(/a$/, 'on'), k.replace(/ae$/, 'a'), k + 's', bare + 's'];
     for (var i = 0; i < tries.length; i++) if (g[tries[i]]) return tries[i];
     return null;
   }
@@ -93,6 +100,20 @@
     '.lh-pop .lh-tr{border-top:1px solid var(--line,#DCCFF5);margin-top:8px;padding-top:8px}',
     '.lh-tr b{display:block;font-size:1.1em}',
     '.lh-none{opacity:.75;font-size:13px;margin-top:6px!important}',
+    '.lh-wps{border-top:1px solid var(--line,#DCCFF5);margin-top:8px;padding-top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline}',
+    '.lh-wps-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;opacity:.7;width:100%}',
+    '.lh-chip{background:var(--soft,#EFE6FF);border-radius:10px;padding:3px 9px;font-size:14px}',
+    '.lh-chip b{margin-right:2px}',
+    '.lh-chip-tr{display:block;font-size:13px;opacity:.85}',
+    '.lh-wpbox{background:var(--surface,#fff);border:2px solid var(--line,#DCCFF5);border-radius:16px;padding:10px 16px;margin:0 0 16px}',
+    '.lh-wpbox summary{cursor:pointer;font-weight:700;font-size:15px}',
+    '.lh-wpbox p{font-size:14px;opacity:.85;margin:8px 0}',
+    '.lh-wpbox .lh-wrap{overflow-x:auto}',
+    '.lh-wpbox table{width:100%;border-collapse:collapse;font-size:14px}',
+    '.lh-wpbox th,.lh-wpbox td{text-align:start;vertical-align:top;padding:6px 8px;border-bottom:1px solid var(--line,#DCCFF5)}',
+    '.lh-wpbox thead th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;opacity:.75}',
+    '.lh-wpbox tbody th{white-space:nowrap}',
+    '.lh-wpbox .lh-eg{opacity:.8;font-style:italic}',
     'table.words td.lh-col{min-width:12em}',
     'table.words .lh-say{margin-left:6px;padding:2px 7px;vertical-align:middle}',
     '.lh-gloss .lh-find{font:inherit;font-size:15px;padding:7px 12px;border-radius:10px;border:2px solid var(--line,#DCCFF5);background:var(--surface,#fff);color:inherit;flex:1 1 180px;min-width:0}',
@@ -106,7 +127,7 @@
     '[lang="hi"]{font-family:"Nirmala UI","Noto Sans Devanagari",sans-serif}',
     '[lang="th"]{font-family:"Leelawadee UI","Noto Sans Thai",Tahoma,sans-serif}',
     '[lang="vi"]{font-family:"Segoe UI",Arial,"Noto Sans",sans-serif}',
-    '@media print{.lh-bar,.lh-pop,.lh-say{display:none!important}.lh-term{text-decoration:none}}'
+    '@media print{.lh-bar,.lh-pop,.lh-say,.lh-wpbox{display:none!important}.lh-term{text-decoration:none}}'
   ].join('\n');
   document.head.appendChild(css);
 
@@ -146,25 +167,77 @@
     var t2 = tr(k);
     if (t2) { var p = langEl(el('p', 'lh-tr')); p.append(el('b', null, t2[0]), document.createTextNode(t2[1])); pop.append(p); }
     else if (lang === 'en') pop.append(el('p', 'lh-none', 'Choose your language above the notes to see this word translated.'));
+    var wp = keyParts(k);
+    if (wp.length) {
+      var box = el('div', 'lh-wps'); box.append(el('span', 'lh-wps-h', 'Word parts'));
+      wp.forEach(function (w) { box.append(partChip(w)); });
+      pop.append(box);
+    }
     document.body.appendChild(pop);
     var r = t.getBoundingClientRect(), w = pop.offsetWidth, vw = document.documentElement.clientWidth;
     pop.style.left = Math.max(16, Math.min(r.left, vw - w - 16)) + scrollX + 'px';
     pop.style.top = (r.bottom + scrollY + 8) + 'px';
     popFor = t; x.focus();
   }
+  function partChip(w) {
+    var c = el('span', 'lh-chip'); c.append(el('b', null, w), document.createTextNode(' ' + ((parts.en || {})[w] || [''])[0]));
+    var t = partTr(w); if (t) { var s = langEl(el('span', 'lh-chip-tr', t)); c.append(s); }
+    return c;
+  }
+  // "Word parts in these notes": every prefix, root and suffix found in the words linked on this page.
+  function partsBox(notes, bar) {
+    var found = {}, order = [], fk = {};
+    notes.querySelectorAll('.lh-term').forEach(function (t) {
+      keyParts(t.dataset.term).forEach(function (w) {
+        if (!found[w]) { found[w] = []; fk[w] = {}; order.push(w); }
+        if (fk[w][t.dataset.term] || found[w].length >= 6) return;
+        fk[w][t.dataset.term] = 1;
+        found[w].push(t.textContent.replace(/[:.,;]+$/, '').trim().toLowerCase());
+      });
+    });
+    if (!order.length) return;
+    var en = parts.en || {};
+    order.sort(function (a, b) { return a.replace(/^-/, '').localeCompare(b.replace(/^-/, '')); });
+    var d = el('details', 'lh-wpbox'), s = el('summary', null, 'Word parts in these notes (' + order.length + ')');
+    d.append(s, el('p', null, 'Many science words are built from smaller parts. Learn a part once and you can work out the meaning of new words.'));
+    var wrap = el('div', 'lh-wrap'), table = el('table'), thead = el('thead'), hr = el('tr'), hTr = el('th');
+    hr.append(el('th', null, 'Part'), el('th', null, 'Meaning'), hTr, el('th', null, 'In these notes')); thead.append(hr);
+    var tbody = el('tbody'); table.append(thead, tbody); wrap.append(table); d.append(wrap);
+    var cells = [];
+    order.forEach(function (w) {
+      var r = el('tr'), td = el('td', 'lh-col');
+      r.append(el('th', null, w), el('td', null, en[w][0]), td, el('td', 'lh-eg', found[w].join(', ')));
+      tbody.append(r); cells.push([w, td]);
+    });
+    function fill() {
+      hTr.hidden = lang === 'en'; hTr.textContent = lang === 'en' ? '' : info(lang)[1].replace(/\s*\(.*\)$/, '');
+      cells.forEach(function (c) { c[1].hidden = lang === 'en'; c[1].textContent = ''; if (lang === 'en') return; langEl(c[1]); c[1].textContent = partTr(c[0]) || ''; });
+    }
+    bar.after(d); refreshers.push(fill); fill();
+  }
   function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
   function makeTerm(e, k) { e.classList.add('lh-term'); e.dataset.term = k; e.setAttribute('role', 'button'); e.tabIndex = 0; e.setAttribute('aria-haspopup', 'dialog'); }
   function dpNotes(notes) {
     var intro = notes.querySelector('.notes-dl') || notes.querySelector('.block-intro') || notes.querySelector('h2');
-    intro.after(picker('Tap any underlined key word in the notes to see what it means in your language. Learn the English word too: you use it in class and in exams.'));
+    var bar = picker('Tap any underlined key word in the notes to see what it means in your language, and the word parts it is built from. Learn the English word too: you use it in class and in exams.');
+    intro.after(bar);
     // Words with an everyday meaning too are linked only where the notes make them bold.
     var BOLD_ONLY = ['source', 'sink', 'matrix', 'cortex', 'envelope', 'conserved', 'reduced', 'oxidized', 'template', 'primer', 'threshold',
       'translocation', 'degenerate', 'medulla', 'resistant', 'segregation', 'checkpoint', 'richness', 'evenness', 'optimum', 'lysis', 'transect',
       'soluble', 'insoluble', 'valves', 'community', 'population', 'host', 'receptor', 'proteins', 'species', 'egg', 'replication', 'polar',
-      'catalyst', 'condensation', 'cytoplasm', 'habitat', 'fitness', 'evolution', 'hormone', 'insertion', 'deletion', 'substitution', 'lipids'];
-    var keys = Object.keys(data.en || {}).filter(function (k) { return k.length > 2 && BOLD_ONLY.indexOf(k) < 0; }).sort(function (a, b) { return b.length - a.length; });
-    if (!keys.length) return;
-    var re = new RegExp('(^|[^\\w-])(' + keys.map(function (k) { return esc(k) + '(?:e?s)?'; }).join('|') + ')(?![\\w-])', 'i');
+      'catalyst', 'condensation', 'cytoplasm', 'habitat', 'fitness', 'evolution', 'hormone', 'insertion', 'deletion', 'substitution', 'lipids',
+      'joint', 'buffer', 'cascade', 'passive', 'resolution', 'generation', 'fusion', 'migration', 'tolerance', 'reduction', 'carrier',
+      'clone', 'radiation', 'solution', 'fertile', 'diversity'];
+    var keys = Object.keys(data.en || {}).filter(function (k) { return k.length > 2 && BOLD_ONLY.indexOf(k) < 0; });
+    // Plural keys (vesicles, telomeres) also match their singular form.
+    var forms = [];
+    keys.forEach(function (k) {
+      forms.push(esc(k) + '(?:e?s)?');
+      if (k.length > 5 && /[^siu]s$/.test(k)) forms.push(esc(k.slice(0, -1)));
+    });
+    forms.sort(function (a, b) { return b.length - a.length; });
+    if (!forms.length) return;
+    var re = new RegExp('(^|[^\\w-])(' + forms.join('|') + ')(?![\\w-])', 'i');
     notes.querySelectorAll('.note-card').forEach(function (card) {
       var seen = {};
       card.querySelectorAll('b').forEach(function (b) {
@@ -191,6 +264,7 @@
         }
       });
     });
+    partsBox(notes, bar);
     notes.addEventListener('click', function (e) { var t = e.target.closest('.lh-term'); if (t) { e.preventDefault(); e.stopPropagation(); openPop(t); } });
     notes.addEventListener('keydown', function (e) { var t = e.target.closest && e.target.closest('.lh-term'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openPop(t); } });
     document.addEventListener('click', function (e) { if (pop && !pop.contains(e.target)) closePop(); });

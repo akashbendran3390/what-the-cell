@@ -541,3 +541,4 @@ WTC_LANG.gloss("pt",{"3' end":["extremidade 3'","Extremidade de uma cadeia de DN
 "zona pellucida":["zona pelúcida","Camada gelatinosa em volta do óvulo."],
 "zoonosis":["zoonose","Doença que pode passar de animais para humanos."],
 "zygote":["zigoto","Célula formada quando dois gametas se fundem."]});
+WTC_LANG.parts("pt",{});

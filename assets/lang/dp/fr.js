@@ -541,3 +541,4 @@ WTC_LANG.gloss("fr",{"3' end":["extrémité 3'","Extrémité d'un brin d'ADN ou 
 "zona pellucida":["zone pellucide","Enveloppe gélatineuse autour de l'ovocyte."],
 "zoonosis":["zoonose","Maladie qui peut passer des animaux aux humains."],
 "zygote":["zygote","Cellule formée par la fusion de deux gamètes."]});
+WTC_LANG.parts("fr",{});

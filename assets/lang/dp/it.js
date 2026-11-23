@@ -541,3 +541,4 @@ WTC_LANG.gloss("it",{"3' end":["estremità 3'","Estremità di un filamento di DN
 "zona pellucida":["zona pellucida","Rivestimento gelatinoso attorno alla cellula uovo."],
 "zoonosis":["zoonosi","Malattia che può passare dagli animali all'uomo."],
 "zygote":["zigote","Cellula formata dalla fusione di due gameti."]});
+WTC_LANG.parts("it",{});

@@ -541,3 +541,4 @@ WTC_LANG.gloss("de",{"3' end":["3'-Ende","Ende eines DNA- oder RNA-Strangs mit f
 "zona pellucida":["Zona pellucida","Gallertige Hülle um die Eizelle."],
 "zoonosis":["Zoonose","Krankheit, die von Tieren auf Menschen übergehen kann."],
 "zygote":["Zygote","Zelle, die bei der Verschmelzung zweier Gameten entsteht."]});
+WTC_LANG.parts("de",{});

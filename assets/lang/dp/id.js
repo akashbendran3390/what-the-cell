@@ -541,3 +541,4 @@ WTC_LANG.gloss("id",{"3' end":["ujung 3'","Ujung untai DNA atau RNA dengan gugus
 "zona pellucida":["zona pelusida","Lapisan seperti jeli di sekitar sel telur."],
 "zoonosis":["zoonosis","Penyakit yang dapat menular dari hewan ke manusia."],
 "zygote":["zigot","Sel yang terbentuk ketika dua gamet melebur."]});
+WTC_LANG.parts("id",{});

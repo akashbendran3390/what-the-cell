@@ -541,3 +541,4 @@ WTC_LANG.gloss("nl",{"3' end":["3'-uiteinde","Uiteinde van een DNA- of RNA-stren
 "zona pellucida":["zona pellucida","Geleiachtige laag rond de eicel."],
 "zoonosis":["zoönose","Ziekte die van dieren op mensen kan overgaan."],
 "zygote":["zygote","Cel die ontstaat als twee geslachtscellen versmelten."]});
+WTC_LANG.parts("nl",{});

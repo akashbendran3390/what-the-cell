@@ -541,3 +541,4 @@ WTC_LANG.gloss("es",{"3' end":["extremo 3'","Extremo de una hebra de ADN o ARN c
 "zona pellucida":["zona pelúcida","Cubierta gelatinosa alrededor del óvulo."],
 "zoonosis":["zoonosis","Enfermedad que puede pasar de los animales a los humanos."],
 "zygote":["cigoto","Célula formada al fusionarse dos gametos."]});
+WTC_LANG.parts("es",{});

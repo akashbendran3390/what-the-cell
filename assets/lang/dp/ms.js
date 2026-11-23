@@ -541,3 +541,4 @@ WTC_LANG.gloss("ms",{"3' end":["hujung 3'","Hujung bebenang DNA atau RNA yang me
 "zona pellucida":["zona pelusida","Lapisan seperti jeli di sekeliling ovum."],
 "zoonosis":["zoonosis","Penyakit yang boleh berjangkit daripada haiwan kepada manusia."],
 "zygote":["zigot","Sel yang terbentuk apabila dua gamet bercantum."]});
+WTC_LANG.parts("ms",{});

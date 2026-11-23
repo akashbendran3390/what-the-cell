@@ -249,7 +249,8 @@
       var body = card.querySelector('.note-body') || card;
       var w = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, { acceptNode: function (n) {
         var p = n.parentElement;
-        return (!p || p.closest('header,b,i,a,.lh-term,summary,script,figure,.calc-eg,.pg-ref,code')) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
+        // Bold phrases that are not glossary words themselves (a word equation, say) are searched too.
+        return (!p || p.closest('header,i,a,.lh-term,summary,script,figure,.calc-eg,.pg-ref,code,.tip > b:first-child')) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT; } });
       var list = []; while (w.nextNode()) list.push(w.currentNode);
       list.forEach(function (node) {
         var pos = 0, guard = 0;

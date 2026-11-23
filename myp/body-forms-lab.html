@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Body Forms Lab. Build cells, zoom from body to cell, watch diffusion and osmosis, race acid into agar cubes, follow a meal through the gut, fold villi, breathe with a model diaphragm, pump blood through the heart and filter blood in a kidney. MYP Science resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/myp/body-forms-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Body Forms Lab | What the Cell">
+<meta property="og:description" content="Body Forms Lab. Build cells, zoom from body to cell, watch diffusion and osmosis, race acid into agar cubes, follow a meal through the gut, fold villi, breathe with a model diaphragm, pump blood through the heart and filter blood in a kidney. MYP Science resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/myp/body-forms-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Body Forms Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=6fddf602">
+<script src="../assets/theme.js?v=3f66ca94"></script>
+<style>
+/* Body Forms Lab (MYP 4, Unit 2: Body Forms), 2026-11-23. Hand-written page.
+   Tabs: #cells, #levels, #diffusion, #osmosis (cells and potato), #sa, #digest, #villi, #lungs, #heart, #kidney. Each tab ends
+   with a challenge. window.bfDebug.tick(n, tab) steps the animations for testing. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#B0356F;--band2:#1F7A7A;--band3:#2A1D5E;--band-pic:url('art/myp/myp4-body-circ-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp4-body-forms.html">Body Forms</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp4">MYP 4, Unit 2</a> / <a href="myp4-body-forms.html">Body Forms</a></div>
+    <h1>Body Forms Lab</h1>
+    <p class="lede">Build cells, zoom from body to cell, watch diffusion and osmosis, race acid into agar cubes, follow a meal through the gut, fold villi, breathe with a model diaphragm, pump blood through the heart and filter blood in a kidney.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="cells" style="--c:var(--coral)"><span>1</span>Cells</button>
+    <button role="tab" aria-selected="false" data-t="levels" style="--c:var(--tang)"><span>2</span>Levels</button>
+    <button role="tab" aria-selected="false" data-t="diffusion" style="--c:var(--sky)"><span>3</span>Diffusion</button>
+    <button role="tab" aria-selected="false" data-t="osmosis" style="--c:var(--mint)"><span>4</span>Osmosis</button>
+    <button role="tab" aria-selected="false" data-t="sa" style="--c:var(--pink)"><span>5</span>Surface area</button>
+    <button role="tab" aria-selected="false" data-t="digest" style="--c:var(--violet)"><span>6</span>Digestion</button>
+    <button role="tab" aria-selected="false" data-t="villi" style="--c:var(--coral)"><span>7</span>Villi</button>
+    <button role="tab" aria-selected="false" data-t="lungs" style="--c:var(--tang)"><span>8</span>Lungs</button>
+    <button role="tab" aria-selected="false" data-t="heart" style="--c:var(--sky)"><span>9</span>Heart</button>
+    <button role="tab" aria-selected="false" data-t="kidney" style="--c:var(--mint)"><span>10</span>Kidney</button>
+  </div>
+
+  <section class="panel" id="p-cells">
+    <p class="intro">Choose a cell, then add the parts it should have. Click a part on the cell to read its job. A wrong part is turned away with a reason.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="c-svg" viewBox="0 0 720 400" role="img" aria-label="A cell you are building"></svg></div>
+      <div class="side">
+        <span class="lbl">Cell</span><div class="seg" id="c-type"><button aria-pressed="true" data-v="animal">Animal cell</button><button aria-pressed="false" data-v="plant">Plant cell (leaf)</button><button aria-pressed="false" data-v="root">Plant cell (root)</button></div>
+        <span class="lbl">Parts (tap to add)</span><div class="seg" id="c-parts"></div>
+        <div class="msg" id="c-msg">Add the parts this cell has.</div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Which part does a root cell have that an animal cell does not, but which a root cell is still missing compared with a leaf cell? <span class="seg" id="ch-cells"></span><span class="why" id="ch-cells-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-levels" hidden>
+    <p class="intro">Zoom in from a whole person to a single cell. At each level, name it.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="l-svg" viewBox="0 0 720 400" role="img" aria-label="Levels of organisation"></svg></div>
+      <div class="side">
+        <span class="lbl">Follow</span><div class="seg" id="l-path"><button aria-pressed="true" data-v="heart">the heart</button><button aria-pressed="false" data-v="stomach">the stomach</button><button aria-pressed="false" data-v="lungs">the lungs</button></div>
+        <div class="row"><button class="btn2 ghost" id="l-out">Zoom out</button><button class="btn2" id="l-in">Zoom in</button></div>
+        <span class="lbl">What level is this?</span><div class="seg" id="l-ans"></div>
+        <div class="msg" id="l-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Name all five levels for the lungs without a mistake. <span class="why" id="ch-lev-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-diffusion" hidden>
+    <p class="intro">Lift the barrier and watch the particles. They move randomly, but more cross from the crowded side: diffusion. Change the temperature and the gap and time how long they take to even out.</p>
+    <div class="lab">
+      <div class="stagebox"><canvas id="d-cv" width="720" height="380" aria-label="Particles diffusing"></canvas></div>
+      <div class="side">
+        <div class="ctl"><div><label for="d-t">Temperature: <b id="d-to"></b> &deg;C</label><input type="range" id="d-t" min="5" max="60" step="5" value="20"></div>
+        <div><label for="d-g">Gap in the barrier: <b id="d-go"></b></label><input type="range" id="d-g" min="1" max="3" step="1" value="2"></div></div>
+        <div class="row"><button class="btn2 warm" id="d-go-b">Lift the barrier</button><button class="btn2 ghost" id="d-reset">Reset</button></div>
+        <div class="stats"><div><small>Left</small><span id="d-l"></span></div><div><small>Right</small><span id="d-r"></span></div><div><small>Time to even out</small><span id="d-time">-</span></div></div>
+        <div class="msg" id="d-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Find the setting that evens out fastest. Which two factors did you change? <span class="why" id="ch-dif-m">Try a few runs first.</span></div>
+  </section>
+
+  <section class="panel" id="p-osmosis" hidden>
+    <p class="intro">Put a cell into a solution and watch the water arrows. Then run the potato investigation: six tubes of sugar solution.</p>
+    <div class="seg" id="o-mode" style="margin-bottom:12px"><button aria-pressed="true" data-v="cell">Cells in solutions</button><button aria-pressed="false" data-v="potato">Potato investigation</button></div>
+    <div class="lab">
+      <div class="stagebox"><svg id="o-svg" viewBox="0 0 720 380" role="img" aria-label="Osmosis model"></svg></div>
+      <div class="side" id="o-side"></div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> A red blood cell is put in pure water. What happens? <span class="seg" id="ch-osm"></span><span class="why" id="ch-osm-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-sa" hidden>
+    <p class="intro">Change the size of the cube. Watch the surface area, the volume and the ratio. Then put the cube in acid: the pink indicator clears as acid diffuses in.</p>
+    <div class="lab">
+      <div class="stagebox"><canvas id="s-cv" width="720" height="380" aria-label="An agar cube in acid"></canvas></div>
+      <div class="side">
+        <div class="ctl"><div><label for="s-a">Side of the cube: <b id="s-ao"></b> cm</label><input type="range" id="s-a" min="1" max="5" step="1" value="2"></div></div>
+        <div class="stats"><div><small>Surface area</small><span id="s-sa"></span></div><div><small>Volume</small><span id="s-v"></span></div><div><small>SA:V</small><span id="s-r"></span></div></div>
+        <div class="row"><button class="btn2 warm" id="s-go">Put in acid</button><button class="btn2 ghost" id="s-reset">Reset</button></div>
+        <div class="msg" id="s-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Which cube has an SA:V of 2 : 1? <span class="seg" id="ch-sa"></span><span class="why" id="ch-sa-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-digest" hidden>
+    <p class="intro">Feed in a meal and step it through the gut. At each organ, see what happens and which enzymes work. Switch an enzyme off to see what goes wrong.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="g-svg" viewBox="0 0 720 400" role="img" aria-label="The meal moving through the gut"></svg></div>
+      <div class="side">
+        <div class="row"><button class="btn2 ghost" id="g-back">Back</button><button class="btn2" id="g-next">Next organ</button><button class="btn2 ghost" id="g-reset">New meal</button></div>
+        <span class="lbl">Enzymes switched on</span><div class="seg" id="g-enz"></div>
+        <div class="stats"><div><small>Starch left</small><span id="g-s"></span></div><div><small>Protein left</small><span id="g-p"></span></div><div><small>Fat left</small><span id="g-f"></span></div></div>
+        <div class="msg" id="g-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Switch off lipase. Which food reaches the large intestine undigested? <span class="seg" id="ch-dig"></span><span class="why" id="ch-dig-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-villi" hidden>
+    <p class="intro">Start with a smooth gut lining. Add folds, villi and microvilli one at a time and watch the surface area and how much glucose is absorbed in 10 seconds.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="v-svg" viewBox="0 0 720 380" role="img" aria-label="Gut lining"></svg></div>
+      <div class="side">
+        <span class="lbl">Add</span><div class="seg" id="v-add" ></div>
+        <div class="stats"><div><small>Surface area</small><span id="v-a"></span></div><div><small>Times bigger</small><span id="v-x"></span></div><div><small>Glucose absorbed</small><span id="v-g"></span></div></div>
+        <div class="msg" id="v-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Coeliac disease flattens the villi. Turn villi off: by how many times does absorption fall? <span class="why" id="ch-vil-m">Turn all three on, then switch villi off.</span></div>
+  </section>
+
+  <section class="panel" id="p-lungs" hidden>
+    <p class="intro">Move the diaphragm. Watch the volume of the chest and the pressure inside. Air flows in only when the pressure inside is lower than outside.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="b-svg" viewBox="0 0 720 400" role="img" aria-label="A model chest with a diaphragm"></svg></div>
+      <div class="side">
+        <div class="ctl"><div><label for="b-d">Diaphragm: <b id="b-do"></b></label><input type="range" id="b-d" min="0" max="10" step="1" value="0"></div></div>
+        <div class="row"><button class="btn2" id="b-auto">Breathe automatically</button><span class="lbl" id="b-rate"></span></div>
+        <div class="stats"><div><small>Chest volume</small><span id="b-v"></span></div><div><small>Pressure inside</small><span id="b-p"></span></div><div><small>Air</small><span id="b-air"></span></div></div>
+        <div class="msg" id="b-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> When you breathe in, the diaphragm... <span class="seg" id="ch-lung"></span><span class="why" id="ch-lung-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-heart" hidden>
+    <p class="intro">Click the parts of the heart in the order the blood flows, starting from the vena cava. Then set the heart rate and see how much blood is pumped.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="h-svg" viewBox="0 0 720 420" role="img" aria-label="Heart route diagram"></svg></div>
+      <div class="side">
+        <div class="eq" id="h-route">Start at the vena cava.</div>
+        <div class="row"><button class="btn2 ghost" id="h-reset">Start again</button></div>
+        <div class="ctl"><div><label for="h-r">Heart rate: <b id="h-ro"></b> beats per minute</label><input type="range" id="h-r" min="50" max="190" step="10" value="70"></div></div>
+        <div class="stats"><div><small>Blood per beat</small><span>70 mL</span></div><div><small>Blood per minute</small><span id="h-out"></span></div><div><small>Like</small><span id="h-like"></span></div></div>
+        <div class="msg" id="h-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Complete the whole route with no mistakes. <span class="why" id="ch-heart-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-kidney" hidden>
+    <p class="intro">Blood enters a nephron. Small particles are filtered out; then useful ones are taken back. Change what you drink and eat and watch the urine.</p>
+    <div class="lab">
+      <div class="stagebox"><svg id="k-svg" viewBox="0 0 720 400" role="img" aria-label="A nephron filtering blood"></svg></div>
+      <div class="side">
+        <div class="ctl"><div><label for="k-w">Water drunk today: <b id="k-wo"></b> L</label><input type="range" id="k-w" min="0.5" max="4" step="0.5" value="2"></div>
+        <div><label for="k-g">Blood glucose: <b id="k-go"></b></label><input type="range" id="k-g" min="1" max="3" step="1" value="1"></div></div>
+        <span class="lbl">Kidney filters</span><div class="seg" id="k-dmg"><button aria-pressed="true" data-v="0">Healthy</button><button aria-pressed="false" data-v="1">Damaged</button></div>
+        <div class="stats"><div><small>Urine per day</small><span id="k-u"></span></div><div><small>Glucose in urine</small><span id="k-gl"></span></div><div><small>Protein in urine</small><span id="k-pr"></span></div></div>
+        <div class="msg" id="k-msg"></div>
+      </div>
+    </div>
+    <div class="challenge"><b>Challenge.</b> Make the urine show glucose but no protein. Which condition could this be? <span class="seg" id="ch-kid"></span><span class="why" id="ch-kid-m"></span></div>
+  </section>
+
+  <p class="why" style="margin-top:22px">Made by What the Cell for MYP 4 Science, Body Forms. Models are simplified for learning: numbers are rounded and some effects are left out.</p>
+</div></main>
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</div></footer>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  function fmt(x, d) { return (+x).toLocaleString('en-GB', { maximumFractionDigits: d == null ? 0 : d, minimumFractionDigits: d == null ? 0 : d }); }
+  function svg(tag, a, txt) { var e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; }
+  function T(S, x, y, t, o) { o = o || {}; S.appendChild(svg('text', { x: x, y: y, 'font-size': o.s || 14, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'system-ui', 'font-weight': o.w || 400 }, t)); }
+  function seg(el, items, cb, multi) {
+    el.innerHTML = items.map(function (it, i) { return '<button data-v="' + it[0] + '" aria-pressed="' + (!multi && i === 0) + '">' + it[1] + '</button>'; }).join('');
+    [].forEach.call(el.children, function (b) { b.onclick = function () { if (multi) b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'); else [].forEach.call(el.children, function (x) { x.setAttribute('aria-pressed', x === b); }); cb && cb(b.dataset.v, b); }; });
+  }
+  function segBind(el, cb) { [].forEach.call(el.children, function (b) { b.onclick = function () { [].forEach.call(el.children, function (x) { x.setAttribute('aria-pressed', x === b); }); cb(b.dataset.v); }; }); }
+  function quiz(id, opts, right, ok, no) { seg($(id), opts, function (v) { var m = $(id + '-m'); m.innerHTML = v === right ? '<b>Yes.</b> ' + ok : '<b>Not quite.</b> ' + no; m.style.color = v === right ? 'var(--mint)' : 'var(--coral)'; }); [].forEach.call($(id).children, function (b) { b.setAttribute('aria-pressed', 'false'); }); }
+  var INK = '#1E0E4A', GREY = '#6B6390', RED = '#D9442B', BLUE = '#2E7DB8', TEAL = '#1F7A7A', PINK = '#B0356F', GOLD = '#E8B400';
+  var NAMES = ['cells', 'levels', 'diffusion', 'osmosis', 'sa', 'digest', 'villi', 'lungs', 'heart', 'kidney'];
+  var tabs = document.querySelectorAll('.tabs button'), cur = 'cells';
+  function show(t) { cur = t; [].forEach.call(tabs, function (b) { b.setAttribute('aria-selected', b.dataset.t === t); }); NAMES.forEach(function (k) { $('p-' + k).hidden = k !== t; }); if (history.replaceState) history.replaceState(null, '', '#' + t); }
+  [].forEach.call(tabs, function (b) { b.onclick = function () { show(b.dataset.t); }; });
+
+  // ---------- 1. cells ----------
+  var PARTS = { membrane: ['cell membrane', 'controls what goes in and out'], nucleus: ['nucleus', 'holds DNA and controls the cell'], cytoplasm: ['cytoplasm', 'jelly where most reactions happen'], mito: ['mitochondria', 'release energy by respiration'], ribo: ['ribosomes', 'make proteins'], wall: ['cell wall', 'cellulose layer that supports the cell'], vacuole: ['permanent vacuole', 'stores cell sap and keeps the cell firm'], chloro: ['chloroplasts', 'absorb light for photosynthesis'] };
+  var HAS = { animal: ['membrane', 'nucleus', 'cytoplasm', 'mito', 'ribo'], plant: ['membrane', 'nucleus', 'cytoplasm', 'mito', 'ribo', 'wall', 'vacuole', 'chloro'], root: ['membrane', 'nucleus', 'cytoplasm', 'mito', 'ribo', 'wall', 'vacuole'] };
+  var WHY = { wall: 'Animal cells have no cell wall: that is why they have no fixed shape.', vacuole: 'Animal cells have no large permanent vacuole.', chloro: { animal: 'Animal cells cannot photosynthesise: no chloroplasts.', root: 'Root cells are underground with no light, so they have no chloroplasts.' } };
+  var C = { type: 'animal', got: [] };
+  segBind($('c-type'), function (v) { C.type = v; C.got = []; cDraw(); $('c-msg').className = 'msg'; $('c-msg').textContent = 'Add the parts this cell has.'; });
+  $('c-parts').innerHTML = Object.keys(PARTS).map(function (k) { return '<button data-v="' + k + '">' + PARTS[k][0] + '</button>'; }).join('');
+  [].forEach.call($('c-parts').children, function (b) { b.onclick = function () { var k = b.dataset.v, m = $('c-msg'); if (C.got.indexOf(k) >= 0) return; if (HAS[C.type].indexOf(k) < 0) { var w = WHY[k]; m.className = 'msg bad'; m.textContent = typeof w === 'string' ? w : w[C.type]; return; } C.got.push(k); cDraw(); var left = HAS[C.type].filter(function (x) { return C.got.indexOf(x) < 0; }).length; m.className = left ? 'msg' : 'msg good'; m.innerHTML = left ? '<b>' + PARTS[k][0] + ':</b> ' + PARTS[k][1] + '. ' + left + ' more to add.' : '<b>Complete!</b> This cell has ' + HAS[C.type].length + ' kinds of part.'; }; });
+  function cDraw() {
+    var S = $('c-svg'), g = C.got, pl = C.type !== 'animal'; S.innerHTML = '';
+    if (g.indexOf('wall') >= 0) S.appendChild(svg('rect', { x: 130, y: 50, width: 460, height: 300, rx: 10, fill: '#DCEBD7', stroke: '#2E7D32', 'stroke-width': 10 }));
+    if (g.indexOf('membrane') >= 0) S.appendChild(pl ? svg('rect', { x: 142, y: 62, width: 436, height: 276, rx: 8, fill: g.indexOf('cytoplasm') >= 0 ? '#F5EFD9' : 'none', stroke: INK, 'stroke-width': 2 }) : svg('ellipse', { cx: 360, cy: 200, rx: 230, ry: 150, fill: g.indexOf('cytoplasm') >= 0 ? '#F9E6EC' : 'none', stroke: INK, 'stroke-width': 2 }));
+    else S.appendChild(svg('ellipse', { cx: 360, cy: 200, rx: 230, ry: 150, fill: 'none', stroke: '#C9C0E0', 'stroke-dasharray': '6 5' }));
+    if (g.indexOf('vacuole') >= 0) S.appendChild(svg('rect', { x: 250, y: 100, width: 240, height: 190, rx: 40, fill: '#D6ECF7', stroke: BLUE }));
+    if (g.indexOf('nucleus') >= 0) { S.appendChild(svg('circle', { cx: pl ? 520 : 330, cy: pl ? 120 : 190, r: 38, fill: '#B9A6E8', stroke: INK })); S.appendChild(svg('circle', { cx: pl ? 520 : 330, cy: pl ? 120 : 190, r: 12, fill: '#5F3DB8' })); }
+    if (g.indexOf('mito') >= 0) [[200, 280], [470, 290], [440, 110]].forEach(function (p) { S.appendChild(svg('ellipse', { cx: p[0], cy: p[1], rx: 26, ry: 13, fill: '#F2A65A', stroke: INK })); });
+    if (g.indexOf('ribo') >= 0) for (var i = 0; i < 18; i++) S.appendChild(svg('circle', { cx: 180 + (i * 53) % 380, cy: 90 + (i * 37) % 220, r: 3, fill: INK }));
+    if (g.indexOf('chloro') >= 0) [[180, 110], [180, 210], [210, 310], [540, 250], [540, 320], [300, 320]].forEach(function (p) { S.appendChild(svg('ellipse', { cx: p[0], cy: p[1], rx: 22, ry: 13, fill: '#4CAF50', stroke: '#1B5E20' })); });
+    T(S, 360, 385, { animal: 'animal cell', plant: 'plant cell from a leaf', root: 'plant cell from a root' }[C.type], { a: 'middle', c: GREY });
+  }
+  cDraw();
+  quiz('ch-cells', [['wall', 'cell wall'], ['chloro', 'chloroplasts'], ['nucleus', 'nucleus']], 'wall', 'The root cell has a cell wall (and a vacuole) like a leaf cell, but no chloroplasts.', 'Compare the three cells: which part is in both plant cells but not the animal cell?');
+
+  // ---------- 2. levels ----------
+  var LV = ['organism', 'organ system', 'organ', 'tissue', 'cell'];
+  var LP = { heart: ['a person', 'circulatory system', 'heart', 'heart muscle tissue', 'heart muscle cell'], stomach: ['a person', 'digestive system', 'stomach', 'stomach lining tissue', 'lining cell'], lungs: ['a person', 'respiratory system', 'lungs', 'alveolus wall tissue', 'alveolus cell'] };
+  var L = { path: 'heart', i: 0, right: 0, wrong: 0 };
+  segBind($('l-path'), function (v) { L.path = v; L.i = 0; L.right = 0; L.wrong = 0; lDraw(); });
+  seg($('l-ans'), LV.map(function (x) { return [x, x]; }), function (v) { var m = $('l-msg'); if (v === LV[L.i]) { m.className = 'msg good'; m.innerHTML = '<b>Yes:</b> ' + LP[L.path][L.i] + ' is the <b>' + v + '</b> level.'; if (L.path === 'lungs') { L.right++; if (L.right >= 5 && !L.wrong) $('ch-lev-m').innerHTML = '<b>Done!</b> All five levels for the lungs.'; } if (L.i < 4) { L.i++; setTimeout(lDraw, 700); } } else { m.className = 'msg bad'; m.textContent = 'Not quite. ' + (L.i < 4 ? 'It is made of smaller parts: which level is it?' : 'This is the smallest unit of life.'); if (L.path === 'lungs') L.wrong++; } });
+  $('l-in').onclick = function () { if (L.i < 4) { L.i++; lDraw(); } }; $('l-out').onclick = function () { if (L.i > 0) { L.i--; lDraw(); } };
+  function lDraw() {
+    var S = $('l-svg'), i = L.i; S.innerHTML = ''; [].forEach.call($('l-ans').children, function (b) { b.setAttribute('aria-pressed', 'false'); });
+    if (i === 0) { S.appendChild(svg('circle', { cx: 360, cy: 80, r: 40, fill: '#F4C9A8', stroke: INK })); S.appendChild(svg('rect', { x: 300, y: 125, width: 120, height: 170, rx: 30, fill: '#9FD3E8', stroke: INK })); S.appendChild(svg('rect', { x: 310, y: 295, width: 40, height: 90, fill: '#5F3DB8' })); S.appendChild(svg('rect', { x: 370, y: 295, width: 40, height: 90, fill: '#5F3DB8' })); }
+    else if (i === 1) { S.appendChild(svg('rect', { x: 260, y: 40, width: 200, height: 320, rx: 60, fill: '#FDF0E8', stroke: INK })); var c = { heart: RED, stomach: '#F2A65A', lungs: PINK }[L.path]; for (var k = 0; k < 8; k++) S.appendChild(svg('path', { d: 'M360 200 Q ' + (270 + k * 25) + ' ' + (60 + k * 30) + ' ' + (280 + k * 20) + ' ' + (340 - k * 10), fill: 'none', stroke: c, 'stroke-width': 3 })); }
+    else if (i === 2) { var c2 = { heart: RED, stomach: '#F2A65A', lungs: PINK }[L.path]; S.appendChild(svg('path', { d: 'M360 340 C 220 260 200 120 300 90 C 340 80 360 110 360 130 C 360 110 380 80 420 90 C 520 120 500 260 360 340 Z', fill: c2, stroke: INK })); }
+    else if (i === 3) { for (var r = 0; r < 6; r++) for (var q = 0; q < 10; q++) S.appendChild(svg('rect', { x: 100 + q * 52, y: 60 + r * 46, width: 48, height: 40, rx: 8, fill: '#F7C9DD', stroke: INK })); }
+    else { S.appendChild(svg('rect', { x: 220, y: 90, width: 280, height: 200, rx: 30, fill: '#F7C9DD', stroke: INK, 'stroke-width': 2 })); S.appendChild(svg('circle', { cx: 360, cy: 190, r: 34, fill: '#B9A6E8', stroke: INK })); }
+    T(S, 360, 390, LP[L.path][i], { a: 'middle', c: GREY, s: 15 });
+    $('l-msg').className = 'msg'; $('l-msg').textContent = 'Level ' + (i + 1) + ' of 5. What level is ' + LP[L.path][i] + '?';
+  }
+  lDraw();
+
+  // ---------- 3. diffusion ----------
+  var D = { parts: [], open: false, t: 0, done: null }, dc = $('d-cv'), dx = dc.getContext('2d');
+  function dInit() { D.parts = []; D.open = false; D.t = 0; D.done = null; for (var i = 0; i < 80; i++) D.parts.push({ x: 60 + Math.random() * 280, y: 40 + Math.random() * 300, a: Math.random() * 6.28 }); $('d-time').textContent = '-'; }
+  function dStep(dt) {
+    var T0 = +$('d-t').value, g = +$('d-g').value, sp = 90 + T0 * 5, gapH = [0, 40, 100, 180][g];
+    D.parts.forEach(function (p) {
+      p.a += (Math.random() - 0.5) * 0.6; var nx = p.x + Math.cos(p.a) * sp * dt, ny = p.y + Math.sin(p.a) * sp * dt;
+      if (ny < 30 || ny > 350) { p.a = -p.a; ny = Math.max(30, Math.min(350, ny)); }
+      if (nx < 30 || nx > 690) { p.a = Math.PI - p.a; nx = Math.max(30, Math.min(690, nx)); }
+      var cross = (p.x - 360) * (nx - 360) <= 0, inGap = D.open && Math.abs(ny - 190) < gapH / 2;
+      if (cross && !inGap) { p.a = Math.PI - p.a; nx = p.x; }
+      p.x = nx; p.y = ny;
+    });
+    if (D.open) { D.t += dt; var r = D.parts.filter(function (p) { return p.x > 360; }).length; if (D.done === null && r >= 36) { D.done = D.t; $('d-time').textContent = fmt(D.t, 1) + ' s'; dJudge(); } }
+  }
+  function dJudge() { var T0 = +$('d-t').value, g = +$('d-g').value; $('ch-dif-m').innerHTML = T0 >= 50 && g === 3 ? '<b>Yes:</b> high temperature and a wide gap (bigger surface) gave the fastest diffusion.' : 'Even after ' + fmt(D.done, 1) + ' s. Can you make it faster?'; }
+  function dDraw() {
+    var x = dx; x.clearRect(0, 0, 720, 380); x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(30, 30, 660, 320);
+    var g = +$('d-g').value, gapH = [0, 40, 100, 180][g];
+    x.lineWidth = 6; x.strokeStyle = '#5F3DB8'; x.beginPath(); if (D.open) { x.moveTo(360, 30); x.lineTo(360, 190 - gapH / 2); x.moveTo(360, 190 + gapH / 2); x.lineTo(360, 350); } else { x.moveTo(360, 30); x.lineTo(360, 350); } x.stroke();
+    x.fillStyle = TEAL; D.parts.forEach(function (p) { x.beginPath(); x.arc(p.x, p.y, 6, 0, 6.283); x.fill(); });
+    var l = D.parts.filter(function (p) { return p.x < 360; }).length; $('d-l').textContent = l; $('d-r').textContent = 80 - l;
+    $('d-to').textContent = $('d-t').value; $('d-go').textContent = ['', 'narrow', 'medium', 'wide'][g];
+    $('d-msg').innerHTML = !D.open ? 'All the particles start on the left: a steep <b>concentration gradient</b>.' : (80 - l) >= 36 ? 'Nearly even: no more <b>net</b> movement, though the particles still move.' : 'More particles cross left to right than back: net movement down the gradient.';
+  }
+  $('d-go-b').onclick = function () { D.open = true; }; $('d-reset').onclick = dInit; $('d-t').oninput = $('d-g').oninput = function () { dDraw(); };
+  dInit();
+
+  // ---------- 4. osmosis ----------
+  var O = { mode: 'cell', cell: 'rbc', sol: 'water', run: 0 };
+  var PCONC = [0, 0.2, 0.4, 0.6, 0.8, 1.0], PRES = [14, 6, -3, -11, -17, -21];
+  segBind($('o-mode'), function (v) { O.mode = v; oSide(); oDraw(); });
+  function oSide() {
+    var s = $('o-side');
+    if (O.mode === 'cell') {
+      s.innerHTML = '<span class="lbl">Cell</span><div class="seg" id="o-cell"><button aria-pressed="true" data-v="rbc">Red blood cell</button><button aria-pressed="false" data-v="plant">Plant cell</button></div><span class="lbl">Solution</span><div class="seg" id="o-sol"><button aria-pressed="true" data-v="water">Pure water</button><button aria-pressed="false" data-v="same">Same as the cell</button><button aria-pressed="false" data-v="salt">Strong salt</button></div><div class="msg" id="o-msg"></div>';
+      segBind($('o-cell'), function (v) { O.cell = v; oDraw(); }); segBind($('o-sol'), function (v) { O.sol = v; oDraw(); });
+    } else {
+      s.innerHTML = '<div class="row"><button class="btn2 warm" id="o-run">Run all six tubes</button></div><table class="t"><tr><th>Sugar (M)</th><th>Mean % change</th></tr>' + PCONC.map(function (c, i) { return '<tr><td>' + c.toFixed(1) + '</td><td id="o-r' + i + '">-</td></tr>'; }).join('') + '</table><div class="msg" id="o-msg">Each tube has three potato cylinders. Run them, then find where the change is zero.</div>';
+      $('o-run').onclick = function () { O.run = 1; PCONC.forEach(function (c, i) { $('o-r' + i).textContent = (PRES[i] > 0 ? '+' : '') + PRES[i] + '%'; }); $('o-msg').innerHTML = 'The line crosses 0% at about <b>0.33 M</b>: there the potato cells and the solution have the same concentration, so there is no net osmosis.'; oDraw(); };
+    }
+  }
+  function oDraw() {
+    var S = $('o-svg'); S.innerHTML = '';
+    if (O.mode === 'cell') {
+      var bg = { water: '#EAF6FD', same: '#F3F8F8', salt: '#FDEDE8' }[O.sol]; S.appendChild(svg('rect', { x: 20, y: 20, width: 680, height: 340, rx: 14, fill: bg, stroke: INK }));
+      var pl = O.cell === 'plant', r = O.sol === 'water' ? 1.25 : O.sol === 'same' ? 1 : 0.7, m = $('o-msg');
+      if (pl) { S.appendChild(svg('rect', { x: 250, y: 90, width: 220, height: 200, fill: '#DCEBD7', stroke: '#2E7D32', 'stroke-width': 8 })); var w = O.sol === 'salt' ? 120 : 200, h = O.sol === 'salt' ? 120 : 184; S.appendChild(svg('rect', { x: 360 - w / 2, y: 190 - h / 2, width: w, height: h, rx: O.sol === 'salt' ? 40 : 6, fill: '#B07FC9', stroke: INK })); }
+      else if (O.sol === 'water') { for (var k = 0; k < 10; k++) { var a = k * 0.628; S.appendChild(svg('line', { x1: 360 + Math.cos(a) * 70, y1: 190 + Math.sin(a) * 50, x2: 360 + Math.cos(a) * 120, y2: 190 + Math.sin(a) * 90, stroke: RED, 'stroke-width': 4 })); } T(S, 360, 200, 'burst!', { a: 'middle', s: 22, w: 700, c: RED }); }
+      else S.appendChild(svg('ellipse', { cx: 360, cy: 190, rx: 100 * r, ry: 60 * r, fill: RED, stroke: INK }));
+      var arrows = O.sol === 'same' ? 0 : 1, inw = O.sol === 'water';
+      if (arrows) for (var j = 0; j < 4; j++) { var y = 110 + j * 55; S.appendChild(svg('line', { x1: inw ? 80 : 210, y1: y, x2: inw ? 180 : 110, y2: y, stroke: BLUE, 'stroke-width': 4, 'marker-end': 'url(#ah)' })); }
+      S.insertBefore(svg('defs', {}), S.firstChild); S.firstChild.innerHTML = '<marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="' + BLUE + '"/></marker>';
+      m.className = 'msg'; m.innerHTML = O.sol === 'same' ? 'Same concentration inside and out: <b>no net osmosis</b>. The cell stays normal.' : O.sol === 'water' ? (pl ? 'Water moves <b>in</b>. The cell swells and becomes <b>turgid</b>, but the <b>cell wall</b> stops it bursting.' : 'Water moves <b>in</b> by osmosis. With no cell wall, the red blood cell <b>bursts</b>.') : (pl ? 'Water moves <b>out</b>. The membrane pulls away from the wall: the cell is <b>plasmolysed</b>.' : 'Water moves <b>out</b>. The red blood cell <b>shrivels</b>.');
+    } else {
+      S.appendChild(svg('line', { x1: 80, y1: 40, x2: 80, y2: 340, stroke: INK })); S.appendChild(svg('line', { x1: 80, y1: 190, x2: 680, y2: 190, stroke: INK }));
+      T(S, 380, 370, 'sugar concentration (M)', { a: 'middle', c: GREY }); T(S, 20, 30, '% change', { c: GREY });
+      PCONC.forEach(function (c, i) { var x = 80 + c * 560; T(S, x, 208, c.toFixed(1), { a: 'middle', s: 11, c: GREY }); if (O.run) S.appendChild(svg('circle', { cx: x, cy: 190 - PRES[i] * 7, r: 6, fill: TEAL })); });
+      if (O.run) { S.appendChild(svg('path', { d: 'M' + PCONC.map(function (c, i) { return (80 + c * 560) + ' ' + (190 - PRES[i] * 7); }).join(' L'), fill: 'none', stroke: TEAL, 'stroke-width': 2 })); S.appendChild(svg('circle', { cx: 80 + 0.333 * 560, cy: 190, r: 7, fill: RED })); T(S, 80 + 0.333 * 560 + 10, 180, 'about 0.33 M', { c: RED, w: 700 }); }
+    }
+  }
+  oSide(); oDraw();
+  quiz('ch-osm', [['burst', 'It swells and bursts'], ['shrink', 'It shrivels'], ['same', 'Nothing']], 'burst', 'Water moves in by osmosis and, with no cell wall, the cell bursts.', 'Pure water is more dilute than the cell. Which way does water move?');
+
+  // ---------- 5. surface area ----------
+  var SA = { a: 2, t: 0, run: false }, sc = $('s-cv'), sx = sc.getContext('2d');
+  function saCalc() { var a = +$('s-a').value; SA.a = a; $('s-ao').textContent = a; $('s-sa').textContent = 6 * a * a + ' cm²'; $('s-v').textContent = a * a * a + ' cm³'; $('s-r').textContent = fmt(6 / a, 2).replace(/\.00$/, '') + ' : 1'; }
+  function saDraw() {
+    var x = sx; x.clearRect(0, 0, 720, 380); var a = SA.a, px = 50 * a, cx = 360, cy = 200, depth = SA.run ? Math.min(px / 2, SA.t * 6) : 0;
+    x.fillStyle = '#FFE4EF'; x.fillRect(cx - px / 2 - 20, cy - px / 2 - 20, px + 40, px + 40);
+    x.fillStyle = '#F7F3F7'; x.fillRect(cx - px / 2, cy - px / 2, px, px); x.fillStyle = '#EC6FA3'; var inner = Math.max(0, px - 2 * depth); x.fillRect(cx - inner / 2, cy - inner / 2, inner, inner);
+    x.strokeStyle = INK; x.lineWidth = 2; x.strokeRect(cx - px / 2, cy - px / 2, px, px);
+    x.fillStyle = GREY; x.font = '14px system-ui'; x.fillText('cube cut in half: pink = no acid yet', 230, 360);
+    if (SA.run) { $('s-msg').innerHTML = inner <= 0 ? '<b>Clear after ' + fmt(SA.t, 0) + ' minutes.</b> Acid diffused about 3 mm a minute from every face.' : 'Acid diffusing in from every face... ' + fmt(SA.t, 0) + ' min'; if (inner <= 0) SA.run = false; }
+    else if (!SA.t) $('s-msg').innerHTML = 'Bigger cube = smaller SA:V. Each centimetre of surface has more inside to supply.';
+  }
+  $('s-a').oninput = function () { saCalc(); SA.t = 0; SA.run = false; saDraw(); }; $('s-go').onclick = function () { SA.t = 0; SA.run = true; }; $('s-reset').onclick = function () { SA.t = 0; SA.run = false; saDraw(); };
+  saCalc(); saDraw();
+  quiz('ch-sa', [['1', '1 cm'], ['2', '2 cm'], ['3', '3 cm'], ['6', '6 cm']], '3', '3 cm: SA = 54 cm², V = 27 cm³, so 54 : 27 = 2 : 1.', 'SA:V for a cube is 6 divided by the side. Which side gives 2?');
+
+  // ---------- 6. digestion ----------
+  var ORG = [['mouth', 'Teeth chew (mechanical digestion). Saliva contains amylase.', ['amylase'], 140, 60], ['oesophagus', 'Peristalsis squeezes the food down. No digestion here.', [], 140, 120], ['stomach', 'Churning and acid. Protease starts digesting protein.', ['protease'], 200, 190], ['small intestine', 'Pancreas adds amylase, protease and lipase; liver adds bile. Food is absorbed through the villi.', ['amylase', 'protease', 'lipase'], 150, 280], ['large intestine', 'Water is absorbed. Fibre and anything undigested goes on to the rectum.', [], 230, 320], ['rectum and anus', 'Faeces are stored, then egested.', [], 140, 370]];
+  var G = { i: 0, food: { starch: 100, protein: 100, fat: 100 }, on: { amylase: 1, protease: 1, lipase: 1 } };
+  seg($('g-enz'), [['amylase', 'amylase'], ['protease', 'protease'], ['lipase', 'lipase']], function (v, b) { G.on[v] = b.getAttribute('aria-pressed') === 'true' ? 1 : 0; }, true);
+  [].forEach.call($('g-enz').children, function (b) { b.setAttribute('aria-pressed', 'true'); });
+  function gReset() { G.i = 0; G.food = { starch: 100, protein: 100, fat: 100 }; gApply(); gDraw(); }
+  function gApply() { var o = ORG[G.i]; var amt = { mouth: { starch: 20 }, stomach: { protein: 40 }, 'small intestine': { starch: 80, protein: 60, fat: 100 } }[o[0]] || {}; ['starch', 'protein', 'fat'].forEach(function (k) { var e = { starch: 'amylase', protein: 'protease', fat: 'lipase' }[k]; if (amt[k] && G.on[e]) G.food[k] = Math.max(0, G.food[k] - amt[k]); }); }
+  $('g-next').onclick = function () { if (G.i < ORG.length - 1) { G.i++; gApply(); gDraw(); } }; $('g-back').onclick = function () { if (G.i > 0) { G.i--; gDraw(); } }; $('g-reset').onclick = gReset;
+  function gDraw() {
+    var S = $('g-svg'); S.innerHTML = '';
+    S.appendChild(svg('path', { d: 'M140 40 L140 150 Q140 170 160 175 L250 180 Q270 200 240 230 Q150 240 150 270 Q160 300 230 300 Q290 300 290 270 L290 330 Q260 360 140 370', fill: 'none', stroke: '#F2B8A0', 'stroke-width': 26, 'stroke-linecap': 'round' }));
+    ORG.forEach(function (o, i) { var on = i === G.i; S.appendChild(svg('circle', { cx: o[3], cy: o[4], r: on ? 14 : 8, fill: on ? '#5F3DB8' : '#C9C0E0' })); T(S, o[3] + 22, o[4] + 5, o[0], { s: on ? 15 : 13, w: on ? 700 : 400 }); });
+    var bars = [['starch', '#E8B400'], ['protein', RED], ['fat', '#F2A65A']];
+    bars.forEach(function (b, i) { var v = G.food[b[0]], x = 470 + i * 75; S.appendChild(svg('rect', { x: x, y: 330 - v * 2.4, width: 50, height: v * 2.4, fill: b[1], rx: 4 })); T(S, x + 25, 350, b[0], { a: 'middle', s: 12, c: GREY }); });
+    T(S, 470, 70, 'undigested food left', { s: 12, c: GREY });
+    var o = ORG[G.i]; $('g-msg').innerHTML = '<b>' + o[0] + ':</b> ' + o[1] + (o[2].length ? ' Enzymes here: ' + o[2].join(', ') + '.' : '');
+    $('g-s').textContent = G.food.starch + '%'; $('g-p').textContent = G.food.protein + '%'; $('g-f').textContent = G.food.fat + '%';
+  }
+  gReset();
+  quiz('ch-dig', [['starch', 'starch'], ['protein', 'protein'], ['fat', 'fat']], 'fat', 'Without lipase, fat is not broken into fatty acids and glycerol, so it cannot be absorbed.', 'Lipase digests one kind of food. Which?');
+
+  // ---------- 7. villi ----------
+  var V = { folds: 0, villi: 0, micro: 0 };
+  seg($('v-add'), [['folds', 'folds'], ['villi', 'villi'], ['micro', 'microvilli']], function (v, b) { V[v] = b.getAttribute('aria-pressed') === 'true' ? 1 : 0; vDraw(); }, true);
+  function vDraw() {
+    var x = (V.folds ? 3 : 1) * (V.villi ? 10 : 1) * (V.micro ? 20 : 1), area = 0.5 * x, S = $('v-svg'); S.innerHTML = '';
+    var d = 'M20 300'; var n = V.folds ? 5 : 0; for (var i = 0; i <= 68; i++) { var px = 20 + i * 10, y = 300 - (V.folds ? 60 * Math.max(0, Math.sin(i / 68 * n * Math.PI)) : 0); d += ' L' + px + ' ' + y; } S.appendChild(svg('path', { d: d, fill: 'none', stroke: PINK, 'stroke-width': 4 }));
+    if (V.villi) for (var k = 0; k < 34; k++) { var vx = 30 + k * 20, base = 300 - (V.folds ? 60 * Math.max(0, Math.sin((vx - 20) / 680 * 5 * Math.PI)) : 0); S.appendChild(svg('rect', { x: vx, y: base - 50, width: 12, height: 50, rx: 6, fill: '#F7C9DD', stroke: PINK })); if (V.micro) for (var m = 0; m < 5; m++) S.appendChild(svg('line', { x1: vx + 2 + m * 2, y1: base - 50, x2: vx + 2 + m * 2, y2: base - 56, stroke: PINK })); }
+    S.appendChild(svg('rect', { x: 20, y: 320, width: 680, height: 40, fill: '#FCE3E3' })); T(S, 360, 345, 'blood capillaries', { a: 'middle', c: RED, s: 13 });
+    $('v-a').textContent = fmt(area, 1) + ' m²'; $('v-x').textContent = x + 'x'; $('v-g').textContent = fmt(Math.min(100, 2 * x), 0) + ' units';
+    $('v-msg').innerHTML = x === 1 ? 'A smooth tube: about 0.5 m² of lining. Not enough!' : 'Each kind of fold multiplies the surface area. More surface means more glucose diffuses into the blood each second.' + (x >= 600 ? ' Now about 300 m² in this model (real estimates vary from about 30 m² upwards).' : '');
+    if (V.folds && V.micro && !V.villi) $('ch-vil-m').innerHTML = '<b>Yes:</b> without villi the area (and absorption) falls by 10 times. That is why coeliac disease causes weight loss.';
+  }
+  vDraw();
+
+  // ---------- 8. lungs ----------
+  var B = { auto: false, ph: 0, prev: 0 };
+  function bCalc() {
+    var d = +$('b-d').value, vol = 2.5 + d * 0.3, flow = d - B.prev, S = $('b-svg'); B.prev = d; S.innerHTML = '';
+    $('b-do').textContent = d === 0 ? 'relaxed (domed)' : d >= 8 ? 'contracted (flat)' : 'contracting'; $('b-v').textContent = fmt(vol, 1) + ' L';
+    var p = flow > 0 ? 'lower than outside' : flow < 0 ? 'higher than outside' : 'same as outside'; $('b-p').textContent = p; $('b-air').textContent = flow > 0 ? 'flows IN' : flow < 0 ? 'flows OUT' : 'no flow';
+    S.appendChild(svg('path', { d: 'M200 60 L200 300 L520 300 L520 60', fill: '#F7F3F7', stroke: INK, 'stroke-width': 3 }));
+    for (var r = 0; r < 6; r++) S.appendChild(svg('line', { x1: 200 - 8 - d, y1: 90 + r * 35, x2: 200 + 8 - d, y2: 80 + r * 35, stroke: '#B5532A', 'stroke-width': 6 }));
+    S.appendChild(svg('rect', { x: 352, y: 20, width: 16, height: 80, fill: '#FFF6D9', stroke: INK }));
+    var lw = 62 + d * 4; [300, 420].forEach(function (cx) { S.appendChild(svg('ellipse', { cx: cx, cy: 175, rx: lw * 0.5, ry: lw, fill: '#F7A1C4', stroke: PINK })); });
+    var dy = 300 - (10 - d) * 4; S.appendChild(svg('path', { d: 'M200 300 Q360 ' + (dy - 40 + d * 4) + ' 520 300', fill: 'none', stroke: '#5F3DB8', 'stroke-width': 8 })); T(S, 360, 340, 'diaphragm', { a: 'middle', c: '#5F3DB8', w: 700 });
+    $('b-msg').innerHTML = flow > 0 ? 'The diaphragm <b>contracts and flattens</b>; the chest volume increases, the pressure falls, and air is pushed <b>in</b> by the higher pressure outside.' : flow < 0 ? 'The diaphragm <b>relaxes</b> and domes up; volume falls, pressure rises, air is pushed <b>out</b>.' : 'Move the slider to breathe.';
+  }
+  $('b-d').oninput = bCalc; $('b-auto').onclick = function () { B.auto = !B.auto; this.textContent = B.auto ? 'Stop' : 'Breathe automatically'; };
+  bCalc();
+  quiz('ch-lung', [['down', 'contracts and flattens'], ['up', 'relaxes and domes up']], 'down', 'Contracting flattens the diaphragm, increasing the chest volume so air flows in.', 'Watch the volume: which way makes it bigger?');
+
+  // ---------- 9. heart ----------
+  var HP = [['vena cava', 160, 70, BLUE], ['right atrium', 160, 150, BLUE], ['right ventricle', 180, 270, BLUE], ['pulmonary artery', 280, 40, BLUE], ['lungs', 360, 20, '#9FB3C8'], ['pulmonary vein', 470, 60, RED], ['left atrium', 520, 150, RED], ['left ventricle', 500, 280, RED], ['aorta', 400, 70, RED], ['body', 360, 390, '#9FB3C8']];
+  var H = { i: 0, wrong: 0 };
+  function hDraw() {
+    var S = $('h-svg'); S.innerHTML = '';
+    S.appendChild(svg('path', { d: 'M360 380 C 200 320 120 200 180 110 C 230 50 330 70 360 120 C 390 70 490 50 540 110 C 600 200 520 320 360 380 Z', fill: '#FBE3DA', stroke: INK, 'stroke-width': 2 }));
+    S.appendChild(svg('line', { x1: 360, y1: 120, x2: 360, y2: 380, stroke: INK, 'stroke-width': 3 }));
+    HP.forEach(function (p, k) { var done = k < H.i, g = svg('g', { style: 'cursor:pointer' }); g.appendChild(svg('rect', { x: p[1] - 62, y: p[2] - 16, width: 124, height: 30, rx: 8, fill: done ? p[3] : '#FFFFFF', stroke: p[3], 'stroke-width': 2 })); g.appendChild(svg('text', { x: p[1], y: p[2] + 4, 'text-anchor': 'middle', 'font-size': 12, 'font-family': 'system-ui', fill: done ? '#fff' : INK, 'font-weight': 700 }, p[0])); g.onclick = function () { hClick(k); }; S.appendChild(g); });
+    $('h-route').innerHTML = H.i ? HP.slice(0, H.i).map(function (p) { return p[0]; }).join(' &rarr; ') : 'Start at the vena cava.';
+  }
+  function hClick(k) { var m = $('h-msg'); if (k === H.i) { H.i++; m.className = 'msg good'; m.textContent = H.i === HP.length ? 'Complete: the blood has been to the lungs and the body - a double circulation.' : 'Yes. Next?'; if (H.i === HP.length && !H.wrong) $('ch-heart-m').innerHTML = '<b>Done!</b> A perfect route.'; } else { H.wrong++; m.className = 'msg bad'; m.textContent = 'Not next. ' + (H.i === 3 ? 'Blood leaves the right ventricle to collect oxygen.' : H.i === 6 ? 'Blood from the lungs enters an upper chamber.' : 'Follow the colours: blue blood on the right side, red on the left.'); } hDraw(); }
+  $('h-reset').onclick = function () { H.i = 0; H.wrong = 0; $('h-msg').className = 'msg'; $('h-msg').textContent = ''; hDraw(); };
+  function hRate() { var r = +$('h-r').value, out = r * 70 / 1000; $('h-ro').textContent = r; $('h-out').textContent = fmt(out, 1) + ' L'; $('h-like').textContent = out < 6 ? 'resting' : out < 9 ? 'walking' : out < 12 ? 'jogging' : 'sprinting'; }
+  $('h-r').oninput = hRate; hDraw(); hRate();
+
+  // ---------- 10. kidney ----------
+  var K = { dmg: 0 };
+  segBind($('k-dmg'), function (v) { K.dmg = +v; kCalc(); });
+  function kCalc() {
+    var w = +$('k-w').value, g = +$('k-g').value, S = $('k-svg'); S.innerHTML = '';
+    var urine = Math.max(0.5, w - 0.8), gl = g === 3 ? 'yes' : 'none', pr = K.dmg ? 'yes' : 'none';
+    $('k-wo').textContent = w; $('k-go').textContent = ['', 'normal', 'high', 'very high (above the limit)'][g];
+    $('k-u').textContent = fmt(urine, 1) + ' L'; $('k-gl').textContent = gl; $('k-pr').textContent = pr;
+    S.appendChild(svg('circle', { cx: 150, cy: 140, r: 70, fill: '#FBE3DA', stroke: INK, 'stroke-width': 2 })); T(S, 150, 60, 'filter', { a: 'middle', c: GREY });
+    S.appendChild(svg('path', { d: 'M40 140 Q100 100 120 140 Q100 180 40 160', fill: 'none', stroke: RED, 'stroke-width': 10 })); T(S, 40, 125, 'blood in', { c: RED, s: 12 });
+    S.appendChild(svg('path', { d: 'M220 140 L380 140 Q420 140 420 200 L420 330 Q420 360 460 360 L660 360', fill: 'none', stroke: '#E8B400', 'stroke-width': 18 })); T(S, 540, 390, 'urine: ' + fmt(urine, 1) + ' L a day', { a: 'middle', c: '#9A6B00', w: 700 });
+    S.appendChild(svg('path', { d: 'M260 120 Q330 60 400 120 L680 120', fill: 'none', stroke: RED, 'stroke-width': 8 })); T(S, 600, 108, 'blood out', { c: RED, s: 12 });
+    [['glucose', 300, g < 3], ['water', 360, true], ['salts', 420, true]].forEach(function (a) { S.appendChild(svg('line', { x1: a[1], y1: 150, x2: a[1], y2: 124, stroke: TEAL, 'stroke-width': 3 })); T(S, a[1], 175, a[0] + (a[2] ? ' back' : ''), { a: 'middle', s: 11, c: TEAL }); });
+    for (var i = 0; i < 6; i++) S.appendChild(svg('circle', { cx: 450 + i * 30, cy: 360, r: 5, fill: '#7A6B3A' })); T(S, 560, 330, 'urea', { a: 'middle', s: 12, c: '#7A6B3A' });
+    if (g === 3) for (var j = 0; j < 4; j++) S.appendChild(svg('rect', { x: 470 + j * 40, y: 352, width: 10, height: 10, fill: '#E8B400', stroke: INK }));
+    if (K.dmg) for (var q = 0; q < 4; q++) S.appendChild(svg('circle', { cx: 480 + q * 40, cy: 366, r: 6, fill: '#5F3DB8' }));
+    var m = $('k-msg'); m.className = 'msg'; m.innerHTML = 'Blood cells and proteins are too big to be filtered' + (K.dmg ? ', but <b>damaged filters let protein through</b>.' : '.') + ' All glucose is taken back' + (g === 3 ? ' - unless there is <b>more than the kidney can take back</b>, as in untreated diabetes.' : '.') + ' Drinking more water makes more, paler urine.';
+    var ok = g === 3 && !K.dmg; if (ok) $('ch-kid-m').innerHTML = 'Now choose the condition.';
+  }
+  ['k-w', 'k-g'].forEach(function (id) { $(id).oninput = kCalc; }); kCalc();
+  quiz('ch-kid', [['diab', 'diabetes'], ['kid', 'kidney damage'], ['dehyd', 'not drinking enough']], 'diab', 'High blood glucose goes over the limit the kidney can take back, so glucose appears in the urine.', 'Glucose (not protein) in the urine points to one condition.');
+
+  // ---------- loop ----------
+  var last = 0;
+  function loop(ts) {
+    var dt = last ? Math.min(0.05, Math.max(0, (ts - last) / 1000)) : 0; last = ts;
+    try {
+      if (cur === 'diffusion') { dStep(dt); dDraw(); }
+      else if (cur === 'sa' && SA.run) { SA.t += dt * 3; saDraw(); }
+      else if (cur === 'lungs' && B.auto) { B.ph += dt * 1.6; $('b-d').value = Math.round(5 + 5 * Math.sin(B.ph)); bCalc(); }
+    } catch (e) { if (window.console) console.error(e); }
+    requestAnimationFrame(loop);
+  }
+  dDraw(); requestAnimationFrame(loop);
+  function tick(n, t) { if (t) show(t); for (var i = 0; i < (n || 1); i++) { if (cur === 'diffusion') dStep(0.03); if (cur === 'sa' && SA.run) SA.t += 0.09; } dDraw(); saDraw(); return { D: D.done, SA: SA.t }; }
+  window.bfDebug = { show: show, tick: tick, C: C, L: L, D: D, O: O, G: G, V: V, H: H, K: K };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

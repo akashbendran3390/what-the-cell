@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Motion Lab. Walk a route and compare distance with displacement, race vehicles, drive a scooter to match a graph, watch acceleration on a dot trail, build velocity-time graphs, drop objects with and without air, push crates, crash test cars, and find out how far a car needs to stop. MYP Science r...">
+<link rel="canonical" href="https://whatthecell.org/myp/motion-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Motion Lab | What the Cell">
+<meta property="og:description" content="Motion Lab. Walk a route and compare distance with displacement, race vehicles, drive a scooter to match a graph, watch acceleration on a dot trail, build velocity-time graphs, drop objects with and without air, push crates, crash test cars, and find out how far a car needs to stop. MYP Science r...">
+<meta property="og:url" content="https://whatthecell.org/myp/motion-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Motion Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=6fddf602">
+<script src="../assets/theme.js?v=b9ea70c6"></script>
+<style>
+/* Motion Lab (MYP 4, Unit 4: Motion and Car Safety), 2026-11-23. Hand-written page.
+   Tabs: #vectors #speed #dt #accel #vt #suvat #fall #forces #inertia #fma #pairs #stopping #crash. Each tab ends with a
+   challenge. window.moDebug.tick(n, dt) steps the animations for testing in a hidden pane. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+.eqbig{font:700 1.15rem/2.2 ui-monospace,monospace;text-align:center;padding:8px 0 4px;overflow-x:auto}
+.co{display:inline-flex;align-items:center;gap:2px;margin-right:2px;vertical-align:middle}
+.co button{font:800 .8rem var(--ui);border:0;border-radius:8px;width:24px;height:24px;cursor:pointer;background:var(--soft);color:var(--ink)}
+.co b{min-width:14px;text-align:center;color:#B0356F}
+#d-list .prow{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr)}
+table.t{margin:0}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#1F7A7A;--band2:#5F3DB8;--band3:#2A1D5E;--band-pic:url('art/myp/myp4-motion-coaster-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp4-motion.html">Motion and Car Safety</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp4">MYP 4, Unit 4</a> / <a href="myp4-motion.html">Motion and Car Safety</a></div>
+    <h1>Motion Lab</h1>
+    <p class="lede">Walk a route and compare distance with displacement, race vehicles, drive a scooter to match a graph, watch acceleration on a dot trail, build velocity-time graphs, drop objects with and without air, push crates, crash test cars, and find out how far a car needs to stop.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="vectors" style="--c:var(--coral)"><span>1</span>Vectors</button>
+    <button role="tab" aria-selected="false" data-t="speed" style="--c:var(--tang)"><span>2</span>Speed</button>
+    <button role="tab" aria-selected="false" data-t="dt" style="--c:var(--sky)"><span>3</span>Distance-time</button>
+    <button role="tab" aria-selected="false" data-t="accel" style="--c:var(--mint)"><span>4</span>Acceleration</button>
+    <button role="tab" aria-selected="false" data-t="vt" style="--c:var(--pink)"><span>5</span>Velocity-time</button>
+    <button role="tab" aria-selected="false" data-t="suvat" style="--c:var(--violet)"><span>6</span>Equations</button>
+    <button role="tab" aria-selected="false" data-t="fall" style="--c:var(--coral)"><span>7</span>Falling</button>
+    <button role="tab" aria-selected="false" data-t="forces" style="--c:var(--tang)"><span>8</span>Forces</button>
+    <button role="tab" aria-selected="false" data-t="inertia" style="--c:var(--sky)"><span>9</span>Inertia</button>
+    <button role="tab" aria-selected="false" data-t="fma" style="--c:var(--mint)"><span>10</span>F = ma</button>
+    <button role="tab" aria-selected="false" data-t="pairs" style="--c:var(--pink)"><span>11</span>Force pairs</button>
+    <button role="tab" aria-selected="false" data-t="stopping" style="--c:var(--violet)"><span>12</span>Stopping distance</button>
+    <button role="tab" aria-selected="false" data-t="crash" style="--c:var(--coral)"><span>13</span>Crash test</button>
+  </div>
+
+  <section class="panel" id="p-vectors">
+    <p class="intro">Each button moves the walker 2 m. Compare the distance walked with the displacement arrow from start to finish.</p>
+    <div class="lab"><div class="stagebox"><svg id="v-svg" viewBox="0 0 720 400" role="img" aria-label="A walking route on a grid"></svg></div>
+      <div class="side"><div class="row"><button class="btn2" data-v="N">North</button><button class="btn2" data-v="S">South</button><button class="btn2" data-v="E">East</button><button class="btn2" data-v="W">West</button><button class="btn2 ghost" id="v-reset">Reset</button></div>
+        <div class="stats"><div><small>Distance</small><span id="v-d"></span></div><div><small>Displacement</small><span id="v-s"></span></div><div><small>Direction</small><span id="v-dir"></span></div></div>
+        <div class="msg" id="v-msg">Distance adds up every step. Displacement is the straight line from start to finish.</div></div></div>
+    <div class="challenge"><b>Challenge.</b> Walk exactly 20 m and finish with zero displacement. <span class="why" id="ch-v-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-speed" hidden>
+    <p class="intro">Three vehicles travel 600 m. Press Race and compare their times and average speeds.</p>
+    <div class="lab"><div class="stagebox"><svg id="s-svg" viewBox="0 0 720 300" role="img" aria-label="Three lanes"></svg></div>
+      <div class="side"><div class="row"><button class="btn2" id="s-go">Race</button><button class="btn2 ghost" id="s-reset">Reset</button></div>
+        <table class="t"><tr><th>Vehicle</th><th>Time (s)</th><th>Average speed (m/s)</th></tr><tbody id="s-tab"></tbody></table>
+        <div class="msg" id="s-msg">The bus stops twice. Average speed = total distance / total time, stops included.</div></div></div>
+    <div class="challenge"><b>Challenge.</b> Which has the higher average speed: the bus or the cyclist? <span class="seg" id="ch-s"></span><span class="why" id="ch-s-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-dt" hidden>
+    <p class="intro">Drive the scooter with the velocity slider to make its distance-time graph follow the dashed target line. The run lasts 20 seconds.</p>
+    <div class="lab"><div class="stagebox"><svg id="d-svg" viewBox="0 0 720 400" role="img" aria-label="A distance-time graph"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="d-v">Velocity: <b id="d-vo"></b> m/s</label><input type="range" id="d-v" min="-8" max="8" step="1" value="0"></div></div>
+        <div class="row"><button class="btn2" id="d-go">Start the run</button><button class="btn2 ghost" id="d-reset">Reset</button></div>
+        <div class="stats"><div><small>Time</small><span id="d-t"></span></div><div><small>Distance</small><span id="d-x"></span></div><div><small>Match</small><span id="d-sc"></span></div></div>
+        <div class="msg" id="d-msg">Target: wait at 20 m for 5 s, go to 80 m in 10 s, then stop. Negative velocity drives back.</div></div></div>
+    <div class="challenge"><b>Challenge.</b> Score 8 out of 10 or better. <span class="why" id="ch-d-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-accel" hidden>
+    <p class="intro">The trolley leaves a dot every half second, like ticker tape. Set the starting velocity and the acceleration, then press Go.</p>
+    <div class="lab"><div class="stagebox"><svg id="a-svg" viewBox="0 0 720 260" role="img" aria-label="Dot trail"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="a-u">Starting velocity u: <b id="a-uo"></b> m/s</label><input type="range" id="a-u" min="0" max="10" step="1" value="0"></div><div><label for="a-a">Acceleration a: <b id="a-ao"></b> m/s<sup>2</sup></label><input type="range" id="a-a" min="-2" max="4" step="0.5" value="2"></div></div>
+        <div class="row"><button class="btn2" id="a-go">Go (5 s)</button></div>
+        <div class="stats"><div><small>Final velocity</small><span id="a-v"></span></div><div><small>Distance</small><span id="a-s"></span></div><div><small>Gaps</small><span id="a-g"></span></div></div>
+        <div class="msg" id="a-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> What do equal gaps between the dots show? <span class="seg" id="ch-a"></span><span class="why" id="ch-a-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-vt" hidden>
+    <p class="intro">Set the velocity at each 5-second mark. The shaded area is the distance travelled; each slope is an acceleration.</p>
+    <div class="lab"><div class="stagebox"><svg id="g-svg" viewBox="0 0 720 380" role="img" aria-label="A velocity-time graph"></svg></div>
+      <div class="side"><div class="ctl" id="g-ctl"></div>
+        <div class="stats"><div><small>Distance</small><span id="g-d"></span></div><div><small>Biggest acceleration</small><span id="g-a"></span></div><div><small>Ends at rest?</small><span id="g-r"></span></div></div>
+        <div class="msg" id="g-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Make a journey that starts and ends at rest and covers exactly 300 m. <span class="why" id="ch-g-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-suvat" hidden>
+    <p class="intro">Choose u, a and t. The lab uses v = u + at and s = (u + v) / 2 x t, then plays the motion so you can check.</p>
+    <div class="lab"><div class="stagebox"><svg id="q-svg" viewBox="0 0 720 240" role="img" aria-label="A car on a measured road"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="q-u">u: <b id="q-uo"></b> m/s</label><input type="range" id="q-u" min="0" max="20" step="1" value="0"></div><div><label for="q-a">a: <b id="q-ao"></b> m/s<sup>2</sup></label><input type="range" id="q-a" min="-4" max="4" step="0.5" value="2"></div><div><label for="q-t">t: <b id="q-to"></b> s</label><input type="range" id="q-t" min="1" max="10" step="1" value="5"></div></div>
+        <div class="row"><button class="btn2" id="q-go">Play</button></div>
+        <div class="eq" id="q-eq"></div><div class="msg" id="q-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> A car at 20 m/s brakes at 4 m/s<sup>2</sup>. How far does it travel before it stops? <span class="ans1"><input id="ch-q-in" inputmode="decimal" aria-label="distance in metres"><button class="btn2" id="ch-q-b">Check</button></span><span class="why" id="ch-q-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-fall" hidden>
+    <p class="intro">Drop an object from 1000 m. Switch the air on or off and watch the forces and the speed.</p>
+    <div class="lab"><div class="stagebox"><svg id="f-svg" viewBox="0 0 720 400" role="img" aria-label="A falling object with force arrows and a speed graph"></svg></div>
+      <div class="side"><span class="lbl">Object</span><div class="seg" id="f-obj"></div><span class="lbl">Air</span><div class="seg" id="f-air"><button aria-pressed="true" data-v="1">air (Earth)</button><button aria-pressed="false" data-v="0">no air (like the Moon, but with Earth's g)</button></div>
+        <div class="row"><button class="btn2" id="f-go">Drop</button><button class="btn2 warm" id="f-chute" disabled>Open parachute</button></div>
+        <div class="stats"><div><small>Speed</small><span id="f-v"></span></div><div><small>Air resistance</small><span id="f-r"></span></div><div><small>Weight</small><span id="f-w"></span></div></div>
+        <div class="msg" id="f-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> At terminal velocity, how do the two forces compare? <span class="seg" id="ch-f"></span><span class="why" id="ch-f-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-forces" hidden>
+    <p class="intro">Push the 20 kg crate from each side. Friction (40 N when it moves) always acts against the motion.</p>
+    <div class="lab"><div class="stagebox"><svg id="c-svg" viewBox="0 0 720 300" role="img" aria-label="A crate with force arrows"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="c-l">Push from the left: <b id="c-lo"></b> N</label><input type="range" id="c-l" min="0" max="200" step="10" value="100"></div><div><label for="c-r">Push from the right: <b id="c-ro"></b> N</label><input type="range" id="c-r" min="0" max="200" step="10" value="40"></div></div>
+        <div class="row"><button class="btn2" id="c-go">Go (4 s)</button><button class="btn2 ghost" id="c-reset">Reset</button></div>
+        <div class="stats"><div><small>Resultant</small><span id="c-f"></span></div><div><small>Acceleration</small><span id="c-a"></span></div><div><small>Speed</small><span id="c-v"></span></div></div>
+        <div class="msg" id="c-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Make the crate move at a constant speed after the first push. <span class="why" id="ch-c-m">Hint: friction is 40 N once it moves.</span></div>
+  </section>
+
+  <section class="panel" id="p-inertia" hidden>
+    <p class="intro">A car hits a barrier at 14 m/s (50 km/h). Watch the passenger with and without a seat belt.</p>
+    <div class="lab"><div class="stagebox"><svg id="i-svg" viewBox="0 0 720 300" role="img" aria-label="A car and passenger in a crash"></svg></div>
+      <div class="side"><span class="lbl">Seat belt</span><div class="seg" id="i-belt"><button aria-pressed="true" data-v="1">wearing a belt</button><button aria-pressed="false" data-v="0">no belt</button></div>
+        <div class="row"><button class="btn2" id="i-go">Crash</button></div>
+        <div class="stats"><div><small>Car stops in</small><span id="i-c"></span></div><div><small>Passenger stops in</small><span id="i-p"></span></div><div><small>Force on passenger</small><span id="i-f"></span></div></div>
+        <div class="msg" id="i-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Why does the unbelted passenger keep moving when the car stops? <span class="seg" id="ch-i"></span><span class="why" id="ch-i-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-fma" hidden>
+    <p class="intro">Change the resultant force and the mass of the cart. The lab works out a = F / m and runs the cart for 3 seconds.</p>
+    <div class="lab"><div class="stagebox"><svg id="m-svg" viewBox="0 0 720 240" role="img" aria-label="A cart pushed by a force"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="m-f">Resultant force F: <b id="m-fo"></b> N</label><input type="range" id="m-f" min="0" max="60" step="5" value="20"></div><div><label for="m-m">Mass m: <b id="m-mo"></b> kg</label><input type="range" id="m-m" min="1" max="12" step="1" value="4"></div></div>
+        <div class="row"><button class="btn2" id="m-go">Push (3 s)</button></div>
+        <div class="eq" id="m-eq"></div><div class="msg" id="m-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Find two different settings that both give a = 5 m/s<sup>2</sup>. <span class="why" id="ch-m-m">Found: none yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-pairs" hidden>
+    <p class="intro">Two skaters push each other apart with a 120 N force for half a second. Change their masses.</p>
+    <div class="lab"><div class="stagebox"><svg id="k-svg" viewBox="0 0 720 260" role="img" aria-label="Two skaters pushing apart"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="k-a">Skater A mass: <b id="k-ao"></b> kg</label><input type="range" id="k-a" min="20" max="100" step="10" value="40"></div><div><label for="k-b">Skater B mass: <b id="k-bo"></b> kg</label><input type="range" id="k-b" min="20" max="100" step="10" value="80"></div></div>
+        <div class="row"><button class="btn2" id="k-go">Push apart</button></div>
+        <div class="stats"><div><small>Force on A</small><span id="k-fa"></span></div><div><small>Force on B</small><span id="k-fb"></span></div><div><small>Speeds A : B</small><span id="k-v"></span></div></div>
+        <div class="msg" id="k-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Is the force on the lighter skater bigger, smaller or the same? <span class="seg" id="ch-k"></span><span class="why" id="ch-k-m"></span></div>
+  </section>
+
+  <section class="panel" id="p-stopping" hidden>
+    <p class="intro">A child steps onto a crossing 40 m ahead. Choose the conditions, then press Brake to see where the car stops. (Typical values, rounded.)</p>
+    <div class="lab"><div class="stagebox"><svg id="t-svg" viewBox="0 0 720 260" role="img" aria-label="A car approaching a crossing"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="t-v">Speed: <b id="t-vo"></b> km/h</label><input type="range" id="t-v" min="20" max="120" step="10" value="50"></div></div>
+        <span class="lbl">Road</span><div class="seg" id="t-road"><button aria-pressed="true" data-v="7">dry</button><button aria-pressed="false" data-v="4">wet</button><button aria-pressed="false" data-v="2">icy</button></div>
+        <span class="lbl">Driver</span><div class="seg" id="t-drv"><button aria-pressed="true" data-v="0.7">alert</button><button aria-pressed="false" data-v="1.5">on the phone</button><button aria-pressed="false" data-v="1.2">tired</button></div>
+        <div class="row"><button class="btn2" id="t-go">Brake</button></div>
+        <div class="stats"><div><small>Thinking</small><span id="t-th"></span></div><div><small>Braking</small><span id="t-br"></span></div><div><small>Stopping</small><span id="t-st"></span></div></div>
+        <div class="msg" id="t-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> Find the highest speed that still stops before the crossing on a wet road with an alert driver. <span class="why" id="ch-t-m">Not yet.</span></div>
+  </section>
+
+  <section class="panel" id="p-crash" hidden>
+    <p class="intro">A belted 70 kg passenger is in a car that hits a wall. A longer crumple zone makes the car (and the passenger) take longer to stop.</p>
+    <div class="lab"><div class="stagebox"><svg id="x-svg" viewBox="0 0 720 300" role="img" aria-label="Crash test with a force meter"></svg></div>
+      <div class="side"><div class="ctl"><div><label for="x-v">Speed: <b id="x-vo"></b> km/h</label><input type="range" id="x-v" min="20" max="100" step="10" value="50"></div><div><label for="x-c">Crumple zone: <b id="x-co"></b> m</label><input type="range" id="x-c" min="0.1" max="1.0" step="0.1" value="0.2"></div></div>
+        <div class="row"><button class="btn2" id="x-go">Crash</button></div>
+        <div class="stats"><div><small>Momentum</small><span id="x-p"></span></div><div><small>Stopping time</small><span id="x-t"></span></div><div><small>Average force</small><span id="x-f"></span></div></div>
+        <div class="msg" id="x-msg"></div></div></div>
+    <div class="challenge"><b>Challenge.</b> At 50 km/h, get the average force on the passenger below 10 000 N. <span class="why" id="ch-x-m">Not yet.</span></div>
+  </section>
+
+  <p class="why" style="margin-top:22px">Made by What the Cell for MYP 4 Science, Motion and Car Safety. Models are simplified for learning: numbers are rounded and some effects are left out.</p>
+</div></main>
+<footer class="m-foot"><div class="m-wrap">&copy; 2026 Akash Parthi Bendran. Please ask before using or sharing any resources from this site: see <a href="../about.html#permission">permission to use</a>.</div></footer>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  function fmt(x, d) { return (+x).toLocaleString('en-GB', { maximumFractionDigits: d == null ? 0 : d, minimumFractionDigits: 0 }); }
+  function svg(tag, a, txt) { var e = document.createElementNS('http://www.w3.org/2000/svg', tag); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; }
+  var INK = '#1E0E4A', GREY = '#6B6390', RED = '#D9442B', BLUE = '#2E7DB8', TEAL = '#1F7A7A', PINK = '#B0356F', GOLD = '#E0A800';
+  function T(S, x, y, t, o) { o = o || {}; S.appendChild(svg('text', { x: x, y: y, 'font-size': o.s || 14, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'system-ui', 'font-weight': o.w || 400 }, t)); }
+  function arrow(S, x1, y1, x2, y2, col, w) { var L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return; S.appendChild(svg('line', { x1: x1, y1: y1, x2: x2, y2: y2, stroke: col, 'stroke-width': w || 4 })); var a = Math.atan2(y2 - y1, x2 - x1), h = 10; S.appendChild(svg('path', { d: 'M' + x2 + ' ' + y2 + ' L' + (x2 - h * Math.cos(a - 0.45)) + ' ' + (y2 - h * Math.sin(a - 0.45)) + ' L' + (x2 - h * Math.cos(a + 0.45)) + ' ' + (y2 - h * Math.sin(a + 0.45)) + ' Z', fill: col })); }
+  function seg(el, items, cb) { el.innerHTML = items.map(function (it, i) { return '<button data-v="' + it[0] + '" aria-pressed="' + (i === 0) + '">' + it[1] + '</button>'; }).join(''); [].forEach.call(el.children, function (b) { b.onclick = function () { [].forEach.call(el.children, function (x) { x.setAttribute('aria-pressed', x === b); }); cb && cb(b.dataset.v); }; }); }
+  function segv(el, cb) { [].forEach.call(el.children, function (b) { b.onclick = function () { [].forEach.call(el.children, function (x) { x.setAttribute('aria-pressed', x === b); }); cb && cb(b.dataset.v); }; }); }
+  function cur(el) { var b = el.querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function quiz(id, opts, right, ok, no) { seg($(id), opts, function (v) { var m = $(id + '-m'); m.innerHTML = v === right ? '<b>Yes.</b> ' + ok : '<b>Not quite.</b> ' + no; m.style.color = v === right ? 'var(--mint)' : 'var(--coral)'; }); [].forEach.call($(id).children, function (b) { b.setAttribute('aria-pressed', 'false'); }); }
+  function done(id, html) { $(id).innerHTML = '<b>Done!</b> ' + (html || ''); $(id).style.color = 'var(--mint)'; }
+  function car(S, x, y, w, col, hh) { var h = hh || w * 0.3; S.appendChild(svg('rect', { x: x, y: y + h * 0.35, width: w, height: h * 0.5, rx: 8, fill: col || BLUE, stroke: INK })); S.appendChild(svg('rect', { x: x + w * 0.22, y: y, width: w * 0.5, height: h * 0.5, rx: 8, fill: col || BLUE, stroke: INK })); S.appendChild(svg('rect', { x: x + w * 0.28, y: y + h * 0.07, width: w * 0.18, height: h * 0.3, rx: 3, fill: '#CFE8F7' })); S.appendChild(svg('rect', { x: x + w * 0.5, y: y + h * 0.07, width: w * 0.18, height: h * 0.3, rx: 3, fill: '#CFE8F7' })); [0.2, 0.8].forEach(function (c) { S.appendChild(svg('circle', { cx: x + w * c, cy: y + h * 0.85, r: h * 0.2, fill: '#2B2B2B' })); }); }
+  // animation helper: run f(t) for dur seconds of simulated time; window.moDebug.tick runs it instantly in hidden panes
+  var anims = [];
+  function run(dur, f, end) { var a = { t: 0, dur: dur, f: f, end: end }; anims.push(a); return a; }
+  var last = 0;
+  function loop(ts) { var dt = last ? Math.min(0.05, Math.max(0, (ts - last) / 1000)) : 0; last = ts; step(dt); requestAnimationFrame(loop); }
+  function step(dt) { for (var i = anims.length - 1; i >= 0; i--) { var a = anims[i]; a.t = Math.min(a.dur, a.t + dt); try { a.f(a.t); } catch (e) { } if (a.t >= a.dur) { anims.splice(i, 1); a.end && a.end(); } } }
+  requestAnimationFrame(loop);
+  function stopAll() { anims.length = 0; }
+
+  var NAMES = ['vectors', 'speed', 'dt', 'accel', 'vt', 'suvat', 'fall', 'forces', 'inertia', 'fma', 'pairs', 'stopping', 'crash'];
+  var tabs = document.querySelectorAll('.tabs button');
+  function show(t) { stopAll(); [].forEach.call(tabs, function (b) { b.setAttribute('aria-selected', b.dataset.t === t); }); NAMES.forEach(function (k) { $('p-' + k).hidden = k !== t; }); if (history.replaceState) history.replaceState(null, '', '#' + t); }
+  [].forEach.call(tabs, function (b) { b.onclick = function () { show(b.dataset.t); }; });
+
+  // 1 vectors
+  var V = { x: 0, y: 0, path: [[0, 0]], dist: 0 };
+  [].forEach.call(document.querySelectorAll('#p-vectors [data-v]'), function (b) { b.onclick = function () { var d = { N: [0, 1], S: [0, -1], E: [1, 0], W: [-1, 0] }[b.dataset.v]; var nx = V.x + d[0], ny = V.y + d[1]; if (Math.abs(nx) > 8 || Math.abs(ny) > 4) return; V.x = nx; V.y = ny; V.path.push([nx, ny]); V.dist += 2; vDraw(); }; });
+  $('v-reset').onclick = function () { V = { x: 0, y: 0, path: [[0, 0]], dist: 0 }; vDraw(); };
+  function vDraw() {
+    var S = $('v-svg'); S.innerHTML = ''; var cx = 360, cy = 200, g = 40;
+    for (var i = -8; i <= 8; i++) S.appendChild(svg('line', { x1: cx + i * g, y1: 20, x2: cx + i * g, y2: 380, stroke: '#E3E8EE' }));
+    for (var j = -4; j <= 4; j++) S.appendChild(svg('line', { x1: 40, y1: cy + j * g, x2: 680, y2: cy + j * g, stroke: '#E3E8EE' }));
+    T(S, 690, 30, 'N', { w: 700, a: 'end' }); T(S, 50, 395, '1 square = 2 m', { s: 12, c: GREY });
+    var p = V.path.map(function (q) { return (cx + q[0] * g) + ',' + (cy - q[1] * g); }).join(' ');
+    S.appendChild(svg('polyline', { points: p, fill: 'none', stroke: BLUE, 'stroke-width': 4, 'stroke-linejoin': 'round' }));
+    arrow(S, cx, cy, cx + V.x * g, cy - V.y * g, PINK, 4);
+    S.appendChild(svg('circle', { cx: cx, cy: cy, r: 8, fill: TEAL })); S.appendChild(svg('circle', { cx: cx + V.x * g, cy: cy - V.y * g, r: 10, fill: RED }));
+    var dx = V.x * 2, dy = V.y * 2, s = Math.hypot(dx, dy);
+    var dir = s === 0 ? '-' : (dy > 0 ? 'N' : dy < 0 ? 'S' : '') + (dx > 0 ? 'E' : dx < 0 ? 'W' : '');
+    $('v-d').textContent = V.dist + ' m'; $('v-s').textContent = fmt(s, 1) + ' m'; $('v-dir').textContent = dir;
+    if (V.dist === 20 && s === 0) done('ch-v-m', '20 m walked, displacement 0 m.');
+  }
+  vDraw();
+
+  // 2 speed
+  var RACERS = [['cyclist', 6, null, TEAL], ['bus', 12, [[200, 10], [420, 10]], RED], ['train', 30, null, BLUE]];
+  function sPos(r, t) { var v = r[1], stops = r[2] || [], x = 0, tt = 0; var segs = [], prev = 0; stops.forEach(function (s) { segs.push([s[0] - prev, 0]); segs.push([0, s[1]]); prev = s[0]; }); segs.push([600 - prev, 0]); for (var i = 0; i < segs.length; i++) { var d = segs[i][0], w = segs[i][1], dur = d ? d / v : w; if (t <= tt + dur) return x + (d ? (t - tt) * v : 0); tt += dur; x += d; } return 600; }
+  function sTime(r) { return 600 / r[1] + (r[2] || []).reduce(function (a, s) { return a + s[1]; }, 0); }
+  function sDraw(t) { var S = $('s-svg'); S.innerHTML = ''; RACERS.forEach(function (r, i) { var y = 40 + i * 85; S.appendChild(svg('rect', { x: 40, y: y, width: 640, height: 60, rx: 8, fill: '#F3F6F8' })); (r[2] || []).forEach(function (s) { S.appendChild(svg('rect', { x: 40 + s[0] / 600 * 600, y: y, width: 6, height: 60, fill: GOLD })); }); var x = 40 + sPos(r, t) / 600 * 600; S.appendChild(svg('rect', { x: x - 10, y: y + 14, width: 40, height: 32, rx: 8, fill: r[3] })); T(S, 48, y + 76, r[0], { s: 12, c: GREY }); }); S.appendChild(svg('line', { x1: 640, y1: 30, x2: 640, y2: 290, stroke: INK, 'stroke-dasharray': '4 3' })); T(S, 640, 22, '600 m', { a: 'middle', s: 12 }); T(S, 40, 22, 't = ' + fmt(t, 1) + ' s', { s: 13, w: 700 }); }
+  $('s-tab').innerHTML = RACERS.map(function (r) { return '<tr><td>' + r[0] + '</td><td id="s-t-' + r[0] + '">-</td><td id="s-v-' + r[0] + '">-</td></tr>'; }).join('');
+  $('s-go').onclick = function () { stopAll(); RACERS.forEach(function (r) { $('s-t-' + r[0]).textContent = '-'; $('s-v-' + r[0]).textContent = '-'; }); run(10.5, function (t) { var tt = t * 10; sDraw(tt); RACERS.forEach(function (r) { if (tt >= sTime(r) && $('s-t-' + r[0]).textContent === '-') { $('s-t-' + r[0]).textContent = fmt(sTime(r), 1); $('s-v-' + r[0]).textContent = fmt(600 / sTime(r), 1); } }); }); };
+  $('s-reset').onclick = function () { stopAll(); sDraw(0); };
+  sDraw(0); quiz('ch-s', [['bus', 'the bus'], ['cyc', 'the cyclist'], ['same', 'the same']], 'bus', 'Bus: 600 m in 70 s = 8.6 m/s; cyclist: 600 m in 100 s = 6 m/s. The stops lower the bus average, but not enough.', 'Work out each average: total distance / total time, stops included.');
+
+  // 3 distance-time
+  var D = { t: 0, x: 0, pts: [[0, 0]], running: false };
+  function dTarget(t) { return t <= 5 ? 20 : t <= 15 ? 20 + (t - 5) * 6 : 80; }
+  function dDraw() {
+    var S = $('d-svg'); S.innerHTML = ''; var X = function (t) { return 60 + t * 31; }, Y = function (x) { return 350 - x * 3; };
+    for (var t = 0; t <= 20; t += 5) { S.appendChild(svg('line', { x1: X(t), y1: 50, x2: X(t), y2: 350, stroke: '#E3E8EE' })); T(S, X(t), 368, t, { a: 'middle', s: 12 }); }
+    for (var x = 0; x <= 100; x += 20) { S.appendChild(svg('line', { x1: 60, y1: Y(x), x2: 680, y2: Y(x), stroke: '#E3E8EE' })); T(S, 52, Y(x) + 4, x, { a: 'end', s: 12 }); }
+    S.appendChild(svg('line', { x1: 60, y1: 350, x2: 680, y2: 350, stroke: INK, 'stroke-width': 2 })); S.appendChild(svg('line', { x1: 60, y1: 50, x2: 60, y2: 350, stroke: INK, 'stroke-width': 2 }));
+    T(S, 370, 392, 'time (s)', { a: 'middle', s: 13 }); T(S, 64, 40, 'distance (m)', { s: 13 });
+    var tp = []; for (var k = 0; k <= 20; k += 0.5) tp.push(X(k) + ',' + Y(dTarget(k))); S.appendChild(svg('polyline', { points: tp.join(' '), fill: 'none', stroke: GREY, 'stroke-width': 3, 'stroke-dasharray': '7 5' }));
+    S.appendChild(svg('polyline', { points: D.pts.map(function (p) { return X(p[0]) + ',' + Y(p[1]); }).join(' '), fill: 'none', stroke: RED, 'stroke-width': 3.5 }));
+    S.appendChild(svg('rect', { x: 690, y: Y(D.x) - 8, width: 22, height: 16, rx: 4, fill: RED }));
+    $('d-t').textContent = fmt(D.t, 1) + ' s'; $('d-x').textContent = fmt(D.x, 0) + ' m';
+  }
+  function dScore() { var e = 0, n = 0; D.pts.forEach(function (p) { e += Math.abs(p[1] - dTarget(p[0])); n++; }); return Math.max(0, Math.round(10 - (e / n) / 3)); }
+  $('d-v').oninput = function () { $('d-vo').textContent = this.value; }; $('d-vo').textContent = 0;
+  $('d-go').onclick = function () { stopAll(); D = { t: 0, x: 0, pts: [[0, 0]] }; $('d-sc').textContent = '-'; run(20, function (t) { var dt = t - D.t; D.x = Math.max(0, Math.min(100, D.x + (+$('d-v').value) * dt)); D.t = t; D.pts.push([t, D.x]); dDraw(); }, function () { var sc = dScore(); $('d-sc').textContent = sc + '/10'; $('d-msg').innerHTML = sc >= 8 ? '<b>Great match.</b> Flat = stopped; the steady slope = 6 m/s.' : 'Score ' + sc + '/10. Hint: start at 4 m/s to reach 20 m, then 0, then 6 m/s, then 0.'; if (sc >= 8) done('ch-d-m', 'Score ' + sc + '/10.'); }); };
+  $('d-reset').onclick = function () { stopAll(); D = { t: 0, x: 0, pts: [[0, 0]] }; $('d-v').value = 0; $('d-vo').textContent = 0; $('d-sc').textContent = '-'; dDraw(); };
+  dDraw();
+
+  // 4 acceleration
+  function aDraw(tmax) {
+    var u = +$('a-u').value, a = +$('a-a').value, S = $('a-svg'); S.innerHTML = ''; $('a-uo').textContent = u; $('a-ao').textContent = a;
+    S.appendChild(svg('rect', { x: 20, y: 120, width: 680, height: 40, fill: '#F5F0DC', stroke: '#C8B89A' }));
+    var tEnd = 5, sMax = 0; for (var k = 0; k <= 10; k++) { var tt = k / 2, ss = u * tt + 0.5 * a * tt * tt; sMax = Math.max(sMax, ss); }
+    var sc = sMax > 0 ? 640 / Math.max(sMax, 20) : 32, prev = null, gaps = [];
+    for (var k = 0; k <= 10; k++) { var t = k / 2; if (t > tmax + 1e-9) break; var vNow = u + a * t; if (vNow < 0) break; var s = u * t + 0.5 * a * t * t; var x = 30 + s * sc; S.appendChild(svg('circle', { cx: x, cy: 140, r: 5, fill: INK })); if (prev != null) gaps.push(s - prev); prev = s; }
+    var t2 = Math.min(tmax, 5), vf = Math.max(0, u + a * t2), sf = u * t2 + 0.5 * a * t2 * t2; if (u + a * t2 < 0) { var ts = u / -a; sf = u * ts + 0.5 * a * ts * ts; }
+    S.appendChild(svg('rect', { x: 20 + sf * sc, y: 70, width: 40, height: 26, rx: 6, fill: BLUE })); T(S, 20, 210, 'one dot every 0.5 s', { s: 12, c: GREY }); T(S, 20, 230, 'scale: ' + fmt(sc, 1) + ' px per metre', { s: 12, c: GREY });
+    $('a-v').textContent = fmt(vf, 1) + ' m/s'; $('a-s').textContent = fmt(sf, 1) + ' m';
+    var trend = gaps.length < 2 ? '-' : Math.abs(gaps[gaps.length - 1] - gaps[0]) < 0.01 ? 'equal' : gaps[gaps.length - 1] > gaps[0] ? 'growing' : 'shrinking'; $('a-g').textContent = trend;
+    $('a-msg').innerHTML = a > 0 ? 'Gaps <b>grow</b>: the trolley speeds up by ' + a + ' m/s every second.' : a < 0 ? 'Gaps <b>shrink</b>: a negative acceleration (deceleration).' : 'Equal gaps: <b>constant velocity</b>, no acceleration.';
+  }
+  $('a-u').oninput = $('a-a').oninput = function () { aDraw(5); };
+  $('a-go').onclick = function () { stopAll(); run(5, function (t) { aDraw(t); }); };
+  aDraw(5); quiz('ch-a', [['const', 'constant velocity'], ['acc', 'speeding up'], ['stop', 'stopped']], 'const', 'The same distance every half second means the velocity is not changing.', 'Growing gaps mean speeding up. What do equal gaps mean?');
+
+  // 5 velocity-time
+  var G = [0, 10, 10, 10, 0];
+  $('g-ctl').innerHTML = G.map(function (v, i) { return '<div><label for="g-' + i + '">v at ' + (i * 5) + ' s: <b id="g-o' + i + '">' + v + '</b> m/s</label><input type="range" id="g-' + i + '" min="0" max="20" step="1" value="' + v + '"></div>'; }).join('');
+  G.forEach(function (v, i) { $('g-' + i).oninput = function () { G[i] = +this.value; $('g-o' + i).textContent = this.value; gDraw(); }; });
+  function gDraw() {
+    var S = $('g-svg'); S.innerHTML = ''; var X = function (t) { return 60 + t * 30; }, Y = function (v) { return 330 - v * 14; };
+    for (var t = 0; t <= 20; t += 5) { S.appendChild(svg('line', { x1: X(t), y1: 50, x2: X(t), y2: 330, stroke: '#E3E8EE' })); T(S, X(t), 348, t, { a: 'middle', s: 12 }); }
+    for (var v = 0; v <= 20; v += 5) { S.appendChild(svg('line', { x1: 60, y1: Y(v), x2: 660, y2: Y(v), stroke: '#E3E8EE' })); T(S, 52, Y(v) + 4, v, { a: 'end', s: 12 }); }
+    var pts = G.map(function (v, i) { return X(i * 5) + ',' + Y(v); }); S.appendChild(svg('polygon', { points: X(0) + ',' + Y(0) + ' ' + pts.join(' ') + ' ' + X(20) + ',' + Y(0), fill: 'rgba(31,122,122,.25)' }));
+    S.appendChild(svg('polyline', { points: pts.join(' '), fill: 'none', stroke: RED, 'stroke-width': 3.5 }));
+    S.appendChild(svg('line', { x1: 60, y1: 330, x2: 660, y2: 330, stroke: INK, 'stroke-width': 2 })); S.appendChild(svg('line', { x1: 60, y1: 50, x2: 60, y2: 330, stroke: INK, 'stroke-width': 2 }));
+    T(S, 360, 372, 'time (s)', { a: 'middle', s: 13 }); T(S, 64, 40, 'velocity (m/s)', { s: 13 });
+    var d = 0, amax = 0; for (var i = 0; i < 4; i++) { d += (G[i] + G[i + 1]) / 2 * 5; var a = (G[i + 1] - G[i]) / 5; T(S, X(i * 5 + 2.5), 66, (a > 0 ? '+' : '') + fmt(a, 1) + ' m/s²', { a: 'middle', s: 12, c: a ? PINK : GREY }); if (Math.abs(a) > Math.abs(amax)) amax = a; }
+    $('g-d').textContent = fmt(d) + ' m'; $('g-a').textContent = fmt(amax, 1) + ' m/s²'; var rest = G[0] === 0 && G[4] === 0; $('g-r').textContent = rest ? 'yes' : 'no';
+    $('g-msg').innerHTML = 'Distance = area = sum of the trapeziums: <b>' + fmt(d) + ' m</b>.';
+    if (rest && d === 300) done('ch-g-m', '300 m from rest to rest.');
+  }
+  gDraw();
+
+  // 6 suvat
+  function qCalc() { var u = +$('q-u').value, a = +$('q-a').value, t = +$('q-t').value; $('q-uo').textContent = u; $('q-ao').textContent = a; $('q-to').textContent = t; var v = u + a * t, s = (u + v) / 2 * t, note = ''; if (v < 0) { var ts = u / -a; s = u * ts / 2; v = 0; note = ' (it stops after ' + fmt(ts, 1) + ' s and stays stopped)'; } $('q-eq').innerHTML = 'v = u + at = ' + u + ' + ' + a + ' &times; ' + t + ' = <b>' + fmt(v, 1) + ' m/s</b><br>s = (u + v)/2 &times; t = <b>' + fmt(s, 1) + ' m</b>' + note; return { u: u, a: a, t: t, v: v, s: s }; }
+  function qDraw(x, R) { var S = $('q-svg'); S.innerHTML = ''; var smax = Math.max(20, R.s), sc = 600 / smax; S.appendChild(svg('rect', { x: 40, y: 150, width: 640, height: 30, fill: '#DADFE4' })); for (var m = 0; m <= smax; m += Math.max(5, Math.round(smax / 10 / 5) * 5)) { S.appendChild(svg('line', { x1: 50 + m * sc, y1: 180, x2: 50 + m * sc, y2: 190, stroke: INK })); T(S, 50 + m * sc, 206, m + ' m', { a: 'middle', s: 11 }); } car(S, 50 + x * sc - 30, 105, 90, TEAL); }
+  ['q-u', 'q-a', 'q-t'].forEach(function (id) { $(id).oninput = function () { var R = qCalc(); qDraw(0, R); }; });
+  $('q-go').onclick = function () { stopAll(); var R = qCalc(); run(R.t, function (t) { var x = R.u * t + 0.5 * R.a * t * t; if (R.u + R.a * t < 0) x = R.s; qDraw(Math.min(x, R.s), R); }, function () { $('q-msg').innerHTML = 'It travelled <b>' + fmt(R.s, 1) + ' m</b>, as the equation said.'; }); };
+  var R0 = qCalc(); qDraw(0, R0);
+  $('ch-q-b').onclick = function () { var v = parseFloat(($('ch-q-in').value || '').replace(',', '.')); var m = $('ch-q-m'); if (Math.abs(v - 50) < 0.6) { done('ch-q-m', 'v² = u² + 2as: 0 = 400 - 8s, so s = 50 m.'); } else { m.innerHTML = 'Not quite. Use v² = u² + 2as with v = 0.'; m.style.color = 'var(--coral)'; } };
+
+  // 7 falling
+  var OBJ = { ball: { m: 5, k: 0.0016, n: 'bowling ball' }, feather: { m: 0.005, k: 0.0004, n: 'feather' }, sky: { m: 80, k: 0.26, n: 'skydiver' } };
+  var F = { o: 'ball', v: 0, y: 0, t: 0, chute: false, pts: [] };
+  seg($('f-obj'), [['ball', 'bowling ball'], ['feather', 'feather'], ['sky', 'skydiver']], function (v) { F.o = v; fReset(); });
+  segv($('f-air'), function () { fReset(); });
+  function fReset() { stopAll(); F.v = 0; F.y = 0; F.t = 0; F.chute = false; F.pts = []; $('f-chute').disabled = true; fDraw(); }
+  function fDraw() {
+    var S = $('f-svg'); S.innerHTML = ''; var o = OBJ[F.o], air = cur($('f-air')) === '1', W = o.m * 9.8, k = o.k * (F.chute ? 60 : 1), R = air ? k * F.v * F.v : 0;
+    S.appendChild(svg('rect', { x: 20, y: 20, width: 260, height: 360, rx: 10, fill: air ? '#EAF4FB' : '#1E1E2E' }));
+    var y = 40 + Math.min(F.y, 1000) / 1000 * 300; S.appendChild(svg('circle', { cx: 150, cy: y, r: F.o === 'feather' ? 8 : 16, fill: F.o === 'sky' ? PINK : F.o === 'ball' ? INK : '#EEE', stroke: INK }));
+    if (F.chute) S.appendChild(svg('path', { d: 'M110 ' + (y - 30) + ' Q150 ' + (y - 80) + ' 190 ' + (y - 30) + ' Z', fill: GOLD, stroke: INK }));
+    var sc = 60 / W; arrow(S, 150, y + 18, 150, y + 18 + Math.min(80, W * sc), RED, 4); if (R > 0) arrow(S, 150, y - 18, 150, y - 18 - Math.min(110, R * sc), BLUE, 4);
+    T(S, 200, y + 50, 'weight', { s: 12, c: RED }); if (R > 0) T(S, 200, y - 40, 'air resistance', { s: 12, c: BLUE });
+    var X = function (t) { return 330 + t * 18; }, Y = function (v) { return 360 - v * 3.5; };
+    S.appendChild(svg('line', { x1: 330, y1: 360, x2: 700, y2: 360, stroke: INK, 'stroke-width': 2 })); S.appendChild(svg('line', { x1: 330, y1: 40, x2: 330, y2: 360, stroke: INK, 'stroke-width': 2 }));
+    T(S, 515, 390, 'time (s)', { a: 'middle', s: 12 }); T(S, 334, 34, 'speed (m/s)', { s: 12 });
+    for (var v = 0; v <= 80; v += 20) T(S, 324, Y(v) + 4, v, { a: 'end', s: 11 }); for (var t = 0; t <= 20; t += 5) T(S, X(t), 376, t, { a: 'middle', s: 11 });
+    if (F.pts.length > 1) S.appendChild(svg('polyline', { points: F.pts.map(function (p) { return X(p[0]) + ',' + Y(Math.min(90, p[1])); }).join(' '), fill: 'none', stroke: TEAL, 'stroke-width': 3 }));
+    $('f-v').textContent = fmt(F.v, 1) + ' m/s'; $('f-r').textContent = fmt(R, R < 1 ? 3 : 0) + ' N'; $('f-w').textContent = fmt(W, W < 1 ? 3 : 0) + ' N';
+    var msg = !air ? 'No air: only weight acts, so every object speeds up by 9.8 m/s every second.' : R < W * 0.97 ? 'Weight is bigger than air resistance: the object <b>speeds up</b>.' : R > W * 1.03 ? 'Air resistance is bigger than weight: the object <b>slows down</b>.' : '<b>Terminal velocity</b>: the forces are balanced, so the speed is constant.';
+    $('f-msg').innerHTML = msg;
+  }
+  function fStep(dt) { var o = OBJ[F.o], air = cur($('f-air')) === '1', W = o.m * 9.8, k = o.k * (F.chute ? 60 : 1), R = air ? k * F.v * F.v : 0, a = (W - R) / o.m; var n = 10; for (var i = 0; i < n; i++) { var h = dt / n; R = air ? k * F.v * F.v : 0; a = (W - R) / o.m; F.v = Math.max(0, F.v + a * h); F.y += F.v * h; } F.t += dt; }
+  $('f-go').onclick = function () { fReset(); $('f-chute').disabled = F.o !== 'sky' || cur($('f-air')) !== '1'; run(20, function (t) { var dt = t - F.t; fStep(dt); F.pts.push([F.t, F.v]); fDraw(); }); };
+  $('f-chute').onclick = function () { F.chute = true; this.disabled = true; };
+  fDraw(); quiz('ch-f', [['eq', 'equal and opposite'], ['w', 'weight is bigger'], ['r', 'air resistance is bigger']], 'eq', 'Balanced forces give a resultant of zero, so the speed stays constant (first law).', 'At terminal velocity the speed is not changing. What does that tell you about the resultant force?');
+
+  // 8 forces
+  var C = { x: 0, v: 0 };
+  function cRes(v) { var L = +$('c-l').value, Rr = +$('c-r').value, net = L - Rr; var fr = 0; if (Math.abs(v) > 0.01) fr = -40 * Math.sign(v); else if (Math.abs(net) <= 40) return { net: 0, fr: -net }; else fr = -40 * Math.sign(net); return { net: net + fr, fr: fr }; }
+  function cDraw() {
+    var L = +$('c-l').value, Rr = +$('c-r').value; $('c-lo').textContent = L; $('c-ro').textContent = Rr; var S = $('c-svg'); S.innerHTML = '';
+    S.appendChild(svg('rect', { x: 20, y: 200, width: 680, height: 14, fill: '#C8B89A' })); var x = 360 + Math.max(-300, Math.min(260, C.x * 20));
+    S.appendChild(svg('rect', { x: x - 40, y: 130, width: 80, height: 70, rx: 6, fill: '#D9A86C', stroke: INK })); T(S, x, 172, '20 kg', { a: 'middle', s: 13, w: 700 });
+    if (L) arrow(S, x - 40 - L * 0.9, 150, x - 42, 150, RED, 5); if (Rr) arrow(S, x + 40 + Rr * 0.9, 165, x + 42, 165, BLUE, 5);
+    var r = cRes(C.v); if (r.fr) arrow(S, x, 205, x + r.fr * 1.2, 205, GOLD, 4);
+    T(S, 20, 30, 'push ' + L + ' N', { c: RED, s: 13 }); T(S, 700, 30, 'push ' + Rr + ' N', { c: BLUE, s: 13, a: 'end' }); T(S, 20, 250, 'yellow arrow: friction', { c: '#8A6D00', s: 12 });
+    $('c-f').textContent = fmt(r.net) + ' N'; $('c-a').textContent = fmt(r.net / 20, 1) + ' m/s²'; $('c-v').textContent = fmt(C.v, 1) + ' m/s';
+    $('c-msg').innerHTML = r.net === 0 ? (Math.abs(C.v) > 0.01 ? 'Balanced forces: it keeps moving at a <b>constant speed</b>.' : 'Balanced: friction matches the pushes, so it stays still.') : 'Unbalanced: resultant ' + fmt(Math.abs(r.net)) + ' N to the ' + (r.net > 0 ? 'right' : 'left') + ', so the velocity changes.';
+  }
+  $('c-l').oninput = $('c-r').oninput = function () { cDraw(); if (Math.abs(C.v) > 0.5) { var r = cRes(C.v); if (r.net === 0) done('ch-c-m', 'Pushes minus friction = 0, so constant speed.'); } };
+  $('c-go').onclick = function () { stopAll(); var last = 0; run(4, function (t) { var dt = t - last; last = t; var r = cRes(C.v); var nv = C.v + r.net / 20 * dt; if (C.v !== 0 && Math.sign(nv) !== Math.sign(C.v) && cRes(0).net === 0) nv = 0; C.v = nv; C.x += C.v * dt; cDraw(); }, function () { var r = cRes(C.v); if (Math.abs(C.v) > 0.5 && r.net === 0) done('ch-c-m', 'Pushes minus friction = 0, so constant speed.'); }); };
+  $('c-reset').onclick = function () { stopAll(); C = { x: 0, v: 0 }; cDraw(); };
+  cDraw();
+
+  // 9 inertia
+  function iDraw(t, belt) {
+    var S = $('i-svg'); S.innerHTML = ''; S.appendChild(svg('rect', { x: 600, y: 60, width: 30, height: 200, fill: '#9A8F80' })); S.appendChild(svg('rect', { x: 0, y: 250, width: 720, height: 10, fill: '#BBB' }));
+    var v0 = 14, tH = 0.1, tc = 0.1, xf; if (t < tH) xf = -v0 * (tH - t); else if (t < tH + tc) { var u = t - tH; xf = v0 * u - 0.5 * (v0 / tc) * u * u; } else xf = 0.7;
+    var crush = Math.max(0, xf), rear = xf - 4, seat = rear + 2.2, pp;
+    if (belt) pp = seat + Math.min(0.12, crush * 0.2); else pp = Math.min(-v0 * (tH - t) - 1.8, rear + 3.2);
+    var X = function (m) { return 600 + m * 60; };
+    car(S, X(rear), 150, (4 - crush) * 60, BLUE, 72);
+    S.appendChild(svg('circle', { cx: X(pp), cy: 160, r: 12, fill: '#F2C9A0', stroke: INK }));
+    if (belt) S.appendChild(svg('line', { x1: X(seat) - 14, y1: 160, x2: X(seat) + 16, y2: 205, stroke: GOLD, 'stroke-width': 5 }));
+    T(S, 20, 30, 't = ' + fmt(t, 2) + ' s (slow motion)', { w: 700 });
+  }  segv($('i-belt'), function () { iDraw(0, cur($('i-belt')) === '1'); });
+  $('i-go').onclick = function () { stopAll(); var belt = cur($('i-belt')) === '1'; run(3, function (t) { iDraw(t / 10, belt); }, function () { var ts = belt ? 0.12 : 0.01; $('i-c').textContent = '0.10 s'; $('i-p').textContent = fmt(ts, 2) + ' s'; $('i-f').textContent = fmt(70 * 14 / ts) + ' N'; $('i-msg').innerHTML = belt ? 'The belt stretches slightly: the passenger slows down <b>with the car</b> over about 0.12 s.' : 'No belt: the passenger keeps moving at 14 m/s (<b>inertia</b>) until hitting the dashboard and stopping in about 0.01 s: a huge force.'; }); };
+  iDraw(0, true); quiz('ch-i', [['in', 'inertia: no force acts on them yet'], ['push', 'the crash pushes them forward'], ['grav', 'gravity pulls them forward']], 'in', 'Nothing pushes them forward: they simply keep moving (first law) until a force stops them.', 'Is there really a forward force on the passenger?');
+
+  // 10 F = ma
+  var M = { found: {} };
+  function mDraw(x) { var Fv = +$('m-f').value, m = +$('m-m').value; $('m-fo').textContent = Fv; $('m-mo').textContent = m; var a = Fv / m; var S = $('m-svg'); S.innerHTML = ''; S.appendChild(svg('rect', { x: 20, y: 170, width: 680, height: 10, fill: '#C8B89A' })); var cx = 60 + Math.min(560, x * 25); var w = 40 + m * 6; S.appendChild(svg('rect', { x: cx, y: 170 - 40 - m * 2, width: w, height: 40 + m * 2, rx: 6, fill: TEAL, stroke: INK })); T(S, cx + w / 2, 160 - m, m + ' kg', { a: 'middle', c: '#fff', w: 700, s: 13 }); if (Fv) arrow(S, cx - 10 - Fv * 1.2, 150, cx - 4, 150, RED, 5); $('m-eq').innerHTML = 'a = F / m = ' + Fv + ' / ' + m + ' = <b>' + fmt(a, 2) + ' m/s&sup2;</b>'; return a; }
+  $('m-f').oninput = $('m-m').oninput = function () { var a = mDraw(0); if (Math.abs(a - 5) < 1e-9) { M.found[$('m-f').value + '/' + $('m-m').value] = 1; } var k = Object.keys(M.found); $('ch-m-m').textContent = 'Found: ' + (k.length ? k.map(function (s) { return s.replace('/', ' N on ') + ' kg'; }).join(', ') : 'none yet') + '.'; if (k.length >= 2) done('ch-m-m', k.map(function (s) { return s.replace('/', ' N on ') + ' kg'; }).join(' and ') + ' both give 5 m/s².'); };
+  $('m-go').onclick = function () { stopAll(); var a = mDraw(0); run(3, function (t) { mDraw(0.5 * a * t * t); }, function () { $('m-msg').innerHTML = 'After 3 s: v = ' + fmt(a * 3, 1) + ' m/s, s = ' + fmt(4.5 * a, 1) + ' m. Double the force: double the acceleration. Double the mass: half the acceleration.'; }); };
+  mDraw(0);
+
+  // 11 pairs
+  function kDraw(xa, xb) { var ma = +$('k-a').value, mb = +$('k-b').value; $('k-ao').textContent = ma; $('k-bo').textContent = mb; var S = $('k-svg'); S.innerHTML = ''; S.appendChild(svg('rect', { x: 0, y: 200, width: 720, height: 40, fill: '#E6F3FB' })); var ra = 12 + ma / 6, rb = 12 + mb / 6; var A = 340 - xa * 30, B = 380 + xb * 30; S.appendChild(svg('circle', { cx: A, cy: 200 - ra * 2, r: ra, fill: PINK })); S.appendChild(svg('rect', { x: A - ra * 0.7, y: 200 - ra * 1.2, width: ra * 1.4, height: ra * 1.2, fill: PINK })); S.appendChild(svg('circle', { cx: B, cy: 200 - rb * 2, r: rb, fill: BLUE })); S.appendChild(svg('rect', { x: B - rb * 0.7, y: 200 - rb * 1.2, width: rb * 1.4, height: rb * 1.2, fill: BLUE })); T(S, A, 230, 'A ' + ma + ' kg', { a: 'middle', s: 12 }); T(S, B, 230, 'B ' + mb + ' kg', { a: 'middle', s: 12 }); if (xa < 0.05) { arrow(S, 360, 120, 300, 120, RED, 4); arrow(S, 360, 120, 420, 120, RED, 4); T(S, 360, 105, '120 N each way', { a: 'middle', s: 12, c: RED }); } }
+  $('k-a').oninput = $('k-b').oninput = function () { kDraw(0, 0); };
+  $('k-go').onclick = function () { stopAll(); var ma = +$('k-a').value, mb = +$('k-b').value, va = 120 * 0.5 / ma, vb = 120 * 0.5 / mb; $('k-fa').textContent = '120 N'; $('k-fb').textContent = '120 N'; $('k-v').textContent = fmt(va, 2) + ' : ' + fmt(vb, 2); run(4, function (t) { kDraw(va * t, vb * t); }, function () { $('k-msg').innerHTML = 'Equal and opposite forces (third law). The lighter skater gets the bigger speed because a = F / m: ' + fmt(va, 2) + ' m/s and ' + fmt(vb, 2) + ' m/s.'; }); };
+  kDraw(0, 0); quiz('ch-k', [['same', 'the same'], ['big', 'bigger'], ['small', 'smaller']], 'same', 'Third-law pairs are always equal. The lighter skater simply accelerates more.', 'Look at the force readings: are they different?');
+
+  // 12 stopping
+  function tCalc() { var v = +$('t-v').value / 3.6, a = +cur($('t-road')), rt = +cur($('t-drv')); return { v: v, th: v * rt, br: v * v / (2 * a), rt: rt, a: a }; }
+  function tDraw(x, R) { var S = $('t-svg'); S.innerHTML = ''; var sc = 6; S.appendChild(svg('rect', { x: 0, y: 150, width: 720, height: 60, fill: '#6B6B6B' })); var cross = 40 + 40 * sc; for (var i = 0; i < 6; i++) S.appendChild(svg('rect', { x: cross, y: 153 + i * 10, width: 30, height: 6, fill: '#FFF' })); S.appendChild(svg('circle', { cx: cross + 15, cy: 135, r: 9, fill: GOLD, stroke: INK })); T(S, cross + 15, 110, 'crossing at 40 m', { a: 'middle', s: 12 }); for (var m = 0; m <= 100; m += 20) { S.appendChild(svg('line', { x1: 40 + m * sc, y1: 212, x2: 40 + m * sc, y2: 222, stroke: INK })); T(S, 40 + m * sc, 238, m + ' m', { a: 'middle', s: 11 }); } if (R) { S.appendChild(svg('rect', { x: 40, y: 244, width: R.th * sc, height: 8, fill: '#7EC8F2' })); S.appendChild(svg('rect', { x: 40 + R.th * sc, y: 244, width: R.br * sc, height: 8, fill: RED })); } car(S, 40 + x * sc - 90, 150, 90, TEAL); }
+  $('t-v').oninput = function () { $('t-vo').textContent = this.value; tDraw(0); }; $('t-vo').textContent = 50; segv($('t-road'), function () { tDraw(0); }); segv($('t-drv'), function () { tDraw(0); });
+  $('t-go').onclick = function () { stopAll(); var R = tCalc(), tb = R.v / R.a, T0 = R.rt + tb; $('t-th').textContent = fmt(R.th, 1) + ' m'; $('t-br').textContent = fmt(R.br, 1) + ' m'; var st = R.th + R.br; $('t-st').textContent = fmt(st, 1) + ' m'; run(T0, function (t) { var x = t < R.rt ? R.v * t : R.th + R.v * (t - R.rt) - 0.5 * R.a * (t - R.rt) * (t - R.rt); tDraw(Math.min(x, st), R); }, function () { var ok = st < 40; $('t-msg').className = ok ? 'msg good' : 'msg bad'; $('t-msg').innerHTML = ok ? 'Stopped <b>' + fmt(40 - st, 1) + ' m before</b> the crossing.' : '<b>Did not stop in time:</b> the car needed ' + fmt(st, 1) + ' m.'; if (cur($('t-road')) === '4' && cur($('t-drv')) === '0.7') { var best = 0; for (var k = 20; k <= 120; k += 10) { var v = k / 3.6; if (v * 0.7 + v * v / 8 < 40) best = k; } if (+$('t-v').value === best && ok) done('ch-t-m', best + ' km/h is the highest: at ' + (best + 10) + ' km/h the car does not stop in time.'); } }); };
+  tDraw(0);
+
+  // 13 crash
+  function xCalc() { var v = +$('x-v').value / 3.6, d = +$('x-c').value + 0.1, p = 70 * v, t = 2 * d / v, f = 70 * v * v / (2 * d); return { v: v, d: d, p: p, t: t, f: f }; }
+  function xDraw(k, R) { var S = $('x-svg'); S.innerHTML = ''; S.appendChild(svg('rect', { x: 560, y: 60, width: 30, height: 200, fill: '#9A8F80' })); var crush = k * (+$('x-c').value) * 100; car(S, 560 - 240 + 0, 140, 240 - crush * 0.6, BLUE); S.appendChild(svg('rect', { x: 560 - 240 + 240 - crush * 0.6 - 30 * (+$('x-c').value), y: 175, width: 30 * (+$('x-c').value), height: 20, fill: GOLD, opacity: 0.8 })); T(S, 20, 30, 'yellow: crumple zone', { s: 12, c: '#8A6D00' }); var fmax = 60000, w = Math.min(1, (R ? R.f : 0) / fmax) * 480; S.appendChild(svg('rect', { x: 40, y: 270, width: 480, height: 18, fill: '#EEE' })); S.appendChild(svg('rect', { x: 40, y: 270, width: w * k, height: 18, fill: R && R.f > 10000 ? RED : TEAL })); S.appendChild(svg('line', { x1: 40 + 10000 / fmax * 480, y1: 262, x2: 40 + 10000 / fmax * 480, y2: 294, stroke: INK, 'stroke-dasharray': '3 2' })); T(S, 40 + 10000 / fmax * 480, 256, '10 000 N', { a: 'middle', s: 11 }); }
+  $('x-v').oninput = $('x-c').oninput = function () { $('x-vo').textContent = $('x-v').value; $('x-co').textContent = $('x-c').value; xDraw(0); };
+  $('x-go').onclick = function () { stopAll(); var R = xCalc(); $('x-p').textContent = fmt(R.p) + ' kg m/s'; $('x-t').textContent = fmt(R.t, 3) + ' s'; $('x-f').textContent = fmt(R.f) + ' N'; run(0.6, function (t) { xDraw(Math.min(1, t / 0.4), R); }, function () { $('x-msg').innerHTML = 'Same change in momentum (' + fmt(R.p) + ' kg m/s) over ' + fmt(R.t, 3) + ' s: force = ' + fmt(R.p) + ' / ' + fmt(R.t, 3) + ' = <b>' + fmt(R.f) + ' N</b>. A longer crumple zone gives a longer time and a smaller force.'; if (+$('x-v').value === 50 && R.f < 10000) done('ch-x-m', fmt(R.f) + ' N with a ' + $('x-c').value + ' m crumple zone.'); }); };
+  $('x-vo').textContent = 50; $('x-co').textContent = 0.2; xDraw(0);
+
+  window.moDebug = { show: show, tick: function (n, dt) { for (var i = 0; i < (n || 1); i++) step(dt || 0.05); }, V: V, G: G };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

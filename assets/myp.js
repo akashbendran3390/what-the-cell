@@ -23,6 +23,18 @@
     if (b) { e.preventDefault(); openVideo(b.getAttribute('data-video'), b.getAttribute('data-title') || 'Video'); }
   });
 
+  // Lesson pages: give each video in the list a clickable thumbnail in place of the plain time badge (2026-11-23).
+  Array.prototype.forEach.call(document.querySelectorAll('.res li'), function (li) {
+    var b = li.querySelector('button[data-video]'), badge = li.querySelector('.badge');
+    if (!b || !badge || li.querySelector('.vthumb')) return;
+    var t = document.createElement('button');
+    t.type = 'button'; t.className = 'vthumb'; t.setAttribute('data-video', b.getAttribute('data-video'));
+    t.setAttribute('data-title', b.getAttribute('data-title') || ''); t.setAttribute('aria-label', 'Play ' + (b.getAttribute('data-title') || 'video'));
+    t.innerHTML = '<img src="https://i.ytimg.com/vi/' + encodeURIComponent(b.getAttribute('data-video')) + '/mqdefault.jpg" alt="" loading="lazy"><i></i>';
+    t.querySelector('i').textContent = badge.textContent;
+    badge.replaceWith(t); li.classList.add('has-thumb');
+  });
+
   if (!viewer) return;
   var base = viewer.getAttribute('data-base'), n = +viewer.getAttribute('data-count'), ext = viewer.getAttribute('data-ext') || 'png';
   var links = {}; try { links = JSON.parse(viewer.getAttribute('data-links') || '{}'); } catch (e) {}

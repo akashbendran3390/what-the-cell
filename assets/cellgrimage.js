@@ -59,13 +59,44 @@
     clue._p.forEach(function (a) { a.keys.forEach(function (k) { clue._p.forEach(function (b) { if (b !== a) b.keys.forEach(function (k2) { var al = allow(k.length > k2.length ? k : k2); if (al && lev(k, k2) <= al) clue._strict[k] = 1; }); }); }); });
     return clue._p;
   }
-  function match(clue, text) {
+  function match(clue, text) { return strictMatch(clue, text) || kindMatch(clue, text); }
+  function strictMatch(clue, text) {   // the worker's rules: whole answer, small spelling slips forgiven
     var tries = forms(text), best = null, bestD = 9, ps = parsed(clue);
     ps.forEach(function (a) { a.keys.forEach(function (k) { tries.forEach(function (t) {
       if (!t) return;
       var al = clue._strict[k] ? 0 : allow(k), d = t === k ? 0 : lev(t, k);
       if (d <= al && (d < bestD || (d === bestD && a.tier > best.tier))) { best = a; bestD = d; }
     }); }); });
+    return best;
+  }
+  // Kinder matching on this page only (the page sends the matched name to the leaderboard, so scores agree):
+  // ignores "a", "the" and other filler words, plural endings (-s, -es, -ies, -ae, -i), and extra words around a listed answer.
+  var FILL = { a: 1, an: 1, the: 1, some: 1, of: 1, my: 1, its: 1, their: 1, is: 1, are: 1, it: 1, called: 1, type: 1, kind: 1 };
+  function stem(w) {
+    if (w.length > 4 && /ies$/.test(w)) return w.slice(0, -3) + 'y';
+    if (w.length > 4 && /(ches|shes|sses|xes)$/.test(w)) return w.slice(0, -2);
+    if (w.length > 4 && /ae$/.test(w)) return w.slice(0, -1);
+    if (w.length > 3 && /s$/.test(w) && !/ss$/.test(w) && !/us$/.test(w) && !/is$/.test(w)) return w.slice(0, -1);
+    return w;
+  }
+  function words(s) {
+    return String(s).toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter(function (w) { return w && !FILL[w]; }).map(stem);
+  }
+  function kindMatch(clue, text) {
+    var tw = words(text); if (!tw.length) return null;
+    var joined = tw.join(''), best = null, bestLen = 0;
+    var r = strictMatch(clue, tw.join(' ')); if (r) return r;
+    parsed(clue).forEach(function (a) {
+      var names = [a.name].concat(clue.a[clue._p.indexOf(a)].split('|').slice(2));
+      names.forEach(function (n) {
+        var kw = words(n); if (!kw.length) return;
+        var kj = kw.join('');
+        // every word of the listed answer appears in what was typed (so "insulin hormone" finds Insulin)
+        var all = kj.length >= 4 && kw.every(function (w) { return tw.some(function (t) { return t === w || (w.length >= 6 && lev(t, w) <= 1); }); });
+        if (!all && kj === joined) all = true;
+        if (all && (kj.length > bestLen || (kj.length === bestLen && a.tier > best.tier))) { best = a; bestLen = kj.length; }
+      });
+    });
     return best;
   }
 
@@ -88,20 +119,21 @@
     if (!img || !img.complete || !img.naturalWidth) return;
     var c = Math.max(0, Math.min(1, clarShown)), iw = img.naturalWidth, ih = img.naturalHeight, f = spec.f || [0.5, 0.5];
     // view window: tight on the focus point when blurry, the whole picture when clear
-    var zoom = lerp(3.2, 1, Math.pow(c, 0.8)), fit = Math.max(w / iw, h / ih), fitAll = Math.min(w / iw, h / ih);
+    var zoom = lerp(1.6, 1, Math.pow(c, 0.8)), fit = Math.max(w / iw, h / ih), fitAll = Math.min(w / iw, h / ih);
     var scale = revealed ? lerp(fit, fitAll, revealed) : fit * zoom;
     var vw = w / scale, vh = h / scale, cx = lerp(f[0] * iw, iw / 2, revealed ? 1 : c), cy = lerp(f[1] * ih, ih / 2, revealed ? 1 : c);
     var sx = Math.max(0, Math.min(iw - vw, cx - vw / 2)), sy = Math.max(0, Math.min(ih - vh, cy - vh / 2));
     if (vw > iw) sx = (iw - vw) / 2; if (vh > ih) sy = (ih - vh) / 2;
     // low resolution drawing, scaled up smoothly: the blur that clears as you answer
-    var res = revealed ? 1 : Math.pow(c, 1.7);
+    // shapes show early (teacher, 2026-11-23: at 60% focus the specimen must be recognisable)
+    var res = revealed ? 1 : lerp(0.035, 1, Math.pow(c, 1.25));
     var lw = Math.max(6, Math.round(lerp(10, w, res))), lh = Math.max(6, Math.round(lw * h / w));
     small.width = lw; small.height = lh;
     sctx.imageSmoothingEnabled = true; sctx.imageSmoothingQuality = 'high';
     sctx.drawImage(img, sx, sy, vw, vh, 0, 0, lw, lh);
     ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(small, 0, 0, lw, lh, 0, 0, w, h);
-    var blur = revealed ? 0 : (1 - c) * 7, dim = revealed ? 1 : lerp(0.55, 1, c);
+    var blur = revealed ? 0 : (1 - c) * 4.5, dim = revealed ? 1 : lerp(0.55, 1, c);
     cv.style.filter = (blur > 0.1 ? 'blur(' + blur.toFixed(1) + 'px) ' : '') + 'brightness(' + dim.toFixed(2) + ') saturate(' + (revealed ? 1 : lerp(0.4, 1, c)).toFixed(2) + ')';
     var pct = Math.round((revealed ? 1 : c) * 100);
     $('.cg-fbar i').style.width = pct + '%'; $('.cg-fpct').textContent = pct + '%';
@@ -137,7 +169,7 @@
   }
 
   // ---------- game state ----------
-  var mode = 'daily', list = [], idx = 0, picks = [], timer = null, tries = 0, unit = '', guessSeed = 0, specIndex = 0;
+  var mode = 'daily', list = [], idx = 0, picks = [], timer = null, tries = 0, unit = store.unit || '', guessSeed = 0, specIndex = 0;
   function rec() { return store.days[today]; }
   function total(ps) { return ps.reduce(function (a, b) { return a + PTS[b.tier || 0]; }, 0); }
   function streak() {
@@ -164,7 +196,12 @@
       '<p class="cg-lede">A mystery specimen is hiding under the microscope. Answer five biology clues to bring it into focus, then guess what it is. <b>Common answers sharpen it a little. Rare answers that are still correct sharpen it a lot.</b></p>' +
       '<ul class="cg-rules"><li>25 seconds per clue. Spelling slips are forgiven.</li><li>Not recognised? Try again while the clock runs (3 tries).</li><li>Guess the specimen at the end for 50 bonus points. A new specimen every day at midnight.</li></ul>' + stats() +
       '<div class="cg-btns"><button type="button" class="cg-go" data-act="daily">' + (resume ? 'Carry on with today\'s specimen' : 'Look at today\'s specimen') + '</button></div>' +
-      '<div class="cg-practice"><label for="cg-unit">Practise as much as you like:</label><select id="cg-unit"><option value="">All units</option>' + UNITS.map(function (u) { return '<option' + (u === unit ? ' selected' : '') + '>' + u + '</option>'; }).join('') + '</select><button type="button" class="cg-alt" data-act="practice">Practice specimen</button></div>';
+      unitPicker();
+  }
+  function unitPicker() {   // practice: pick a unit and every clue (and, where we have one, the specimen) comes from it
+    return '<div class="cg-practice"><p id="cg-unit-l">Practise one unit as much as you like:</p><div class="cg-units" role="radiogroup" aria-labelledby="cg-unit-l">' +
+      [''].concat(UNITS).map(function (u) { return '<button type="button" role="radio" data-unit="' + u + '" aria-checked="' + (u === unit) + '">' + (u || 'All units') + '</button>'; }).join('') +
+      '</div><button type="button" class="cg-alt" data-act="practice">Practice ' + (unit ? esc(unit) + ' ' : '') + 'specimen</button></div>';
   }
 
   function startDaily() {
@@ -177,13 +214,18 @@
     }, offline);
   }
   function startPractice() {
-    unit = ($('#cg-unit') || {}).value || '';
     loadData().then(function () {
       mode = 'practice'; picks = []; idx = 0;
       var pool = []; DATA.clues.forEach(function (c, i) { if (!unit || c.u === unit) pool.push(i); });
-      var seed = (Date.now() % 1e6) + 1, o = shuffled(pool.length, seed); list = o.slice(0, PER_DAY).map(function (k) { return pool[k]; });
-      var todayIdx = dailySpecimen(DATA.specimens, today), others = []; DATA.specimens.forEach(function (s, i) { if (i !== todayIdx) others.push(i); });
-      specIndex = others[seed % others.length]; guessSeed = seed + 11;
+      // avoid the clues seen in the last few practice rounds when the unit has enough
+      var seen = store.seenClues || [], fresh = pool.filter(function (i) { return seen.indexOf(DATA.clues[i].c) < 0; });
+      if (fresh.length < PER_DAY) { fresh = pool; seen = []; }
+      var seed = (Date.now() % 1e6) + 1, o = shuffled(fresh.length, seed); list = o.slice(0, PER_DAY).map(function (k) { return fresh[k]; });
+      store.seenClues = seen.concat(list.map(function (i) { return DATA.clues[i].c; })).slice(-60); save();
+      var todayIdx = dailySpecimen(DATA.specimens, today), others = [], mine = [];
+      DATA.specimens.forEach(function (s, i) { if (i !== todayIdx && i !== store.lastSpec) { others.push(i); if (unit && s.u === unit) mine.push(i); } });
+      var from = mine.length ? mine : others;
+      specIndex = from[seed % from.length]; store.lastSpec = specIndex; save(); guessSeed = seed + 11;
       clarShown = 0; setSpecimen(DATA.specimens[specIndex], function () { focusTo(0); }); ask();
     }, offline);
   }
@@ -199,6 +241,7 @@
     if (mode === 'daily') { store.days[today].started = idx; save(); }
     panel.innerHTML = head(clue) +
       '<p class="cg-clue">' + esc(clue.c) + '</p>' +
+      '<p class="cg-count">' + clue.a.length + ' correct answers on our list. The rarer yours is, the sharper the picture.</p>' +
       '<div class="cg-timer"><i style="width:100%"></i></div>' +
       '<form class="cg-form" autocomplete="off"><label class="cg-sr" for="cg-in">Your answer</label><input id="cg-in" type="text" maxlength="60" placeholder="Type your answer" spellcheck="false" autocapitalize="off"><button type="submit">Go</button></form>' +
       '<p class="cg-msg"></p>';
@@ -226,7 +269,7 @@
 
   function reveal(clue, m, typed) {
     picks.push({ tier: m ? m.tier : 0, ans: m ? m.name : '' });
-    if (mode === 'daily') { var r = rec(); r.picks = picks; r.typed[idx] = m ? typed : ''; save(); }
+    if (mode === 'daily') { var r = rec(); r.picks = picks; r.typed[idx] = m ? m.name : ''; save(); }
     if (m) focusTo(clarityFor(total(picks)));
     // Only one or two of the rarest answers, so the rest stay a challenge for next time.
     var rare = parsed(clue).filter(function (a) { return a !== m && a.tier >= 4 && (!m || a.tier >= m.tier); });
@@ -264,7 +307,8 @@
       '<p class="cg-credit">' + esc(s.k) + ' &middot; Image: ' + esc(s.credit) + '</p>' +
       '<p class="cg-big">' + sc + ' <small>points</small></p>' +
       (isDaily ? '<div class="cg-sq">' + squares(picks) + (right ? '<i class="t5 g" title="Guessed the specimen"></i>' : '<i class="t0 g" title="Guess missed"></i>') + '</div>' + stats() : '') +
-      '<div class="cg-btns">' + (isDaily ? '<button type="button" class="cg-go" data-act="share">Copy my result</button>' : '<button type="button" class="cg-go" data-act="practice">Another practice specimen</button>') + '<button type="button" class="cg-alt" data-act="' + (isDaily ? 'practice' : 'home') + '">' + (isDaily ? 'Practice mode' : 'Back') + '</button></div>' +
+      (isDaily ? '<div class="cg-btns"><button type="button" class="cg-go" data-act="share">Copy my result</button></div>' : '') + unitPicker() +
+      (isDaily ? '' : '<div class="cg-btns"><button type="button" class="cg-alt" data-act="home">Back</button></div>') +
       '<p class="cg-msg"></p>' + (isDaily ? '<p class="cg-next">New specimen in <b class="cg-cd"></b></p>' : '');
   }
 
@@ -339,10 +383,14 @@
   if (admin) { try { adminKey = sessionStorage.getItem('cg-admin') || ''; } catch (e) {} if (!adminKey) { adminKey = prompt('Admin key') || ''; try { sessionStorage.setItem('cg-admin', adminKey); } catch (e) {} } }
 
   panel.addEventListener('click', function (e) {
-    var b = e.target.closest && e.target.closest('[data-act]'); if (!b) return;
+    var b = e.target.closest && e.target.closest('[data-act],[data-unit]'); if (!b) return;
     var act = b.getAttribute('data-act');
     if (act === 'daily') startDaily();
-    else if (act === 'practice') { if (!$('#cg-unit')) unit = unit; startPractice(); }
+    else if (act === 'practice') startPractice();
+    else if (b.hasAttribute('data-unit')) {
+      unit = b.getAttribute('data-unit'); store.unit = unit; save();
+      var p = $('.cg-practice', panel); if (p) p.outerHTML = unitPicker();
+    }
     else if (act === 'home') { clearInterval(timer); spec = null; img = null; clarShown = 0; revealed = 0; scope.classList.remove('revealed'); draw(); intro(); }
     else if (act === 'next') { idx++; ask(); }
     else if (act === 'guess') chose(+b.getAttribute('data-i'));

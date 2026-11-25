@@ -783,3 +783,18 @@ html.sim-open-page{overflow:hidden}
 
 /* Site audit (2026-11-21): long single words in headings (e.g. compartmentalization) wrap on phones instead of pushing the page sideways */
 @media (max-width:560px){h1,h2{overflow-wrap:break-word;hyphens:auto}}
+/* Answers to the "Working with data" slides, hidden until clicked (subtopic.js, 2026-11-25) */
+.viewer-answers{padding:10px 4px 2px;border-top:1px solid rgb(255 255 255/.2);margin-top:8px;color:#fff}
+.va-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.va-btn{font:700 14px var(--ui);color:#10263a;background:#8ADFDA;border:0;padding:5px 13px;border-radius:99px;cursor:pointer}
+.va-btn::before{content:"\25B8\00A0"}
+.va-btn.open{background:var(--yellow)}
+.va-btn.open::before{content:"\25BE\00A0"}
+.va-btn.va-all{background:none;color:#fff;border:1px solid rgb(255 255 255/.5)}
+.va-btn.va-all::before{content:none}
+.va-btn:hover{background:var(--yellow);color:#10263a}
+.va-text{margin:8px 0 2px;padding:10px 14px;background:#fff;color:#1B2A41;border-left:5px solid #0F5C6E;border-radius:8px;font:15px/1.45 var(--ui)}
+.va-text b{display:block;font-weight:700;color:#0F5C6E;margin-bottom:3px}
+.va-text p{margin:0}
+.viewer.presenting .viewer-answers{max-height:34vh;overflow:auto}
+.viewer.presenting .va-text{font-size:19px}

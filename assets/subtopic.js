@@ -41,13 +41,48 @@ function initViewer() {
       });
     }
   }
+  // Answers to the "Working with data" slides (answers.json next to the slides, written by the deck build, 2026-11-25).
+  // Each answer stays hidden until its button is clicked, so the class can try the questions first.
+  const ansBox = document.createElement('div'); ansBox.className = 'viewer-answers'; ansBox.hidden = true;
+  let answers = {};
+  function loadAnswers() {
+    answers = {}; showAnswers(at);
+    fetch(v.dataset.base + '../answers.json').then(r => r.ok ? r.json() : {}).then(j => { answers = j || {}; showAnswers(at); }).catch(() => {});
+  }
+  function showAnswers(n) {
+    const d = answers[n]; ansBox.textContent = ''; ansBox.hidden = !d;
+    if (!d) return;
+    const head = document.createElement('div'); head.className = 'va-head';
+    const label = document.createElement('span'); label.className = 'viewer-watch'; label.textContent = 'Answers for this slide';
+    head.append(label);
+    const items = [];
+    d.q.forEach(([q, marks, a], i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'va-btn'; b.setAttribute('aria-expanded', 'false');
+      b.textContent = 'Answer ' + (i + 1); b.title = q;
+      const p = document.createElement('div'); p.className = 'va-text'; p.hidden = true;
+      const h = document.createElement('b'); h.textContent = (i + 1) + '. ' + q + ' [' + marks + ']';
+      const t = document.createElement('p'); t.textContent = a;
+      p.append(h, t);
+      b.addEventListener('click', () => { const open = p.hidden; p.hidden = !open; b.setAttribute('aria-expanded', open); b.classList.toggle('open', open); if (presenting()) wake(); });
+      head.append(b); items.push([b, p]);
+    });
+    const all = document.createElement('button'); all.type = 'button'; all.className = 'va-btn va-all'; all.textContent = 'Show all';
+    all.addEventListener('click', () => {
+      const open = items.some(([, p]) => p.hidden);
+      items.forEach(([b, p]) => { p.hidden = !open; b.setAttribute('aria-expanded', open); b.classList.toggle('open', open); });
+      all.textContent = open ? 'Hide all' : 'Show all';
+    });
+    head.append(all);
+    ansBox.append(head);
+    items.forEach(([, p]) => ansBox.append(p));
+  }
   let at = 1;
   function show(n) {
     at = Math.min(count, Math.max(1, n));
     img.src = src(at); img.alt = 'Slide ' + at + ' of ' + count;
     range.value = at; num.textContent = at;
     prev.disabled = at === 1; next.disabled = at === count;
-    showVideos(at);
+    showVideos(at); showAnswers(at);
     if (at < count) new Image().src = src(at + 1);
     if (presenting()) { if (videos[at]) wake(); else if (!v.contains(document.activeElement) || document.activeElement === v) sleep(); }
   }
@@ -56,12 +91,13 @@ function initViewer() {
   v.querySelector('.viewer-bar').before(controls);
   controls.append(v.querySelector('.viewer-bar'));
   if (videoBox) controls.append(videoBox);
+  controls.append(ansBox);
   const full = document.createElement('button'); full.type = 'button'; full.id = 'viewer-full'; full.textContent = 'Full screen';
   next.after(full);
   const presenting = () => v.classList.contains('presenting');
   const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement;
   let idleTimer;
-  function sleep() { clearTimeout(idleTimer); if (!v.querySelector('.yt-player')) v.classList.add('idle'); }
+  function sleep() { clearTimeout(idleTimer); if (!v.querySelector('.yt-player') && !v.querySelector('.va-text:not([hidden])')) v.classList.add('idle'); }
   function wake() { v.classList.remove('idle'); clearTimeout(idleTimer); idleTimer = setTimeout(sleep, 3000); }
   function setPresenting(on) {
     v.classList.toggle('presenting', on);
@@ -120,9 +156,9 @@ function initViewer() {
     const total = document.getElementById('viewer-total'); if (total) total.textContent = count;
     const pdf = document.getElementById('deck-pdf');
     if (pdf) { pdf.href = t.dataset.pdf; pdf.dataset.filename = t.dataset.filename; pdf.download = t.dataset.filename; }
-    show(1);
+    show(1); loadAnswers();
   }));
-  show(1);
+  show(1); loadAnswers();
 }
 
 async function initDownloads() {

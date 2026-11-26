@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Health Lab. Compare growth spurts, follow hormones in the blood, build a balanced plate, balance energy, name bones, move joints and muscles, explore the teenage brain, make choices, test your reaction time, breathe with a model chest, investigate lung capacity and see what smoking does. MYP Scie...">
+<link rel="canonical" href="https://whatthecell.org/myp/health-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Health Lab | What the Cell">
+<meta property="og:description" content="Health Lab. Compare growth spurts, follow hormones in the blood, build a balanced plate, balance energy, name bones, move joints and muscles, explore the teenage brain, make choices, test your reaction time, breathe with a model chest, investigate lung capacity and see what smoking does. MYP Scie...">
+<meta property="og:url" content="https://whatthecell.org/myp/health-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Health Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=b9dd26ec">
+<script src="../assets/theme.js?v=7d185cf5"></script>
+<style>
+/* MYP 3 lab (2026-11-26): shared lab styles copied from molecules-lab.html by build-myp3-labs.ps1. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+.eqbig{font:700 1.15rem/2.2 ui-monospace,monospace;text-align:center;padding:8px 0 4px;overflow-x:auto}
+.co{display:inline-flex;align-items:center;gap:2px;margin-right:2px;vertical-align:middle}
+.co button{font:800 .8rem var(--ui);border:0;border-radius:8px;width:24px;height:24px;cursor:pointer;background:var(--soft);color:var(--ink)}
+.co b{min-width:14px;text-align:center;color:#B0356F}
+#d-list .prow{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr)}
+table.t{margin:0}
+.rbox{display:block;width:100%;height:190px;border:0;border-radius:16px;font:800 1.3rem var(--ui);background:#2E7DB8;color:#fff;cursor:pointer;margin-bottom:10px}.rbox.wait{background:#B5532A}.rbox.go{background:#4CA64C}
+.chip input{margin-right:5px;vertical-align:middle}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#B0356F;--band2:#1F7A7A;--band3:#2A1D5E;--band-pic:url('art/myp/myp3-health-runner-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp3-looking-after-ourselves.html">Looking After Ourselves</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp3">MYP 3, Unit 1</a> / <a href="myp3-looking-after-ourselves.html">Looking After Ourselves</a></div>
+    <h1>Health Lab</h1>
+    <p class="lede">Compare growth spurts, follow hormones in the blood, build a balanced plate, balance energy, name bones, move joints and muscles, explore the teenage brain, make choices, test your reaction time, breathe with a model chest, investigate lung capacity and see what smoking does.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="growth" style="--c:var(--coral)"><span>1</span>Growth</button>
+    <button role="tab" aria-selected="false" data-t="hormones" style="--c:var(--tang)"><span>2</span>Hormones</button>
+    <button role="tab" aria-selected="false" data-t="plate" style="--c:var(--sky)"><span>3</span>Balanced plate</button>
+    <button role="tab" aria-selected="false" data-t="energy" style="--c:var(--mint)"><span>4</span>Energy balance</button>
+    <button role="tab" aria-selected="false" data-t="skeleton" style="--c:var(--pink)"><span>5</span>Skeleton</button>
+    <button role="tab" aria-selected="false" data-t="joints" style="--c:var(--violet)"><span>6</span>Joints</button>
+    <button role="tab" aria-selected="false" data-t="muscles" style="--c:var(--coral)"><span>7</span>Muscles</button>
+    <button role="tab" aria-selected="false" data-t="brain" style="--c:var(--tang)"><span>8</span>Brain</button>
+    <button role="tab" aria-selected="false" data-t="choices" style="--c:var(--sky)"><span>9</span>Choices</button>
+    <button role="tab" aria-selected="false" data-t="reaction" style="--c:var(--mint)"><span>10</span>Reaction time</button>
+    <button role="tab" aria-selected="false" data-t="lungs" style="--c:var(--pink)"><span>11</span>Lungs</button>
+    <button role="tab" aria-selected="false" data-t="capacity" style="--c:var(--violet)"><span>12</span>Lung capacity</button>
+    <button role="tab" aria-selected="false" data-t="smoking" style="--c:var(--coral)"><span>13</span>Smoking</button>
+    <button role="tab" aria-selected="false" data-t="quiz" style="--c:var(--tang)"><span>14</span>Unit quiz</button>
+  </div>
+
+  <section class="panel" id="p-growth">
+    <p class="intro">Everyone has a <b>growth spurt</b> in puberty, but not at the same age. Move the age slider and compare the two curves: how fast does each person grow each year?</p>
+    <div class="lab"><div class="stagebox"><svg id="g-svg" viewBox="0 0 640 380" role="img" aria-label="Height gain per year against age for a girl and a boy"></svg></div>
+    <div class="side"><div class="ctl"><label for="g-age">Age: <b id="g-agev">12</b> years</label><input type="range" id="g-age" min="8" max="18" step="0.5" value="12"></div>
+    <div class="stats"><div><small>Girl</small><span id="g-f">-</span></div><div><small>Boy</small><span id="g-m">-</span></div><div><small>Faster</small><span id="g-w">-</span></div></div>
+    <div class="msg" id="g-msg">Values are typical averages; real people vary a lot.</div></div></div>
+    <div class="challenge" id="ch-g"></div>
+  </section>
+
+  <section class="panel" id="p-hormones" hidden>
+    <p class="intro">Hormones are chemical messengers carried in the <b>blood</b>. Click a gland to see its hormone and target, then run the puberty chain.</p>
+    <div class="lab"><div class="stagebox"><svg id="h-svg" viewBox="0 0 640 400" role="img" aria-label="Glands of the endocrine system"></svg></div>
+    <div class="side"><div class="seg" id="h-sex"></div><button class="btn2" id="h-run">Run the puberty chain</button><div class="msg" id="h-msg">Click a gland.</div></div></div>
+    <div class="challenge" id="ch-h"></div>
+  </section>
+
+  <section class="panel" id="p-plate" hidden>
+    <p class="intro">Build a lunch for a 14-year-old who plays football after school. Click foods to add them (click again to remove). Try to get every bar into the green zone.</p>
+    <div class="lab"><div class="stagebox"><svg id="pl-svg" viewBox="0 0 640 360" role="img" aria-label="Nutrient bars"></svg></div>
+    <div class="side"><div class="cards" id="pl-foods"></div><div class="msg" id="pl-msg">Add some foods.</div></div></div>
+    <div class="challenge" id="ch-pl"></div>
+  </section>
+
+  <section class="panel" id="p-energy" hidden>
+    <p class="intro">Energy in comes from food; energy out goes on growing, keeping warm and moving. Choose a day's meals and activities and watch the balance.</p>
+    <div class="lab"><div class="stagebox"><svg id="e-svg" viewBox="0 0 640 320" role="img" aria-label="Energy balance scale"></svg></div>
+    <div class="side"><span class="lbl">Food</span><div class="cards" id="e-food"></div><span class="lbl">Activity</span><div class="cards" id="e-act"></div>
+    <div class="stats"><div><small>In / kJ</small><span id="e-in">0</span></div><div><small>Out / kJ</small><span id="e-out">0</span></div><div><small>Difference</small><span id="e-d">0</span></div></div>
+    <div class="msg" id="e-msg">Growing and keeping the body working uses about 6500 kJ a day before any activity.</div></div></div>
+    <div class="challenge" id="ch-e"></div>
+  </section>
+
+  <section class="panel" id="p-skeleton" hidden>
+    <p class="intro">The skeleton supports, protects, moves, makes blood cells and stores minerals. Pick a bone, then pick its main job. Ten in a row wins.</p>
+    <div class="lab"><div class="stagebox"><img src="../assets/art/myp3/skeleton.png" alt="Labelled human skeleton, front view" style="display:block;max-height:520px;margin:0 auto;max-width:100%"><p class="why">Skeleton: public domain (Wikimedia Commons, Human skeleton front en.svg).</p></div>
+    <div class="side"><div class="msg" id="sk-q">Where is the bone?</div><div class="cards" id="sk-opts"></div><div class="stats"><div><small>Score</small><span id="sk-s">0</span></div><div><small>Streak</small><span id="sk-st">0</span></div><div><small>Best</small><span id="sk-b">0</span></div></div><div class="msg" id="sk-msg">Use the labelled picture to help you.</div></div></div>
+    <div class="challenge" id="ch-sk"></div>
+  </section>
+
+  <section class="panel" id="p-joints" hidden>
+    <p class="intro">Choose a joint and drag the slider to move the bone. How far can it go? Then take away the cartilage and synovial fluid.</p>
+    <div class="lab"><div class="stagebox"><svg id="j-svg" viewBox="0 0 640 360" role="img" aria-label="Joint movement model"></svg></div>
+    <div class="side"><div class="seg" id="j-type"></div><div class="ctl"><label for="j-ang">Angle: <b id="j-angv">0</b>&deg;</label><input type="range" id="j-ang" min="-180" max="180" value="0"></div>
+    <label class="chip"><input type="checkbox" id="j-cart" checked>Cartilage and synovial fluid</label>
+    <div class="stats"><div><small>Range</small><span id="j-range">-</span></div><div><small>Friction</small><span id="j-fr">low</span></div><div><small>Example</small><span id="j-ex">-</span></div></div>
+    <div class="msg" id="j-msg">Pick a joint.</div></div></div>
+    <div class="challenge" id="ch-j"></div>
+  </section>
+
+  <section class="panel" id="p-muscles" hidden>
+    <p class="intro">Muscles can only <b>pull</b>. Bend and straighten the arm and watch which muscle contracts (gets shorter and fatter) and which relaxes.</p>
+    <div class="lab"><div class="stagebox"><svg id="m-svg" viewBox="0 0 640 360" role="img" aria-label="Arm with biceps and triceps"></svg></div>
+    <div class="side"><div class="seg" id="m-limb"></div><div class="ctl"><label for="m-ang">Joint angle: <b id="m-angv">90</b>&deg;</label><input type="range" id="m-ang" min="30" max="175" value="90"></div>
+    <div class="stats"><div><small id="m-n1">Biceps</small><span id="m-a">-</span></div><div><small id="m-n2">Triceps</small><span id="m-b">-</span></div><div><small>Moving</small><span id="m-dir">-</span></div></div>
+    <div class="msg" id="m-msg">Move the slider.</div></div></div>
+    <div class="challenge" id="ch-m"></div>
+  </section>
+
+  <section class="panel" id="p-brain" hidden>
+    <p class="intro">Click a brain region to see its job. Then move the age slider: which parts are still developing in your teens?</p>
+    <div class="lab"><div class="stagebox"><svg id="b-svg" viewBox="0 0 640 360" role="img" aria-label="Brain regions and how mature they are"></svg></div>
+    <div class="side"><div class="cards" id="b-reg"></div><div class="ctl"><label for="b-age">Age: <b id="b-agev">14</b></label><input type="range" id="b-age" min="10" max="26" value="14"></div><div class="msg" id="b-msg">Click a region.</div></div></div>
+    <div class="challenge" id="ch-b"></div>
+  </section>
+
+  <section class="panel" id="p-choices" hidden>
+    <p class="intro">Read each situation and choose a response. You will see possible <b>immediate</b> and <b>future</b> consequences for your physical, emotional and social health.</p>
+    <div class="lab"><div class="stagebox" style="padding:18px"><div class="msg" id="c-sit"></div><div class="cards" id="c-opts" style="margin-top:12px"></div></div>
+    <div class="side"><div class="msg" id="c-res">Choose a response.</div><div class="row"><button class="btn2 ghost" id="c-prev">Previous</button><button class="btn2" id="c-next">Next situation</button></div></div></div>
+    <div class="challenge" id="ch-c"></div>
+  </section>
+
+  <section class="panel" id="p-reaction" hidden>
+    <p class="intro">Click the box as soon as it turns green. Do five tries, then turn on <b>distraction</b> and try again. Alcohol slows reactions even more than distraction.</p>
+    <div class="lab"><div class="stagebox"><button class="rbox" id="r-box">Click to start</button><div class="eq" id="r-dis" hidden></div></div>
+    <div class="side"><label class="chip"><input type="checkbox" id="r-dist">Distraction (count backwards in 7s from 100 out loud)</label>
+    <div class="tablewrap"><table class="t"><thead><tr><th>Try</th><th>Normal / s</th><th>Distracted / s</th></tr></thead><tbody id="r-tab"></tbody></table></div>
+    <div class="stats"><div><small>Mean normal</small><span id="r-m1">-</span></div><div><small>Mean distracted</small><span id="r-m2">-</span></div><div><small>Extra at 50 km/h</small><span id="r-x">-</span></div></div>
+    <button class="btn2 ghost" id="r-reset">Reset</button></div></div>
+    <div class="challenge" id="ch-r"></div>
+  </section>
+
+  <section class="panel" id="p-lungs" hidden>
+    <p class="intro">This is a model chest. Pull the diaphragm down and push it up. Watch the volume, the pressure and the air.</p>
+    <div class="lab"><div class="stagebox"><svg id="l-svg" viewBox="0 0 640 380" role="img" aria-label="Model chest with lungs and diaphragm"></svg></div>
+    <div class="side"><div class="ctl"><label for="l-d">Diaphragm: <b id="l-dv">relaxed (domed)</b></label><input type="range" id="l-d" min="0" max="100" value="0"></div>
+    <div class="stats"><div><small>Chest volume</small><span id="l-v">-</span></div><div><small>Pressure</small><span id="l-p">-</span></div><div><small>Air</small><span id="l-a">-</span></div></div>
+    <button class="btn2 alt" id="l-auto">Breathe automatically</button><div class="msg" id="l-msg">Drag the slider.</div></div></div>
+    <div class="challenge" id="ch-l"></div>
+  </section>
+
+  <section class="panel" id="p-capacity" hidden>
+    <p class="intro">Choose a factor and test 10 virtual students. Does it affect <b>vital capacity</b> (the most air breathed out after a deep breath in)?</p>
+    <div class="lab"><div class="stagebox"><svg id="v-svg" viewBox="0 0 640 380" role="img" aria-label="Scatter graph of vital capacity"></svg></div>
+    <div class="side"><div class="seg" id="v-f"></div><button class="btn2" id="v-go">Test 10 students</button><div class="tablewrap"><table class="t"><thead><tr><th>Student</th><th id="v-h">Height / cm</th><th>Vital capacity / L</th></tr></thead><tbody id="v-tab"></tbody></table></div><div class="msg" id="v-msg">Pick a factor.</div></div></div>
+    <div class="challenge" id="ch-v"></div>
+  </section>
+
+  <section class="panel" id="p-smoking" hidden>
+    <p class="intro">Add years of smoking and watch what happens to the cilia, the alveoli and the blood. Then press <b>Quit</b>: which damage recovers?</p>
+    <div class="lab"><div class="stagebox"><svg id="s-svg" viewBox="0 0 640 360" role="img" aria-label="Lung health bars"></svg></div>
+    <div class="side"><div class="ctl"><label for="s-y">Years of smoking: <b id="s-yv">0</b></label><input type="range" id="s-y" min="0" max="40" value="0"></div><div class="row"><button class="btn2 warm" id="s-quit">Quit now</button><button class="btn2 ghost" id="s-reset">Reset</button></div><div class="msg" id="s-msg">A non-smoker's lungs.</div></div></div>
+    <div class="challenge" id="ch-s"></div>
+  </section>
+
+  <section class="panel" id="p-quiz" hidden>
+    <p class="intro">Fifteen mixed questions from the whole unit. Revise any topic where you get less than 2 out of 3.</p>
+    <div id="q-box"></div><div class="row" style="margin-top:12px"><button class="btn2" id="q-chk">Check my answers</button><button class="btn2 ghost" id="q-new">New order</button></div><div class="msg" id="q-msg" style="margin-top:12px">Answer every question, then check.</div>
+  </section>
+  <p class="why" style="margin-top:24px">Health Lab is made by What the Cell for MYP 3 Science, Unit 1: Looking After Ourselves. Values are simplified for learning.</p>
+</div></main>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  var NS = 'http://www.w3.org/2000/svg', INK = '#1E0E4A', SKY = '#2E7DB8', MINT = '#2E9E6B', CORAL = '#E4572E', TANG = '#E89B1E', PINK = '#B0356F', VIO = '#5F3DB8', GREY = '#9AA3B5';
+  function el(S, t, a, txt) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; S.appendChild(e); return e; }
+  function line(S, x1, y1, x2, y2, c, w) { return el(S, 'line', { x1: x1, y1: y1, x2: x2, y2: y2, stroke: c || INK, 'stroke-width': w || 2, 'stroke-linecap': 'round' }); }
+  function text(S, x, y, t, o) { o = o || {}; return el(S, 'text', { x: x, y: y, 'font-size': o.s || 14, 'font-weight': o.b ? 800 : 500, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'Atkinson Hyperlegible, sans-serif' }, t); }
+  function rect(S, x, y, w, h, f, r, st) { return el(S, 'rect', { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h), rx: r || 0, fill: f, stroke: st || 'none' }); }
+  function circ(S, x, y, r, f, st, w) { return el(S, 'circle', { cx: x, cy: y, r: r, fill: f, stroke: st || 'none', 'stroke-width': w || 1.5 }); }
+  function seg(box, opts, cb, start) { box.innerHTML = ''; opts.forEach(function (o, i) { var b = document.createElement('button'); b.type = 'button'; b.dataset.v = o[0]; b.textContent = o[1]; b.setAttribute('aria-pressed', i === (start || 0)); b.onclick = function () { [].forEach.call(box.children, function (x) { x.setAttribute('aria-pressed', x === b); }); if (cb) cb(o[0]); }; box.appendChild(b); }); }
+  function cur(box) { var b = box.querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function quiz(id, q, opts, right, good, hint) { var box = $(id); box.innerHTML = '<b>Challenge:</b> <span>' + q + '</span><span class="seg"></span><p class="why"></p>'; var sg = box.querySelector('.seg'), why = box.querySelector('.why');
+    opts.forEach(function (o) { var b = document.createElement('button'); b.type = 'button'; b.textContent = o[1]; b.onclick = function () { if (o[0] === right) { why.innerHTML = '&#10004; ' + good; why.style.color = MINT; } else { why.innerHTML = '&#10008; Not quite. ' + hint; why.style.color = CORAL; } }; sg.appendChild(b); }); }
+  var NAMES = ['growth', 'hormones', 'plate', 'energy', 'skeleton', 'joints', 'muscles', 'brain', 'choices', 'reaction', 'lungs', 'capacity', 'smoking', 'quiz'];
+  function show(n) { NAMES.forEach(function (k) { $('p-' + k).hidden = k !== n; }); [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.dataset.t === n); }); if (history.replaceState) history.replaceState(null, '', '#' + n); }
+  [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { show(b.dataset.t); }; });
+
+  // 1 growth
+  var GF = [[8, 5.5], [9, 6], [10, 6.5], [11, 8], [12, 7], [13, 4.5], [14, 2], [15, 1], [16, 0.5], [17, 0.2], [18, 0]], GM = [[8, 5.5], [9, 5.2], [10, 5], [11, 5.2], [12, 6], [13, 8.5], [14, 9], [15, 6], [16, 3], [17, 1.2], [18, 0.5]];
+  function gAt(a, x) { for (var i = 1; i < a.length; i++) if (x <= a[i][0]) { var t = (x - a[i - 1][0]) / (a[i][0] - a[i - 1][0]); return a[i - 1][1] + t * (a[i][1] - a[i - 1][1]); } return a[a.length - 1][1]; }
+  function gx(v) { return 70 + (v - 8) * 54; } function gy(v) { return 330 - v * 30; }
+  function gDraw() { var S = $('g-svg'), age = +$('g-age').value; S.innerHTML = ''; for (var v = 0; v <= 10; v += 2) { line(S, 70, gy(v), 610, gy(v), '#E3E8EE', 1); text(S, 62, gy(v) + 5, v, { a: 'end', s: 12 }); } for (var a = 8; a <= 18; a += 2) text(S, gx(a), 350, a, { a: 'middle', s: 12 });
+    text(S, 340, 375, 'Age / years', { a: 'middle', s: 12, b: 1 }); text(S, 20, 20, 'Height gain / cm per year', { s: 12, b: 1 });
+    [[GF, CORAL, 'Girl'], [GM, SKY, 'Boy']].forEach(function (c) { var d = c[0].map(function (p, i) { return (i ? 'L' : 'M') + gx(p[0]) + ' ' + gy(p[1]); }).join(' '); el(S, 'path', { d: d, fill: 'none', stroke: c[1], 'stroke-width': 4 }); });
+    line(S, gx(age), 30, gx(age), 330, INK, 1.5); var f = gAt(GF, age), m = gAt(GM, age); circ(S, gx(age), gy(f), 7, CORAL); circ(S, gx(age), gy(m), 7, SKY); text(S, 560, 50, 'Girl', { c: CORAL, b: 1 }); text(S, 560, 72, 'Boy', { c: SKY, b: 1 });
+    $('g-agev').textContent = age; $('g-f').textContent = f.toFixed(1) + ' cm'; $('g-m').textContent = m.toFixed(1) + ' cm'; $('g-w').textContent = Math.abs(f - m) < 0.3 ? 'same' : (f > m ? 'girl' : 'boy');
+    $('g-msg').innerHTML = age < 10.5 ? 'Before puberty both grow at about 5 to 6 cm a year.' : age < 12.5 ? 'The girl is in her <b>growth spurt</b>; the boy has not started his yet.' : age < 15.5 ? 'The boy is in his <b>growth spurt</b>; the girl is slowing down.' : 'Growth is nearly finished: the growth plates in the bones are closing.'; }
+  $('g-age').oninput = gDraw; gDraw();
+  quiz('ch-g', 'A boy and a girl are both 13. Who is likely to grow more in the next year?', [['b', 'the boy'], ['g', 'the girl'], ['s', 'the same']], 'b', 'At 13 the boy is entering his spurt (8.5 cm a year) while the girl is slowing (4.5 cm a year).', 'Read both curves at age 13.');
+
+  // 2 hormones
+  var GL = { pit: ['Pituitary gland', 320, 70, 'FSH and LH', 'ovaries or testes', 'The master gland: its hormones control other glands.'], thy: ['Thyroid', 320, 130, 'thyroxine', 'most cells', 'Controls how fast cells use energy (metabolism).'], adr: ['Adrenal glands', 290, 210, 'adrenaline', 'heart, muscles, liver', 'Fight or flight: heart beats faster.'], pan: ['Pancreas', 355, 230, 'insulin', 'liver and muscles', 'Lowers blood glucose.'], ova: ['Ovaries', 320, 300, 'oestrogen', 'uterus, breasts, whole body', 'Female puberty changes; thickens the uterus lining.'], tes: ['Testes', 320, 350, 'testosterone', 'whole body', 'Male puberty changes; sperm production.'] }, HS = 'f', HSEL = null;
+  function hDraw(t) { var S = $('h-svg'); S.innerHTML = ''; el(S, 'ellipse', { cx: 320, cy: 55, rx: 70, ry: 48, fill: '#F3E6F0', stroke: INK }); text(S, 320, 30, 'brain', { a: 'middle', s: 12 }); el(S, 'path', { d: 'M260 110 Q240 240 260 380 L380 380 Q400 240 380 110 Z', fill: '#FDF5EC', stroke: INK }); el(S, 'path', { d: 'M250 120 C200 200 200 300 250 370', fill: 'none', stroke: CORAL, 'stroke-width': 6, opacity: .5 }); text(S, 160, 250, 'blood', { c: CORAL, b: 1 });
+    Object.keys(GL).forEach(function (k) { if ((k === 'ova' && HS !== 'f') || (k === 'tes' && HS !== 'm')) return; var g = GL[k]; var c = circ(S, g[1], g[2], 14, HSEL === k ? TANG : '#fff', INK, 2); c.style.cursor = 'pointer'; c.onclick = function () { HSEL = k; hDraw(); $('h-msg').innerHTML = '<b>' + g[0] + '</b> makes <b>' + g[3] + '</b>. Target: ' + g[4] + '. ' + g[5]; }; text(S, g[1] + 22, g[2] + 5, g[0], { s: 13, b: 1 }); });
+    if (t != null) { var pts = [[320, 70], [250, 130], [215, 240], HS === 'f' ? [320, 300] : [320, 350]], seg = Math.min(2.99, t * 3), i = Math.floor(seg), f = seg - i; var x = pts[i][0] + (pts[i + 1][0] - pts[i][0]) * f, y = pts[i][1] + (pts[i + 1][1] - pts[i][1]) * f; circ(S, x, y, 9, TANG, INK, 2); } }
+  seg($('h-sex'), [['f', 'Female'], ['m', 'Male']], function (v) { HS = v; HSEL = null; hDraw(); });
+  var HT = null; $('h-run').onclick = function () { var t0 = performance.now(); if (HT) cancelAnimationFrame(HT); $('h-msg').innerHTML = 'The hypothalamus signals the <b>pituitary</b>, which releases <b>FSH and LH</b> into the blood...'; (function loop(now) { var t = Math.min(1, (now - t0) / 3000); hDraw(t); if (t < 1) HT = requestAnimationFrame(loop); else $('h-msg').innerHTML = 'FSH and LH reach the ' + (HS === 'f' ? '<b>ovaries</b>, which release <b>oestrogen</b>: breasts develop, periods start.' : '<b>testes</b>, which release <b>testosterone</b>: voice deepens, sperm are made.') + ' Hormones are slower than nerves but last longer.'; })(t0); };
+  hDraw(); quiz('ch-h', 'Why does FSH act on the ovaries but not on the stomach?', [['r', 'only target organs have receptors for it'], ['n', 'it travels along nerves to the ovaries'], ['b', 'the stomach destroys it']], 'r', 'Every organ receives the hormone in the blood, but only target organs with the right receptors respond.', 'Hormones travel in the blood to every organ.');
+
+  // 3 plate
+  var FOODS = [['Rice (1 bowl)', 3, 0.5, 0, 0.5, 0], ['Noodles', 3, 0.5, 1, 0.5, 0], ['Grilled fish', 0, 3, 0.5, 0, 0.5], ['Tofu', 0, 2, 1, 0.5, 0.5], ['Egg', 0, 1.5, 1, 0, 0.5], ['Fried chicken', 0.5, 2, 3, 0, 0], ['Green vegetables', 0.5, 0.5, 0, 2, 2], ['Mango', 1, 0, 0, 1, 1.5], ['Chips', 1.5, 0.5, 2.5, 0.5, 0], ['Milk', 0.5, 1, 1, 0, 1], ['Soft drink', 2, 0, 0, 0, 0], ['Beans', 1, 1.5, 0, 2, 0.5]], NUT = ['Carbohydrate', 'Protein', 'Fat', 'Fibre', 'Vitamins and minerals'], GOAL = [[3, 5], [3, 5], [1, 2.5], [2.5, 5], [2.5, 5]], PSEL = {};
+  $('pl-foods').innerHTML = FOODS.map(function (f, i) { return '<button class="rx" data-i="' + i + '" aria-pressed="false"><b>' + f[0] + '</b></button>'; }).join('');
+  [].forEach.call($('pl-foods').children, function (b) { b.onclick = function () { var i = +b.dataset.i; PSEL[i] = !PSEL[i]; b.setAttribute('aria-pressed', !!PSEL[i]); plDraw(); }; });
+  function plDraw() { var S = $('pl-svg'); S.innerHTML = ''; var tot = [0, 0, 0, 0, 0], sugar = 0; Object.keys(PSEL).forEach(function (k) { if (PSEL[k]) { for (var j = 0; j < 5; j++) tot[j] += FOODS[k][j + 1]; if (FOODS[k][0] === 'Soft drink') sugar = 1; } });
+    var ok = 0; for (var j = 0; j < 5; j++) { var y = 30 + j * 62; text(S, 20, y + 22, NUT[j], { b: 1 }); rect(S, 220, y, 380, 34, '#EEF1F5', 8); rect(S, 220 + GOAL[j][0] * 60, y, (GOAL[j][1] - GOAL[j][0]) * 60, 34, '#CDEBD9', 0); rect(S, 220, y + 8, Math.min(380, tot[j] * 60), 18, tot[j] > GOAL[j][1] ? CORAL : (tot[j] >= GOAL[j][0] ? MINT : TANG), 6); if (tot[j] >= GOAL[j][0] && tot[j] <= GOAL[j][1]) ok++; }
+    text(S, 220, 345, 'green zone = about right for one meal', { s: 12, c: GREY });
+    $('pl-msg').innerHTML = ok === 5 ? '<b>Balanced!</b> Every nutrient is in the green zone.' + (sugar ? ' But the soft drink adds a lot of sugar: swap it for water.' : '') : 'In the green zone: ' + ok + ' of 5. ' + (tot[2] > GOAL[2][1] ? 'Too much fat: try grilled instead of fried. ' : '') + (tot[3] < GOAL[3][0] ? 'Add fibre: vegetables or beans. ' : '') + (tot[1] < GOAL[1][0] ? 'Add protein for growth. ' : ''); }
+  plDraw(); quiz('ch-pl', 'Which nutrient does a growing teenager need for growth and repair?', [['p', 'protein'], ['c', 'carbohydrate'], ['f', 'fibre']], 'p', 'Protein builds new cells: muscles, skin, blood.', 'Carbohydrate is mainly for energy.');
+
+  // 4 energy
+  var EF = [['Breakfast: pho', 2100], ['Lunch: rice, fish, vegetables', 2900], ['Dinner: rice, pork, soup', 3000], ['Snack: crisps', 1100], ['Snack: banana', 400], ['Bubble tea', 1300]], EA = [['Walk to school (30 min)', 600], ['Football (60 min)', 2400], ['PE lesson (45 min)', 1200], ['Gaming (2 h)', 250], ['Swimming (30 min)', 1100]], ES = {};
+  function cards(box, arr, key) { $(box).innerHTML = arr.map(function (f, i) { return '<button class="rx" data-i="' + i + '" aria-pressed="false"><b>' + f[0] + '</b><small>' + f[1] + ' kJ</small></button>'; }).join(''); [].forEach.call($(box).children, function (b) { b.onclick = function () { var k = key + b.dataset.i; ES[k] = !ES[k]; b.setAttribute('aria-pressed', !!ES[k]); eDraw(); }; }); }
+  cards('e-food', EF, 'f'); cards('e-act', EA, 'a');
+  function eDraw() { var inn = 0, out = 6500; Object.keys(ES).forEach(function (k) { if (!ES[k]) return; var i = +k.slice(1); if (k[0] === 'f') inn += EF[i][1]; else out += EA[i][1]; }); var d = inn - out, S = $('e-svg'); S.innerHTML = ''; var tilt = Math.max(-14, Math.min(14, d / 250));
+    el(S, 'path', { d: 'M300 280 L320 200 L340 280 Z', fill: INK }); var g = el(S, 'g', { transform: 'rotate(' + (-tilt) + ' 320 200)' }); line(g, 100, 200, 540, 200, INK, 6); rect(g, 60, 150, 140, 50, '#CDEBD9', 10); text(g, 130, 182, 'IN ' + inn, { a: 'middle', b: 1 }); rect(g, 440, 150, 140, 50, '#FBD9CF', 10); text(g, 510, 182, 'OUT ' + out, { a: 'middle', b: 1 });
+    $('e-in').textContent = inn; $('e-out').textContent = out; $('e-d').textContent = (d > 0 ? '+' : '') + d;
+    $('e-msg').innerHTML = Math.abs(d) <= 800 ? '<b>About balanced.</b> Energy in roughly equals energy out.' : d > 0 ? 'More energy in than out. Over months the extra is stored as <b>fat</b>.' : 'More energy out than in. The body uses its stores; over months growth can slow.'; }
+  eDraw(); quiz('ch-e', 'Why does a teenager need energy even when sitting still all day?', [['g', 'for growth, keeping warm and keeping organs working'], ['n', 'they do not need any'], ['m', 'only for moving muscles']], 'g', 'About 6500 kJ a day goes on growth, body temperature, breathing, the heart and the brain.', 'Think about what your body does even while you sleep.');
+
+  // 5 skeleton
+  var BONES = [['skull', 'protects the brain'], ['rib cage', 'protects the heart and lungs'], ['vertebrae', 'support the body and protect the spinal cord'], ['femur', 'longest bone; movement; makes blood cells'], ['pelvis', 'supports the body and protects organs'], ['humerus', 'upper arm: movement'], ['tibia', 'lower leg: supports body weight'], ['clavicle', 'collarbone: connects arm to body'], ['patella', 'kneecap: protects the knee joint'], ['radius and ulna', 'forearm: twisting movements']], SK = { s: 0, st: 0, b: 0, q: 0 };
+  function skNew() { SK.q = Math.floor(Math.random() * BONES.length); var opts = [SK.q]; while (opts.length < 3) { var r = Math.floor(Math.random() * BONES.length); if (opts.indexOf(r) < 0) opts.push(r); } opts.sort(function () { return Math.random() - .5; }); $('sk-q').innerHTML = 'Main job of the <b>' + BONES[SK.q][0] + '</b>?'; $('sk-opts').innerHTML = opts.map(function (o) { return '<button class="rx" data-i="' + o + '"><b>' + BONES[o][1] + '</b></button>'; }).join('');
+    [].forEach.call($('sk-opts').children, function (b) { b.onclick = function () { if (+b.dataset.i === SK.q) { SK.s++; SK.st++; SK.b = Math.max(SK.b, SK.st); $('sk-msg').innerHTML = '&#10004; Correct.' + (SK.st >= 10 ? ' <b>Ten in a row!</b>' : ''); } else { SK.st = 0; $('sk-msg').innerHTML = '&#10008; The ' + BONES[SK.q][0] + ': ' + BONES[SK.q][1] + '.'; } $('sk-s').textContent = SK.s; $('sk-st').textContent = SK.st; $('sk-b').textContent = SK.b; skNew(); }; }); }
+  skNew(); quiz('ch-sk', 'Which is NOT a function of the skeleton?', [['d', 'digesting food'], ['b', 'making blood cells'], ['s', 'storing calcium']], 'd', 'The five functions: support, protection, movement, making blood cells, storing minerals.', 'Bone marrow makes blood cells, and bones store calcium.');
+
+  // 6 joints
+  var JT = { hinge: ['Hinge', [0, 150], 'knee, elbow'], ball: ['Ball and socket', [-180, 180], 'shoulder, hip'], pivot: ['Pivot', [-80, 80], 'top of the neck'], fixed: ['Fixed', [0, 0], 'skull sutures'] }, JC = 'hinge';
+  function jDraw() { var S = $('j-svg'), t = JT[JC], a = Math.max(t[1][0], Math.min(t[1][1], +$('j-ang').value)), cart = $('j-cart').checked; S.innerHTML = ''; $('j-ang').value = a; $('j-angv').textContent = a;
+    rect(S, 80, 160, 220, 40, '#F5EFD9', 18, INK); circ(S, 320, 180, 34, '#F5EFD9', INK, 2); if (cart) { el(S, 'circle', { cx: 320, cy: 180, r: 40, fill: 'none', stroke: '#8FC7E8', 'stroke-width': 6 }); }
+    var g = el(S, 'g', { transform: 'rotate(' + (JC === 'pivot' ? 0 : -a) + ' 320 180)' }); rect(g, 340, 160, 220, 40, '#F5EFD9', 18, INK); if (JC === 'pivot') { el(S, 'ellipse', { cx: 450, cy: 180, rx: 110 * Math.cos(a * Math.PI / 180) + 8, ry: 26, fill: 'none', stroke: VIO, 'stroke-width': 3 }); }
+    if (!cart && a !== 0) { for (var i = 0; i < 5; i++) text(S, 300 + Math.random() * 40, 140 + Math.random() * 80, '*', { c: CORAL, s: 26, b: 1 }); }
+    $('j-range').textContent = t[1][0] === t[1][1] ? 'none' : (t[1][1] - t[1][0]) + '°'; $('j-ex').textContent = t[2]; $('j-fr').textContent = cart ? 'low' : 'HIGH';
+    $('j-msg').innerHTML = !cart ? 'Without cartilage and synovial fluid the bones <b>grind</b>: painful, like arthritis.' : JC === 'fixed' ? 'A fixed joint does not move: the bones are locked together to protect the brain.' : JC === 'hinge' ? 'A hinge joint moves back and forth in <b>one direction</b>, like a door.' : JC === 'ball' ? 'A ball-and-socket joint moves in <b>all directions</b> and can rotate.' : 'A pivot joint lets one bone <b>rotate</b> around another.'; }
+  seg($('j-type'), [['hinge', 'Hinge'], ['ball', 'Ball and socket'], ['pivot', 'Pivot'], ['fixed', 'Fixed']], function (v) { JC = v; $('j-ang').value = 0; jDraw(); }); $('j-ang').oninput = jDraw; $('j-cart').onchange = jDraw; jDraw();
+  quiz('ch-j', 'What joins bone to bone at a joint?', [['l', 'ligaments'], ['t', 'tendons'], ['c', 'cartilage']], 'l', 'Ligaments hold bones together; tendons join muscle to bone.', 'Tendons belong to muscles.');
+
+  // 7 muscles
+  var ML = 'arm', MPREV = 90;
+  function mDraw() { var S = $('m-svg'), ang = +$('m-ang').value; S.innerHTML = ''; var dir = ang < MPREV ? 'bending' : ang > MPREV ? 'straightening' : MPREV < 100 ? 'bent' : 'straight'; MPREV = ang;
+    var sx = 160, sy = 80, ex = 300, ey = 230, r = ang * Math.PI / 180, L = 180; var hx = ex + L * Math.cos(Math.PI - r + Math.atan2(sy - ey, sx - ex) - Math.PI), hy = ey + L * Math.sin(Math.PI - r + Math.atan2(sy - ey, sx - ex) - Math.PI);
+    line(S, sx, sy, ex, ey, '#D9CBA6', 20); line(S, ex, ey, hx, hy, '#D9CBA6', 18); circ(S, ex, ey, 14, '#F5EFD9', INK, 2);
+    var f = (175 - ang) / 145, bw = 14 + f * 18, tw = 30 - f * 16; var bx = (sx + ex) / 2 - 22, by = (sy + ey) / 2 - 18; el(S, 'ellipse', { cx: bx, cy: by, rx: 60 - f * 14, ry: bw, transform: 'rotate(47 ' + bx + ' ' + by + ')', fill: f > .5 ? CORAL : '#F2A28C', stroke: INK }); var tx = (sx + ex) / 2 + 22, ty = (sy + ey) / 2 + 18; el(S, 'ellipse', { cx: tx, cy: ty, rx: 46 + f * 14, ry: tw, transform: 'rotate(47 ' + tx + ' ' + ty + ')', fill: f < .5 ? SKY : '#9CC5E3', stroke: INK });
+    line(S, bx + 30, by + 30, ex - 10 + (hx - ex) * .12, ey + (hy - ey) * .12, INK, 3); text(S, bx - 110, by - 30, ML === 'arm' ? 'biceps' : 'hamstrings', { b: 1, c: CORAL }); text(S, tx + 40, ty + 40, ML === 'arm' ? 'triceps' : 'quadriceps', { b: 1, c: SKY });
+    $('m-a').textContent = dir === 'bending' || (dir === 'bent') ? 'contracts' : 'relaxes'; $('m-b').textContent = dir === 'straightening' || dir === 'straight' ? 'contracts' : 'relaxes'; $('m-dir').textContent = dir; $('m-angv').textContent = ang;
+    $('m-msg').innerHTML = dir === 'bending' ? 'To bend: the <b>' + (ML === 'arm' ? 'biceps' : 'hamstrings') + '</b> contracts and pulls; the other muscle relaxes.' : dir === 'straightening' ? 'To straighten: the <b>' + (ML === 'arm' ? 'triceps' : 'quadriceps') + '</b> contracts; the other relaxes. Muscles work in <b>antagonistic pairs</b>.' : 'Move the slider to see the pair at work.'; }
+  seg($('m-limb'), [['arm', 'Arm (elbow)'], ['leg', 'Leg (knee)']], function (v) { ML = v; $('m-n1').textContent = v === 'arm' ? 'Biceps' : 'Hamstrings'; $('m-n2').textContent = v === 'arm' ? 'Triceps' : 'Quadriceps'; mDraw(); }); $('m-ang').oninput = mDraw; mDraw();
+  quiz('ch-m', 'Why do muscles work in pairs?', [['p', 'a muscle can only pull, so another must pull the other way'], ['s', 'one muscle is too weak'], ['b', 'muscles push and pull in turn']], 'p', 'A contracting muscle pulls; it cannot push, so its partner pulls the bone back.', 'Can a muscle push?');
+
+  // 8 brain
+  var BR = [['Cerebrum', 'thinking, memory, senses, movement', 0.6, 0.9], ['Prefrontal cortex', 'planning, judging risk, self-control', 0.25, 1.0], ['Limbic system', 'emotions, reward, fear', 0.7, 0.95], ['Cerebellum', 'balance and coordination', 0.75, 0.95], ['Brain stem', 'heartbeat and breathing', 0.95, 1.0]], BSEL = 1;
+  function bMat(r, age) { var t = Math.max(0, Math.min(1, (age - 10) / 15)); var v = BR[r][2] + (BR[r][3] - BR[r][2]) * (r === 1 ? Math.pow(t, 1.3) : Math.min(1, t * 2.2)); return Math.min(1, v); }
+  $('b-reg').innerHTML = BR.map(function (b, i) { return '<button class="rx" data-i="' + i + '" aria-pressed="' + (i === 1) + '"><b>' + b[0] + '</b></button>'; }).join('');
+  [].forEach.call($('b-reg').children, function (b) { b.onclick = function () { [].forEach.call($('b-reg').children, function (x) { x.setAttribute('aria-pressed', x === b); }); BSEL = +b.dataset.i; bDraw(); }; });
+  function bDraw() { var S = $('b-svg'), age = +$('b-age').value; S.innerHTML = ''; $('b-agev').textContent = age; text(S, 20, 24, 'How mature is each region? (simplified)', { b: 1, s: 13 });
+    for (var i = 0; i < BR.length; i++) { var y = 50 + i * 60, m = bMat(i, age); text(S, 20, y + 22, BR[i][0], { b: i === BSEL, s: 14 }); rect(S, 200, y + 4, 400, 26, '#EEF1F5', 8); rect(S, 200, y + 4, 400 * m, 26, i === 1 ? VIO : i === 2 ? CORAL : MINT, 8); text(S, 604, y + 23, Math.round(m * 100) + '%', { s: 12, a: 'end', c: '#fff', b: 1 }); }
+    $('b-msg').innerHTML = '<b>' + BR[BSEL][0] + '</b>: ' + BR[BSEL][1] + '.' + (BSEL === 1 ? ' It is the last region to mature, at about 25.' : '') + (age < 18 ? ' At ' + age + ' the reward system (limbic) is ahead of the brakes (prefrontal cortex).' : ''); }
+  $('b-age').oninput = bDraw; bDraw(); quiz('ch-b', 'Which region helps you stop and think before a risky dare?', [['p', 'prefrontal cortex'], ['c', 'cerebellum'], ['s', 'brain stem']], 'p', 'The prefrontal cortex plans and judges risk; it is still developing in your teens.', 'The cerebellum controls balance.');
+
+  // 9 choices
+  var SIT = [['At the beach, friends dare you to swim out past the flags.', [['Go with them', 'Immediate: risk of drowning in strong currents; exciting. Future: a habit of following dares.', 0], ['Say no and suggest a race inside the flags', 'Immediate: safe and still fun; friends may tease briefly. Future: friends learn you make your own choices.', 1], ['Go home without saying anything', 'Immediate: safe, but you may feel left out. Future: practise saying no clearly next time.', 0.5]]],
+    ['It is 11:30 pm on a school night and your team is winning an online game.', [['Play until 2 am', 'Immediate: fun now. Next day: tired, poor concentration and mood (physical and emotional). Future: lower grades if it becomes a habit.', 0], ['Finish this round and log off', 'Immediate: a little disappointing. Next day: rested and focused. Future: a healthy sleep routine.', 1], ['Keep the phone in bed but stop playing', 'Immediate: hard not to check it; screen light delays sleep.', 0.5]]],
+    ['An older friend offers you a vape at a party.', [['Try it once', 'Immediate: nicotine raises heart rate; dizziness. Future: nicotine is very addictive, especially for a teenage brain; vapes are illegal in Vietnam.', 0], ['"No thanks, I\'m good." Get a drink of water', 'Immediate: safe; a short awkward moment. Future: real friends respect your choice.', 1], ['Leave the party early', 'Immediate: safe. Future: next time try a refusal line so you can stay and have fun.', 0.5]]],
+    ['A friend keeps posting edited photos and says they hate how they look.', [['Ignore it', 'Your friend may feel alone with a negative body image.', 0.5], ['Talk to them kindly and suggest a trusted adult', 'Immediate: your friend feels supported. Future: they may get help early, which matters if an eating disorder is starting.', 1], ['Joke about it in the group chat', 'Immediate: hurtful (social and emotional harm). Future: damages the friendship and their self-esteem.', 0]]]], CI = 0;
+  function cShow() { var s = SIT[CI]; $('c-sit').innerHTML = '<b>Situation ' + (CI + 1) + ' of ' + SIT.length + ':</b> ' + s[0]; $('c-opts').innerHTML = s[1].map(function (o, i) { return '<button class="rx" data-i="' + i + '"><b>' + o[0] + '</b></button>'; }).join(''); $('c-res').textContent = 'Choose a response.';
+    [].forEach.call($('c-opts').children, function (b) { b.onclick = function () { var o = s[1][+b.dataset.i]; $('c-res').className = 'msg ' + (o[2] === 1 ? 'good' : o[2] === 0 ? 'bad' : 'warn'); $('c-res').innerHTML = o[1]; }; }); }
+  $('c-next').onclick = function () { CI = (CI + 1) % SIT.length; cShow(); }; $('c-prev').onclick = function () { CI = (CI + SIT.length - 1) % SIT.length; cShow(); }; cShow();
+  quiz('ch-c', 'Which is a refusal skill?', [['a', 'suggest another activity'], ['b', 'give in quietly'], ['c', 'make fun of the person']], 'a', 'Say no clearly, give a reason, suggest an alternative or walk away.', 'A refusal skill keeps you safe and respectful.');
+
+  // 10 reaction
+  var RT = { st: 'idle', t0: 0, tm: null, a: [], b: [] };
+  function rTab() { var h = ''; for (var i = 0; i < 5; i++) h += '<tr><td>' + (i + 1) + '</td><td>' + (RT.a[i] != null ? RT.a[i].toFixed(3) : '') + '</td><td>' + (RT.b[i] != null ? RT.b[i].toFixed(3) : '') + '</td></tr>'; $('r-tab').innerHTML = h; function mean(a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : null; } var m1 = mean(RT.a), m2 = mean(RT.b); $('r-m1').textContent = m1 ? m1.toFixed(3) + ' s' : '-'; $('r-m2').textContent = m2 ? m2.toFixed(3) + ' s' : '-'; $('r-x').textContent = m1 && m2 ? ((m2 - m1) * 14).toFixed(1) + ' m' : '-'; }
+  $('r-box').onclick = function () { var b = $('r-box'), dist = $('r-dist').checked; if (RT.st === 'idle') { RT.st = 'wait'; b.className = 'rbox wait'; b.textContent = 'Wait for green...'; $('r-dis').hidden = !dist; if (dist) $('r-dis').textContent = 'Count down out loud: 100, 93, 86, ...'; RT.tm = setTimeout(function () { RT.st = 'go'; b.className = 'rbox go'; b.textContent = 'CLICK!'; RT.t0 = performance.now(); }, 1200 + Math.random() * 2500); }
+    else if (RT.st === 'wait') { clearTimeout(RT.tm); RT.st = 'idle'; b.className = 'rbox'; b.textContent = 'Too early! Click to try again'; }
+    else if (RT.st === 'go') { var t = (performance.now() - RT.t0) / 1000, arr = dist ? RT.b : RT.a; if (arr.length < 5) arr.push(t); RT.st = 'idle'; b.className = 'rbox'; b.textContent = t.toFixed(3) + ' s. Click to go again'; rTab(); } };
+  $('r-reset').onclick = function () { RT.a = []; RT.b = []; rTab(); }; rTab();
+  quiz('ch-r', 'Reaction time rises from 0.25 s to 0.39 s. How much further does a car at 14 m/s travel before braking?', [['2', 'about 2 m'], ['5', 'about 5.5 m'], ['0', 'no further']], '2', '0.14 s x 14 m/s = about 2 m extra, enough to hit someone crossing.', 'Multiply the extra time by the speed.');
+
+  // 11 lungs
+  var LA = null;
+  function lDraw() { var S = $('l-svg'), d = +$('l-d').value / 100; S.innerHTML = ''; el(S, 'path', { d: 'M180 60 L180 300 M460 60 L460 300', stroke: INK, 'stroke-width': 4 }); line(S, 300, 20, 300, 110, INK, 8); line(S, 340, 20, 340, 110, INK, 8); text(S, 350, 40, 'trachea', { s: 12 }); line(S, 320, 110, 260, 150, INK, 6); line(S, 320, 110, 380, 150, INK, 6);
+    var r = 46 + d * 26; el(S, 'ellipse', { cx: 250, cy: 190, rx: r * .8, ry: r, fill: '#F4B6B6', stroke: INK }); el(S, 'ellipse', { cx: 390, cy: 190, rx: r * .8, ry: r, fill: '#F4B6B6', stroke: INK }); text(S, 250, 195, 'lung', { a: 'middle', s: 12 });
+    var dy = 300 - (1 - d) * 50; el(S, 'path', { d: 'M180 300 Q320 ' + (dy - (1 - d) * 40) + ' 460 300', fill: 'none', stroke: PINK, 'stroke-width': 8 }); text(S, 470, 300, 'diaphragm', { s: 12, c: PINK, b: 1 });
+    var flow = LA ? LA.v : 0; if (Math.abs(flow) > 0.002) { var up = flow < 0; el(S, 'path', { d: up ? 'M260 95 L320 50 L380 95' : 'M260 55 L320 100 L380 55', fill: 'none', stroke: up ? CORAL : SKY, 'stroke-width': 5 }); }
+    $('l-dv').textContent = d < 0.1 ? 'relaxed (domed)' : d > 0.9 ? 'contracted (flat)' : 'contracting'; $('l-v').textContent = (3 + d * 0.8).toFixed(1) + ' L'; $('l-p').textContent = flow > 0.002 ? 'lower than outside' : flow < -0.002 ? 'higher than outside' : 'same as outside'; $('l-a').textContent = flow > 0.002 ? 'IN' : flow < -0.002 ? 'OUT' : 'still';
+    $('l-msg').innerHTML = flow > 0.002 ? 'Diaphragm contracts and flattens; volume <b>increases</b>, pressure <b>falls</b>, so air flows <b>in</b>.' : flow < -0.002 ? 'Diaphragm relaxes and domes up; volume <b>decreases</b>, pressure <b>rises</b>, so air flows <b>out</b>.' : 'Move the diaphragm: air moves only while the volume is changing.'; }
+  var LP = 0; $('l-d').oninput = function () { var v = +$('l-d').value / 100; LA = { v: v - LP }; LP = v; lDraw(); clearTimeout(LA.t); setTimeout(function () { LA = { v: 0 }; lDraw(); }, 400); };
+  var LT = null; $('l-auto').onclick = function () { if (LT) { cancelAnimationFrame(LT); LT = null; $('l-auto').textContent = 'Breathe automatically'; return; } $('l-auto').textContent = 'Stop'; var t0 = performance.now(); (function loop(now) { var v = (1 - Math.cos((now - t0) / 1000 * 1.6)) / 2; LA = { v: v - LP }; LP = v; $('l-d').value = v * 100; lDraw(); LT = requestAnimationFrame(loop); })(t0); };
+  lDraw(); quiz('ch-l', 'What makes air flow INTO the lungs?', [['p', 'lower pressure inside the chest than outside'], ['s', 'the lungs suck it in'], ['h', 'higher pressure inside the chest']], 'p', 'A bigger chest volume lowers the pressure, so air flows in from the higher pressure outside.', 'Air moves from high pressure to low pressure.');
+
+  // 12 capacity
+  var VF = 'height';
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function vGen() { var rows = []; for (var i = 0; i < 10; i++) { var x, y; if (VF === 'height') { x = Math.round(rnd(142, 178)); y = 2.4 + (x - 145) * 0.052 + rnd(-0.25, 0.25); } else if (VF === 'sport') { x = i < 5 ? 'no' : 'yes'; y = (x === 'yes' ? 3.4 : 2.9) + rnd(-0.35, 0.35); } else { x = Math.round(rnd(1, 12)); y = 3.1 + rnd(-0.4, 0.4); } rows.push([x, Math.max(1.8, y)]); } return rows; }
+  function vDraw(rows) { var S = $('v-svg'); S.innerHTML = ''; var cat = VF === 'sport'; for (var v = 2; v <= 4.5; v += 0.5) { var y = 330 - (v - 2) * 120; line(S, 70, y, 610, y, '#E3E8EE', 1); text(S, 62, y + 5, v.toFixed(1), { a: 'end', s: 12 }); } text(S, 20, 18, 'Vital capacity / L', { s: 12, b: 1 });
+    var lab = VF === 'height' ? 'Height / cm' : cat ? 'Plays sport?' : 'Birth month'; text(S, 340, 372, lab, { a: 'middle', s: 12, b: 1 });
+    if (!rows) return; rows.forEach(function (r) { var x = cat ? (r[0] === 'yes' ? 450 : 230) + rnd(-40, 40) : VF === 'height' ? 70 + (r[0] - 140) * 13.5 : 70 + (r[0] - 1) * 49; circ(S, x, 330 - (r[1] - 2) * 120, 7, VIO); });
+    if (cat) { text(S, 230, 350, 'no', { a: 'middle' }); text(S, 450, 350, 'yes', { a: 'middle' }); } else for (var a = 0; a < 5; a++) { var xv = VF === 'height' ? 140 + a * 10 : 1 + a * 3; text(S, VF === 'height' ? 70 + (xv - 140) * 13.5 : 70 + (xv - 1) * 49, 350, xv, { a: 'middle', s: 12 }); } }
+  seg($('v-f'), [['height', 'Height'], ['sport', 'Plays sport'], ['month', 'Birth month']], function (v) { VF = v; $('v-h').textContent = v === 'height' ? 'Height / cm' : v === 'sport' ? 'Sport?' : 'Birth month'; $('v-tab').innerHTML = ''; vDraw(); $('v-msg').textContent = 'Test 10 students.'; });
+  $('v-go').onclick = function () { var rows = vGen(); vDraw(rows); $('v-tab').innerHTML = rows.map(function (r, i) { return '<tr><td>' + (i + 1) + '</td><td>' + r[0] + '</td><td>' + r[1].toFixed(2) + '</td></tr>'; }).join(''); $('v-msg').innerHTML = VF === 'height' ? 'Taller students tend to have a larger vital capacity: a <b>positive correlation</b>. Taller people have bigger chests.' : VF === 'sport' ? 'Students who play sport have a slightly higher mean, but the groups <b>overlap</b>: test more students before concluding.' : 'No pattern: birth month does <b>not</b> affect vital capacity. A good control comparison.'; };
+  vDraw(); quiz('ch-v', 'Why test 10 students rather than 2?', [['r', 'more data makes the pattern more reliable'], ['f', 'it is faster'], ['n', 'it makes no difference']], 'r', 'More data reduces the effect of unusual individuals, so the trend is more trustworthy.', 'Think about one unusual result.');
+
+  // 13 smoking
+  var SM = { y: 0, q: null };
+  function sVals() { var y = SM.y, cil = Math.max(10, 100 - y * 4), alv = Math.max(40, 100 - y * 1.4), co = Math.min(10, 1 + y * 0.35), can = Math.min(25, y * 0.55); if (SM.q != null) { var r = SM.q; cil = Math.min(100, cil + r * 30); co = 1; can = Math.max(can * 0.5, can - r * 1.5); } return [['Working cilia', cil, '%', MINT], ['Alveoli surface area', alv, '%', SKY], ['Blood carrying CO', co, '%', CORAL], ['Lung cancer risk (x normal)', can, '', PINK]]; }
+  function sDraw() { var S = $('s-svg'), v = sVals(); S.innerHTML = ''; v.forEach(function (b, i) { var y = 40 + i * 78, mx = i === 2 ? 10 : i === 3 ? 25 : 100; text(S, 20, y, b[0], { b: 1 }); rect(S, 20, y + 10, 600, 30, '#EEF1F5', 8); rect(S, 20, y + 10, 600 * b[1] / mx, 30, b[3], 8); text(S, 610, y + 31, (i === 3 ? Math.max(1, b[1]).toFixed(0) + ' x' : b[1].toFixed(0) + b[2]), { a: 'end', c: '#fff', b: 1 }); });
+    $('s-yv').textContent = SM.y; $('s-msg').innerHTML = SM.q != null ? '<b>After quitting:</b> carbon monoxide leaves the blood within days and cilia recover within weeks, but <b>damaged alveoli do not repair</b>. Cancer risk falls slowly over years.' : SM.y === 0 ? 'A non-smoker\'s lungs.' : 'Tar and hot smoke paralyse cilia; alveoli walls break down; carbon monoxide takes the place of oxygen in red blood cells.'; }
+  $('s-y').oninput = function () { SM.y = +$('s-y').value; SM.q = null; sDraw(); }; $('s-quit').onclick = function () { if (SM.y > 0) { SM.q = 1; sDraw(); } }; $('s-reset').onclick = function () { SM = { y: 0, q: null }; $('s-y').value = 0; sDraw(); }; sDraw();
+  quiz('ch-s', 'Which damage does NOT recover after quitting?', [['a', 'broken-down alveoli'], ['c', 'paralysed cilia'], ['o', 'carbon monoxide in the blood']], 'a', 'Alveoli walls that have broken down (emphysema) do not grow back, so stopping early matters.', 'Cilia and blood recover fairly quickly.');
+
+  // 14 quiz
+  var QZ = [['Which gland is called the master gland?', ['pituitary', 'thyroid', 'pancreas'], 0], ['Which hormone causes most male puberty changes?', ['testosterone', 'oestrogen', 'insulin'], 0], ['Puberty is...', ['the physical changes that allow reproduction', 'the whole of the teenage years', 'a type of hormone'], 0], ['Which nutrient is mainly for energy?', ['carbohydrate', 'protein', 'fibre'], 0], ['Where are blood cells made?', ['bone marrow', 'the heart', 'the liver'], 0], ['The knee is a...', ['hinge joint', 'ball-and-socket joint', 'fixed joint'], 0], ['What joins muscle to bone?', ['tendon', 'ligament', 'cartilage'], 0], ['To straighten the arm the...', ['triceps contracts', 'biceps contracts', 'both relax'], 0], ['Which region matures last?', ['prefrontal cortex', 'brain stem', 'cerebellum'], 0], ['Alcohol is a...', ['depressant', 'stimulant', 'nutrient'], 0], ['When you breathe in, the diaphragm...', ['contracts and flattens', 'relaxes and domes', 'does not move'], 0], ['Gas exchange happens in the...', ['alveoli', 'trachea', 'bronchi'], 0], ['Oxygen moves into the blood by...', ['diffusion', 'pumping', 'breathing'], 0], ['Carbon monoxide...', ['stops red blood cells carrying oxygen', 'paralyses cilia', 'causes addiction'], 0], ['Which is a positive peer pressure?', ['being encouraged to join a team', 'a dare to skip school', 'being told to vape'], 0]];
+  function qBuild() { var order = QZ.map(function (q, i) { return i; }).sort(function () { return Math.random() - .5; }); $('q-box').innerHTML = order.map(function (i, n) { var q = QZ[i], o = q[1].map(function (x, j) { return [j, x]; }).sort(function () { return Math.random() - .5; }); return '<div class="msg" style="margin:8px 0" data-q="' + i + '"><b>' + (n + 1) + '. ' + q[0] + '</b><div class="seg" style="margin-top:6px">' + o.map(function (x) { return '<button type="button" data-v="' + x[0] + '" aria-pressed="false">' + x[1] + '</button>'; }).join('') + '</div></div>'; }).join('');
+    [].forEach.call($('q-box').querySelectorAll('.seg'), function (s) { [].forEach.call(s.children, function (b) { b.onclick = function () { [].forEach.call(s.children, function (x) { x.setAttribute('aria-pressed', x === b); }); }; }); }); $('q-msg').textContent = 'Answer every question, then check.'; }
+  $('q-chk').onclick = function () { var sc = 0; [].forEach.call($('q-box').children, function (d) { var q = QZ[+d.dataset.q], c = cur(d.querySelector('.seg')); var ok = c != null && +c === q[2]; if (ok) sc++; d.className = 'msg ' + (ok ? 'good' : 'bad'); }); $('q-msg').innerHTML = 'Score: <b>' + sc + ' / ' + QZ.length + '</b>. Red boxes show what to revise.'; }; $('q-new').onclick = qBuild; qBuild();
+
+  window.laDebug = { show: show, SK: SK, RT: RT };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

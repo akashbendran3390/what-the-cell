@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Metals and Reactions Lab. Explore the periodic table, test metal properties, race metals in water and acid, build the reactivity series, rust nails, electroplate a key, spot chemical changes, test gases, balance equations, classify reactions and neutralise acids. MYP Science resources from What t...">
+<link rel="canonical" href="https://whatthecell.org/myp/reactions-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Metals and Reactions Lab | What the Cell">
+<meta property="og:description" content="Metals and Reactions Lab. Explore the periodic table, test metal properties, race metals in water and acid, build the reactivity series, rust nails, electroplate a key, spot chemical changes, test gases, balance equations, classify reactions and neutralise acids. MYP Science resources from What t...">
+<meta property="og:url" content="https://whatthecell.org/myp/reactions-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Metals and Reactions Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=b9dd26ec">
+<script src="../assets/theme.js?v=7d185cf5"></script>
+<style>
+/* MYP 3 lab (2026-11-26): shared lab styles copied from molecules-lab.html by build-myp3-labs.ps1. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+.eqbig{font:700 1.15rem/2.2 ui-monospace,monospace;text-align:center;padding:8px 0 4px;overflow-x:auto}
+.co{display:inline-flex;align-items:center;gap:2px;margin-right:2px;vertical-align:middle}
+.co button{font:800 .8rem var(--ui);border:0;border-radius:8px;width:24px;height:24px;cursor:pointer;background:var(--soft);color:var(--ink)}
+.co b{min-width:14px;text-align:center;color:#B0356F}
+#d-list .prow{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr)}
+table.t{margin:0}
+.rbox{display:block;width:100%;height:190px;border:0;border-radius:16px;font:800 1.3rem var(--ui);background:#2E7DB8;color:#fff;cursor:pointer;margin-bottom:10px}.rbox.wait{background:#B5532A}.rbox.go{background:#4CA64C}
+.chip input{margin-right:5px;vertical-align:middle}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#5F3DB8;--band2:#B5532A;--band3:#2A1D5E;--band-pic:url('art/myp/myp3-chem-fireworks-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp3-metals-reactions.html">Metals and Reactions</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp3">MYP 3, Unit 3</a> / <a href="myp3-metals-reactions.html">Metals and Reactions</a></div>
+    <h1>Metals and Reactions Lab</h1>
+    <p class="lede">Explore the periodic table, test metal properties, race metals in water and acid, build the reactivity series, rust nails, electroplate a key, spot chemical changes, test gases, balance equations, classify reactions and neutralise acids.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="table" style="--c:var(--coral)"><span>1</span>Periodic table</button>
+    <button role="tab" aria-selected="false" data-t="properties" style="--c:var(--tang)"><span>2</span>Properties</button>
+    <button role="tab" aria-selected="false" data-t="groups" style="--c:var(--sky)"><span>3</span>Groups</button>
+    <button role="tab" aria-selected="false" data-t="alloys" style="--c:var(--mint)"><span>4</span>Alloys</button>
+    <button role="tab" aria-selected="false" data-t="race" style="--c:var(--pink)"><span>5</span>Reactivity race</button>
+    <button role="tab" aria-selected="false" data-t="rust" style="--c:var(--violet)"><span>6</span>Rusting</button>
+    <button role="tab" aria-selected="false" data-t="plating" style="--c:var(--coral)"><span>7</span>Cells and plating</button>
+    <button role="tab" aria-selected="false" data-t="change" style="--c:var(--tang)"><span>8</span>Change</button>
+    <button role="tab" aria-selected="false" data-t="gases" style="--c:var(--sky)"><span>9</span>Gas tests</button>
+    <button role="tab" aria-selected="false" data-t="equations" style="--c:var(--mint)"><span>10</span>Equations</button>
+    <button role="tab" aria-selected="false" data-t="balance" style="--c:var(--pink)"><span>11</span>Balancing</button>
+    <button role="tab" aria-selected="false" data-t="types" style="--c:var(--violet)"><span>12</span>Reaction types</button>
+    <button role="tab" aria-selected="false" data-t="neutral" style="--c:var(--coral)"><span>13</span>Neutralisation</button>
+    <button role="tab" aria-selected="false" data-t="quiz" style="--c:var(--tang)"><span>14</span>Unit quiz</button>
+  </div>
+
+  <section class="panel" id="p-table">
+    <p class="intro">Click an element to see its name, type and group. Then find all six metalloids.</p>
+    <div class="lab"><div class="stagebox"><svg id="pt-svg" viewBox="0 0 660 300" role="img" aria-label="Simplified periodic table"></svg></div>
+    <div class="side"><div class="msg" id="pt-msg">Click an element.</div><div class="stats"><div><small>Metalloids found</small><span id="pt-m">0 / 6</span></div><div><small>Type</small><span id="pt-t">-</span></div><div><small>Group</small><span id="pt-g">-</span></div></div><label class="chip"><input type="checkbox" id="pt-col">Colour by type</label></div></div>
+    <div class="challenge" id="ch-pt"></div>
+  </section>
+
+  <section class="panel" id="p-properties" hidden>
+    <p class="intro">Pick a sample, then run each test. Decide whether it is a metal or a non-metal.</p>
+    <div class="lab"><div class="stagebox"><svg id="pr-svg" viewBox="0 0 640 300" role="img" aria-label="Property test bench"></svg></div>
+    <div class="side"><div class="seg" id="pr-sam"></div><div class="row"><button class="btn2" id="pr-shine">Sand it</button><button class="btn2" id="pr-cond">Circuit test</button><button class="btn2" id="pr-ham">Hammer</button><button class="btn2" id="pr-mag">Magnet</button></div><div class="msg" id="pr-msg">Choose a sample.</div><div class="seg" id="pr-dec"></div></div></div>
+    <div class="challenge" id="ch-pr"></div>
+  </section>
+
+  <section class="panel" id="p-groups" hidden>
+    <p class="intro">Drop an alkali metal into water. Compare how fast each one reacts and how long a small piece lasts.</p>
+    <div class="lab"><div class="stagebox"><svg id="g-svg" viewBox="0 0 640 300" role="img" aria-label="Metal reacting in a trough of water"></svg></div>
+    <div class="side"><div class="seg" id="g-met"></div><button class="btn2" id="g-drop">Drop it in</button><div class="stats"><div><small>Time to disappear</small><span id="g-t">-</span></div><div><small>Gas</small><span id="g-gas">-</span></div><div><small>Water after</small><span id="g-ph">pH 7</span></div></div><div class="msg" id="g-msg">Choose a metal.</div></div></div>
+    <div class="challenge" id="ch-g"></div>
+  </section>
+
+  <section class="panel" id="p-alloys" hidden>
+    <p class="intro">Push the top layer of atoms. Then swap some atoms for bigger ones and push again.</p>
+    <div class="lab"><div class="stagebox"><svg id="al-svg" viewBox="0 0 640 300" role="img" aria-label="Layers of metal atoms"></svg></div>
+    <div class="side"><div class="ctl"><label for="al-n">Different atoms: <b id="al-nv">0</b></label><input type="range" id="al-n" min="0" max="6" value="0"></div><button class="btn2" id="al-push">Push the top layer</button><div class="stats"><div><small>Force to slide</small><span id="al-f">-</span></div><div><small>Material</small><span id="al-m">pure metal</span></div><div><small>Hardness</small><span id="al-h">soft</span></div></div><div class="msg" id="al-msg">Push the layer.</div></div></div>
+    <div class="challenge" id="ch-al"></div>
+  </section>
+
+  <section class="panel" id="p-race" hidden>
+    <p class="intro">Add each metal to acid and count the bubbles. Then try the displacement challenge.</p>
+    <div class="lab"><div class="stagebox"><svg id="r-svg" viewBox="0 0 640 300" role="img" aria-label="Four test tubes with metals in acid"></svg></div>
+    <div class="side"><button class="btn2" id="r-go">Add the metals</button><div class="msg" id="r-msg">Press the button.</div><span class="lbl">Displacement: will it react?</span><div class="msg" id="r-q"></div><div class="seg" id="r-ans"></div><div class="stats"><div><small>Score</small><span id="r-s">0</span></div><div><small>Asked</small><span id="r-n">0</span></div><div><small>Streak</small><span id="r-st">0</span></div></div></div></div>
+    <div class="challenge" id="ch-r"></div>
+  </section>
+
+  <section class="panel" id="p-rust" hidden>
+    <p class="intro">Choose the conditions for each tube, then fast-forward a week. Which nails rust most?</p>
+    <div class="lab"><div class="stagebox"><svg id="ru-svg" viewBox="0 0 640 320" role="img" aria-label="Four tubes with iron nails"></svg></div>
+    <div class="side"><div class="tablewrap"><table class="t" id="ru-tab"><thead><tr><th>Tube</th><th>Air</th><th>Water</th><th>Salt</th><th>Zinc coat</th></tr></thead><tbody></tbody></table></div><button class="btn2" id="ru-go">Fast-forward 7 days</button><div class="msg" id="ru-msg">Set the conditions.</div></div></div>
+    <div class="challenge" id="ch-ru"></div>
+  </section>
+
+  <section class="panel" id="p-plating" hidden>
+    <p class="intro">Part 1: pick two metals for a lemon cell and read the voltage. Part 2: run the plating bath.</p>
+    <div class="lab"><div class="stagebox"><svg id="c-svg" viewBox="0 0 640 320" role="img" aria-label="Lemon cell and plating bath"></svg></div>
+    <div class="side"><span class="lbl">Metal A</span><div class="seg" id="c-a"></div><span class="lbl">Metal B</span><div class="seg" id="c-b"></div><div class="stats"><div><small>Voltage</small><span id="c-v">-</span></div><div><small>Plating time</small><span id="c-pt">0 min</span></div><div><small>Copper on key</small><span id="c-cu">0%</span></div></div><div class="row"><button class="btn2 alt" id="c-plate">Run plating (key on -)</button><button class="btn2 ghost" id="c-swap">Swap electrodes</button></div><div class="msg" id="c-msg"></div></div></div>
+    <div class="challenge" id="ch-c"></div>
+  </section>
+
+  <section class="panel" id="p-change" hidden>
+    <p class="intro">Watch each change. Is a new substance made? Decide: physical or chemical.</p>
+    <div class="lab"><div class="stagebox" style="padding:18px"><div class="msg" id="ch-card" style="font-size:1.15rem;padding:24px"></div><div class="seg" id="ch-btn" style="margin-top:10px"></div></div>
+    <div class="side"><div class="stats"><div><small>Score</small><span id="chg-s">0</span></div><div><small>Streak</small><span id="chg-st">0</span></div><div><small>Best</small><span id="chg-b">0</span></div></div><div class="msg" id="chg-msg">Choose.</div></div></div>
+    <div class="challenge" id="ch-chg"></div>
+  </section>
+
+  <section class="panel" id="p-gases" hidden>
+    <p class="intro">Make a gas, then test it. Identify all three gases.</p>
+    <div class="lab"><div class="stagebox"><svg id="ga-svg" viewBox="0 0 640 300" role="img" aria-label="Gas test"></svg></div>
+    <div class="side"><span class="lbl">Reaction</span><div class="seg" id="ga-rx"></div><span class="lbl">Test</span><div class="row"><button class="btn2" id="ga-lit">Lighted splint</button><button class="btn2" id="ga-glow">Glowing splint</button><button class="btn2" id="ga-lime">Limewater</button></div><div class="msg" id="ga-msg">Choose a reaction.</div><span class="lbl">The gas is</span><div class="seg" id="ga-id"></div></div></div>
+    <div class="challenge" id="ch-ga"></div>
+  </section>
+
+  <section class="panel" id="p-equations" hidden>
+    <p class="intro">Build the word equation by putting the cards in order, then watch the atoms rearrange on the balance: the mass stays the same.</p>
+    <div class="lab"><div class="stagebox"><svg id="eq-svg" viewBox="0 0 640 300" role="img" aria-label="Atoms on a balance"></svg></div>
+    <div class="side"><div class="msg" id="eq-built" style="font:700 1.05rem ui-monospace,monospace">&nbsp;</div><div class="cards" id="eq-cards"></div><div class="row"><button class="btn2 ghost" id="eq-reset">Start again</button><button class="btn2" id="eq-next">Next reaction</button></div><div class="msg" id="eq-msg">Click the cards in order.</div></div></div>
+    <div class="challenge" id="ch-eq"></div>
+  </section>
+
+  <section class="panel" id="p-balance" hidden>
+    <p class="intro">Change the coefficients with + and -. The atom counts turn green when each element is balanced.</p>
+    <div class="stagebox" style="padding:16px"><div class="eqbig" id="b-eq"></div><div class="tablewrap"><table class="t"><thead><tr><th>Element</th><th>Left</th><th>Right</th></tr></thead><tbody id="b-tab"></tbody></table></div></div>
+    <div class="row" style="margin-top:12px"><button class="btn2 ghost" id="b-prev">Previous</button><button class="btn2" id="b-next">Next equation</button><span class="msg" id="b-msg">Equation 1 of 8.</span></div>
+    <div class="challenge" id="ch-b"></div>
+  </section>
+
+  <section class="panel" id="p-types" hidden>
+    <p class="intro">Watch the atoms. Do they join, split or swap places? Name the type of reaction.</p>
+    <div class="lab"><div class="stagebox"><svg id="ty-svg" viewBox="0 0 640 260" role="img" aria-label="Reaction animation"></svg></div>
+    <div class="side"><div class="msg" id="ty-eq" style="font:700 1rem ui-monospace,monospace"></div><div class="seg" id="ty-btn"></div><div class="row"><button class="btn2 ghost" id="ty-play">Play again</button><button class="btn2" id="ty-next">Next</button></div><div class="msg" id="ty-msg">Choose a type.</div></div></div>
+    <div class="challenge" id="ch-ty"></div>
+  </section>
+
+  <section class="panel" id="p-neutral" hidden>
+    <p class="intro">25 cm<sup>3</sup> of acid with universal indicator. Add alkali and stop exactly at pH 7.</p>
+    <div class="lab"><div class="stagebox"><svg id="n-svg" viewBox="0 0 640 320" role="img" aria-label="Flask with indicator and pH graph"></svg></div>
+    <div class="side"><div class="row"><button class="btn2" id="n-1">+1 cm&sup3;</button><button class="btn2" id="n-01">+0.1 cm&sup3;</button><button class="btn2 ghost" id="n-reset">Start again</button></div><div class="stats"><div><small>Alkali added</small><span id="n-v">0.0 cm&sup3;</span></div><div><small>pH</small><span id="n-ph">1.0</span></div><div><small>Colour</small><span id="n-c">red</span></div></div><div class="msg" id="n-msg">Add alkali.</div></div></div>
+    <div class="challenge" id="ch-n"></div>
+  </section>
+
+  <section class="panel" id="p-quiz" hidden>
+    <p class="intro">Fifteen mixed questions from the whole unit. Revise any topic where you get less than 2 out of 3.</p>
+    <div id="q-box"></div><div class="row" style="margin-top:12px"><button class="btn2" id="q-chk">Check my answers</button><button class="btn2 ghost" id="q-new">New order</button></div><div class="msg" id="q-msg" style="margin-top:12px">Answer every question, then check.</div>
+  </section>
+  <p class="why" style="margin-top:24px">Metals and Reactions Lab is made by What the Cell for MYP 3 Science, Unit 3: Metals and Useful Reactions. Models are simplified; never try these reactions without a teacher.</p>
+</div></main>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  var NS = 'http://www.w3.org/2000/svg', INK = '#1E0E4A', SKY = '#2E7DB8', MINT = '#2E9E6B', CORAL = '#E4572E', TANG = '#E89B1E', PINK = '#B0356F', VIO = '#5F3DB8', GREY = '#9AA3B5';
+  function el(S, t, a, txt) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; S.appendChild(e); return e; }
+  function line(S, x1, y1, x2, y2, c, w) { return el(S, 'line', { x1: x1, y1: y1, x2: x2, y2: y2, stroke: c || INK, 'stroke-width': w || 2, 'stroke-linecap': 'round' }); }
+  function text(S, x, y, t, o) { o = o || {}; return el(S, 'text', { x: x, y: y, 'font-size': o.s || 14, 'font-weight': o.b ? 800 : 500, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'Atkinson Hyperlegible, sans-serif' }, t); }
+  function rect(S, x, y, w, h, f, r, st) { return el(S, 'rect', { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h), rx: r || 0, fill: f, stroke: st || 'none' }); }
+  function circ(S, x, y, r, f, st, w) { return el(S, 'circle', { cx: x, cy: y, r: r, fill: f, stroke: st || 'none', 'stroke-width': w || 1.5 }); }
+  function seg(box, opts, cb, start) { box.innerHTML = ''; opts.forEach(function (o, i) { var b = document.createElement('button'); b.type = 'button'; b.dataset.v = o[0]; b.textContent = o[1]; b.setAttribute('aria-pressed', i === (start == null ? 0 : start)); b.onclick = function () { [].forEach.call(box.children, function (x) { x.setAttribute('aria-pressed', x === b); }); if (cb) cb(o[0]); }; box.appendChild(b); }); }
+  function cur(box) { var b = box.querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function quiz(id, q, opts, right, good, hint) { var box = $(id); box.innerHTML = '<b>Challenge:</b> <span>' + q + '</span><span class="seg"></span><p class="why"></p>'; var sg = box.querySelector('.seg'), why = box.querySelector('.why');
+    opts.forEach(function (o) { var b = document.createElement('button'); b.type = 'button'; b.textContent = o[1]; b.onclick = function () { if (o[0] === right) { why.innerHTML = '&#10004; ' + good; why.style.color = MINT; } else { why.innerHTML = '&#10008; Not quite. ' + hint; why.style.color = CORAL; } }; sg.appendChild(b); }); }
+  function sub(s) { return s.replace(/([A-Za-z\)])(\d+)/g, '$1<sub>$2</sub>'); }
+  var NAMES = ['table', 'properties', 'groups', 'alloys', 'race', 'rust', 'plating', 'change', 'gases', 'equations', 'balance', 'types', 'neutral', 'quiz'];
+  function show(n) { NAMES.forEach(function (k) { $('p-' + k).hidden = k !== n; }); [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.dataset.t === n); }); if (history.replaceState) history.replaceState(null, '', '#' + n); }
+  [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { show(b.dataset.t); }; });
+
+  // 1 periodic table (periods 1-4 main groups + transition strip)
+  var PT = [['H', 'hydrogen', 'n', 1, 1, 1], ['He', 'helium', 'n', 0, 1, 18], ['Li', 'lithium', 'm', 1, 2, 1], ['Be', 'beryllium', 'm', 2, 2, 2], ['B', 'boron', 'd', 3, 2, 13], ['C', 'carbon', 'n', 4, 2, 14], ['N', 'nitrogen', 'n', 5, 2, 15], ['O', 'oxygen', 'n', 6, 2, 16], ['F', 'fluorine', 'n', 7, 2, 17], ['Ne', 'neon', 'n', 0, 2, 18], ['Na', 'sodium', 'm', 1, 3, 1], ['Mg', 'magnesium', 'm', 2, 3, 2], ['Al', 'aluminium', 'm', 3, 3, 13], ['Si', 'silicon', 'd', 4, 3, 14], ['P', 'phosphorus', 'n', 5, 3, 15], ['S', 'sulfur', 'n', 6, 3, 16], ['Cl', 'chlorine', 'n', 7, 3, 17], ['Ar', 'argon', 'n', 0, 3, 18], ['K', 'potassium', 'm', 1, 4, 1], ['Ca', 'calcium', 'm', 2, 4, 2], ['Fe', 'iron', 't', 'transition', 4, 8], ['Cu', 'copper', 't', 'transition', 4, 11], ['Zn', 'zinc', 't', 'transition', 4, 12], ['Ga', 'gallium', 'm', 3, 4, 13], ['Ge', 'germanium', 'd', 4, 4, 14], ['As', 'arsenic', 'd', 5, 4, 15], ['Se', 'selenium', 'n', 6, 4, 16], ['Br', 'bromine', 'n', 7, 4, 17], ['Kr', 'krypton', 'n', 0, 4, 18], ['Sb', 'antimony', 'd', 5, 5, 15], ['Te', 'tellurium', 'd', 6, 5, 16], ['Ag', 'silver', 't', 'transition', 5, 11], ['Au', 'gold', 't', 'transition', 6, 11]], PF = {};
+  function ptDraw() { var S = $('pt-svg'), col = $('pt-col').checked; S.innerHTML = ''; PT.forEach(function (e, i) { var x = 10 + (e[5] - 1) * 36, y = 10 + (e[4] - 1) * 48, f = !col ? '#fff' : e[2] === 'n' ? '#FFF1B8' : e[2] === 'd' ? '#CDEBD9' : '#D6E6F7'; if (PF[i]) f = '#CDEBD9'; var r = rect(S, x, y, 34, 44, f, 4, INK); r.style.cursor = 'pointer'; var t = text(S, x + 17, y + 28, e[0], { a: 'middle', b: 1 }); t.style.pointerEvents = 'none'; r.onclick = function () { var ty = { m: 'metal', n: 'non-metal', d: 'metalloid', t: 'transition metal' }[e[2]]; $('pt-msg').innerHTML = '<b>' + e[0] + '</b>: ' + e[1] + ', a ' + ty + '. Period ' + e[4] + '.'; $('pt-t').textContent = ty; $('pt-g').textContent = e[3] === 0 ? '0 (noble gas)' : e[3]; if (e[2] === 'd') { PF[i] = 1; } $('pt-m').textContent = Object.keys(PF).length + ' / 6'; ptDraw(); }; }); el(S, 'path', { d: 'M442 58 v48 h36 v48 h36 v48 h36 v48', fill: 'none', stroke: CORAL, 'stroke-width': 3 }); text(S, 10, 292, 'Simplified: not every element is shown. The red line is the metal/non-metal staircase.', { s: 11, c: GREY }); }
+  $('pt-col').onchange = ptDraw; ptDraw();
+  quiz('ch-pt', 'Elements in the same group...', [['s', 'react in similar ways'], ['p', 'are in the same row'], ['m', 'are all metals']], 's', 'A group is a column; its elements have similar chemical properties.', 'Groups are columns.');
+
+  // 2 properties
+  var SAM = { cu: ['copper', 1, 1, 1, 0, 'm'], fe: ['iron', 1, 1, 1, 1, 'm'], al: ['aluminium', 1, 1, 1, 0, 'm'], c: ['carbon (graphite)', 0, 1, 0, 0, 'n'], s: ['sulfur', 0, 0, 0, 0, 'n'], w: ['wood', 0, 0, 0, 0, 'x'] }, PS = 'cu';
+  function prDraw(test, res) { var S = $('pr-svg'), s = SAM[PS]; S.innerHTML = ''; rect(S, 40, 220, 560, 20, '#D9CBA6', 4); var col = { cu: '#C87533', fe: '#8C8C8C', al: '#C9D1D9', c: '#3B3B3B', s: '#F2D21B', w: '#A0522D' }[PS]; rect(S, 250, 170, 140, 50, col, 6, INK); text(S, 320, 160, s[0], { a: 'middle', b: 1 }); if (test) text(S, 320, 280, res, { a: 'middle', b: 1, c: VIO }); }
+  seg($('pr-sam'), Object.keys(SAM).map(function (k) { return [k, SAM[k][0]]; }), function (v) { PS = v; prDraw(); $('pr-msg').textContent = 'Run the tests.'; });
+  $('pr-shine').onclick = function () { var r = SAM[PS][1] ? 'shiny when sanded: lustrous' : 'stays dull'; prDraw(1, r); $('pr-msg').textContent = r; };
+  $('pr-cond').onclick = function () { var r = SAM[PS][2] ? 'the bulb lights: conducts' : 'the bulb stays off: insulator'; prDraw(1, r); $('pr-msg').textContent = r; };
+  $('pr-ham').onclick = function () { var r = SAM[PS][3] ? 'flattens: malleable' : (PS === 'w' ? 'dents a little' : 'shatters or crumbles: brittle'); prDraw(1, r); $('pr-msg').textContent = r; };
+  $('pr-mag').onclick = function () { var r = SAM[PS][4] ? 'attracted to the magnet' : 'not attracted'; prDraw(1, r); $('pr-msg').textContent = r + (PS === 'cu' || PS === 'al' ? '. Not every metal is magnetic!' : ''); };
+  seg($('pr-dec'), [['m', 'It is a metal'], ['n', 'It is a non-metal'], ['x', 'It is not an element']], function (v) { var s = SAM[PS]; $('pr-msg').innerHTML = v === s[5] ? '&#10004; Correct.' + (PS === 'c' ? ' Graphite conducts, but carbon is a non-metal.' : '') : '&#10008; ' + s[0] + ' is ' + { m: 'a metal', n: 'a non-metal', x: 'not an element (wood is a mixture of compounds)' }[s[5]] + '.'; }, -1);
+  prDraw(); quiz('ch-pr', 'Which metal property makes copper good for wires?', [['d', 'ductile and a good conductor'], ['m', 'magnetic'], ['b', 'brittle']], 'd', 'Copper can be drawn into wires and conducts electricity very well.', 'Copper is not magnetic.');
+
+  // 3 groups
+  var GM = { li: ['lithium', 14, 'fizzes steadily', 0.55], na: ['sodium', 5, 'melts into a ball and whizzes around', 1], k: ['potassium', 2, 'bursts into a lilac flame', 1.8] }, GT = null;
+  function gDraw(t, k) { var S = $('g-svg'); S.innerHTML = ''; rect(S, 60, 120, 520, 140, '#BFE3F7', 10, INK); if (k) { var m = GM[k], life = m[1], frac = Math.max(0, 1 - t / life); var x = 320 + Math.sin(t * m[3] * 4) * 120 * Math.min(1, m[3] / 1.8); if (frac > 0) { circ(S, x, 120, 6 + 14 * frac, k === 'li' ? '#D9D9D9' : '#EDEDED', INK); for (var i = 0; i < 8 * m[3]; i++) circ(S, x - 20 + Math.random() * 40, 100 - Math.random() * 30, 2 + Math.random() * 2, '#fff', '#888', 1); if (k === 'k') el(S, 'path', { d: 'M' + (x - 10) + ' 112 Q' + x + ' 70 ' + (x + 10) + ' 112 Z', fill: '#C8A2F0' }); } } }
+  seg($('g-met'), [['li', 'Lithium'], ['na', 'Sodium'], ['k', 'Potassium']], null, 0);
+  $('g-drop').onclick = function () { var k = cur($('g-met')), m = GM[k], t0 = performance.now(); if (GT) cancelAnimationFrame(GT); $('g-msg').innerHTML = 'The ' + m[0] + ' ' + m[2] + '...'; (function loop(now) { var t = (now - t0) / 1000; gDraw(t, k); if (t < m[1]) GT = requestAnimationFrame(loop); else { $('g-t').textContent = m[1] + ' s'; $('g-gas').textContent = 'hydrogen'; $('g-ph').textContent = 'pH 13'; $('g-msg').innerHTML = m[0] + ' + water &rarr; ' + m[0] + ' hydroxide + hydrogen. The water is now alkaline. Reactivity increases down group 1.'; } })(t0); };
+  gDraw(0); quiz('ch-g', 'Rubidium is below potassium. How will it react with water?', [['v', 'even more violently'], ['s', 'more slowly'], ['n', 'not at all']], 'v', 'Reactivity increases down group 1, so rubidium reacts even faster (it can explode).', 'Look at the trend from lithium to potassium.');
+
+  // 4 alloys
+  var AS = { off: 0 };
+  function alDraw() { var S = $('al-svg'), n = +$('al-n').value; S.innerHTML = ''; var big = [7, 14, 3, 11, 17, 9].slice(0, n); for (var r = 0; r < 3; r++) for (var c = 0; c < 10; c++) { var idx = r * 10 + c - 10, isBig = r === 1 && big.indexOf(c) >= 0 || r === 2 && big.indexOf(c + 10) >= 0; var x = 80 + c * 50 + (r === 0 ? AS.off : 0); circ(S, x, 80 + r * 50, isBig ? 30 : 23, isBig ? '#8C96A8' : '#E3A857', INK, 1.5); } text(S, 30, 290, n ? 'grey = atoms of a different element' : 'all atoms the same size', { s: 12, c: GREY }); }
+  $('al-n').oninput = function () { $('al-nv').textContent = $('al-n').value; AS.off = 0; alDraw(); var n = +$('al-n').value; $('al-m').textContent = n ? 'alloy' : 'pure metal'; };
+  $('al-push').onclick = function () { var n = +$('al-n').value, f = 1 + n * 1.2, dist = n ? Math.max(6, 50 - n * 8) : 50, t0 = performance.now(); (function loop(now) { var t = Math.min(1, (now - t0) / 700); AS.off = dist * t; alDraw(); if (t < 1) requestAnimationFrame(loop); })(t0); $('al-f').textContent = f.toFixed(1) + ' units'; $('al-h').textContent = n === 0 ? 'soft' : n < 3 ? 'harder' : 'very hard'; $('al-msg').innerHTML = n ? 'The different-sized atoms <b>jam the layers</b>: much more force is needed, so the alloy is harder.' : 'Same-sized atoms: the layers <b>slide</b> easily. Pure metals are soft and malleable.'; };
+  alDraw(); quiz('ch-al', 'Why is steel harder than pure iron?', [['c', 'carbon atoms stop the layers sliding'], ['h', 'steel has fewer atoms'], ['m', 'steel is a compound']], 'c', 'Different-sized carbon atoms disrupt the regular layers of iron atoms.', 'Think about the layers.');
+
+  // 5 race
+  var RM = [['magnesium', 70, '#C9D1D9'], ['zinc', 25, '#AFB8C4'], ['iron', 8, '#8C8C8C'], ['copper', 0, '#C87533']], RT = null;
+  function rDraw(t) { var S = $('r-svg'); S.innerHTML = ''; RM.forEach(function (m, i) { var x = 70 + i * 140; rect(S, x, 60, 60, 180, '#EAF4FB', 10, INK); rect(S, x + 2, 140, 56, 98, '#D6E6F7', 8); rect(S, x + 18, 210, 24, 14, m[2], 2, INK); for (var b = 0; b < m[1] / 6 * Math.min(1, t); b++) circ(S, x + 12 + Math.random() * 36, 140 + Math.random() * 70, 3, '#fff', '#888', 1); text(S, x + 30, 262, m[0], { a: 'middle', b: 1, s: 13 }); text(S, x + 30, 282, Math.round(m[1] * Math.min(1, t)) + ' bubbles', { a: 'middle', s: 12 }); }); }
+  $('r-go').onclick = function () { var t0 = performance.now(); if (RT) cancelAnimationFrame(RT); (function loop(now) { var t = (now - t0) / 2000; rDraw(t); if (t < 1.2) RT = requestAnimationFrame(loop); else $('r-msg').innerHTML = 'Order: <b>magnesium &gt; zinc &gt; iron &gt; copper</b>. Copper is below hydrogen, so it does not react with dilute acid.'; })(t0); };
+  var SER = ['potassium', 'sodium', 'calcium', 'magnesium', 'aluminium', 'zinc', 'iron', 'lead', 'copper', 'silver', 'gold'], SALT = ['magnesium sulfate', 'zinc sulfate', 'iron sulfate', 'copper sulfate', 'silver nitrate'], RQ = { s: 0, n: 0, st: 0 }, RQC = null;
+  function rNew() { var mets = ['magnesium', 'zinc', 'iron', 'copper', 'silver'], a = mets[Math.floor(Math.random() * 5)], s = SALT[Math.floor(Math.random() * 5)]; if (s.indexOf(a) === 0) return rNew(); RQC = [a, s, SER.indexOf(a) < SER.indexOf(s.split(' ')[0])]; $('r-q').innerHTML = '<b>' + a + '</b> + ' + s + ' solution'; }
+  seg($('r-ans'), [['y', 'Yes, it reacts'], ['n', 'No reaction']], function (v) { RQ.n++; var ok = (v === 'y') === RQC[2]; if (ok) { RQ.s++; RQ.st++; } else RQ.st = 0; $('r-msg').innerHTML = (ok ? '&#10004; ' : '&#10008; ') + RQC[0] + ' is ' + (RQC[2] ? 'more' : 'less') + ' reactive than ' + RQC[1].split(' ')[0] + (RQC[2] ? ', so it displaces it.' : ', so no reaction.'); $('r-s').textContent = RQ.s; $('r-n').textContent = RQ.n; $('r-st').textContent = RQ.st; rNew(); }, -1);
+  rDraw(0); rNew(); quiz('ch-r', 'Why is gold found as nuggets of pure metal?', [['u', 'it is very unreactive'], ['r', 'it is very reactive'], ['h', 'it is very hard']], 'u', 'Unreactive metals do not form compounds, so they stay as the metal.', 'Where is gold in the series?');
+
+  // 6 rust
+  var RU = [[1, 1, 0, 0], [0, 1, 0, 0], [1, 0, 0, 0], [1, 1, 1, 0]];
+  function ruTab() { var tb = $('ru-tab').querySelector('tbody'); tb.innerHTML = RU.map(function (r, i) { return '<tr><td>' + (i + 1) + '</td>' + r.map(function (v, j) { return '<td><input type="checkbox" data-i="' + i + '" data-j="' + j + '"' + (v ? ' checked' : '') + '></td>'; }).join('') + '</tr>'; }).join(''); [].forEach.call(tb.querySelectorAll('input'), function (c) { c.onchange = function () { RU[+c.dataset.i][+c.dataset.j] = c.checked ? 1 : 0; ruDraw(0); }; }); }
+  function rustAmt(r) { if (r[3]) return r[0] && r[1] ? 0.5 : 0; if (!r[0] || !r[1]) return 0; return r[2] ? 30 : 12; }
+  function ruDraw(days) { var S = $('ru-svg'); S.innerHTML = ''; RU.forEach(function (r, i) { var x = 60 + i * 140, amt = rustAmt(r) * days / 7; rect(S, x, 40, 70, 220, '#F5F7FA', 10, INK); if (r[1]) rect(S, x + 3, 150, 64, 107, r[2] ? '#CFE6F2' : '#D6E6F7', 8); if (!r[0] && r[1]) rect(S, x + 3, 140, 64, 12, '#F2D36B', 2); rect(S, x + 32, 70, 6, 170, r[3] ? '#AFB8C4' : '#6E6E6E', 2); for (var k = 0; k < amt; k++) circ(S, x + 35 + (Math.random() - .5) * 14, 80 + Math.random() * 160, 3, '#B5532A'); text(S, x + 35, 285, 'Tube ' + (i + 1), { a: 'middle', b: 1 }); text(S, x + 35, 305, (rustAmt(r) * days / 7).toFixed(0) + ' mg', { a: 'middle', s: 12 }); }); }
+  $('ru-go').onclick = function () { var t0 = performance.now(); (function loop(now) { var d = Math.min(7, (now - t0) / 300); ruDraw(d); if (d < 7) requestAnimationFrame(loop); else $('ru-msg').innerHTML = 'Iron rusts only with <b>both air and water</b>. Salt makes it faster. A zinc coat (galvanising) protects it.'; })(t0); };
+  ruTab(); ruDraw(0); quiz('ch-ru', 'Tube 2 had water but no air. What does it show?', [['o', 'iron needs oxygen to rust'], ['w', 'iron needs water to rust'], ['s', 'salt stops rust']], 'o', 'Without air (oxygen) the nail did not rust, even in water.', 'What was missing from tube 2?');
+
+  // 7 cells and plating
+  var CV = { magnesium: 2.4, zinc: 0.76, iron: 0.44, copper: -0.34, silver: -0.8 }, CP = { t: 0, sw: false, T: null };
+  function cDraw() { var S = $('c-svg'), a = cur($('c-a')), b = cur($('c-b')); S.innerHTML = ''; el(S, 'ellipse', { cx: 150, cy: 180, rx: 110, ry: 80, fill: '#F7E66B', stroke: INK }); rect(S, 100, 80, 14, 130, '#AFB8C4', 2, INK); rect(S, 190, 80, 14, 130, '#C87533', 2, INK); text(S, 107, 70, a, { a: 'middle', s: 12 }); text(S, 197, 70, b, { a: 'middle', s: 12 });
+    var v = a === b ? 0 : Math.abs(CV[a] - CV[b]) * 0.9; $('c-v').textContent = v.toFixed(2) + ' V'; circ(S, 152, 40, 24, '#fff', INK, 2); text(S, 152, 45, v.toFixed(1) + 'V', { a: 'middle', s: 12, b: 1 }); line(S, 107, 80, 130, 50, INK, 2); line(S, 197, 80, 174, 50, INK, 2);
+    rect(S, 380, 140, 220, 150, '#9FD0F0', 10, INK); rect(S, 410, 90, 18, 170, '#C87533', 2, INK); var cu = Math.min(100, CP.t * 20); rect(S, 540, 90, 22, 120, CP.sw ? '#AFB8C4' : 'rgb(' + Math.round(175 + cu * 0.25) + ',' + Math.round(184 - cu * 0.66) + ',' + Math.round(196 - cu * 1.45) + ')', 4, INK); text(S, 419, 80, CP.sw ? '-' : '+ copper', { a: 'middle', s: 12 }); text(S, 551, 80, CP.sw ? '+ key' : '- key', { a: 'middle', s: 12 }); text(S, 490, 310, 'copper sulfate', { a: 'middle', s: 12 });
+    $('c-pt').textContent = CP.t.toFixed(1) + ' min'; $('c-cu').textContent = (CP.sw ? 0 : Math.round(cu)) + '%';
+    $('c-msg').innerHTML = a === b ? 'Two identical metals: <b>no voltage</b>. You need two different metals.' : 'The further apart the metals are in the reactivity series, the bigger the voltage. ' + (CP.sw ? 'With the key on the <b>positive</b> side, the key itself would dissolve: no plating!' : ''); }
+  var CM = [['magnesium', 'magnesium'], ['zinc', 'zinc'], ['iron', 'iron'], ['copper', 'copper'], ['silver', 'silver']]; seg($('c-a'), CM, cDraw, 1); seg($('c-b'), CM, cDraw, 3);
+  $('c-plate').onclick = function () { if (CP.T) return; var t0 = performance.now(), s0 = CP.t; (function loop(now) { CP.t = Math.min(5, s0 + (now - t0) / 800); cDraw(); if (CP.t < 5 && (now - t0) < 4000) CP.T = requestAnimationFrame(loop); else CP.T = null; })(t0); };
+  $('c-swap').onclick = function () { CP.sw = !CP.sw; CP.t = 0; cDraw(); };
+  cDraw(); quiz('ch-c', 'In electroplating, which electrode is the object to be plated?', [['n', 'the negative electrode'], ['p', 'the positive electrode']], 'n', 'Positive metal ions in the solution are attracted to the negative object and coat it.', 'Try swapping the electrodes.');
+
+  // 8 change
+  var CHG = [['Ice melting in the sun', 'p'], ['Burning a match', 'c'], ['Dissolving salt in water', 'p'], ['Iron rusting', 'c'], ['Frying an egg', 'c'], ['Boiling water', 'p'], ['Vinegar and baking soda fizzing', 'c'], ['Cutting paper', 'p'], ['Bread baking', 'c'], ['Chocolate melting', 'p'], ['Milk going sour', 'c'], ['Water freezing', 'p'], ['Fireworks exploding', 'c'], ['Breaking a glass', 'p'], ['Digesting food', 'c'], ['Making a cup of tea', 'p']], CS = { i: 0, s: 0, st: 0, b: 0 };
+  function chNew() { CS.i = Math.floor(Math.random() * CHG.length); $('ch-card').textContent = CHG[CS.i][0]; }
+  seg($('ch-btn'), [['p', 'Physical'], ['c', 'Chemical']], function (v) { var r = CHG[CS.i][1]; if (v === r) { CS.s++; CS.st++; CS.b = Math.max(CS.b, CS.st); $('chg-msg').className = 'msg good'; $('chg-msg').innerHTML = '&#10004; ' + (r === 'c' ? 'A new substance forms.' : 'No new substance forms.'); } else { CS.st = 0; $('chg-msg').className = 'msg bad'; $('chg-msg').innerHTML = '&#10008; ' + CHG[CS.i][0] + ' is a <b>' + (r === 'c' ? 'chemical' : 'physical') + '</b> change.'; } $('chg-s').textContent = CS.s; $('chg-st').textContent = CS.st; $('chg-b').textContent = CS.b; chNew(); }, -1);
+  chNew(); quiz('ch-chg', 'Which is the best evidence that a NEW substance has formed?', [['n', 'a substance with different properties is made'], ['b', 'bubbles appear'], ['t', 'the temperature changes']], 'n', 'Bubbles and temperature changes can also happen in physical changes (boiling, dissolving).', 'Boiling water bubbles too.');
+
+  // 9 gases
+  var GX = { mg: ['magnesium + acid', 'h'], marble: ['marble chips + acid', 'c'], per: ['hydrogen peroxide + catalyst', 'o'] }, GG = null;
+  function gaDraw(res) { var S = $('ga-svg'); S.innerHTML = ''; rect(S, 120, 40, 60, 200, '#F5F7FA', 10, INK); if (GG) for (var i = 0; i < 12; i++) circ(S, 135 + Math.random() * 30, 100 + Math.random() * 120, 3, '#fff', '#999', 1); text(S, 150, 270, GG ? GX[GG][0] : 'choose a reaction', { a: 'middle', s: 13, b: 1 }); if (res) text(S, 400, 150, res, { a: 'middle', s: 20, b: 1, c: VIO }); }
+  seg($('ga-rx'), [['mg', 'Magnesium + acid'], ['marble', 'Marble + acid'], ['per', 'Peroxide + catalyst']], function (v) { GG = v; gaDraw(); $('ga-msg').textContent = 'Now test the gas.'; }, -1);
+  function gaTest(t) { if (!GG) { $('ga-msg').textContent = 'Choose a reaction first.'; return; } var g = GX[GG][1], r; if (t === 'lit') r = g === 'h' ? 'SQUEAKY POP!' : 'splint goes out'; else if (t === 'glow') r = g === 'o' ? 'splint relights!' : 'splint goes out'; else r = g === 'c' ? 'limewater turns cloudy' : 'limewater stays clear'; gaDraw(r); $('ga-msg').textContent = r; }
+  $('ga-lit').onclick = function () { gaTest('lit'); }; $('ga-glow').onclick = function () { gaTest('glow'); }; $('ga-lime').onclick = function () { gaTest('lime'); };
+  seg($('ga-id'), [['h', 'hydrogen'], ['o', 'oxygen'], ['c', 'carbon dioxide']], function (v) { if (!GG) return; $('ga-msg').innerHTML = v === GX[GG][1] ? '&#10004; Correct.' : '&#10008; Run the tests again: which one gave a positive result?'; }, -1);
+  gaDraw(); quiz('ch-ga', 'A gas puts out a lighted splint. Can you say it is carbon dioxide?', [['n', 'no: use limewater to be sure'], ['y', 'yes']], 'n', 'Many gases (e.g. nitrogen) put out a flame; only carbon dioxide turns limewater cloudy.', 'Is the splint test specific?');
+
+  // 10 equations
+  var EQ = [[['magnesium', 'oxygen'], ['magnesium oxide'], [['Mg', 'Mg', 'O', 'O'], ['MgO', 'MgO']]], [['iron', 'sulfur'], ['iron sulfide'], [['Fe', 'S'], ['FeS']]], [['calcium carbonate'], ['calcium oxide', 'carbon dioxide'], [['CaCO3'], ['CaO', 'CO2']]], [['zinc', 'hydrochloric acid'], ['zinc chloride', 'hydrogen'], [['Zn', 'HCl', 'HCl'], ['ZnCl2', 'H2']]]], EI = 0, EB = [];
+  function eqCards() { var e = EQ[EI], items = e[0].map(function (x) { return [x, 'r']; }).concat(e[1].map(function (x) { return [x, 'p']; })).concat([['+', 'x'], ['&rarr;', 'x']]); if (e[0].length > 1 || e[1].length > 1) items.push(['+', 'x']); items.sort(function () { return Math.random() - .5; }); $('eq-cards').innerHTML = items.map(function (it, i) { return '<button class="rx" data-i="' + i + '"><b>' + it[0] + '</b></button>'; }).join(''); [].forEach.call($('eq-cards').children, function (b, i) { b.onclick = function () { EB.push(items[i]); b.disabled = true; b.style.opacity = .4; eqCheck(); }; }); }
+  function eqCheck() { var e = EQ[EI], want = e[0].join(' + ') + ' &rarr; ' + e[1].join(' + '), got = EB.map(function (x) { return x[0]; }).join(' '); $('eq-built').innerHTML = got || '&nbsp;'; var all = [].every.call($('eq-cards').children, function (b) { return b.disabled; }); if (all) { var ok = got.replace(/ \+ /g, ' + ') === want; $('eq-msg').innerHTML = ok ? '&#10004; ' + want + '. Reactants on the left, products on the right.' : '&#10008; Try again: reactants, then the arrow, then products. Answer: ' + want; if (ok) eqDraw(); } }
+  function eqDraw() { var S = $('eq-svg'), e = EQ[EI]; S.innerHTML = ''; line(S, 320, 120, 320, 260, INK, 6); el(S, 'path', { d: 'M290 270 L350 270 L320 250 Z', fill: INK }); line(S, 120, 120, 520, 120, INK, 5); e[2][0].forEach(function (a, i) { circ(S, 150 + i * 50, 90, 22, '#F4B6B6', INK); text(S, 150 + i * 50, 95, a, { a: 'middle', s: 11, b: 1 }); }); e[2][1].forEach(function (a, i) { circ(S, 400 + i * 60, 90, 26, '#B6D8F4', INK); text(S, 400 + i * 60, 95, a, { a: 'middle', s: 11, b: 1 }); }); text(S, 200, 160, 'reactants', { a: 'middle', b: 1 }); text(S, 440, 160, 'products', { a: 'middle', b: 1 }); text(S, 320, 30, 'Same atoms, same total mass', { a: 'middle', b: 1, c: MINT }); }
+  $('eq-reset').onclick = function () { EB = []; eqCards(); $('eq-built').innerHTML = '&nbsp;'; $('eq-msg').textContent = 'Click the cards in order.'; $('eq-svg').innerHTML = ''; };
+  $('eq-next').onclick = function () { EI = (EI + 1) % EQ.length; $('eq-reset').onclick(); }; eqCards();
+  quiz('ch-eq', 'Magnesium (2.4 g) burns to make magnesium oxide (4.0 g). Where did the extra mass come from?', [['o', 'oxygen from the air'], ['m', 'the magnesium grew'], ['f', 'the flame']], 'o', 'Oxygen atoms joined the magnesium; mass is conserved: 4.0 - 2.4 = 1.6 g of oxygen.', 'What does magnesium react with when it burns?');
+
+  // 11 balancing
+  var BQ = [[[['H2', 1], ['Cl2', 1]], [['HCl', 1]], [1, 1, 2]], [[['Mg', 1], ['O2', 1]], [['MgO', 1]], [2, 1, 2]], [[['Na', 1], ['Cl2', 1]], [['NaCl', 1]], [2, 1, 2]], [[['H2', 1], ['O2', 1]], [['H2O', 1]], [2, 1, 2]], [[['Zn', 1], ['HCl', 1]], [['ZnCl2', 1], ['H2', 1]], [1, 2, 1, 1]], [[['CH4', 1], ['O2', 1]], [['CO2', 1], ['H2O', 1]], [1, 2, 1, 2]], [[['N2', 1], ['H2', 1]], [['NH3', 1]], [1, 3, 2]], [[['Fe', 1], ['O2', 1]], [['Fe2O3', 1]], [4, 3, 2]]], BI = 0;
+  function atoms(f) { var r = {}, m, re = /([A-Z][a-z]?)(\d*)/g; while ((m = re.exec(f))) { r[m[1]] = (r[m[1]] || 0) + (m[2] ? +m[2] : 1); } return r; }
+  function bDraw() { var q = BQ[BI], side = function (arr, si) { return arr.map(function (t, i) { return '<span class="co"><button data-s="' + si + '" data-i="' + i + '" data-d="-1">-</button><b>' + (t[1] > 1 ? t[1] : '') + '</b><button data-s="' + si + '" data-i="' + i + '" data-d="1">+</button></span>' + sub(t[0]); }).join(' + '); }; $('b-eq').innerHTML = side(q[0], 0) + ' &rarr; ' + side(q[1], 1);
+    [].forEach.call($('b-eq').querySelectorAll('button'), function (b) { b.onclick = function () { var t = BQ[BI][+b.dataset.s][+b.dataset.i]; t[1] = Math.max(1, Math.min(9, t[1] + +b.dataset.d)); bDraw(); }; });
+    var L = {}, R = {}; q[0].forEach(function (t) { var a = atoms(t[0]); for (var k in a) L[k] = (L[k] || 0) + a[k] * t[1]; }); q[1].forEach(function (t) { var a = atoms(t[0]); for (var k in a) R[k] = (R[k] || 0) + a[k] * t[1]; }); var ok = true; $('b-tab').innerHTML = Object.keys(L).map(function (k) { var g = L[k] === R[k]; if (!g) ok = false; return '<tr><td>' + k + '</td><td style="color:' + (g ? MINT : CORAL) + ';font-weight:800">' + L[k] + '</td><td style="color:' + (g ? MINT : CORAL) + ';font-weight:800">' + (R[k] || 0) + '</td></tr>'; }).join('');
+    $('b-msg').innerHTML = 'Equation ' + (BI + 1) + ' of ' + BQ.length + '. ' + (ok ? '<b style="color:' + MINT + '">Balanced!</b>' : 'Not balanced yet.'); }
+  $('b-next').onclick = function () { BI = (BI + 1) % BQ.length; bDraw(); }; $('b-prev').onclick = function () { BI = (BI + BQ.length - 1) % BQ.length; bDraw(); }; bDraw();
+  quiz('ch-b', 'To balance H2 + O2 -> H2O, a student writes H2 + O2 -> H2O2. What is wrong?', [['f', 'changing H2O to H2O2 makes a different substance'], ['n', 'nothing']], 'f', 'Only change coefficients: 2H2 + O2 -> 2H2O.', 'Which numbers may you change?');
+
+  // 12 types
+  var TYP = [['iron + sulfur &rarr; iron sulfide', 'syn', [['Fe', 'S'], ['FeS']]], ['copper carbonate &rarr; copper oxide + carbon dioxide', 'dec', [['CuCO3'], ['CuO', 'CO2']]], ['zinc + copper sulfate &rarr; zinc sulfate + copper', 'dis', [['Zn', 'CuSO4'], ['ZnSO4', 'Cu']]], ['methane + oxygen &rarr; carbon dioxide + water', 'com', [['CH4', 'O2'], ['CO2', 'H2O']]], ['hydrogen + chlorine &rarr; hydrogen chloride', 'syn', [['H2', 'Cl2'], ['HCl']]], ['calcium carbonate &rarr; calcium oxide + carbon dioxide', 'dec', [['CaCO3'], ['CaO', 'CO2']]], ['magnesium + iron sulfate &rarr; magnesium sulfate + iron', 'dis', [['Mg', 'FeSO4'], ['MgSO4', 'Fe']]]], TI = 0, TN = { syn: 'synthesis', dec: 'decomposition', dis: 'displacement', com: 'combustion' };
+  function tyPlay() { var S = $('ty-svg'), t = TYP[TI], t0 = performance.now(); $('ty-eq').innerHTML = t[0]; (function loop(now) { var p = Math.min(1, (now - t0) / 1500); S.innerHTML = ''; var A = t[2][0], B = t[2][1]; A.forEach(function (a, i) { var x0 = 120 + i * 120, x1 = 400 + (i % B.length) * 120; var x = x0 + (x1 - x0) * p * 0.0; el(S, 'g', {}); circ(S, x0, 120, 34, '#F4B6B6', INK); text(S, x0, 126, a, { a: 'middle', s: 12, b: 1 }); }); el(S, 'path', { d: 'M300 120 L340 120', stroke: INK, 'stroke-width': 3 }); if (p > 0.5) B.forEach(function (b, i) { circ(S, 420 + i * 110, 120, 34 * Math.min(1, (p - 0.5) * 2), '#B6D8F4', INK); text(S, 420 + i * 110, 126, b, { a: 'middle', s: 12, b: 1 }); }); if (p < 1) requestAnimationFrame(loop); })(t0); }
+  seg($('ty-btn'), [['syn', 'Synthesis'], ['dec', 'Decomposition'], ['dis', 'Displacement'], ['com', 'Combustion']], function (v) { var r = TYP[TI][1]; $('ty-msg').innerHTML = v === r ? '&#10004; ' + TN[r] + '.' : '&#10008; It is ' + TN[r] + ': ' + { syn: 'substances join into one.', dec: 'one substance splits into two or more.', dis: 'a more reactive element swaps in.', com: 'a fuel reacts with oxygen.' }[r]; }, -1);
+  $('ty-play').onclick = tyPlay; $('ty-next').onclick = function () { TI = (TI + 1) % TYP.length; seg($('ty-btn'), [['syn', 'Synthesis'], ['dec', 'Decomposition'], ['dis', 'Displacement'], ['com', 'Combustion']], function (v) { var r = TYP[TI][1]; $('ty-msg').innerHTML = v === r ? '&#10004; ' + TN[r] + '.' : '&#10008; It is ' + TN[r] + '.'; }, -1); tyPlay(); $('ty-msg').textContent = 'Choose a type.'; };
+  tyPlay(); quiz('ch-ty', 'Magnesium burning in oxygen is...', [['b', 'both synthesis and combustion'], ['d', 'decomposition'], ['x', 'displacement']], 'b', 'Two elements join (synthesis) and it is burning in oxygen (combustion).', 'Some reactions fit two families.');
+
+  // 13 neutralisation
+  var NV = 0, NH = [];
+  function phOf(v) { var a = 25 - v; if (Math.abs(a) < 0.05) return 7; if (a > 0) return Math.max(1, Math.min(6.5, 1 + Math.log10(25 / a) * 2)); return Math.min(13, Math.max(7.5, 13 - Math.log10(25 / -a) * 2)); }
+  function colOf(p) { var c = ['#E53935', '#E53935', '#F4511E', '#FB8C00', '#FFB300', '#FDD835', '#C0CA33', '#43A047', '#26A69A', '#039BE5', '#1E88E5', '#3949AB', '#5E35B1', '#6A1B9A', '#6A1B9A']; return c[Math.round(p)]; }
+  function nDraw() { var S = $('n-svg'), p = phOf(NV); S.innerHTML = ''; el(S, 'path', { d: 'M70 60 L70 140 L20 280 L200 280 L150 140 L150 60 Z', fill: '#fff', stroke: INK, 'stroke-width': 2 }); el(S, 'path', { d: 'M48 200 L172 200 L200 280 L20 280 Z', fill: colOf(p), opacity: .85 }); var x0 = 260, y0 = 30, w = 340, h = 240; rect(S, x0, y0, w, h, '#fff', 0, '#E3E8EE'); for (var q = 0; q <= 14; q += 7) { var yy = y0 + h - q / 14 * h; line(S, x0, yy, x0 + w, yy, '#E3E8EE', 1); text(S, x0 - 6, yy + 4, q, { a: 'end', s: 11 }); } text(S, x0 + w / 2, y0 + h + 26, 'alkali added / cm³ (0 to 40)', { a: 'middle', s: 12 }); if (NH.length) el(S, 'path', { d: NH.map(function (pt, i) { return (i ? 'L' : 'M') + (x0 + pt[0] / 40 * w) + ' ' + (y0 + h - pt[1] / 14 * h); }).join(' '), fill: 'none', stroke: VIO, 'stroke-width': 3 });
+    $('n-v').textContent = NV.toFixed(1) + ' cm³'; $('n-ph').textContent = p.toFixed(1); $('n-c').textContent = p < 3 ? 'red' : p < 6 ? 'orange/yellow' : p < 7.5 && p > 6.5 ? 'green' : p < 9 ? 'blue-green' : p < 12 ? 'blue' : 'purple';
+    $('n-msg').innerHTML = Math.abs(p - 7) < 0.01 ? '<b>Neutral!</b> hydrochloric acid + sodium hydroxide &rarr; sodium chloride + water. Evaporate the water to get the salt.' : p > 7 ? 'Too much alkali: the solution is now alkaline. Start again and add smaller amounts near the end.' : 'Still acidic. The pH changes slowly at first, then very fast near the end.'; }
+  function nAdd(d) { NV = Math.round((NV + d) * 10) / 10; NH.push([NV, phOf(NV)]); nDraw(); }
+  $('n-1').onclick = function () { nAdd(1); }; $('n-01').onclick = function () { nAdd(0.1); }; $('n-reset').onclick = function () { NV = 0; NH = [[0, 1]]; nDraw(); }; NH = [[0, 1]]; nDraw();
+  quiz('ch-n', 'Name the salt made from hydrochloric acid and potassium hydroxide.', [['k', 'potassium chloride'], ['h', 'potassium hydride'], ['s', 'potassium sulfate']], 'k', 'Hydrochloric acid makes chlorides; acid + alkali -> salt + water.', 'Which acid makes chlorides?');
+
+  // 14 quiz
+  var QZ = [['Symbol for copper?', ['Cu', 'Co', 'C'], 0], ['Metalloids are found...', ['on the staircase line', 'in group 1', 'in group 0'], 0], ['Ductile means...', ['can be drawn into wires', 'shiny', 'brittle'], 0], ['Reactivity in group 1...', ['increases down the group', 'decreases down the group', 'stays the same'], 0], ['Brass is copper and...', ['zinc', 'tin', 'iron'], 0], ['Which metal reacts fastest with acid?', ['magnesium', 'iron', 'copper'], 0], ['Iron needs ... to rust.', ['water and oxygen', 'only water', 'only salt'], 0], ['In plating, the object is the...', ['negative electrode', 'positive electrode', 'electrolyte'], 0], ['Dissolving sugar is a...', ['physical change', 'chemical change', 'combustion'], 0], ['A glowing splint relights in...', ['oxygen', 'hydrogen', 'carbon dioxide'], 0], ['In a sealed flask the total mass...', ['stays the same', 'falls', 'rises'], 0], ['Balanced: 2Mg + O2 -> ?', ['2MgO', 'MgO', 'MgO2'], 0], ['Copper carbonate -> copper oxide + CO2 is...', ['decomposition', 'synthesis', 'displacement'], 0], ['A neutral solution has pH...', ['7', '1', '14'], 0], ['acid + carbonate makes salt + water + ...', ['carbon dioxide', 'hydrogen', 'oxygen'], 0]];
+  function qBuild() { var order = QZ.map(function (q, i) { return i; }).sort(function () { return Math.random() - .5; }); $('q-box').innerHTML = order.map(function (i, n) { var q = QZ[i], o = q[1].map(function (x, j) { return [j, x]; }).sort(function () { return Math.random() - .5; }); return '<div class="msg" style="margin:8px 0" data-q="' + i + '"><b>' + (n + 1) + '. ' + q[0] + '</b><div class="seg" style="margin-top:6px">' + o.map(function (x) { return '<button type="button" data-v="' + x[0] + '" aria-pressed="false">' + x[1] + '</button>'; }).join('') + '</div></div>'; }).join('');
+    [].forEach.call($('q-box').querySelectorAll('.seg'), function (s) { [].forEach.call(s.children, function (b) { b.onclick = function () { [].forEach.call(s.children, function (x) { x.setAttribute('aria-pressed', x === b); }); }; }); }); $('q-msg').textContent = 'Answer every question, then check.'; }
+  $('q-chk').onclick = function () { var sc = 0; [].forEach.call($('q-box').children, function (d) { var q = QZ[+d.dataset.q], c = cur(d.querySelector('.seg')); var ok = c != null && +c === q[2]; if (ok) sc++; d.className = 'msg ' + (ok ? 'good' : 'bad'); }); $('q-msg').innerHTML = 'Score: <b>' + sc + ' / ' + QZ.length + '</b>. Red boxes show what to revise.'; }; $('q-new').onclick = qBuild; qBuild();
+
+  window.mrDebug = { show: show, BQ: BQ, phOf: phOf };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

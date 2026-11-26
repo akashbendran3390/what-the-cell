@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Machines Lab. Push a wheelchair up a ramp, balance a lever, lift loads with pulleys, change bicycle gears, squeeze a hydraulic lift, measure efficiency and design an assistive device. MYP Science resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/myp/machines-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Machines Lab | What the Cell">
+<meta property="og:description" content="Machines Lab. Push a wheelchair up a ramp, balance a lever, lift loads with pulleys, change bicycle gears, squeeze a hydraulic lift, measure efficiency and design an assistive device. MYP Science resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/myp/machines-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Machines Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=b9dd26ec">
+<script src="../assets/theme.js?v=7d185cf5"></script>
+<style>
+/* MYP 3 lab (2026-11-26): shared lab styles copied from molecules-lab.html by build-myp3-labs.ps1. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+.eqbig{font:700 1.15rem/2.2 ui-monospace,monospace;text-align:center;padding:8px 0 4px;overflow-x:auto}
+.co{display:inline-flex;align-items:center;gap:2px;margin-right:2px;vertical-align:middle}
+.co button{font:800 .8rem var(--ui);border:0;border-radius:8px;width:24px;height:24px;cursor:pointer;background:var(--soft);color:var(--ink)}
+.co b{min-width:14px;text-align:center;color:#B0356F}
+#d-list .prow{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr)}
+table.t{margin:0}
+.rbox{display:block;width:100%;height:190px;border:0;border-radius:16px;font:800 1.3rem var(--ui);background:#2E7DB8;color:#fff;cursor:pointer;margin-bottom:10px}.rbox.wait{background:#B5532A}.rbox.go{background:#4CA64C}
+.chip input{margin-right:5px;vertical-align:middle}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#B5532A;--band2:#1F7A7A;--band3:#2A1D5E;--band-pic:url('art/myp/myp3-assist-crane-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp3-assistive-technology.html">Assistive Technology</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp3">MYP 3, Unit 5</a> / <a href="myp3-assistive-technology.html">Assistive Technology</a></div>
+    <h1>Machines Lab</h1>
+    <p class="lede">Push a wheelchair up a ramp, balance a lever, lift loads with pulleys, change bicycle gears, squeeze a hydraulic lift, measure efficiency and design an assistive device.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="access" style="--c:var(--coral)"><span>1</span>Barriers</button>
+    <button role="tab" aria-selected="false" data-t="devices" style="--c:var(--tang)"><span>2</span>Devices</button>
+    <button role="tab" aria-selected="false" data-t="work" style="--c:var(--sky)"><span>3</span>Work done</button>
+    <button role="tab" aria-selected="false" data-t="ramp" style="--c:var(--mint)"><span>4</span>Ramps</button>
+    <button role="tab" aria-selected="false" data-t="lever" style="--c:var(--pink)"><span>5</span>Levers</button>
+    <button role="tab" aria-selected="false" data-t="moments" style="--c:var(--violet)"><span>6</span>Moments</button>
+    <button role="tab" aria-selected="false" data-t="wheel" style="--c:var(--coral)"><span>7</span>Wheel and axle</button>
+    <button role="tab" aria-selected="false" data-t="pulley" style="--c:var(--tang)"><span>8</span>Pulleys</button>
+    <button role="tab" aria-selected="false" data-t="gears" style="--c:var(--sky)"><span>9</span>Gears</button>
+    <button role="tab" aria-selected="false" data-t="bike" style="--c:var(--mint)"><span>10</span>Bicycle</button>
+    <button role="tab" aria-selected="false" data-t="efficiency" style="--c:var(--pink)"><span>11</span>Efficiency</button>
+    <button role="tab" aria-selected="false" data-t="hydraulic" style="--c:var(--violet)"><span>12</span>Hydraulics</button>
+    <button role="tab" aria-selected="false" data-t="design" style="--c:var(--coral)"><span>13</span>Design</button>
+    <button role="tab" aria-selected="false" data-t="quiz" style="--c:var(--tang)"><span>14</span>Unit quiz</button>
+  </div>
+
+  <section class="panel" id="p-access">
+    <p class="intro">Choose a visitor and switch on changes to the school entrance. Disability depends on barriers: remove them and everyone can take part.</p>
+    <div class="lab"><div class="stagebox"><svg id="ac-svg" viewBox="0 0 640 300" role="img" aria-label="A school entrance"></svg></div>
+    <div class="side"><span class="lbl">Visitor</span><div class="seg" id="ac-who"></div><span class="lbl">Changes</span><div class="cards" id="ac-fix"></div><div class="stats"><div><small>Can enter?</small><span id="ac-in">-</span></div><div><small>Barriers left</small><span id="ac-b">-</span></div></div><div class="msg" id="ac-msg"></div></div></div>
+    <div class="challenge" id="ch-ac"></div>
+  </section>
+
+  <section class="panel" id="p-devices" hidden>
+    <p class="intro">Match each device to the body function it supports. Click a device, then a function.</p>
+    <div class="lab"><div class="stagebox"><svg id="dv-svg" viewBox="0 0 640 300" role="img" aria-label="Device matching"></svg></div>
+    <div class="side"><span class="lbl">Devices</span><div class="cards" id="dv-dev"></div><span class="lbl">Body functions</span><div class="cards" id="dv-fn"></div><div class="stats"><div><small>Matched</small><span id="dv-n">0 / 8</span></div></div><div class="msg" id="dv-msg">Click a device first.</div></div></div>
+    <div class="challenge" id="ch-dv"></div>
+  </section>
+
+  <section class="panel" id="p-work" hidden>
+    <p class="intro">Push a box along the floor. Change the force and the distance and watch the work done (in joules) add up.</p>
+    <div class="lab"><div class="stagebox"><svg id="w-svg" viewBox="0 0 640 300" role="img" aria-label="Pushing a box"></svg></div>
+    <div class="side"><div class="ctl"><label for="w-f">Force: <b id="w-fv">40</b> N</label><input type="range" id="w-f" min="10" max="100" step="5" value="40"><label for="w-d">Distance: <b id="w-dv">5</b> m</label><input type="range" id="w-d" min="1" max="10" value="5"></div><div class="row"><button class="btn2" id="w-go">Push</button></div><div class="stats"><div><small>Work done</small><span id="w-w">-</span></div><div><small>Equation</small><span>W = F x d</span></div></div><div class="msg" id="w-msg">Press Push.</div></div></div>
+    <div class="challenge" id="ch-w"></div>
+  </section>
+
+  <section class="panel" id="p-ramp" hidden>
+    <p class="intro">Raise a wheelchair to the doorway. A longer ramp needs less force, but you push further. The work done stays the same (ideal ramp, no friction).</p>
+    <div class="lab"><div class="stagebox"><svg id="r-svg" viewBox="0 0 640 300" role="img" aria-label="A ramp"></svg></div>
+    <div class="side"><div class="ctl"><label for="r-h">Height: <b id="r-hv">0.45</b> m</label><input type="range" id="r-h" min="0.15" max="0.9" step="0.05" value="0.45"><label for="r-l">Ramp length: <b id="r-lv">5.4</b> m</label><input type="range" id="r-l" min="1" max="12" step="0.2" value="5.4"><label for="r-w">Weight of chair and user: <b id="r-wv">800</b> N</label><input type="range" id="r-w" min="400" max="1200" step="50" value="800"></div><div class="stats"><div><small>Force along ramp</small><span id="r-f">-</span></div><div><small>Gradient</small><span id="r-g">-</span></div><div><small>Work done</small><span id="r-wk">-</span></div></div><div class="msg" id="r-msg"></div></div></div>
+    <div class="challenge" id="ch-r"></div>
+  </section>
+
+  <section class="panel" id="p-lever" hidden>
+    <p class="intro">Choose a lever class. Drag the sliders to move the pivot and see how the effort changes. Then name the levers in the cards.</p>
+    <div class="lab"><div class="stagebox"><svg id="lv-svg" viewBox="0 0 640 300" role="img" aria-label="A lever"></svg></div>
+    <div class="side"><div class="seg" id="lv-cls"></div><div class="ctl"><label for="lv-p">Pivot position: <b id="lv-pv">0.3</b></label><input type="range" id="lv-p" min="0.05" max="0.95" step="0.05" value="0.3"></div><div class="stats"><div><small>Load</small><span>100 N</span></div><div><small>Effort needed</small><span id="lv-e">-</span></div><div><small>MA</small><span id="lv-ma">-</span></div></div><div class="msg" id="lv-msg"></div><span class="lbl">Which class? Click a card to check</span><div class="cards" id="lv-cards"></div><div class="msg" id="lv-cm">Click a card.</div></div></div>
+    <div class="challenge" id="ch-lv"></div>
+  </section>
+
+  <section class="panel" id="p-moments" hidden>
+    <p class="intro">Put masses on the see-saw. It balances when the clockwise moment equals the anticlockwise moment.</p>
+    <div class="lab"><div class="stagebox"><svg id="m-svg" viewBox="0 0 640 300" role="img" aria-label="A see-saw"></svg></div>
+    <div class="side"><div class="ctl"><label for="m-lf">Left force: <b id="m-lfv">400</b> N</label><input type="range" id="m-lf" min="100" max="800" step="50" value="400"><label for="m-ld">Left distance: <b id="m-ldv">1.5</b> m</label><input type="range" id="m-ld" min="0.25" max="2.5" step="0.25" value="1.5"><label for="m-rf">Right force: <b id="m-rfv">300</b> N</label><input type="range" id="m-rf" min="100" max="800" step="50" value="300"><label for="m-rd">Right distance: <b id="m-rdv">1.5</b> m</label><input type="range" id="m-rd" min="0.25" max="2.5" step="0.25" value="1.5"></div><div class="stats"><div><small>Anticlockwise</small><span id="m-ac">-</span></div><div><small>Clockwise</small><span id="m-cw">-</span></div><div><small>Result</small><span id="m-res">-</span></div></div><div class="msg" id="m-msg"></div></div></div>
+    <div class="challenge" id="ch-m"></div>
+  </section>
+
+  <section class="panel" id="p-wheel" hidden>
+    <p class="intro">A wheel and axle is a lever that goes round. Change the wheel radius and see how much turning force reaches the axle.</p>
+    <div class="lab"><div class="stagebox"><svg id="wh-svg" viewBox="0 0 640 300" role="img" aria-label="A wheel and axle"></svg></div>
+    <div class="side"><div class="ctl"><label for="wh-r">Wheel (handle) radius: <b id="wh-rv">12</b> cm</label><input type="range" id="wh-r" min="2" max="20" value="12"><label for="wh-a">Axle radius: <b id="wh-av">2</b> cm</label><input type="range" id="wh-a" min="1" max="6" value="2"><label for="wh-f">Your force: <b id="wh-fv">10</b> N</label><input type="range" id="wh-f" min="2" max="30" value="10"></div><div class="stats"><div><small>MA</small><span id="wh-ma">-</span></div><div><small>Force at axle</small><span id="wh-out">-</span></div></div><div class="msg" id="wh-msg"></div></div></div>
+    <div class="challenge" id="ch-wh"></div>
+  </section>
+
+  <section class="panel" id="p-pulley" hidden>
+    <p class="intro">Choose a pulley system and lift a patient in a hoist. Count the ropes holding the load.</p>
+    <div class="lab"><div class="stagebox"><svg id="pu-svg" viewBox="0 0 640 300" role="img" aria-label="Pulley systems"></svg></div>
+    <div class="side"><div class="seg" id="pu-n"></div><div class="ctl"><label for="pu-l">Load: <b id="pu-lv">720</b> N</label><input type="range" id="pu-l" min="100" max="1000" step="20" value="720"><label for="pu-h">Lift height: <b id="pu-hv">0.5</b> m</label><input type="range" id="pu-h" min="0.1" max="1" step="0.1" value="0.5"></div><button class="btn2" id="pu-go">Lift</button><div class="stats"><div><small>Effort (ideal)</small><span id="pu-e">-</span></div><div><small>Rope pulled</small><span id="pu-r">-</span></div><div><small>Work in = work out</small><span id="pu-w">-</span></div></div><div class="msg" id="pu-msg"></div></div></div>
+    <div class="challenge" id="ch-pu"></div>
+  </section>
+
+  <section class="panel" id="p-gears" hidden>
+    <p class="intro">Change the teeth on each gear and press Turn. Watch speed and direction. Add an idler gear in between.</p>
+    <div class="lab"><div class="stagebox"><svg id="g-svg" viewBox="0 0 640 300" role="img" aria-label="Two gears"></svg></div>
+    <div class="side"><div class="ctl"><label for="g-a">Driver teeth: <b id="g-av">10</b></label><input type="range" id="g-a" min="8" max="40" step="2" value="10"><label for="g-b">Driven teeth: <b id="g-bv">30</b></label><input type="range" id="g-b" min="8" max="40" step="2" value="30"></div><div class="seg" id="g-mode"></div><div class="stats"><div><small>Gear ratio</small><span id="g-r">-</span></div><div><small>Driven speed</small><span id="g-s">-</span></div><div><small>Driven turns</small><span id="g-d">-</span></div><div><small>Turning force</small><span id="g-t">-</span></div></div><div class="msg" id="g-msg"></div></div></div>
+    <div class="challenge" id="ch-g"></div>
+  </section>
+
+  <section class="panel" id="p-bike" hidden>
+    <p class="intro">Ride a hand-cycle up a hill and along the flat. Pick a chainring and a sprocket to keep the pedal force comfortable.</p>
+    <div class="lab"><div class="stagebox"><svg id="b-svg" viewBox="0 0 640 300" role="img" aria-label="A cycle on a hill"></svg></div>
+    <div class="side"><span class="lbl">Chainring (front)</span><div class="seg" id="b-cr"></div><span class="lbl">Sprocket (back)</span><div class="seg" id="b-sp"></div><span class="lbl">Road</span><div class="seg" id="b-road"></div><div class="stats"><div><small>Ratio</small><span id="b-r">-</span></div><div><small>Distance per turn</small><span id="b-d">-</span></div><div><small>Force on cranks</small><span id="b-f">-</span></div></div><div class="msg" id="b-msg"></div></div></div>
+    <div class="challenge" id="ch-b"></div>
+  </section>
+
+  <section class="panel" id="p-efficiency" hidden>
+    <p class="intro">Every machine wastes some energy, mostly as heat from friction. Change the friction and lubrication and watch the energy flow.</p>
+    <div class="lab"><div class="stagebox"><svg id="ef-svg" viewBox="0 0 640 300" role="img" aria-label="Energy flow diagram"></svg></div>
+    <div class="side"><div class="seg" id="ef-m"></div><div class="ctl"><label for="ef-in">Energy in: <b id="ef-inv">1000</b> J</label><input type="range" id="ef-in" min="200" max="2000" step="100" value="1000"><label for="ef-fr">Friction: <b id="ef-frv">medium</b></label><input type="range" id="ef-fr" min="0" max="2" value="1"></div><div class="stats"><div><small>Useful out</small><span id="ef-u">-</span></div><div><small>Wasted</small><span id="ef-w">-</span></div><div><small>Efficiency</small><span id="ef-e">-</span></div></div><div class="msg" id="ef-msg"></div></div></div>
+    <div class="challenge" id="ch-ef"></div>
+  </section>
+
+  <section class="panel" id="p-hydraulic" hidden>
+    <p class="intro">Push the small piston. The pressure is the same everywhere in the liquid, so the big piston pushes up with a bigger force. Try air instead.</p>
+    <div class="lab"><div class="stagebox"><svg id="h-svg" viewBox="0 0 640 300" role="img" aria-label="Hydraulic lift"></svg></div>
+    <div class="side"><div class="ctl"><label for="h-f">Push: <b id="h-fv">60</b> N</label><input type="range" id="h-f" min="10" max="200" step="10" value="60"><label for="h-a">Small piston area: <b id="h-av">3</b> cm<sup>2</sup></label><input type="range" id="h-a" min="1" max="10" value="3"><label for="h-b">Large piston area: <b id="h-bv">75</b> cm<sup>2</sup></label><input type="range" id="h-b" min="10" max="150" step="5" value="75"></div><div class="seg" id="h-fl"></div><div class="stats"><div><small>Pressure</small><span id="h-p">-</span></div><div><small>Lifting force</small><span id="h-o">-</span></div><div><small>Can lift a 1500 N chair?</small><span id="h-ok">-</span></div></div><div class="msg" id="h-msg"></div></div></div>
+    <div class="challenge" id="ch-h"></div>
+  </section>
+
+  <section class="panel" id="p-design" hidden>
+    <p class="intro">Pick a user and a task, then choose a simple machine. The lab checks your design against the criteria.</p>
+    <div class="lab"><div class="stagebox"><svg id="d-svg" viewBox="0 0 640 300" role="img" aria-label="Design check"></svg></div>
+    <div class="side"><span class="lbl">User and task</span><div class="seg" id="d-task"></div><span class="lbl">Machine</span><div class="seg" id="d-mach"></div><div class="ctl"><label for="d-ma">Mechanical advantage: <b id="d-mav">2</b></label><input type="range" id="d-ma" min="1" max="8" value="2"></div><div class="stats"><div><small>Effort needed</small><span id="d-e">-</span></div><div><small>User can give</small><span id="d-c">-</span></div><div><small>Criteria met</small><span id="d-ok">-</span></div></div><div class="msg" id="d-msg"></div></div></div>
+    <div class="challenge" id="ch-d"></div>
+  </section>
+
+  <section class="panel" id="p-quiz" hidden>
+    <p class="intro">Fifteen mixed questions from the whole unit. Revise any topic where you get less than 2 out of 3.</p>
+    <div id="q-box"></div><div class="row" style="margin-top:12px"><button class="btn2" id="q-chk">Check my answers</button><button class="btn2 ghost" id="q-new">New order</button></div><div class="msg" id="q-msg" style="margin-top:12px">Answer every question, then check.</div>
+  </section>
+  <p class="why" style="margin-top:24px">Machines Lab is made by What the Cell for MYP 3 Science, Unit 5: Assistive Technology. Machines are ideal (no friction) unless the tab says otherwise; values are rounded.</p>
+</div></main>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  var NS = 'http://www.w3.org/2000/svg', INK = '#1E0E4A', SKY = '#2E7DB8', MINT = '#2E9E6B', CORAL = '#E4572E', TANG = '#E89B1E', PINK = '#B0356F', VIO = '#5F3DB8', GREY = '#9AA3B5', WOOD = '#C9A46B';
+  function el(S, t, a, txt) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; S.appendChild(e); return e; }
+  function line(S, x1, y1, x2, y2, c, w, d) { var l = el(S, 'line', { x1: x1, y1: y1, x2: x2, y2: y2, stroke: c || INK, 'stroke-width': w || 2, 'stroke-linecap': 'round' }); if (d) l.setAttribute('stroke-dasharray', d); return l; }
+  function text(S, x, y, t, o) { o = o || {}; return el(S, 'text', { x: x, y: y, 'font-size': o.s || 14, 'font-weight': o.b ? 800 : 500, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'Atkinson Hyperlegible, sans-serif' }, t); }
+  function rect(S, x, y, w, h, f, r, st) { return el(S, 'rect', { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h), rx: r || 0, fill: f, stroke: st || 'none' }); }
+  function circ(S, x, y, r, f, st, w) { return el(S, 'circle', { cx: x, cy: y, r: r, fill: f, stroke: st || 'none', 'stroke-width': w || 1.5 }); }
+  function arrow(S, x1, y1, x2, y2, c, w) { line(S, x1, y1, x2, y2, c, w || 3); var a = Math.atan2(y2 - y1, x2 - x1); el(S, 'path', { d: 'M' + x2 + ' ' + y2 + ' L' + (x2 - 12 * Math.cos(a - 0.4)) + ' ' + (y2 - 12 * Math.sin(a - 0.4)) + ' L' + (x2 - 12 * Math.cos(a + 0.4)) + ' ' + (y2 - 12 * Math.sin(a + 0.4)) + ' Z', fill: c || INK }); }
+  function seg(box, opts, cb, start) { box.innerHTML = ''; opts.forEach(function (o, i) { var b = document.createElement('button'); b.type = 'button'; b.dataset.v = o[0]; b.textContent = o[1]; b.setAttribute('aria-pressed', i === (start == null ? 0 : start)); b.onclick = function () { [].forEach.call(box.children, function (x) { x.setAttribute('aria-pressed', x === b); }); if (cb) cb(o[0]); }; box.appendChild(b); }); }
+  function cur(box) { var b = box.querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function quiz(id, q, opts, right, good, hint) { var box = $(id); box.innerHTML = '<b>Challenge:</b> <span>' + q + '</span><span class="seg"></span><p class="why"></p>'; var sg = box.querySelector('.seg'), why = box.querySelector('.why');
+    opts.forEach(function (o) { var b = document.createElement('button'); b.type = 'button'; b.textContent = o[1]; b.onclick = function () { if (o[0] === right) { why.innerHTML = '&#10004; ' + good; why.style.color = MINT; } else { why.innerHTML = '&#10008; Not quite. ' + hint; why.style.color = CORAL; } }; sg.appendChild(b); }); }
+  function fx(n, d) { var s = (+n).toFixed(d == null ? 0 : d); return s.replace(/\.0+$/, ''); }
+  function person(S, x, y, c) { circ(S, x, y - 52, 10, c || INK); line(S, x, y - 42, x, y - 14, c || INK, 4); line(S, x, y - 34, x + 14, y - 22, c || INK, 3); line(S, x, y - 14, x - 8, y, c || INK, 3); line(S, x, y - 14, x + 8, y, c || INK, 3); }
+  function chair(S, x, y, c) { circ(S, x, y - 18, 18, 'none', c || INK, 3); circ(S, x + 24, y - 6, 6, 'none', c || INK, 2); line(S, x - 6, y - 36, x + 22, y - 36, c || INK, 3); line(S, x - 6, y - 36, x - 10, y - 66, c || INK, 3); circ(S, x + 6, y - 74, 9, c || INK); line(S, x + 6, y - 64, x + 6, y - 38, c || INK, 4); line(S, x + 6, y - 40, x + 26, y - 40, c || INK, 3); line(S, x + 26, y - 40, x + 30, y - 18, c || INK, 3); }
+  var NAMES = ['access', 'devices', 'work', 'ramp', 'lever', 'moments', 'wheel', 'pulley', 'gears', 'bike', 'efficiency', 'hydraulic', 'design', 'quiz'], T0 = performance.now(), LOOPS = {};
+  function show(n) { NAMES.forEach(function (k) { $('p-' + k).hidden = k !== n; }); [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.dataset.t === n); }); if (history.replaceState) history.replaceState(null, '', '#' + n); }
+  [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { show(b.dataset.t); }; });
+  function tick(now) { var t = (now - T0) / 1000; for (var k in LOOPS) if (!$('p-' + k).hidden) LOOPS[k](t); requestAnimationFrame(tick); }
+
+  // 1 barriers
+  var AW = 'wheel', AF = { ramp: false, door: false, sign: false, light: false };
+  var AN = { wheel: ['wheelchair user', ['ramp', 'door']], vision: ['person with low vision', ['sign']], deaf: ['deaf visitor', ['light']], frame: ['person with a walking frame', ['ramp', 'door']] };
+  var AFX = [['ramp', 'Add a ramp (1 : 12)'], ['door', 'Wider automatic door'], ['sign', 'Large, high-contrast sign and tactile path'], ['light', 'Flashing light with the bell']];
+  function acDraw() { var S = $('ac-svg'); S.innerHTML = ''; rect(S, 0, 250, 640, 50, '#E6E0D2'); rect(S, 380, 60, 240, 190, '#F2EDE4', 0, INK); rect(S, 340, 220, 280, 30, '#D6CCBB', 0, INK); rect(S, 360, 190, 260, 30, '#D6CCBB', 0, INK); rect(S, 470, 100, AF.door ? 90 : 50, 90, AF.door ? '#BFE3D3' : '#8C6A43', 0, INK); text(S, 500, 90, AF.sign ? 'SCIENCE BLOCK' : 'science block', { s: AF.sign ? 18 : 9, b: AF.sign, a: 'middle', c: AF.sign ? '#000' : '#A9A9A9' });
+    if (AF.ramp) el(S, 'path', { d: 'M60 250 L360 190 L360 250 Z', fill: '#CFE6F2', stroke: INK }); if (AF.sign) for (var i = 0; i < 8; i++) rect(S, 80 + i * 36, 256, 24, 8, TANG, 2); if (AF.light) { circ(S, 600, 75, 10, Math.sin(performance.now() / 150) > 0 ? CORAL : '#F5C8BA', INK); }
+    if (AW === 'wheel') chair(S, 120, 250, VIO); else { person(S, 120, 250, VIO); if (AW === 'frame') { rect(S, 128, 212, 24, 38, 'none', 2, VIO); } if (AW === 'vision') line(S, 134, 228, 170, 250, '#fff', 3); }
+    var need = AN[AW][1], left = need.filter(function (k) { return !AF[k]; }); $('ac-in').textContent = left.length ? 'no' : 'yes'; $('ac-b').textContent = left.length;
+    $('ac-msg').innerHTML = left.length ? 'For a <b>' + AN[AW][0] + '</b> the barrier is in the <b>environment</b>: ' + left.map(function (k) { return AFX.filter(function (f) { return f[0] === k; })[0][1].toLowerCase(); }).join(', ') + ' would remove it.' : 'No barriers left: the <b>' + AN[AW][0] + '</b> can take part like everyone else. The impairment is the same, but the disability has gone.'; }
+  seg($('ac-who'), [['wheel', 'Wheelchair user'], ['vision', 'Low vision'], ['deaf', 'Deaf'], ['frame', 'Walking frame']], function (v) { AW = v; acDraw(); });
+  $('ac-fix').innerHTML = AFX.map(function (f) { return '<button class="rx" data-k="' + f[0] + '"><b>' + f[1] + '</b></button>'; }).join(''); [].forEach.call($('ac-fix').children, function (b) { b.onclick = function () { AF[b.dataset.k] = !AF[b.dataset.k]; b.style.outline = AF[b.dataset.k] ? '3px solid ' + MINT : ''; acDraw(); }; });
+  LOOPS.access = function () { if (AF.light) acDraw(); }; acDraw();
+  quiz('ch-ac', 'Which change helps the most different visitors?', [['r', 'a ramp'], ['s', 'a sign'], ['l', 'a flashing light']], 'r', 'Ramps help wheelchair users, people with walking frames, prams and trolleys: accessible design helps everyone.', 'Think about who else uses a ramp.');
+
+  // 2 devices
+  var DV = [['Wheelchair', 'moving around'], ['Prosthetic leg', 'walking and running'], ['Hearing aid', 'hearing (louder sound)'], ['Cochlear implant', 'hearing (signals to the nerve)'], ['Screen reader', 'reading a screen'], ['White cane', 'finding obstacles'], ['Sip-and-puff switch', 'controlling a device by breath'], ['GNSS phone app', 'finding the way']], DSel = -1, DDone = {};
+  function dvBuild() { var fns = DV.map(function (d, i) { return i; }).sort(function () { return Math.random() - .5; }); $('dv-dev').innerHTML = DV.map(function (d, i) { return '<button class="rx" data-i="' + i + '"><b>' + d[0] + '</b></button>'; }).join(''); $('dv-fn').innerHTML = fns.map(function (i) { return '<button class="rx" data-i="' + i + '">' + DV[i][1] + '</button>'; }).join(''); DDone = {}; DSel = -1; $('dv-n').textContent = '0 / 8';
+    [].forEach.call($('dv-dev').children, function (b) { b.onclick = function () { if (DDone[b.dataset.i]) return; DSel = +b.dataset.i; [].forEach.call($('dv-dev').children, function (x) { x.style.outline = x === b ? '3px solid ' + TANG : ''; }); $('dv-msg').innerHTML = 'Now click the function for <b>' + DV[DSel][0] + '</b>.'; dvDraw(); }; });
+    [].forEach.call($('dv-fn').children, function (b) { b.onclick = function () { if (DSel < 0) return; if (+b.dataset.i === DSel) { DDone[DSel] = 1; b.disabled = true; b.style.opacity = .45; $('dv-dev').children[DSel].disabled = true; $('dv-dev').children[DSel].style.opacity = .45; var n = Object.keys(DDone).length; $('dv-n').textContent = n + ' / 8'; $('dv-msg').innerHTML = n === 8 ? '<b>All matched!</b> Each device supports a body function so the person can take part.' : '&#10004; Right.'; DSel = -1; } else $('dv-msg').innerHTML = '&#10008; Not that one. What does <b>' + DV[DSel][0] + '</b> help with?'; dvDraw(); }; }); dvDraw(); }
+  function dvDraw() { var S = $('dv-svg'); S.innerHTML = ''; var n = Object.keys(DDone).length; text(S, 320, 40, 'Assistive technology supports a body function', { a: 'middle', s: 16, b: 1 }); for (var i = 0; i < 8; i++) { var x = 60 + (i % 4) * 150, y = 90 + Math.floor(i / 4) * 110, ok = DDone[i]; rect(S, x - 50, y - 20, 120, 80, ok ? '#DFF3EA' : '#F3F1F8', 10, ok ? MINT : GREY); text(S, x + 10, y + 10, DV[i][0], { a: 'middle', s: 12, b: 1 }); text(S, x + 10, y + 36, ok ? DV[i][1] : '?', { a: 'middle', s: 11, c: ok ? MINT : GREY }); } }
+  dvBuild();
+  quiz('ch-dv', 'A cochlear implant differs from a hearing aid because it...', [['n', 'sends signals straight to the hearing nerve'], ['l', 'only makes sound louder'], ['e', 'replaces the eardrum with plastic']], 'n', 'A hearing aid amplifies sound; an implant turns sound into electrical signals that stimulate the nerve.', 'Think about where each device sends the signal.');
+
+  // 3 work done
+  var WK = { t: -10 };
+  LOOPS.work = function (t) { var S = $('w-svg'), F = +$('w-f').value, d = +$('w-d').value, p = Math.min(1, Math.max(0, (t - WK.t) / 3)), sc = 50; S.innerHTML = ''; rect(S, 0, 230, 640, 70, '#E6E0D2'); for (var i = 0; i <= 10; i++) { line(S, 60 + i * sc, 232, 60 + i * sc, 242, GREY, 2); text(S, 60 + i * sc, 258, i + ' m', { a: 'middle', s: 11 }); }
+    var x = 60 + p * d * sc; rect(S, x, 170, 60, 60, WOOD, 4, INK); person(S, x - 26, 230, VIO); arrow(S, x - 14, 200, x + 6, 200, CORAL, 4); text(S, x - 30, 160, F + ' N', { s: 13, b: 1, c: CORAL }); line(S, 90, 285, 90 + p * d * sc, 285, MINT, 6);
+    var W = F * d * p; text(S, 600, 60, fx(W) + ' J', { a: 'end', s: 28, b: 1, c: MINT }); rect(S, 400, 80, 200, 14, '#EEE', 7); rect(S, 400, 80, 200 * W / 1000, 14, MINT, 7); $('w-fv').textContent = F; $('w-dv').textContent = d; $('w-w').textContent = fx(W) + ' J'; };
+  $('w-go').onclick = function () { WK.t = (performance.now() - T0) / 1000; var F = +$('w-f').value, d = +$('w-d').value; $('w-msg').innerHTML = 'Work done = ' + F + ' N x ' + d + ' m = <b>' + F * d + ' J</b>. One joule is the work done when 1 N moves something 1 m.'; };
+  $('w-f').oninput = $('w-d').oninput = function () { WK.t = -10; };
+  quiz('ch-w', 'You push with 50 N for 4 m. Then you push with 100 N for 2 m. Which does more work?', [['s', 'both the same'], ['a', 'the first'], ['b', 'the second']], 's', 'Both are 200 J: work = force x distance.', 'Multiply force by distance for each.');
+
+  // 4 ramp
+  function rDraw() { var S = $('r-svg'), h = +$('r-h').value, L = +$('r-l').value, W = +$('r-w').value; if (L < h * 1.2) L = h * 1.2; S.innerHTML = ''; var sc = 40, hp = h * 160, base = Math.sqrt(Math.max(0.01, L * L - h * h)), bp = Math.min(520, base * sc); rect(S, 0, 260, 640, 40, '#E6E0D2'); el(S, 'path', { d: 'M' + (600 - bp) + ' 260 L600 ' + (260 - hp) + ' L600 260 Z', fill: '#CFE6F2', stroke: INK, 'stroke-width': 2 }); rect(S, 600, 260 - hp, 40, hp, '#D6CCBB', 0, INK); var ang = Math.atan2(hp, bp), cx = 600 - bp * 0.45, cy = 260 - hp * 0.55; var g = el(S, 'g', { transform: 'rotate(' + (-ang * 180 / Math.PI) + ' ' + cx + ' ' + cy + ')' }); chair(g, cx, cy, VIO);
+    var F = W * h / L, gr = base / h; arrow(S, cx + 30 * Math.cos(ang), cy - 40 - 30 * Math.sin(ang), cx + 90 * Math.cos(ang), cy - 40 - 90 * Math.sin(ang), CORAL, 4); text(S, 40, 40, 'force along ramp = weight x height / length', { s: 13 }); text(S, 40, 64, fx(W) + ' x ' + fx(h, 2) + ' / ' + fx(L, 1) + ' = ' + fx(F) + ' N', { s: 16, b: 1, c: CORAL });
+    $('r-hv').textContent = fx(h, 2); $('r-lv').textContent = fx(L, 1); $('r-wv').textContent = W; $('r-f').textContent = fx(F) + ' N'; $('r-g').textContent = '1 : ' + fx(gr, 1); $('r-wk').textContent = fx(W * h) + ' J';
+    $('r-msg').innerHTML = (gr >= 11.95 ? '&#10004; Gradient 1 : ' + fx(gr, 1) + ' is gentle enough for a wheelchair ramp (1 : 12 or gentler).' : '&#10008; Gradient 1 : ' + fx(gr, 1) + ' is too steep for a wheelchair. Make the ramp longer.') + ' The work done is always weight x height = <b>' + fx(W * h) + ' J</b>.'; }
+  ['r-h', 'r-l', 'r-w'].forEach(function (id) { $(id).oninput = rDraw; }); rDraw();
+  quiz('ch-r', 'Doubling the ramp length (same height) makes the force...', [['h', 'half'], ['d', 'double'], ['s', 'the same']], 'h', 'Force x length stays equal to weight x height, so the force halves.', 'Use force = weight x height / length.');
+
+  // 5 levers
+  var LC = '1', LCARDS = [['See-saw', '1'], ['Scissors', '1'], ['Crowbar', '1'], ['Wheelbarrow', '2'], ['Nutcracker', '2'], ['Bottle opener', '2'], ['Tweezers', '3'], ['Fishing rod', '3'], ['Forearm', '3']];
+  function lvDraw() { var S = $('lv-svg'), p = +$('lv-p').value; S.innerHTML = ''; var x0 = 60, x1 = 580, len = x1 - x0, piv, eff, lod, y = 170; if (LC === '1') { lod = x0; eff = x1; piv = x0 + p * len; } else if (LC === '2') { piv = x0; eff = x1; lod = x0 + p * len; } else { piv = x0; lod = x1; eff = x0 + p * len; }
+    rect(S, x0, y - 6, len, 12, WOOD, 4, INK); el(S, 'path', { d: 'M' + piv + ' ' + (y + 6) + ' L' + (piv - 22) + ' ' + (y + 46) + ' L' + (piv + 22) + ' ' + (y + 46) + ' Z', fill: GREY, stroke: INK }); rect(S, lod - 22, y - 50, 44, 44, TANG, 4, INK); text(S, lod, y - 22, '100 N', { a: 'middle', s: 11, b: 1 }); arrow(S, eff, y - 90, eff, y - 10, CORAL, 4);
+    var de = Math.abs(eff - piv), dl = Math.abs(lod - piv), E = dl < 1 ? 0 : 100 * dl / Math.max(de, 1); text(S, eff, y - 98, 'effort', { a: 'middle', s: 12, c: CORAL, b: 1 }); text(S, piv, y + 66, 'pivot', { a: 'middle', s: 12, b: 1 }); text(S, lod, y - 58, 'load', { a: 'middle', s: 12, b: 1 }); text(S, 320, 40, ['', 'First class: pivot in the middle', 'Second class: load in the middle', 'Third class: effort in the middle'][+LC], { a: 'middle', s: 16, b: 1, c: VIO });
+    $('lv-pv').textContent = fx(p, 2); $('lv-e').textContent = fx(E) + ' N'; $('lv-ma').textContent = E ? fx(100 / E, 2) : '-'; $('lv-msg').innerHTML = LC === '3' ? 'Third-class levers always need <b>more</b> effort than the load (MA under 1), but the load moves <b>further and faster</b>.' : 'The further the effort is from the pivot compared with the load, the <b>smaller</b> the effort.'; }
+  seg($('lv-cls'), [['1', 'First'], ['2', 'Second'], ['3', 'Third']], function (v) { LC = v; lvDraw(); }); $('lv-p').oninput = lvDraw; lvDraw();
+  $('lv-cards').innerHTML = LCARDS.map(function (c, i) { return '<button class="rx" data-i="' + i + '"><b>' + c[0] + '</b></button>'; }).join(''); [].forEach.call($('lv-cards').children, function (b) { b.onclick = function () { var c = LCARDS[+b.dataset.i]; $('lv-cm').innerHTML = (c[1] === LC ? '&#10004; Yes: ' : 'Not class ' + LC + '. ') + c[0] + ' is a <b>' + ['', 'first', 'second', 'third'][+c[1]] + '-class</b> lever.'; }; });
+  quiz('ch-lv', 'In a wheelbarrow, what is in the middle?', [['l', 'the load'], ['p', 'the pivot'], ['e', 'the effort']], 'l', 'The wheel is the pivot, the load is in the middle, you lift at the handles: second class.', 'Find the wheel first.');
+
+  // 6 moments
+  function mDraw() { var S = $('m-svg'), lf = +$('m-lf').value, ld = +$('m-ld').value, rf = +$('m-rf').value, rd = +$('m-rd').value, ac = lf * ld, cw = rf * rd, tilt = Math.max(-12, Math.min(12, (ac - cw) / 40)); S.innerHTML = ''; var sc = 110, cx = 320, cy = 190; el(S, 'path', { d: 'M' + cx + ' ' + cy + ' L' + (cx - 26) + ' 260 L' + (cx + 26) + ' 260 Z', fill: GREY, stroke: INK }); rect(S, 0, 260, 640, 40, '#E6E0D2');
+    var g = el(S, 'g', { transform: 'rotate(' + (-tilt) + ' ' + cx + ' ' + cy + ')' }); rect(g, cx - 2.7 * sc, cy - 8, 5.4 * sc, 10, WOOD, 4, INK); for (var i = -2.5; i <= 2.5; i += 0.5) line(g, cx + i * sc, cy + 2, cx + i * sc, cy + 8, INK, 1);
+    var sl = 20 + lf / 25, sr = 20 + rf / 25; rect(g, cx - ld * sc - sl / 2, cy - 8 - sl, sl, sl, SKY, 4, INK); text(g, cx - ld * sc, cy - 14 - sl, lf + ' N', { a: 'middle', s: 12, b: 1 }); rect(g, cx + rd * sc - sr / 2, cy - 8 - sr, sr, sr, PINK, 4, INK); text(g, cx + rd * sc, cy - 14 - sr, rf + ' N', { a: 'middle', s: 12, b: 1 });
+    ['m-lf', 'm-ld', 'm-rf', 'm-rd'].forEach(function (id) { $(id + 'v').textContent = $(id).value; }); $('m-ac').textContent = fx(ac) + ' N m'; $('m-cw').textContent = fx(cw) + ' N m'; var bal = Math.abs(ac - cw) < 1; $('m-res').textContent = bal ? 'balanced' : ac > cw ? 'left goes down' : 'right goes down';
+    $('m-msg').innerHTML = 'Moment = force x distance from the pivot. Left: ' + lf + ' x ' + ld + ' = ' + fx(ac) + ' N m. Right: ' + rf + ' x ' + rd + ' = ' + fx(cw) + ' N m. ' + (bal ? '<b>Balanced: the principle of moments.</b>' : 'Not balanced yet.'); }
+  ['m-lf', 'm-ld', 'm-rf', 'm-rd'].forEach(function (id) { $(id).oninput = mDraw; }); mDraw();
+  quiz('ch-m', 'A 400 N adult sits 1.5 m from the pivot. Where must a 300 N child sit to balance?', [['2', '2.0 m'], ['1', '1.125 m'], ['15', '1.5 m']], '2', '400 x 1.5 = 600 N m; 600 / 300 = 2 m. Try it with the sliders.', 'Moment left = moment right.');
+
+  // 7 wheel and axle
+  var WA = 0;
+  LOOPS.wheel = function (t) { var S = $('wh-svg'), R = +$('wh-r').value, a = +$('wh-a').value, F = +$('wh-f').value, ma = R / a; S.innerHTML = ''; WA += 0.02; var cx = 240, cy = 150, sc = 6; circ(S, cx, cy, R * sc, '#F3F1F8', INK, 3); circ(S, cx, cy, a * sc, WOOD, INK, 2); var ang = WA; line(S, cx, cy, cx + R * sc * Math.cos(ang), cy + R * sc * Math.sin(ang), VIO, 4); circ(S, cx + R * sc * Math.cos(ang), cy + R * sc * Math.sin(ang), 7, VIO);
+    line(S, cx + a * sc, cy, cx + a * sc, 280, GREY, 2); rect(S, cx + a * sc - 14, 250, 28, 28, TANG, 3, INK); text(S, 420, 70, 'MA = wheel radius / axle radius', { s: 13 }); text(S, 420, 96, R + ' / ' + a + ' = ' + fx(ma, 1), { s: 18, b: 1, c: VIO }); text(S, 420, 140, 'force at axle = ' + F + ' x ' + fx(ma, 1), { s: 13 }); text(S, 420, 166, '= ' + fx(F * ma) + ' N', { s: 18, b: 1, c: CORAL });
+    $('wh-rv').textContent = R; $('wh-av').textContent = a; $('wh-fv').textContent = F; $('wh-ma').textContent = fx(ma, 1); $('wh-out').textContent = fx(F * ma) + ' N'; $('wh-msg').innerHTML = 'Turning the big wheel moves your hand a long way round, so a small force makes a big turning force on the axle. That is why <b>fat screwdriver handles</b>, <b>tap turners</b> and <b>wheelchair push rims</b> help.'; };
+  quiz('ch-wh', 'Which tap is easiest for a person with a weak grip?', [['b', 'a tap with a long lever handle'], ['s', 'a small round knob'], ['t', 'a thin metal key']], 'b', 'A long handle acts like a big wheel: more turning force for the same push.', 'Bigger radius, bigger MA.');
+
+  // 8 pulleys
+  var PN = 1, PU = { t: -10 };
+  LOOPS.pulley = function (t) { var S = $('pu-svg'), L = +$('pu-l').value, h = +$('pu-h').value, p = Math.min(1, Math.max(0, (t - PU.t) / 3)); S.innerHTML = ''; rect(S, 60, 20, 520, 12, GREY, 3); var lift = p * h * 120, ly = 200 - lift, cx = 320;
+    if (PN === 1) { circ(S, cx, 50, 18, '#fff', INK, 3); line(S, cx - 18, 50, cx - 18, ly, INK, 2); line(S, cx + 18, 50, cx + 18, 230 + lift, CORAL, 2); }
+    else { var n = PN, top = 50; for (var i = 0; i < Math.ceil(n / 2); i++) circ(S, cx - 30 + i * 40, top, 16, '#fff', INK, 3); for (var j = 0; j < Math.floor(n / 2) || j < 1; j++) circ(S, cx - 30 + j * 40, ly - 20, 16, '#fff', INK, 3); for (var k = 0; k < n; k++) { var x = cx - 46 + k * 22; line(S, x, top, x, ly - 20, k % 2 ? MINT : INK, 2); } line(S, cx - 46 + n * 22, top, cx - 46 + n * 22, 230 + lift * n * 0.3, CORAL, 2); }
+    chair(S, cx - 10, ly + 70, VIO); text(S, 40, 80, PN + ' supporting rope' + (PN > 1 ? 's' : ''), { s: 14, b: 1 }); var E = L / PN; text(S, 40, 110, 'effort = ' + L + ' / ' + PN + ' = ' + fx(E) + ' N', { s: 14, c: CORAL, b: 1 }); text(S, 40, 140, 'rope pulled = ' + fx(h, 1) + ' x ' + PN + ' = ' + fx(h * PN, 1) + ' m', { s: 14 });
+    $('pu-lv').textContent = L; $('pu-hv').textContent = fx(h, 1); $('pu-e').textContent = fx(E) + ' N'; $('pu-r').textContent = fx(h * PN, 1) + ' m'; $('pu-w').textContent = fx(L * h) + ' J'; };
+  seg($('pu-n'), [['1', 'Fixed (1 rope)'], ['2', 'Movable (2)'], ['4', 'Block and tackle (4)']], function (v) { PN = +v; PU.t = -10; $('pu-msg').innerHTML = PN === 1 ? 'A single fixed pulley only <b>changes the direction</b> of the force: pulling down lifts the load up.' : PN + ' ropes share the load, so the effort is <b>1/' + PN + '</b> of the load, but you pull <b>' + PN + ' times</b> as much rope.'; });
+  $('pu-go').onclick = function () { PU.t = (performance.now() - T0) / 1000; }; $('pu-msg').innerHTML = 'A single fixed pulley only <b>changes the direction</b> of the force.';
+  quiz('ch-pu', 'A hoist with 4 supporting ropes lifts a 680 N person. What is the ideal effort?', [['170', '170 N'], ['680', '680 N'], ['2720', '2720 N']], '170', '680 / 4 = 170 N, but the carer pulls 4 times as much rope.', 'Divide the load by the number of ropes.');
+
+  // 9 gears
+  var GM = 'two', GA = 0;
+  function gear(S, cx, cy, n, ang, col) { var r = n * 3.2, pts = []; for (var i = 0; i < 2 * n; i++) { var a = ang + Math.PI * i / n, rr = i % 2 ? r : r + 8; pts.push((cx + rr * Math.cos(a)).toFixed(1) + ',' + (cy + rr * Math.sin(a)).toFixed(1)); } el(S, 'polygon', { points: pts.join(' '), fill: col, stroke: INK, 'stroke-width': 1.5 }); circ(S, cx, cy, 6, '#fff', INK); line(S, cx, cy, cx + (r - 6) * Math.cos(ang), cy + (r - 6) * Math.sin(ang), INK, 3); return r; }
+  LOOPS.gears = function (t) { var S = $('g-svg'), A = +$('g-a').value, B = +$('g-b').value, ra = A * 3.2, rb = B * 3.2, ri = 12 * 3.2; S.innerHTML = ''; GA += 0.02; var cx = 140, cy = 150;
+    gear(S, cx, cy, A, GA, '#F7D37A'); text(S, cx, cy + ra + 26, 'driver ' + A, { a: 'middle', s: 12, b: 1 });
+    if (GM === 'two') { var bx = cx + ra + rb + 8; gear(S, bx, cy, B, -GA * A / B + Math.PI / B, '#9CC5E3'); text(S, bx, cy + rb + 26, 'driven ' + B, { a: 'middle', s: 12, b: 1 }); }
+    else if (GM === 'idler') { var ix = cx + ra + ri + 8, bx2 = ix + ri + rb + 8; gear(S, ix, cy, 12, -GA * A / 12 + Math.PI / 12, '#E0D6F5'); gear(S, bx2, cy, B, GA * A / B, '#9CC5E3'); text(S, ix, cy + ri + 26, 'idler', { a: 'middle', s: 12 }); text(S, bx2, cy + rb + 26, 'driven ' + B, { a: 'middle', s: 12, b: 1 }); }
+    else { var bx3 = cx + ra + rb + 120; gear(S, bx3, cy, B, GA * A / B, '#9CC5E3'); line(S, cx, cy - ra - 4, bx3, cy - rb - 4, GREY, 4); line(S, cx, cy + ra + 4, bx3, cy + rb + 4, GREY, 4); text(S, bx3, cy + rb + 26, 'driven ' + B, { a: 'middle', s: 12, b: 1 }); }
+    var r = B / A, same = GM !== 'two'; $('g-av').textContent = A; $('g-bv').textContent = B; $('g-r').textContent = fx(r, 2); $('g-s').textContent = r > 1 ? 'slower' : r < 1 ? 'faster' : 'same'; $('g-d').textContent = same ? 'same way' : 'opposite way'; $('g-t').textContent = r > 1 ? 'more (x' + fx(r, 1) + ')' : r < 1 ? 'less' : 'same';
+    $('g-msg').innerHTML = 'Gear ratio = driven teeth / driver teeth = ' + B + ' / ' + A + ' = <b>' + fx(r, 2) + '</b>. 10 driver turns give <b>' + fx(10 / r, 1) + '</b> driven turns. ' + (GM === 'two' ? 'Meshing gears turn <b>opposite</b> ways.' : GM === 'idler' ? 'An idler gear makes the driven gear turn the <b>same</b> way, without changing the ratio.' : 'A chain makes both gears turn the <b>same</b> way.'); };
+  seg($('g-mode'), [['two', 'Meshing'], ['idler', 'With idler'], ['chain', 'Chain']], function (v) { GM = v; });
+  quiz('ch-g', 'A 12-tooth driver turns a 36-tooth gear 60 times. How many times does the driver turn?', [['180', '180'], ['20', '20'], ['60', '60']], '180', 'The ratio is 3, so the driver turns 3 times for each driven turn: 3 x 60 = 180.', 'Ratio = 36 / 12.');
+
+  // 10 bicycle
+  var BC = 48, BS = 16, BR = 'hill', BX = 0;
+  LOOPS.bike = function (t) { var S = $('b-svg'), r = BC / BS, circ_ = 2.1, d = r * circ_, slope = BR === 'hill' ? 0.12 : 0.01, need = 900 * slope + 15, F = need * d / 1.1; S.innerHTML = ''; BX = (BX + 0.6 * (BR === 'hill' ? 0.6 : 1.4)) % 640; var gy = function (x) { return 260 - (BR === 'hill' ? x * 0.22 : 0); }; el(S, 'path', { d: 'M0 ' + gy(0) + ' L640 ' + gy(640) + ' L640 300 L0 300 Z', fill: BR === 'hill' ? '#CFE3C2' : '#E6E0D2' });
+    var x = 120 + (BX % 400), y = gy(x); circ(S, x - 30, y - 22, 22, 'none', INK, 3); circ(S, x + 34, y - 18, 18, 'none', INK, 3); line(S, x - 30, y - 22, x + 34, y - 18, INK, 3); circ(S, x, y - 40, 9, VIO); line(S, x - 4, y - 50, x - 14, y - 74, VIO, 4); circ(S, x - 16, y - 84, 9, VIO); circ(S, x + 20, y - 50, 10, 'none', CORAL, 2);
+    rect(S, 440, 20, 180, 22, '#EEE', 11); var fw = Math.min(1, F / 300); rect(S, 440, 20, 180 * fw, 22, fw > 0.66 ? CORAL : fw > 0.33 ? TANG : MINT, 11); text(S, 440, 60, 'arm force', { s: 12 });
+    $('b-r').textContent = fx(r, 2); $('b-d').textContent = fx(d, 1) + ' m'; $('b-f').textContent = fx(F) + ' N';
+    $('b-msg').innerHTML = 'Ratio ' + BC + ' / ' + BS + ' = ' + fx(r, 2) + '. One turn moves the cycle ' + fx(r, 2) + ' x 2.1 m = <b>' + fx(d, 1) + ' m</b>. ' + (BR === 'hill' ? (F > 200 ? 'Too hard on this hill: choose a <b>lower gear</b> (small chainring, big sprocket).' : 'A low gear: short distance per turn, so a comfortable force on the hill.') : (F < 60 ? 'Easy, but slow: on the flat a <b>higher gear</b> gives more speed.' : 'A good gear for the flat.')); };
+  seg($('b-cr'), [['34', '34 teeth'], ['48', '48 teeth']], function (v) { BC = +v; }, 1); seg($('b-sp'), [['12', '12'], ['16', '16'], ['24', '24'], ['32', '32']], function (v) { BS = +v; }, 1); seg($('b-road'), [['hill', 'Up a hill'], ['flat', 'Flat road']], function (v) { BR = v; });
+  quiz('ch-b', 'Which gear is best for climbing a steep hill?', [['l', 'small chainring, big sprocket'], ['h', 'big chainring, small sprocket'], ['s', 'it makes no difference']], 'l', 'A low ratio moves the cycle a short distance per turn, so less work and force per turn.', 'Look at the force bar.');
+
+  // 11 efficiency
+  var EM = { wheel: ['Manual wheelchair', [0.85, 0.7, 0.55]], hoist: ['Patient hoist', [0.9, 0.75, 0.6]], lift: ['Stair lift', [0.75, 0.6, 0.45]], bike: ['Hand-cycle chain', [0.95, 0.85, 0.7]] }, EK = 'wheel';
+  function efDraw() { var S = $('ef-svg'), E = +$('ef-in').value, f = +$('ef-fr').value, e = EM[EK][1][f], U = E * e, W = E - U; S.innerHTML = ''; var h = 140, hu = h * e, hw = h - hu; rect(S, 40, 80, 220, h, VIO, 0); text(S, 60, 160, fx(E) + ' J in', { s: 16, b: 1, c: '#fff' }); el(S, 'path', { d: 'M260 80 L460 80 L460 ' + (80 + hu) + ' L260 ' + (80 + hu) + ' Z', fill: MINT }); el(S, 'path', { d: 'M260 ' + (80 + hu) + ' L320 ' + (80 + hu) + ' Q360 ' + (80 + hu) + ' 360 ' + (80 + hu + 60) + ' L360 280 L' + (360 - hw) + ' 280 L' + (360 - hw) + ' ' + (80 + hu + 60) + ' Q' + (360 - hw) + ' ' + (80 + h) + ' 260 ' + (80 + h) + ' Z', fill: CORAL, opacity: .85 }); arrow(S, 460, 80 + hu / 2, 560, 80 + hu / 2, MINT, 6); text(S, 470, 70, fx(U) + ' J useful', { s: 14, b: 1, c: MINT }); text(S, 370, 270, fx(W) + ' J heat (friction)', { s: 13, b: 1, c: CORAL }); text(S, 40, 40, EM[EK][0], { s: 16, b: 1 });
+    $('ef-inv').textContent = E; $('ef-frv').textContent = ['low (oiled)', 'medium', 'high (rusty)'][f]; $('ef-u').textContent = fx(U) + ' J'; $('ef-w').textContent = fx(W) + ' J'; $('ef-e').textContent = Math.round(e * 100) + '%'; $('ef-msg').innerHTML = 'Efficiency = useful energy out / energy in x 100% = ' + fx(U) + ' / ' + fx(E) + ' x 100 = <b>' + Math.round(e * 100) + '%</b>. Oiling bearings, pumping tyres and lighter parts reduce friction, so less energy is wasted as heat.'; }
+  seg($('ef-m'), [['wheel', 'Wheelchair'], ['hoist', 'Hoist'], ['lift', 'Stair lift'], ['bike', 'Hand-cycle']], function (v) { EK = v; efDraw(); }); $('ef-in').oninput = efDraw; $('ef-fr').oninput = efDraw; efDraw();
+  quiz('ch-ef', 'A machine does 300 J of useful work from 400 J. Its efficiency is...', [['75', '75%'], ['133', '133%'], ['25', '25%']], '75', '300 / 400 x 100 = 75%. No machine can be over 100%.', 'Useful out / total in.');
+
+  // 12 hydraulics
+  var HF = 'oil', HP = 0;
+  LOOPS.hydraulic = function (t) { var S = $('h-svg'), F = +$('h-f').value, a = +$('h-a').value, B = +$('h-b').value, P = F / a, O = P * B * (HF === 'air' ? 0.35 : 1); HP = (Math.sin(t * 1.5) + 1) / 2; S.innerHTML = ''; var wa = 16 + a * 4, wb = 40 + B * 1.2, push = HP * 40, rise = push * (wa / wb) * (HF === 'air' ? 0.35 : 1);
+    rect(S, 100, 180, 380, 50, HF === 'air' ? '#EEF3F8' : '#F3D9A8', 4, INK); rect(S, 120 - wa / 2, 80, wa, 110, HF === 'air' ? '#EEF3F8' : '#F3D9A8', 0, INK); rect(S, 400 - wb / 2, 80, wb, 110, HF === 'air' ? '#EEF3F8' : '#F3D9A8', 0, INK); rect(S, 120 - wa / 2, 80 + push, wa, 10, GREY, 2, INK); rect(S, 400 - wb / 2, 90 - rise, wb, 10, GREY, 2, INK); arrow(S, 120, 30 + push, 120, 74 + push, CORAL, 4); text(S, 120, 24, F + ' N', { a: 'middle', s: 13, b: 1, c: CORAL }); chair(S, 400, 90 - rise, VIO); arrow(S, 400 + wb / 2 + 20, 120, 400 + wb / 2 + 20, 70, MINT, 4); text(S, 400 + wb / 2 + 30, 100, fx(O) + ' N', { s: 13, b: 1, c: MINT });
+    if (HF === 'air') for (var i = 0; i < 30; i++) circ(S, 110 + (i * 37) % 360, 190 + (i * 13) % 34, 3, '#9CC5E3');
+    $('h-fv').textContent = F; $('h-av').textContent = a; $('h-bv').textContent = B; $('h-p').textContent = fx(P, 1) + ' N/cm2'; $('h-o').textContent = fx(O) + ' N'; $('h-ok').textContent = O >= 1500 ? 'yes' : 'no';
+    $('h-msg').innerHTML = HF === 'air' ? 'Air is <b>compressible</b>: it squashes, so much of the push is lost and the lift is spongy. Liquids are used in hydraulic lifts.' : 'Pressure = ' + F + ' / ' + a + ' = ' + fx(P, 1) + ' N/cm<sup>2</sup>. Lifting force = pressure x area = ' + fx(P, 1) + ' x ' + B + ' = <b>' + fx(O) + ' N</b>. The big piston moves a <b>shorter</b> distance.'; };
+  seg($('h-fl'), [['oil', 'Liquid (oil)'], ['air', 'Air']], function (v) { HF = v; });
+  quiz('ch-h', 'Why are hydraulic lifts filled with liquid, not air?', [['i', 'liquids are almost incompressible'], ['h', 'liquids are heavier'], ['c', 'air is too cold']], 'i', 'A liquid passes on the pressure fully; air would squash.', 'Switch to Air and watch the lift.');
+
+  // 13 design
+  var DT = { shelf: ['Hoa (wheelchair user) lifts a 30 N box to a high shelf', 30, 8], key: ['Mr Thanh (weak hands) turns a stiff key: 12 N', 12, 4], lid: ['Linh (arthritis) opens a jar: 24 N', 24, 6], hoist: ['A carer lifts a 720 N person', 720, 250] }, DK = 'shelf', DMC = 'lever';
+  var DM = { lever: ['Lever', 'cheap, simple'], wheel: ['Wheel and axle', 'good for turning'], pulley: ['Pulley', 'good for lifting'], ramp: ['Ramp', 'good for rolling loads up'] };
+  var DFIT = { shelf: ['lever', 'pulley'], key: ['wheel', 'lever'], lid: ['wheel', 'lever'], hoist: ['pulley'] };
+  function dDraw() { var S = $('d-svg'), T = DT[DK], ma = +$('d-ma').value, E = T[1] / ma, cap = T[2], fit = DFIT[DK].indexOf(DMC) >= 0, okF = E <= cap; S.innerHTML = ''; text(S, 320, 36, T[0], { a: 'middle', s: 14, b: 1 }); var cr = [['Effort within the user\'s strength', okF], ['Machine suits the task', fit], ['Simple and affordable', DMC !== 'pulley' || DK === 'hoist' || ma <= 4]]; cr.forEach(function (c, i) { rect(S, 80, 70 + i * 66, 480, 52, c[1] ? '#DFF3EA' : '#FBE3DC', 10, c[1] ? MINT : CORAL); text(S, 100, 102 + i * 66, (c[1] ? '✔ ' : '✘ ') + c[0], { s: 15, b: 1, c: c[1] ? MINT : CORAL }); });
+    var n = cr.filter(function (c) { return c[1]; }).length; $('d-mav').textContent = ma; $('d-e').textContent = fx(E, 1) + ' N'; $('d-c').textContent = cap + ' N'; $('d-ok').textContent = n + ' / 3';
+    $('d-msg').innerHTML = n === 3 ? '<b>Design meets all three criteria.</b> Next step in real design: test it with the user and improve it.' : 'Change the machine or its MA. ' + (okF ? '' : 'The effort (' + fx(E, 1) + ' N) is more than the user can give (' + cap + ' N): increase the MA. ') + (fit ? '' : 'A ' + DM[DMC][0].toLowerCase() + ' does not suit this task well.'); }
+  seg($('d-task'), [['shelf', 'Reach a shelf'], ['key', 'Turn a key'], ['lid', 'Open a jar'], ['hoist', 'Lift a person']], function (v) { DK = v; dDraw(); }); seg($('d-mach'), [['lever', 'Lever'], ['wheel', 'Wheel and axle'], ['pulley', 'Pulley'], ['ramp', 'Ramp']], function (v) { DMC = v; dDraw(); }); $('d-ma').oninput = dDraw; dDraw();
+  quiz('ch-d', 'In user-centred design, when should you ask the user what they need?', [['f', 'first, before designing'], ['l', 'last, after building'], ['n', 'never: the designer knows best']], 'f', 'Start with the user and keep testing with them.', 'Think about the motto "nothing about us without us".');
+
+  // 14 quiz
+  var QZ = [['A barrier is...', ['something in the environment that stops people taking part', 'a part of the body that does not work', 'a type of lever'], 0], ['The unit of work done is the...', ['joule', 'newton', 'watt'], 0], ['Work done = ...', ['force x distance', 'force / distance', 'mass x speed'], 0], ['A ramp reduces the...', ['force needed', 'work done', 'height'], 0], ['A wheelchair ramp should be no steeper than about...', ['1 : 12', '1 : 2', '1 : 1'], 0], ['In a first-class lever the middle is the...', ['pivot', 'load', 'effort'], 0], ['Tweezers are a ... lever.', ['third-class', 'first-class', 'second-class'], 0], ['Moment = ...', ['force x distance from pivot', 'force x time', 'mass x height'], 0], ['A 20 N force 0.5 m from a pivot gives a moment of...', ['10 N m', '40 N m', '20.5 N m'], 0], ['MA of a wheel and axle = ...', ['wheel radius / axle radius', 'axle radius / wheel radius', 'wheel x axle'], 0], ['A single fixed pulley...', ['changes the direction of the force', 'halves the effort', 'doubles the load'], 0], ['Gear ratio for a 10-tooth driver and 40-tooth driven gear:', ['4', '0.25', '30'], 0], ['Most wasted energy in machines is...', ['heat from friction', 'light', 'chemical'], 0], ['Pressure = ...', ['force / area', 'force x area', 'area / force'], 0], ['Hydraulic lifts use liquids because they are...', ['almost incompressible', 'light', 'cheap'], 0]];
+  function qBuild() { var order = QZ.map(function (q, i) { return i; }).sort(function () { return Math.random() - .5; }); $('q-box').innerHTML = order.map(function (i, n) { var q = QZ[i], o = q[1].map(function (x, j) { return [j, x]; }).sort(function () { return Math.random() - .5; }); return '<div class="msg" style="margin:8px 0" data-q="' + i + '"><b>' + (n + 1) + '. ' + q[0] + '</b><div class="seg" style="margin-top:6px">' + o.map(function (x) { return '<button type="button" data-v="' + x[0] + '" aria-pressed="false">' + x[1] + '</button>'; }).join('') + '</div></div>'; }).join('');
+    [].forEach.call($('q-box').querySelectorAll('.seg'), function (s) { [].forEach.call(s.children, function (b) { b.onclick = function () { [].forEach.call(s.children, function (x) { x.setAttribute('aria-pressed', x === b); }); }; }); }); $('q-msg').textContent = 'Answer every question, then check.'; }
+  $('q-chk').onclick = function () { var sc = 0; [].forEach.call($('q-box').children, function (d) { var q = QZ[+d.dataset.q], c = cur(d.querySelector('.seg')); var ok = c != null && +c === q[2]; if (ok) sc++; d.className = 'msg ' + (ok ? 'good' : 'bad'); }); $('q-msg').innerHTML = 'Score: <b>' + sc + ' / ' + QZ.length + '</b>. Red boxes show what to revise.'; }; $('q-new').onclick = qBuild; qBuild();
+
+  requestAnimationFrame(tick);
+  window.atDebug = { show: show, step: function (t) { for (var k in LOOPS) LOOPS[k](t || 1); } };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>

@@ -275,3 +275,21 @@ a.lesson:hover .l-pic{filter:saturate(1.15) brightness(1.05)}
 .res li.has-thumb .vthumb::after{content:"";position:absolute;left:50%;top:50%;width:42px;height:42px;margin:-21px 0 0 -21px;border-radius:50%;background:rgb(176 53 111/.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 7l8 5-8 5z' fill='%23fff'/%3E%3C/svg%3E") center/22px no-repeat;box-shadow:0 4px 12px rgb(0 0 0/.25)}
 .res li.has-thumb .vthumb i{position:absolute;right:6px;bottom:6px;padding:1px 7px;border-radius:6px;background:rgb(20 12 40/.85);color:#fff;font:700 .75rem var(--ui);font-style:normal}
 @media (max-width:600px){.res li.has-thumb{flex-direction:column;align-items:stretch}.res li.has-thumb .vthumb{width:100%}}
+/* Data-slide answers under the viewer (myp.js, 2026-11-26) */
+.m-answers{margin-top:8px;padding:8px 12px;border-radius:14px;background:var(--soft)}
+.ma-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.m-answers .lab{font:800 .82rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.ma-btn{font:700 .9rem var(--ui);color:#fff;background:#5F3DB8;border:0;padding:5px 13px;border-radius:99px;cursor:pointer}
+.ma-btn::before{content:"\25B8\00A0"}
+.ma-btn.open{background:#B0356F}
+.ma-btn.open::before{content:"\25BE\00A0"}
+.ma-btn.ma-all{background:none;color:inherit;border:1px solid currentColor}
+.ma-btn.ma-all::before{content:none}
+.ma-text{margin:8px 0 2px;padding:10px 14px;background:#fff;color:#2A1D5E;border-left:5px solid #1F7A7A;border-radius:8px;font:15px/1.45 var(--ui)}
+.ma-text b{display:block;color:#1F7A7A;margin-bottom:3px}
+.ma-text p{margin:0}
+.viewer:fullscreen .m-answers,.viewer.fill .m-answers{background:#1E1C42;color:#fff;max-height:34vh;overflow:auto}
+.viewer:fullscreen .m-answers .lab,.viewer.fill .m-answers .lab{color:#C9C3F0}
+.viewer:fullscreen .ma-text,.viewer.fill .ma-text{font-size:19px}
+.viewer.fill:has(.m-answers:not([hidden])) .stage,.viewer:fullscreen:has(.m-answers:not([hidden])) .stage{max-height:calc(100vh - 190px)}
+.viewer:fullscreen .m-answers,.viewer.fill .m-answers{max-height:30vh}

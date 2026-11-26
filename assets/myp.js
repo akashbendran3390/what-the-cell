@@ -61,9 +61,37 @@
       else h += '<a class="btn sim" href="' + esc(x[1]) + '" target="_blank" rel="noopener">Simulation: ' + esc(x[2]) + '</a>';
     });
     withBox.innerHTML = h;
+    paintAnswers();
     Array.prototype.forEach.call(thumbs.children, function (b, j) { b.setAttribute('aria-current', j === i ? 'true' : 'false'); });
     var c = thumbs.children[i]; if (c) thumbs.scrollLeft = c.offsetLeft - thumbs.clientWidth / 2 + 46;
   }
+  // Answers to the "Working with data" slides (answers.json beside the slides, 2026-11-26): each stays hidden until clicked
+  var answers = {}, ansBox = document.createElement('div'); ansBox.className = 'm-answers'; ansBox.hidden = true;
+  withBox.parentNode.insertBefore(ansBox, withBox.nextSibling);
+  function paintAnswers() {
+    var d = answers[i + 1]; ansBox.innerHTML = ''; ansBox.hidden = !d; if (!d) return;
+    var head = document.createElement('div'); head.className = 'ma-head';
+    head.innerHTML = '<span class="lab">Answers for this slide</span>';
+    var items = [];
+    d.q.forEach(function (x, j) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'ma-btn'; b.setAttribute('aria-expanded', 'false');
+      b.textContent = 'Answer ' + (j + 1); b.title = x[0];
+      var p = document.createElement('div'); p.className = 'ma-text'; p.hidden = true;
+      var tag = /^\d+$/.test(String(x[1])) ? ' [' + x[1] + ']' : ' (level ' + x[1] + ')';
+      p.innerHTML = '<b>' + (j + 1) + '. ' + esc(x[0]) + esc(tag) + '</b><p>' + esc(x[2]) + '</p>';
+      b.addEventListener('click', function () { var open = p.hidden; p.hidden = !open; b.setAttribute('aria-expanded', open); b.classList.toggle('open', open); });
+      head.appendChild(b); items.push([b, p]);
+    });
+    var all = document.createElement('button'); all.type = 'button'; all.className = 'ma-btn ma-all'; all.textContent = 'Show all';
+    all.addEventListener('click', function () {
+      var open = items.some(function (t) { return t[1].hidden; });
+      items.forEach(function (t) { t[1].hidden = !open; t[0].setAttribute('aria-expanded', open); t[0].classList.toggle('open', open); });
+      all.textContent = open ? 'Hide all' : 'Show all';
+    });
+    head.appendChild(all); ansBox.appendChild(head);
+    items.forEach(function (t) { ansBox.appendChild(t[1]); });
+  }
+  if (window.fetch) fetch(base + '../answers.json').then(function (r) { return r.ok ? r.json() : {}; }).then(function (j) { answers = j || {}; paintAnswers(); }).catch(function () {});
   viewer.querySelector('.prev').addEventListener('click', function () { show(i - 1); });
   viewer.querySelector('.next').addEventListener('click', function () { show(i + 1); });
   range.addEventListener('input', function () { show(range.value - 1); });

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- seo -->
+<meta name="description" content="Sorting Life Lab. Sort objects, test whether things are alive, focus a microscope, sort organisms into six kingdoms, grow mould, follow and build keys, climb the seven levels and write scientific names. MYP Science resources from What the Cell.">
+<link rel="canonical" href="https://whatthecell.org/myp/sorting-life-lab.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<meta name="theme-color" content="#2A1D5E">
+<meta property="og:site_name" content="What the Cell">
+<meta property="og:title" content="Sorting Life Lab | What the Cell">
+<meta property="og:description" content="Sorting Life Lab. Sort objects, test whether things are alive, focus a microscope, sort organisms into six kingdoms, grow mould, follow and build keys, climb the seven levels and write scientific names. MYP Science resources from What the Cell.">
+<meta property="og:url" content="https://whatthecell.org/myp/sorting-life-lab.html">
+<meta property="og:image" content="https://whatthecell.org/logo-512.png">
+<!-- /seo -->
+<title>Sorting Life Lab | What the Cell</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&amp;family=Bricolage+Grotesque:opsz,wght@12..96,500..800&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/myp.css?v=b9dd26ec">
+<script src="../assets/theme.js?v=973ced84"></script>
+<style>
+/* MYP 1 lab (2026-11-28): shared lab styles copied from molecules-lab.html by build-myp1-labs.ps1. */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.tabs button{font:800 .95rem var(--ui);border:0;border-radius:14px;padding:10px 14px;cursor:pointer;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tabs button span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;margin-right:6px;background:var(--c);color:#fff;font-size:.85rem}
+.tabs button[aria-selected="true"] span{background:#fff;color:var(--c)}
+.lab{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){.lab{grid-template-columns:minmax(0,1fr)}}
+.stagebox{background:#fff;color:#1E0E4A;border-radius:22px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px;min-width:0}
+.stagebox svg,.stagebox canvas{display:block;width:100%;height:auto}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel[hidden]{display:none}
+.intro{margin:0 0 14px;max-width:75ch}
+.msg{border-radius:18px;padding:12px 14px;background:var(--soft);border-left:7px solid var(--c,var(--sky));font-size:.98rem}
+.msg.good{--c:var(--mint)}.msg.bad{--c:var(--coral)}.msg.warn{--c:var(--tang)}
+.ctl{display:grid;gap:10px}
+.ctl label,.lbl{font:800 .85rem var(--ui);color:var(--muted);display:block}
+.ctl input[type=range]{width:100%;accent-color:var(--sky)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.chip{font:800 .86rem var(--ui);border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:#fff}
+.btn2{font:800 .95rem var(--ui);border:0;border-radius:12px;padding:9px 16px;cursor:pointer;background:var(--sky);color:#fff}
+.btn2.alt{background:var(--mint)}.btn2.warm{background:var(--tang)}.btn2.ghost{background:var(--soft);color:var(--ink)}
+.btn2:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stats div{background:#1E0E4A;color:#8ADFDA;border-radius:14px;padding:8px 12px;font:800 1.15rem/1.15 ui-monospace,monospace;min-width:0}
+.stats small{display:block;font:700 .7rem var(--ui);color:#C9B8F5;text-transform:uppercase;letter-spacing:.06em}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left}
+table.t th{font:800 .78rem var(--ui);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.tablewrap{overflow-x:auto}
+.ans{display:grid;grid-template-columns:minmax(0,1fr) 8.5rem;gap:6px;align-items:center}
+.ans input{font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.ans input.ok{border-color:var(--mint)}.ans input.no{border-color:var(--coral)}
+.eq{font:700 1.02rem/1.6 ui-monospace,monospace;background:var(--soft);border-radius:12px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.hessrow{display:grid;grid-template-columns:minmax(0,1fr) 9.5rem;gap:8px;align-items:center;border:2px solid var(--line);border-radius:14px;padding:8px 10px;background:var(--surface)}
+.hessrow select{font:800 .9rem var(--ui);border-radius:10px;padding:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.hessrow .eq{background:transparent;padding:0;font-size:.95rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
+.rx{font:inherit;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:9px 11px;cursor:pointer}
+.rx b{display:block;font:800 .92rem var(--ui)}.rx small{color:var(--muted);font-size:.8rem}
+.rx[aria-pressed="true"]{border-color:var(--sky);background:color-mix(in srgb,var(--sky) 12%,var(--surface))}
+.why{font-size:.92rem;color:var(--muted);margin:6px 0 0}
+sub,sup{font-size:.72em}
+.flame{transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+@keyframes flick{to{transform:scaleY(1.12) scaleX(.92)}}
+@media (prefers-reduced-motion:reduce){.flame{animation:none}}
+.challenge{margin:16px 0 0;padding:12px 14px;border-radius:16px;background:var(--soft);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.challenge .seg{display:inline-flex}
+.challenge .why{margin:0;flex-basis:100%}
+.ans1{display:inline-flex;gap:6px}.ans1 input{width:6rem;font:700 1rem ui-monospace,monospace;padding:6px 8px;border-radius:10px;border:2px solid var(--line)}
+.plist{display:grid;gap:4px}
+.prow{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 5.2rem;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:4px 2px;font-size:.92rem}
+.prow small{color:#6B6390}.prow input[type=range]{width:100%;accent-color:#5F3DB8}
+@media (max-width:560px){.prow{grid-template-columns:minmax(0,1fr) 5rem}.prow input[type=range]{grid-column:1/-1;grid-row:2}}
+.stagebox .seg button{font-size:.8rem}
+.eqbig{font:700 1.15rem/2.2 ui-monospace,monospace;text-align:center;padding:8px 0 4px;overflow-x:auto}
+.co{display:inline-flex;align-items:center;gap:2px;margin-right:2px;vertical-align:middle}
+.co button{font:800 .8rem var(--ui);border:0;border-radius:8px;width:24px;height:24px;cursor:pointer;background:var(--soft);color:var(--ink)}
+.co b{min-width:14px;text-align:center;color:#B0356F}
+#d-list .prow{grid-template-columns:minmax(0,1.2fr) auto minmax(0,1fr)}
+table.t{margin:0}
+.rbox{display:block;width:100%;height:190px;border:0;border-radius:16px;font:800 1.3rem var(--ui);background:#2E7DB8;color:#fff;cursor:pointer;margin-bottom:10px}.rbox.wait{background:#B5532A}.rbox.go{background:#4CA64C}
+.chip input{margin-right:5px;vertical-align:middle}
+[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="m-band has-pic" style="--band1:#1F7A7A;--band2:#B0356F;--band3:#2A1D5E;--band-pic:url('art/myp/myp1-classify-diatoms-b.jpg')">
+  <div class="m-wrap">
+    <header class="m-head">
+      <a class="m-mark" href="../index.html">What the Cell</a>
+      <nav class="m-nav site-nav" aria-label="MYP"><a href="../index.html">Home</a><a href="../myp.html">Overview</a><a href="../myp-science.html">MYP Science</a><a href="myp1-classifying-living-things.html">Classifying Living Things</a><a href="../teachers.html">Teacher resources</a></nav>
+    </header>
+    <div class="m-crumbs"><a href="../myp-science.html">MYP Science</a> / <a href="../myp-science.html#myp1">MYP 1, Unit 2</a> / <a href="myp1-classifying-living-things.html">Classifying Living Things</a></div>
+    <h1>Sorting Life Lab</h1>
+    <p class="lede">Sort objects, test whether things are alive, focus a microscope, sort organisms into six kingdoms, grow mould, follow and build keys, climb the seven levels and write scientific names.</p>
+  </div>
+</div>
+
+<main><div class="m-wrap">
+  <div class="tabs" role="tablist" aria-label="Lab parts">
+    <button role="tab" aria-selected="true" data-t="sort" style="--c:var(--coral)"><span>1</span>Sorting</button>
+    <button role="tab" aria-selected="false" data-t="living" style="--c:var(--tang)"><span>2</span>Living or not</button>
+    <button role="tab" aria-selected="false" data-t="microscope" style="--c:var(--sky)"><span>3</span>Microscope</button>
+    <button role="tab" aria-selected="false" data-t="cells" style="--c:var(--mint)"><span>4</span>Cells</button>
+    <button role="tab" aria-selected="false" data-t="kingdoms" style="--c:var(--pink)"><span>5</span>Kingdoms</button>
+    <button role="tab" aria-selected="false" data-t="microbes" style="--c:var(--violet)"><span>6</span>Microbes</button>
+    <button role="tab" aria-selected="false" data-t="mould" style="--c:var(--coral)"><span>7</span>Mould</button>
+    <button role="tab" aria-selected="false" data-t="groups" style="--c:var(--tang)"><span>8</span>Groups</button>
+    <button role="tab" aria-selected="false" data-t="key" style="--c:var(--sky)"><span>9</span>Keys</button>
+    <button role="tab" aria-selected="false" data-t="levels" style="--c:var(--mint)"><span>10</span>Levels</button>
+    <button role="tab" aria-selected="false" data-t="names" style="--c:var(--pink)"><span>11</span>Names</button>
+    <button role="tab" aria-selected="false" data-t="quiz" style="--c:var(--violet)"><span>12</span>Unit quiz</button>
+  </div>
+
+  <section class="panel" id="p-sort">
+    <p class="intro">Split the 8 shapes into two groups with <b>one feature</b>, then split each group again, until every shape is alone. Choose a feature for each group in turn.</p>
+    <div class="lab"><div class="stagebox"><svg id="so-svg" viewBox="0 0 640 360" role="img" aria-label="Shapes being sorted into groups"></svg></div>
+    <div class="side"><div class="msg" id="so-q"></div><div class="seg" id="so-feat"></div><div class="row"><button class="btn2 ghost" id="so-new">Start again</button></div><div class="stats"><div><small>Splits</small><span id="so-n">0</span></div><div><small>Groups</small><span id="so-g">1</span></div></div><div class="msg" id="so-msg">Choose a feature to split the first group.</div></div></div>
+    <div class="challenge" id="ch-so"></div>
+  </section>
+
+  <section class="panel" id="p-living" hidden>
+    <p class="intro">Choose a thing, then tick the characteristics of life it shows. Is it <b>living</b>? Remember: a living thing shows all seven and is made of cells.</p>
+    <div class="lab"><div class="stagebox"><div class="cards" id="lv-things"></div></div>
+    <div class="side"><div id="lv-check"></div><div class="seg" id="lv-ans"></div><div class="msg" id="lv-msg">Pick a thing.</div></div></div>
+    <div class="challenge" id="ch-lv"></div>
+  </section>
+
+  <section class="panel" id="p-microscope" hidden>
+    <p class="intro">Choose an objective lens and turn the <b>coarse</b> and <b>fine</b> focus until the cells are sharp. Watch the total magnification.</p>
+    <div class="lab"><div class="stagebox"><svg id="mi-svg" viewBox="0 0 640 380" role="img" aria-label="View down a microscope"></svg></div>
+    <div class="side"><div class="seg" id="mi-obj"></div><div class="ctl"><label for="mi-c">Coarse focus</label><input type="range" id="mi-c" min="0" max="100" value="20"></div><div class="ctl"><label for="mi-f">Fine focus</label><input type="range" id="mi-f" min="-10" max="10" step="0.5" value="0"></div><div class="seg" id="mi-spec"></div>
+    <div class="stats"><div><small>Magnification</small><span id="mi-mag">x40</span></div><div><small>Focus</small><span id="mi-foc">-</span></div></div><div class="msg" id="mi-msg"></div></div></div>
+    <div class="challenge" id="ch-mi"></div>
+  </section>
+
+  <section class="panel" id="p-cells" hidden>
+    <p class="intro">Compare three cells. Click a part to find out what it does, then tick which cells have it.</p>
+    <div class="lab"><div class="stagebox"><svg id="ce-svg" viewBox="0 0 640 340" role="img" aria-label="A bacterium, a plant cell and an animal cell"></svg></div>
+    <div class="side"><div class="tablewrap"><table class="t" id="ce-t"></table></div><button class="btn2" id="ce-chk">Check my table</button><div class="msg" id="ce-msg">Click a part on a cell.</div></div></div>
+    <div class="challenge" id="ch-ce"></div>
+  </section>
+
+  <section class="panel" id="p-kingdoms" hidden>
+    <p class="intro">Answer the three kingdom questions for each organism: one or many cells? Simple or complex cells? How does it get food?</p>
+    <div class="lab"><div class="stagebox"><div id="kg-card" style="font:700 24px 'Bricolage Grotesque',sans-serif;margin:8px 0"></div><p id="kg-clue" class="why"></p><div id="kg-qs"></div></div>
+    <div class="side"><div class="seg" id="kg-ans"></div><div class="stats"><div><small>Right</small><span id="kg-r">0</span></div><div><small>Of</small><span id="kg-n">0</span></div></div><div class="msg" id="kg-msg">Choose the kingdom.</div><button class="btn2 ghost" id="kg-next">Next organism</button></div></div>
+    <div class="challenge" id="ch-kg"></div>
+  </section>
+
+  <section class="panel" id="p-microbes" hidden>
+    <p class="intro">Identify each microbe from its clues, then decide: is it a friend, a foe or both?</p>
+    <div class="lab"><div class="stagebox"><svg id="mb-svg" viewBox="0 0 640 300" role="img" aria-label="A microbe"></svg><p id="mb-clue" style="font-size:17px"></p></div>
+    <div class="side"><div class="seg" id="mb-name"></div><div class="seg" id="mb-ff"></div><div class="msg" id="mb-msg">Who is this?</div><button class="btn2 ghost" id="mb-next">Next microbe</button></div></div>
+    <div class="challenge" id="ch-mb"></div>
+  </section>
+
+  <section class="panel" id="p-mould" hidden>
+    <p class="intro">Set the conditions for a slice of bread, then run 8 days. Mould grows from spores where it is <b>warm, damp</b> and full of food.</p>
+    <div class="lab"><div class="stagebox"><svg id="mo-svg" viewBox="0 0 640 360" role="img" aria-label="Bread slice with mould"></svg></div>
+    <div class="side"><div class="ctl"><label for="mo-t">Temperature: <b id="mo-tv"></b> degrees C</label><input type="range" id="mo-t" min="2" max="40" value="25"></div><div class="ctl"><label for="mo-w">Water: <b id="mo-wv"></b> drops</label><input type="range" id="mo-w" min="0" max="10" value="5"></div><div class="seg" id="mo-wrap"></div><div class="seg" id="mo-bread"></div>
+    <div class="row"><button class="btn2" id="mo-go">Run 8 days</button></div><div class="stats"><div><small>Day</small><span id="mo-d">0</span></div><div><small>Mould cover</small><span id="mo-c">0%</span></div></div><div class="msg" id="mo-msg"></div></div></div>
+    <div class="challenge" id="ch-mo"></div>
+  </section>
+
+  <section class="panel" id="p-groups" hidden>
+    <p class="intro">Put each organism into its group. Animals: fish, amphibians, reptiles, birds, mammals or invertebrates. Plants: mosses, ferns, conifers or flowering plants.</p>
+    <div class="lab"><div class="stagebox"><div id="gp-card" style="font:700 24px 'Bricolage Grotesque',sans-serif;margin:8px 0"></div><p id="gp-clue" class="why" style="font-size:16px"></p></div>
+    <div class="side"><div class="seg" id="gp-ans"></div><div class="stats"><div><small>Right</small><span id="gp-r">0</span></div><div><small>Of</small><span id="gp-n">0</span></div></div><div class="msg" id="gp-msg">Choose a group.</div><button class="btn2 ghost" id="gp-next">Next organism</button></div></div>
+    <div class="challenge" id="ch-gp"></div>
+  </section>
+
+  <section class="panel" id="p-key" hidden>
+    <p class="intro">Follow the key to identify the mystery animal. Answer each question with one of the two choices.</p>
+    <div class="lab"><div class="stagebox"><div id="ky-animal" style="font:700 20px 'Bricolage Grotesque',sans-serif;margin:6px 0 10px"></div><div id="ky-path" class="why"></div><div id="ky-q" style="font-size:20px;margin:14px 0"></div><div class="seg" id="ky-opts"></div></div>
+    <div class="side"><div class="msg" id="ky-msg">Start at question 1.</div><div class="stats"><div><small>Identified</small><span id="ky-n">0</span></div></div><button class="btn2 ghost" id="ky-next">Next mystery animal</button></div></div>
+    <div class="challenge" id="ch-ky"></div>
+  </section>
+
+  <section class="panel" id="p-levels" hidden>
+    <p class="intro">Choose an organism and zoom from <b>kingdom</b> down to <b>species</b>. Watch how few species are left at each level.</p>
+    <div class="lab"><div class="stagebox"><svg id="le-svg" viewBox="0 0 640 380" role="img" aria-label="Nested levels of classification"></svg></div>
+    <div class="side"><div class="seg" id="le-org"></div><div class="ctl"><label for="le-k">Level: <b id="le-kv"></b></label><input type="range" id="le-k" min="0" max="6" value="0"></div><div class="msg" id="le-msg"></div></div></div>
+    <div class="challenge" id="ch-le"></div>
+  </section>
+
+  <section class="panel" id="p-names" hidden>
+    <p class="intro">Match each common name to its scientific name. Then fix the names that are written wrongly.</p>
+    <div class="lab"><div class="stagebox"><div class="cards" id="nm-common"></div><div class="cards" id="nm-sci" style="margin-top:10px"></div></div>
+    <div class="side"><div class="stats"><div><small>Matched</small><span id="nm-r">0</span></div></div><div class="msg" id="nm-msg">Click a common name, then its scientific name.</div><div id="nm-fix"></div></div></div>
+    <div class="challenge" id="ch-nm"></div>
+  </section>
+
+  <section class="panel" id="p-quiz" hidden>
+    <p class="intro">Twelve mixed questions from the whole unit. Revise any topic you get wrong.</p>
+    <div id="q-box"></div><div class="row" style="margin-top:12px"><button class="btn2" id="q-chk">Check my answers</button><button class="btn2 ghost" id="q-new">New order</button></div><div class="msg" id="q-msg" style="margin-top:12px">Answer every question, then check.</div>
+  </section>
+  <p class="why" style="margin-top:24px">Sorting Life Lab is made by What the Cell for MYP 1 Science, Unit 2: Classifying Living Things. Values are simplified for learning.</p>
+</div></main>
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  var NS = 'http://www.w3.org/2000/svg', INK = '#1E0E4A', SKY = '#2E7DB8', MINT = '#2E9E6B', CORAL = '#E4572E', TANG = '#E89B1E', PINK = '#B0356F', VIO = '#5F3DB8', GREY = '#9AA3B5';
+  function el(S, t, a, txt) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; S.appendChild(e); return e; }
+  function line(S, x1, y1, x2, y2, c, w) { return el(S, 'line', { x1: x1, y1: y1, x2: x2, y2: y2, stroke: c || INK, 'stroke-width': w || 2, 'stroke-linecap': 'round' }); }
+  function text(S, x, y, t, o) { o = o || {}; return el(S, 'text', { x: x, y: y, 'font-size': o.s || 14, 'font-weight': o.b ? 800 : 500, fill: o.c || INK, 'text-anchor': o.a || 'start', 'font-family': 'Atkinson Hyperlegible, sans-serif' }, t); }
+  function rect(S, x, y, w, h, f, r, st) { return el(S, 'rect', { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h), rx: r || 0, fill: f, stroke: st || 'none', 'stroke-width': 2 }); }
+  function circ(S, x, y, r, f, st, w) { return el(S, 'circle', { cx: x, cy: y, r: r, fill: f, stroke: st || 'none', 'stroke-width': w || 1.5 }); }
+  function path(S, d, f, st, w) { return el(S, 'path', { d: d, fill: f || 'none', stroke: st || INK, 'stroke-width': w || 2, 'stroke-linejoin': 'round' }); }
+  function seg(box, opts, cb, start) { box.innerHTML = ''; opts.forEach(function (o, i) { var b = document.createElement('button'); b.type = 'button'; b.dataset.v = o[0]; b.textContent = o[1]; b.setAttribute('aria-pressed', i === (start == null ? -1 : start)); b.onclick = function () { [].forEach.call(box.children, function (x) { x.setAttribute('aria-pressed', x === b); }); if (cb) cb(o[0]); }; box.appendChild(b); }); }
+  function cur(box) { var b = box.querySelector('[aria-pressed="true"]'); return b ? b.dataset.v : null; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function quiz(id, q, opts, right, good, hint) { var box = $(id); box.innerHTML = '<b>Challenge:</b> <span>' + q + '</span><span class="seg"></span><p class="why"></p>'; var sg = box.querySelector('.seg'), why = box.querySelector('.why');
+    opts.forEach(function (o) { var b = document.createElement('button'); b.type = 'button'; b.textContent = o[1]; b.onclick = function () { if (o[0] === right) { why.innerHTML = '&#10004; ' + good; why.style.color = MINT; } else { why.innerHTML = '&#10008; Not quite. ' + hint; why.style.color = CORAL; } }; sg.appendChild(b); }); }
+  function setMsg(id, h, ok) { var m = $(id); m.innerHTML = h; m.className = 'msg' + (ok === true ? ' good' : ok === false ? ' bad' : ''); }
+  var NAMES = ['sort', 'living', 'microscope', 'cells', 'kingdoms', 'microbes', 'mould', 'groups', 'key', 'levels', 'names', 'quiz'];
+  function show(n) { NAMES.forEach(function (k) { $('p-' + k).hidden = k !== n; }); [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.setAttribute('aria-selected', b.dataset.t === n); }); if (history.replaceState) history.replaceState(null, '', '#' + n); }
+  [].forEach.call(document.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { show(b.dataset.t); }; });
+
+  // 1 sorting: 8 shapes with features
+  var SH = [{ s: 'c', c: CORAL, b: 1, h: 2 }, { s: 'c', c: SKY, b: 0, h: 4 }, { s: 'c', c: CORAL, b: 0, h: 4 }, { s: 'c', c: SKY, b: 1, h: 2 }, { s: 'q', c: CORAL, b: 1, h: 4 }, { s: 'q', c: SKY, b: 0, h: 2 }, { s: 'q', c: CORAL, b: 0, h: 2 }, { s: 'q', c: SKY, b: 1, h: 4 }];
+  var FEAT = [['s', 'Round or square?', function (x) { return x.s === 'c'; }], ['c', 'Red or blue?', function (x) { return x.c === CORAL; }], ['b', 'Big or small?', function (x) { return x.b === 1; }], ['h', '2 or 4 holes?', function (x) { return x.h === 2; }]];
+  var soGroups = [], soK = 0, soN = 0, soUsed = [];
+  function soStart() { soGroups = [[0, 1, 2, 3, 4, 5, 6, 7]]; soK = 0; soN = 0; soUsed = [[]]; soDraw(); }
+  function soDraw() { var S = $('so-svg'); S.innerHTML = ''; var y = 20, gw = 600 / soGroups.length; soGroups.forEach(function (g, gi) { var x0 = 20 + gi * gw; rect(S, x0 + 3, 20, gw - 6, 320, gi === soK ? '#FFF3D6' : '#F4F6FA', 10, gi === soK ? TANG : 'none'); g.forEach(function (i, j) { var o = SH[i], cx = x0 + gw / 2 + ((j % 2) ? 22 : -22) * (gw > 120 ? 1.5 : 0.7), cy = 60 + Math.floor(j / 2) * 70, r = o.b ? 22 : 14; if (gw < 120) { cx = x0 + gw / 2; cy = 60 + j * 70; } if (o.s === 'c') circ(S, cx, cy, r, o.c, INK, 2); else rect(S, cx - r, cy - r, 2 * r, 2 * r, o.c, 3, INK); for (var hh = 0; hh < o.h; hh++) circ(S, cx + (hh % 2 ? 5 : -5), cy + (hh < 2 ? -4 : 4) + (o.h === 2 ? 4 : 0), 2.2, '#fff'); }); });
+    $('so-n').textContent = soN; $('so-g').textContent = soGroups.length; var done = soGroups.every(function (g) { return g.length === 1; });
+    if (done) { $('so-q').innerHTML = '<b>Every shape is alone!</b>'; $('so-feat').innerHTML = ''; setMsg('so-msg', 'Done in ' + soN + ' splits. Notice each group got smaller and more alike: this branching is a dichotomous key.', true); return; }
+    while (soGroups[soK].length === 1) soK = (soK + 1) % soGroups.length;
+    $('so-q').innerHTML = 'Split the <b>highlighted</b> group (' + soGroups[soK].length + ' shapes). Which feature?'; seg($('so-feat'), FEAT.map(function (f) { return [f[0], f[1]]; }), soSplit); }
+  function soSplit(k) { var f = FEAT.filter(function (x) { return x[0] === k; })[0], g = soGroups[soK], a = g.filter(function (i) { return f[2](SH[i]); }), b = g.filter(function (i) { return !f[2](SH[i]); }); if (!a.length || !b.length) { setMsg('so-msg', 'That feature does not split this group: every shape here is the same for it. Try another.', false); return; } soGroups.splice(soK, 1, a, b); soN++; soK = 0; setMsg('so-msg', 'Split by "' + f[1] + '": ' + a.length + ' and ' + b.length + '.'); soDraw(); }
+  $('so-new').onclick = soStart; soStart();
+  quiz('ch-so', 'As groups get smaller, the things in each group become...', [['m', 'more alike'], ['l', 'less alike'], ['s', 'no different']], 'm', 'Each split adds a shared feature, so members share more features.', 'Think about how many features they share.');
+
+  // 2 living
+  var MR = ['Movement', 'Respiration', 'Sensitivity', 'Growth', 'Reproduction', 'Excretion', 'Nutrition', 'Made of cells'];
+  var LV = [['Bean seedling', [1, 1, 1, 1, 1, 1, 1, 1], 'L', 'It shows all seven and is made of cells.'], ['Fire', [1, 0, 0, 1, 0, 1, 0, 0], 'N', 'Look-alikes only: no cells, no sensitivity, it does not reproduce itself.'], ['Mushroom', [0, 1, 1, 1, 1, 1, 1, 1], 'L', 'A fungus: it moves very slowly as it grows, respires, absorbs food and makes spores.'], ['Robot vacuum', [1, 0, 1, 0, 0, 0, 0, 0], 'N', 'It moves and senses, but has no cells and cannot grow or reproduce.'], ['Salt crystal', [0, 0, 0, 1, 0, 0, 0, 0], 'N', 'It only grows, by adding more salt; it has no cells.'], ['Yeast', [1, 1, 1, 1, 1, 1, 1, 1], 'L', 'A single-celled fungus that does all seven.'], ['Wooden chair', [0, 0, 0, 0, 0, 0, 0, 1], 'O', 'Made of cells from a tree: once living.'], ['Virus', [0, 0, 0, 0, 1, 0, 0, 0], 'V', 'Not made of cells; copies itself only inside living cells. Scientists disagree.']], lvK = -1;
+  $('lv-things').innerHTML = LV.map(function (x, i) { return '<button class="rx" data-i="' + i + '"><b>' + x[0] + '</b></button>'; }).join('');
+  [].forEach.call($('lv-things').children, function (b) { b.onclick = function () { lvK = +b.dataset.i; [].forEach.call($('lv-things').children, function (x) { x.setAttribute('aria-pressed', x === b); }); $('lv-check').innerHTML = MR.map(function (m, j) { return '<label style="display:block;margin:4px 0"><input type="checkbox" data-j="' + j + '"> ' + m + '</label>'; }).join(''); setMsg('lv-msg', 'Tick what <b>' + LV[lvK][0] + '</b> shows, then decide.'); }; });
+  seg($('lv-ans'), [['L', 'Living'], ['O', 'Once living'], ['N', 'Non-living'], ['V', 'Not sure: argue']], function (v) { if (lvK < 0) return; var x = LV[lvK], ticks = [].map.call($('lv-check').querySelectorAll('input'), function (c) { return c.checked ? 1 : 0; }), tk = ticks.filter(function (t, j) { return t === x[1][j]; }).length; var ok = v === x[2]; setMsg('lv-msg', (ok ? '&#10004; ' : '&#10008; ') + x[3] + ' (Your ticks matched ' + tk + ' of 8.)', ok); });
+  quiz('ch-lv', 'What is the difference between respiration and breathing?', [['r', 'respiration releases energy in cells; breathing moves air'], ['s', 'they are the same'], ['p', 'only plants respire']], 'r', 'Every living cell respires, all the time.', 'One happens in cells, one in the lungs.');
+
+  // 3 microscope
+  var miObj = 4, miSpec = 'onion', miTarget = { 4: 38, 10: 55, 40: 63 };
+  seg($('mi-obj'), [['4', 'x4'], ['10', 'x10'], ['40', 'x40']], function (v) { var old = miObj; miObj = +v; if (miObj === 40 && old !== 40) setMsg('mi-msg', 'At x40 use only the <b>fine</b> focus, or you may crash the lens into the slide.'); miDraw(); }, 0);
+  seg($('mi-spec'), [['onion', 'Onion'], ['elodea', 'Pondweed'], ['blood', 'Blood']], function (v) { miSpec = v; miDraw(); }, 0);
+  function miDraw() { var S = $('mi-svg'); S.innerHTML = ''; var mag = 10 * miObj; $('mi-mag').textContent = 'x' + mag; var err = Math.abs(+$('mi-c').value + +$('mi-f').value - miTarget[miObj]); var blur = Math.min(8, err / 2.2);
+    var defs = el(S, 'defs', {}), fl = el(defs, 'filter', { id: 'mib' }); el(fl, 'feGaussianBlur', { stdDeviation: blur }); el(defs, 'clipPath', { id: 'mic' }); el(defs.lastChild, 'circle', { cx: 320, cy: 190, r: 170 });
+    rect(S, 0, 0, 640, 380, '#111'); var g = el(S, 'g', { 'clip-path': 'url(#mic)' }); rect(g, 140, 10, 360, 360, '#FBF7E8'); var gg = el(g, 'g', { filter: 'url(#mib)' }); var sz = miObj === 4 ? 18 : miObj === 10 ? 45 : 170;
+    for (var r = -8; r <= 8; r++) for (var c = -8; c <= 8; c++) { var x = 320 + c * sz * 1.6 + (r % 2 ? sz * 0.8 : 0), y = 190 + r * sz; if (Math.abs(x - 320) > 200 || Math.abs(y - 190) > 200) continue;
+      if (miSpec === 'onion') { rect(gg, x - sz * 0.78, y - sz * 0.48, sz * 1.56, sz * 0.96, '#F3E6B8', 2, '#8A6A2A'); circ(gg, x + sz * 0.3, y, sz * 0.12, '#8A6A2A'); }
+      else if (miSpec === 'elodea') { rect(gg, x - sz * 0.78, y - sz * 0.48, sz * 1.56, sz * 0.96, '#E2F3D2', 2, '#3B7A2A'); for (var k = 0; k < 6; k++) circ(gg, x - sz * 0.55 + k * sz * 0.22, y - sz * 0.32 + (k % 2) * sz * 0.6, sz * 0.09, '#2E9E3B'); }
+      else { circ(gg, x, y, sz * 0.42, '#E79A9A', '#B33', 1.5); circ(gg, x, y, sz * 0.18, '#F2BDBD'); } }
+    circ(S, 320, 190, 170, 'none', '#000', 6); var f = err < 2 ? 'sharp' : err < 8 ? 'nearly' : 'blurred'; $('mi-foc').textContent = f; $('mi-foc').style.color = err < 2 ? MINT : err < 8 ? TANG : CORAL;
+    if (err < 2) setMsg('mi-msg', '<b>In focus at x' + mag + '.</b> ' + (miSpec === 'onion' ? 'Box-shaped cells with a cell wall and a dark nucleus.' : miSpec === 'elodea' ? 'Green chloroplasts in box-shaped cells.' : 'Red blood cells: round, no nucleus.'), true); }
+  $('mi-c').oninput = miDraw; $('mi-f').oninput = miDraw; miDraw();
+  quiz('ch-mi', 'Eyepiece x10 and objective x40. What is the total magnification?', [['a', 'x400'], ['b', 'x50'], ['c', 'x4']], 'a', 'Multiply: 10 x 40 = 400.', 'Multiply, do not add.');
+
+  // 4 cells
+  var PARTS = [['Cell membrane', 'controls what goes in and out', [1, 1, 1]], ['Cytoplasm', 'jelly where chemical reactions happen', [1, 1, 1]], ['Nucleus', 'controls the cell; holds DNA', [0, 1, 1]], ['Cell wall', 'stiff outer layer for support', [1, 1, 0]], ['Chloroplast', 'makes food from light', [0, 1, 0]], ['Large vacuole', 'stores cell sap; keeps the cell firm', [0, 1, 0]]];
+  function ceDraw() { var S = $('ce-svg'); S.innerHTML = ''; text(S, 100, 30, 'Bacterium (simple)', { a: 'middle', b: 1, s: 13 }); text(S, 320, 30, 'Plant cell', { a: 'middle', b: 1, s: 13 }); text(S, 535, 30, 'Animal cell', { a: 'middle', b: 1, s: 13 });
+    function hot(e, i) { e.style.cursor = 'pointer'; e.onclick = function () { setMsg('ce-msg', '<b>' + PARTS[i][0] + ':</b> ' + PARTS[i][1] + '.'); }; return e; }
+    hot(el(S, 'rect', { x: 50, y: 150, width: 100, height: 46, rx: 23, fill: '#F7E9B8', stroke: '#8A6A2A', 'stroke-width': 5 }), 3); hot(el(S, 'rect', { x: 57, y: 156, width: 86, height: 34, rx: 17, fill: '#FBF3D6', stroke: INK, 'stroke-width': 1.5 }), 1); path(S, 'M70 172 C85 160 100 185 125 170', 'none', '#7A4', 2);
+    hot(el(S, 'rect', { x: 240, y: 60, width: 160, height: 240, fill: '#DFF1D0', stroke: '#3B7A2A', 'stroke-width': 7 }), 3); hot(el(S, 'rect', { x: 248, y: 68, width: 144, height: 224, fill: '#EAF6DF', stroke: INK, 'stroke-width': 1.5 }), 1); hot(el(S, 'rect', { x: 268, y: 110, width: 104, height: 140, rx: 20, fill: '#CFE8F7', stroke: '#2E7DB8' }), 5); hot(circ(S, 360, 86, 13, '#B9A3E6', INK, 1.5), 2); [[262, 270], [380, 270], [262, 90], [385, 140], [260, 190]].forEach(function (p) { hot(el(S, 'ellipse', { cx: p[0], cy: p[1], rx: 9, ry: 5, fill: '#2E9E3B' }), 4); });
+    hot(el(S, 'ellipse', { cx: 535, cy: 180, rx: 85, ry: 70, fill: '#FBE2E2', stroke: INK, 'stroke-width': 1.5 }), 0); hot(circ(S, 545, 175, 22, '#B9A3E6', INK, 1.5), 2); text(S, 535, 290, 'no wall, no chloroplasts', { a: 'middle', s: 11, c: GREY }); }
+  function ceTable() { var h = '<tr><th>Part</th><th>Bacterium</th><th>Plant</th><th>Animal</th></tr>'; PARTS.forEach(function (p, i) { h += '<tr><th>' + p[0] + '</th>' + [0, 1, 2].map(function (j) { return '<td><input type="checkbox" data-i="' + i + '" data-j="' + j + '"></td>'; }).join('') + '</tr>'; }); $('ce-t').innerHTML = h; }
+  $('ce-chk').onclick = function () { var ok = 0, n = 0; [].forEach.call($('ce-t').querySelectorAll('input'), function (c) { n++; if ((c.checked ? 1 : 0) === PARTS[+c.dataset.i][2][+c.dataset.j]) ok++; }); setMsg('ce-msg', ok === n ? '&#10004; All correct. Only plants have chloroplasts and a large vacuole; bacteria have no nucleus.' : ok + ' of ' + n + ' boxes right. Hint: bacteria have a wall but no nucleus.', ok === n); };
+  ceDraw(); ceTable();
+  quiz('ch-ce', 'Which part do bacteria NOT have?', [['n', 'a nucleus'], ['m', 'a cell membrane'], ['c', 'cytoplasm']], 'n', 'Bacteria are simple cells: their DNA floats in the cytoplasm.', 'Simple cells lack the control centre.');
+
+  // 5 kingdoms
+  var KG = [['Oak tree', 'many', 'complex', 'makes its own food', 'P'], ['Bread mould', 'many', 'complex', 'absorbs food', 'F'], ['Yeast', 'one', 'complex', 'absorbs food', 'F'], ['Amoeba', 'one', 'complex', 'eats', 'R'], ['E. coli', 'one', 'simple', 'many ways; lives in the gut', 'B'], ['Hot-spring microbe', 'one', 'simple', 'from chemicals; lives at 80 degrees C', 'A'], ['Jellyfish', 'many', 'complex', 'eats', 'N'], ['Kelp', 'many (but simple body)', 'complex', 'makes its own food; not a true plant', 'R'], ['Moss', 'many', 'complex', 'makes its own food', 'P'], ['Tiger', 'many', 'complex', 'eats', 'N'], ['Yoghurt bacteria', 'one', 'simple', 'feeds on milk sugar', 'B'], ['Mushroom', 'many', 'complex', 'absorbs food', 'F']], kgOrder = shuffle(KG.map(function (x, i) { return i; })), kgK = 0, kgR = 0, kgN = 0, kgDone = false;
+  var KN = { A: 'Archaea', B: 'Bacteria', R: 'Protists', F: 'Fungi', P: 'Plants', N: 'Animals' };
+  function kgShow() { var x = KG[kgOrder[kgK]]; kgDone = false; $('kg-card').textContent = x[0]; $('kg-clue').innerHTML = '<b>Cells:</b> ' + x[1] + ' &middot; <b>Cell type:</b> ' + x[2] + ' &middot; <b>Food:</b> ' + x[3]; seg($('kg-ans'), Object.keys(KN).map(function (k) { return [k, KN[k]]; }), function (v) { if (kgDone) return; kgDone = true; kgN++; var ok = v === x[4]; if (ok) kgR++; $('kg-r').textContent = kgR; $('kg-n').textContent = kgN; setMsg('kg-msg', ok ? '&#10004; ' + KN[x[4]] + '.' : '&#10008; It is in ' + KN[x[4]] + '. ' + (x[2] === 'simple' ? 'Simple cells: bacteria or archaea.' : x[3].indexOf('absorbs') >= 0 ? 'Absorbs food: fungi.' : ''), ok); }); setMsg('kg-msg', 'Choose the kingdom.'); }
+  $('kg-next').onclick = function () { kgK = (kgK + 1) % KG.length; kgShow(); }; kgShow();
+  quiz('ch-kg', 'Why were fungi moved out of the plant kingdom?', [['a', 'they absorb food and cannot photosynthesise'], ['b', 'they are too small'], ['c', 'they live in water']], 'a', 'Plants make their own food; fungi absorb food from dead or living material.', 'How do they get food?');
+
+  // 6 microbes
+  var MB = [['Amoeba', 'One complex cell. Changes shape and flows. Surrounds and eats smaller organisms.', 'f', 'Mostly harmless; a few cause illness.', 'amoeba'], ['Paramecium', 'One complex cell shaped like a slipper, covered in tiny beating hairs.', 'f', 'Harmless; eats bacteria in ponds.', 'para'], ['Plasmodium', 'A protist carried by mosquitoes. Lives in red blood cells.', 'x', 'Causes malaria.', 'plas'], ['Lactobacillus', 'Rod-shaped simple cell. Turns milk into yoghurt.', 'f', 'Useful in food and in the gut.', 'rod'], ['E. coli', 'Rod-shaped simple cell that lives in the gut.', 'b', 'Most strains are harmless or helpful; some cause food poisoning.', 'rod'], ['Diatom', 'One complex cell with a glass wall. Makes food from light in the sea.', 'f', 'Makes a large share of Earth\'s oxygen.', 'diatom']], mbK = 0;
+  function mbDraw(k) { var S = $('mb-svg'); S.innerHTML = ''; rect(S, 0, 0, 640, 300, '#F2F7FB', 12);
+    if (k === 'amoeba') path(S, 'M220 150 C180 90 260 60 300 100 C330 60 420 70 410 130 C470 150 430 230 370 210 C340 250 260 250 250 210 C190 220 180 180 220 150 Z', '#D9E8C8', '#5A7A3A', 3);
+    if (k === 'para') { el(S, 'ellipse', { cx: 320, cy: 150, rx: 150, ry: 55, fill: '#E5DDF5', stroke: VIO, 'stroke-width': 3 }); for (var a = 0; a < 40; a++) { var t = a / 40 * 2 * Math.PI; line(S, 320 + 150 * Math.cos(t), 150 + 55 * Math.sin(t), 320 + 162 * Math.cos(t), 150 + 64 * Math.sin(t), VIO, 1.5); } }
+    if (k === 'plas') { circ(S, 320, 150, 90, '#F2B8B8', '#B33', 3); path(S, 'M290 130 C300 110 340 110 350 130 C360 160 330 180 310 170', 'none', VIO, 6); }
+    if (k === 'rod') for (var i = 0; i < 5; i++) rect(S, 170 + i * 60, 120 + (i % 2) * 40, 90, 32, '#CBE4F5', 16, SKY);
+    if (k === 'diatom') { path(S, 'M200 150 L320 80 L440 150 L320 220 Z', '#F3E3B5', '#8A6A2A', 3); for (var j = 0; j < 9; j++) line(S, 230 + j * 22, 150 - 12, 230 + j * 22, 150 + 12, '#8A6A2A', 1.5); } }
+  function mbShow() { var m = MB[mbK]; mbDraw(m[4]); $('mb-clue').textContent = m[1]; var opts = shuffle(MB.map(function (x, i) { return i; })).slice(0, 4); if (opts.indexOf(mbK) < 0) opts[0] = mbK; seg($('mb-name'), shuffle(opts).map(function (i) { return [String(i), MB[i][0]]; }), function (v) { setMsg('mb-msg', +v === mbK ? '&#10004; ' + m[0] + '. Now: friend, foe or both?' : '&#10008; Read the clues again.', +v === mbK); });
+    seg($('mb-ff'), [['f', 'Friend'], ['x', 'Foe'], ['b', 'Both']], function (v) { setMsg('mb-msg', (v === m[2] ? '&#10004; ' : '&#10008; ') + m[3], v === m[2]); }); setMsg('mb-msg', 'Who is this?'); }
+  $('mb-next').onclick = function () { mbK = (mbK + 1) % MB.length; mbShow(); }; mbShow();
+  quiz('ch-mb', 'Most bacteria are...', [['h', 'harmless or useful'], ['d', 'dangerous'], ['p', 'plants']], 'h', 'Only a small number of bacteria cause disease.', 'Think about yoghurt and your gut.');
+
+  // 7 mould
+  var moWrap = 'p', moBread = 'w', moRun = null;
+  seg($('mo-wrap'), [['p', 'Plastic bag'], ['a', 'Paper bag'], ['f', 'Foil'], ['n', 'Open']], function (v) { moWrap = v; moDraw(0); }, 0);
+  seg($('mo-bread'), [['w', 'White bread'], ['k', 'With preservative']], function (v) { moBread = v; moDraw(0); }, 0);
+  function moRate() { var T = +$('mo-t').value, W = +$('mo-w').value; var tf = Math.max(0, 1 - Math.pow((T - 27) / 16, 2)); var wf = Math.min(1, W / 6); var dry = { p: 1, f: 0.85, a: 0.45, n: 0.3 }[moWrap]; var pres = moBread === 'k' ? 0.4 : 1; return 0.9 * tf * wf * dry * pres; }
+  function moCover(d) { var r = moRate(); return Math.max(0, Math.min(100, 100 / (1 + Math.exp(-(r * d - 3.2) * 1.4)) - 100 / (1 + Math.exp(3.2 * 1.4)))); }
+  function moDraw(d) { var S = $('mo-svg'); S.innerHTML = ''; $('mo-tv').textContent = $('mo-t').value; $('mo-wv').textContent = $('mo-w').value; path(S, 'M180 300 L180 140 C180 70 240 50 320 50 C400 50 460 70 460 140 L460 300 Z', '#F0D9A6', '#A57A3A', 6); var cov = d ? moCover(d) : 0, n = Math.round(cov * 1.4);
+    var rng = 7; for (var i = 0; i < n; i++) { rng = (rng * 9301 + 49297) % 233280; var u = rng / 233280; rng = (rng * 9301 + 49297) % 233280; var v = rng / 233280; circ(S, 195 + u * 250, 75 + v * 215, 6 + (i % 4) * 3, i % 3 ? '#7FAF6A' : '#E8EDE4', 'none'); }
+    if (moWrap === 'p') rect(S, 160, 30, 320, 290, 'rgba(200,220,240,.25)', 12, SKY); $('mo-d').textContent = d; $('mo-c').textContent = Math.round(cov) + '%'; }
+  $('mo-go').onclick = function () { var d = 0; clearInterval(moRun); moRun = setInterval(function () { d++; moDraw(d); if (d >= 8) { clearInterval(moRun); var c = Math.round(moCover(8)); setMsg('mo-msg', 'After 8 days: <b>' + c + '%</b> covered. ' + (c < 15 ? 'Slow growth: too cold, too dry or protected.' : c > 70 ? 'Fast growth: warm, damp and full of food.' : 'Some growth.')); } }, 350); };
+  $('mo-t').oninput = function () { moDraw(0); }; $('mo-w').oninput = function () { moDraw(0); }; moDraw(0); setMsg('mo-msg', 'Set the conditions and run.');
+  quiz('ch-mo', 'Which keeps bread mould-free longest?', [['f', 'a fridge, dry, in a paper bag'], ['w', 'a warm cupboard, damp, in a plastic bag'], ['s', 'a sunny window in a plastic bag']], 'f', 'Cold and dry both slow fungi down.', 'Mould likes warm, damp and food.');
+
+  // 8 groups
+  var GP = [['Salmon', 'gills, scales, fins, lays eggs in water', 'fish'], ['Frog', 'moist skin, eggs in jelly in water, lungs as an adult', 'amph'], ['Crocodile', 'dry scales, leathery eggs on land', 'rept'], ['Eagle', 'feathers, beak, hard-shelled eggs', 'bird'], ['Dolphin', 'lungs, feeds young on milk, born with a few hairs', 'mamm'], ['Bat', 'fur, flies, feeds young on milk', 'mamm'], ['Spider', 'no backbone, eight jointed legs', 'inv'], ['Earthworm', 'no backbone, soft segmented body', 'inv'], ['Penguin', 'feathers, cannot fly, eggs with shells', 'bird'], ['Moss', 'no roots, tiny leaves, spore capsules', 'moss'], ['Fern', 'roots and fronds, spores under leaves', 'fern'], ['Pine tree', 'needles, seeds in cones', 'conif'], ['Rice', 'flowers, seeds in grains', 'flow'], ['Platypus', 'fur, lays eggs, feeds young on milk', 'mamm']], gpO = shuffle(GP.map(function (x, i) { return i; })), gpK = 0, gpR = 0, gpN = 0, gpDone = false;
+  var GN = { fish: 'Fish', amph: 'Amphibians', rept: 'Reptiles', bird: 'Birds', mamm: 'Mammals', inv: 'Invertebrates', moss: 'Mosses', fern: 'Ferns', conif: 'Conifers', flow: 'Flowering plants' };
+  function gpShow() { var x = GP[gpO[gpK]]; gpDone = false; $('gp-card').textContent = x[0]; $('gp-clue').textContent = x[1]; seg($('gp-ans'), Object.keys(GN).map(function (k) { return [k, GN[k]]; }), function (v) { if (gpDone) return; gpDone = true; gpN++; var ok = v === x[2]; if (ok) gpR++; $('gp-r').textContent = gpR; $('gp-n').textContent = gpN; setMsg('gp-msg', (ok ? '&#10004; ' : '&#10008; It is in ') + GN[x[2]] + '.' + (x[0] === 'Platypus' ? ' Mammals that lay eggs are rare.' : ''), ok); }); setMsg('gp-msg', 'Choose a group.'); }
+  $('gp-next').onclick = function () { gpK = (gpK + 1) % GP.length; gpShow(); }; gpShow();
+  quiz('ch-gp', 'A whale breathes with lungs and feeds its young on milk. It is a...', [['m', 'mammal'], ['f', 'fish'], ['a', 'amphibian']], 'm', 'Lungs and milk are mammal features.', 'Fish breathe with gills.');
+
+  // 9 keys
+  var KQ = { 1: ['Does it have a backbone?', ['Yes', 2], ['No', 6]], 2: ['Does it have feathers?', ['Yes', 'Bird (e.g. sparrow)'], ['No', 3]], 3: ['Does it have hair or fur?', ['Yes', 'Mammal (e.g. bat)'], ['No', 4]], 4: ['Does it have fins and gills as an adult?', ['Yes', 'Fish (e.g. goldfish)'], ['No', 5]], 5: ['Is its skin moist with no scales?', ['Yes', 'Amphibian (e.g. frog)'], ['No', 'Reptile (e.g. lizard)']], 6: ['Does it have jointed legs?', ['Yes', 7], ['No', 'Snail or worm']], 7: ['Does it have six legs?', ['Yes', 'Insect (e.g. beetle)'], ['No', 'Spider or crab']] };
+  var KA = [['Sparrow', 'feathers, backbone'], ['Bat', 'backbone, fur, wings'], ['Goldfish', 'backbone, fins, gills, scales'], ['Frog', 'backbone, moist skin, no scales'], ['Lizard', 'backbone, dry scales'], ['Beetle', 'no backbone, six jointed legs'], ['Crab', 'no backbone, ten jointed legs'], ['Snail', 'no backbone, no legs, shell']], kyA = 0, kyQ = 1, kyPath = [], kyN = 0;
+  function kyShow() { var a = KA[kyA]; $('ky-animal').innerHTML = 'Mystery animal: <b>' + a[1] + '</b>'; $('ky-path').textContent = kyPath.length ? 'Path: ' + kyPath.join(' > ') : ''; var q = KQ[kyQ]; $('ky-q').innerHTML = '<b>' + kyQ + '.</b> ' + q[0];
+    seg($('ky-opts'), [['1', q[1][0]], ['2', q[2][0]]], function (v) { var go = q[+v][1]; kyPath.push(kyQ + (v === '1' ? 'a' : 'b')); if (typeof go === 'number') { kyQ = go; kyShow(); } else { $('ky-q').innerHTML = 'Result: <b>' + go + '</b>'; $('ky-opts').innerHTML = ''; var ok = go.toLowerCase().indexOf(KA[kyA][0].toLowerCase()) >= 0 || (KA[kyA][0] === 'Crab' && go.indexOf('crab') >= 0) || (KA[kyA][0] === 'Snail' && go.indexOf('Snail') >= 0); if (ok) kyN++; $('ky-n').textContent = kyN; setMsg('ky-msg', ok ? '&#10004; Identified: ' + KA[kyA][0] + '. Path ' + kyPath.join(', ') + '.' : '&#10008; That is not right for a ' + KA[kyA][0].toLowerCase() + '. Check each answer against the clues.', ok); } }); }
+  $('ky-next').onclick = function () { kyA = (kyA + 1) % KA.length; kyQ = 1; kyPath = []; setMsg('ky-msg', 'Start at question 1.'); kyShow(); }; kyShow();
+  quiz('ch-ky', 'Which is the best question for a key?', [['l', 'Does it have more than four legs?'], ['b', 'Is it big?'], ['p', 'Is it pretty?']], 'l', 'Everyone can count legs and get the same answer.', 'Avoid opinions.');
+
+  // 10 levels
+  var LVL = ['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species'];
+  var LO = { human: [['Animals', 1500000], ['Chordates', 75000], ['Mammals', 6600], ['Primates', 500], ['Great apes', 8], ['Homo', 1], ['Homo sapiens', 1]], tiger: [['Animals', 1500000], ['Chordates', 75000], ['Mammals', 6600], ['Carnivores', 300], ['Cat family', 40], ['Panthera', 5], ['Panthera tigris', 1]], rice: [['Plants', 390000], ['Flowering plants', 300000], ['Monocots', 60000], ['Grasses order', 25000], ['Grass family', 12000], ['Oryza', 20], ['Oryza sativa', 1]] }, leOrg = 'human';
+  seg($('le-org'), [['human', 'Human'], ['tiger', 'Tiger'], ['rice', 'Rice']], function (v) { leOrg = v; leDraw(); }, 0);
+  function leDraw() { var S = $('le-svg'); S.innerHTML = ''; var k = +$('le-k').value, L = LO[leOrg]; $('le-kv').textContent = LVL[k]; for (var i = 0; i <= k; i++) { var w = 600 - i * 70, h = 360 - i * 46; rect(S, 320 - w / 2, 10 + i * 23, w, h, ['#FDECE6', '#FFF3D6', '#E6F1FB', '#E3F5EC', '#F6E6F0', '#ECE6FA', '#FFE3B8'][i], 14, i === k ? CORAL : '#C9CFD6'); text(S, 320 - w / 2 + 12, 32 + i * 23, LVL[i] + ': ' + L[i][0], { s: 12.5, b: i === k ? 1 : 0 }); }
+    setMsg('le-msg', '<b>' + LVL[k] + ': ' + L[k][0] + '.</b> About <b>' + L[k][1].toLocaleString('en') + '</b> species in this group. ' + (k < 6 ? 'Go lower: fewer, more similar organisms.' : 'Just one species.')); }
+  $('le-k').oninput = leDraw; leDraw();
+  quiz('ch-le', 'Which level contains the fewest organisms?', [['s', 'species'], ['k', 'kingdom'], ['c', 'class']], 's', 'Each level down holds fewer, more similar organisms.', 'Think of the funnel.');
+
+  // 11 names
+  var NM = [['Tiger', 'Panthera tigris'], ['Lion', 'Panthera leo'], ['House cat', 'Felis catus'], ['Human', 'Homo sapiens'], ['Rice', 'Oryza sativa'], ['Red squirrel', 'Sciurus vulgaris']], nmPick = null, nmDone = {};
+  function nmShow() { $('nm-common').innerHTML = NM.map(function (x, i) { return '<button class="rx" data-i="' + i + '"' + (nmDone[i] ? ' aria-pressed="true"' : '') + '><b>' + x[0] + '</b></button>'; }).join(''); $('nm-sci').innerHTML = shuffle(NM.map(function (x, i) { return i; })).map(function (i) { return '<button class="rx" data-i="' + i + '"' + (nmDone[i] ? ' aria-pressed="true"' : '') + '><i>' + NM[i][1] + '</i></button>'; }).join('');
+    [].forEach.call($('nm-common').children, function (b) { b.onclick = function () { nmPick = +b.dataset.i; setMsg('nm-msg', 'Now click the scientific name of the ' + NM[nmPick][0].toLowerCase() + '.'); }; });
+    [].forEach.call($('nm-sci').children, function (b) { b.onclick = function () { if (nmPick == null) return; if (+b.dataset.i === nmPick) { nmDone[nmPick] = 1; setMsg('nm-msg', '&#10004; ' + NM[nmPick][0] + ': <i>' + NM[nmPick][1] + '</i>.' + (nmPick < 2 ? ' Same genus as the ' + (nmPick ? 'tiger' : 'lion') + '!' : ''), true); nmPick = null; $('nm-r').textContent = Object.keys(nmDone).length; nmShow(); } else setMsg('nm-msg', '&#10008; Not that one.', false); }; }); }
+  var FIX = [['homo Sapiens', 'Homo sapiens'], ['Panthera Tigris', 'Panthera tigris'], ['felis catus', 'Felis catus']];
+  $('nm-fix').innerHTML = '<p><b>Fix these names:</b></p>' + FIX.map(function (f, i) { return '<div class="ctl"><label>' + f[0] + '</label><input type="text" data-i="' + i + '"></div>'; }).join('') + '<button class="btn2" id="nm-fchk">Check</button>';
+  $('nm-fchk').onclick = function () { var ok = 0; [].forEach.call($('nm-fix').querySelectorAll('input'), function (inp) { if (inp.value.trim() === FIX[+inp.dataset.i][1]) ok++; }); setMsg('nm-msg', ok === 3 ? '&#10004; Genus with a capital, species all small.' : ok + ' of 3 right. Genus starts with a capital; species is all small letters.', ok === 3); };
+  nmShow();
+  quiz('ch-nm', 'A horse and a donkey have a mule. Mules cannot have young. So horses and donkeys are...', [['d', 'different species'], ['s', 'the same species'], ['k', 'different kingdoms']], 'd', 'A species makes fertile offspring; mules are infertile.', 'Can the young breed?');
+
+  // 12 quiz
+  var QZ = [['Which is a characteristic of living things?', ['excretion', 'colour', 'hardness'], 0], ['Who first saw bacteria?', ['van Leeuwenhoek', 'Linnaeus', 'Aristotle'], 0], ['Magnification with x10 and x10 lenses is...', ['x100', 'x20', 'x10'], 0], ['Which kingdom has simple cells?', ['bacteria', 'fungi', 'protists'], 0], ['Mushrooms get food by...', ['absorbing it', 'photosynthesis', 'hunting'], 0], ['Which is a protist?', ['amoeba', 'yeast', 'moss'], 0], ['Mould grows best when it is...', ['warm and damp', 'cold and dry', 'frozen'], 0], ['Animals with feathers are...', ['birds', 'reptiles', 'mammals'], 0], ['Ferns reproduce with...', ['spores', 'cones', 'flowers'], 0], ['Each question in a dichotomous key has...', ['two answers', 'three answers', 'no answers'], 0], ['The level below family is...', ['genus', 'order', 'class'], 0], ['The correct way to write the human name is...', ['Homo sapiens', 'homo Sapiens', 'Homo Sapiens'], 0]];
+  function qBuild() { var order = shuffle(QZ.map(function (q, i) { return i; })); $('q-box').innerHTML = order.map(function (i, n) { var q = QZ[i], o = shuffle(q[1].map(function (x, j) { return [j, x]; })); return '<div class="msg" style="margin:8px 0" data-q="' + i + '"><b>' + (n + 1) + '. ' + q[0] + '</b><div class="seg" style="margin-top:6px">' + o.map(function (x) { return '<button type="button" data-v="' + x[0] + '" aria-pressed="false">' + x[1] + '</button>'; }).join('') + '</div></div>'; }).join('');
+    [].forEach.call($('q-box').querySelectorAll('.seg'), function (s) { [].forEach.call(s.children, function (b) { b.onclick = function () { [].forEach.call(s.children, function (x) { x.setAttribute('aria-pressed', x === b); }); }; }); }); $('q-msg').textContent = 'Answer every question, then check.'; }
+  $('q-chk').onclick = function () { var sc = 0; [].forEach.call($('q-box').children, function (d) { var q = QZ[+d.dataset.q], c = cur(d.querySelector('.seg')); var ok = c != null && +c === q[2]; if (ok) sc++; d.className = 'msg ' + (ok ? 'good' : 'bad'); }); $('q-msg').innerHTML = 'Score: <b>' + sc + ' / ' + QZ.length + '</b>. Red boxes show what to revise.'; }; $('q-new').onclick = qBuild; qBuild();
+
+  window.clDebug = { show: show, moCover: moCover };
+  var h0 = location.hash.replace('#', ''); if (NAMES.indexOf(h0) >= 0) show(h0);
+})();
+</script>
+</body>
+</html>
